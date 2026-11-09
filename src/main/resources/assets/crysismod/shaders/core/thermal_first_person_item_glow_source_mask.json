@@ -1,0 +1,12 @@
+{
+  "vertex": "crysismod:thermal_first_person_arm_composite",
+  "fragment": "crysismod:thermal_first_person_item_glow_source_mask",
+  "attributes": [ "Position", "UV0" ],
+  "samplers": [
+    { "name": "ThermalSampler" }
+  ],
+  "uniforms": [
+    { "name": "ModelViewMat", "type": "matrix4x4", "count": 16, "values": [ 1.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 1.0 ] },
+    { "name": "ProjMat", "type": "matrix4x4", "count": 16, "values": [ 1.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 1.0 ] }
+  ]
+}

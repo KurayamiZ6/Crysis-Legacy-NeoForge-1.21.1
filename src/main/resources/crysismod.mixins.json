@@ -1,0 +1,39 @@
+{
+  "required": false,
+  "minVersion": "0.8",
+  "package": "io.github.painworks.crysismod.mixin",
+  "compatibilityLevel": "JAVA_21",
+  "mixins": ["nanosuit.CloakFootstepsMixin", "nanosuit.CloakTargetingConditionsMixin", "nanosuit.NanosuitLandingSoundMixin", "nanosuit.PlayerPowerMeleeMixin", "nanosuit.TaczPowerMeleeMixin", "nanosuit.TaczCloakGunfireMixin"],
+  "client": [
+    "client.nanosuit.AbstractSoundVolumeAccessor",
+    "client.nanosuit.CloakHandsMixin",
+    "client.nanosuit.CloakPlayerRenderMixin",
+    "client.nanosuit.CloakPunchyArmsMixin",
+    "client.nanosuit.CloakTaczGunMixin",
+    "client.nanosuit.CloakTaczScopeMixin",
+    "client.nanosuit.CloakTaczStaticGunMixin",
+    "client.nanovision.EmfThermalBufferMixin",
+    "client.nanovision.ItemInHandRendererTransitionStateMixin",
+    "client.nanovision.ItemInHandRendererItemMaskMixin",
+    "client.nanovision.TaczBedrockHeldItemCaptureMixin",
+    "client.nanovision.TaczAttachmentScopeCaptureSourceMixin",
+    "client.nanovision.ScopeDeferredThirdPersonTaczThermalMixin",
+    "client.nanovision.ScopeDeferredFirstPersonGlowMaskMixin",
+    "client.nanovision.TaczScopeOpticsThermalExclusionMixin",
+    "client.nanovision.FullyBufferedHeldItemCaptureMixin",
+    "client.nanovision.ForgeHooksClientArmCaptureMixin",
+    "client.nanovision.ThermalFirstPersonArmScissorMixin",
+    "client.nanovision.ThermalFirstPersonEmptySlotTransitionMixin",
+    "client.nanovision.ThermalFirstPersonItemGlowMixin",
+    "client.nanovision.PlayerRendererHeldItemCaptureMixin",
+    "client.nanovision.ThirdPersonHeldItemThermalMixin",
+    "client.nanovision.RenderTypeCompositeAccessor",
+    "client.nanovision.RenderTypeCompositeStateAccessor",
+    "client.nanovision.TextureStateShardAccessor",
+    "client.nanosuit.LocalPlayerEnhancedJumpMixin",
+    "client.nanosuit.KeyboardInputEnhancedJumpMixin"
+  ],
+  "injectors": {
+    "defaultRequire": 0
+  }
+}

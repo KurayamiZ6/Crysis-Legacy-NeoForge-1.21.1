@@ -1,0 +1,310 @@
+﻿{
+    "texture":  "crysismod:textures/armor/nanosuit_armor_mode.png",
+    "marker_texture":  "crysismod:textures/armor/nanosuit_armor_mode.png",
+    "texture_width":  512,
+    "texture_height":  512,
+    "source":  "red_pixel_markers",
+    "red_threshold":  {
+                          "r_min":  240,
+                          "g_max":  40,
+                          "b_max":  40,
+                          "a_min":  128
+                      },
+    "centers":  [
+                    {
+                        "x":  25.5,
+                        "y":  7.5,
+                        "pixel_count":  1
+                    },
+                    {
+                        "x":  36.5,
+                        "y":  7.5,
+                        "pixel_count":  1
+                    },
+                    {
+                        "x":  195.5,
+                        "y":  14.5,
+                        "pixel_count":  1
+                    },
+                    {
+                        "x":  204.5,
+                        "y":  14.5,
+                        "pixel_count":  1
+                    },
+                    {
+                        "x":  322.5,
+                        "y":  18.5,
+                        "pixel_count":  1
+                    },
+                    {
+                        "x":  333.5,
+                        "y":  18.5,
+                        "pixel_count":  1
+                    },
+                    {
+                        "x":  164.5,
+                        "y":  33.5,
+                        "pixel_count":  1
+                    },
+                    {
+                        "x":  191.5,
+                        "y":  33.5,
+                        "pixel_count":  1
+                    },
+                    {
+                        "x":  196.5,
+                        "y":  35.5,
+                        "pixel_count":  1
+                    },
+                    {
+                        "x":  323.5,
+                        "y":  72.5,
+                        "pixel_count":  1
+                    },
+                    {
+                        "x":  305.5,
+                        "y":  75.5,
+                        "pixel_count":  1
+                    },
+                    {
+                        "x":  311.5,
+                        "y":  87.5,
+                        "pixel_count":  1
+                    },
+                    {
+                        "x":  136.5,
+                        "y":  132.5,
+                        "pixel_count":  1
+                    },
+                    {
+                        "x":  165.5,
+                        "y":  135.5,
+                        "pixel_count":  1
+                    },
+                    {
+                        "x":  146.5,
+                        "y":  139.5,
+                        "pixel_count":  1
+                    },
+                    {
+                        "x":  192.5,
+                        "y":  140.5,
+                        "pixel_count":  1
+                    },
+                    {
+                        "x":  202.5,
+                        "y":  147.5,
+                        "pixel_count":  1
+                    },
+                    {
+                        "x":  221.5,
+                        "y":  147.5,
+                        "pixel_count":  1
+                    },
+                    {
+                        "x":  274.5,
+                        "y":  154.5,
+                        "pixel_count":  1
+                    },
+                    {
+                        "x":  104.5,
+                        "y":  155.5,
+                        "pixel_count":  1
+                    },
+                    {
+                        "x":  258.5,
+                        "y":  155.5,
+                        "pixel_count":  1
+                    },
+                    {
+                        "x":  114.5,
+                        "y":  156.5,
+                        "pixel_count":  1
+                    },
+                    {
+                        "x":  133.5,
+                        "y":  157.5,
+                        "pixel_count":  1
+                    },
+                    {
+                        "x":  152.5,
+                        "y":  159.5,
+                        "pixel_count":  1
+                    },
+                    {
+                        "x":  162.5,
+                        "y":  160.5,
+                        "pixel_count":  1
+                    },
+                    {
+                        "x":  181.5,
+                        "y":  161.5,
+                        "pixel_count":  1
+                    },
+                    {
+                        "x":  155.5,
+                        "y":  193.5,
+                        "pixel_count":  1
+                    },
+                    {
+                        "x":  172.5,
+                        "y":  193.5,
+                        "pixel_count":  1
+                    },
+                    {
+                        "x":  304.5,
+                        "y":  200.5,
+                        "pixel_count":  1
+                    },
+                    {
+                        "x":  304.5,
+                        "y":  212.5,
+                        "pixel_count":  1
+                    },
+                    {
+                        "x":  254.5,
+                        "y":  217.5,
+                        "pixel_count":  1
+                    },
+                    {
+                        "x":  288.5,
+                        "y":  217.5,
+                        "pixel_count":  1
+                    },
+                    {
+                        "x":  270.5,
+                        "y":  218.5,
+                        "pixel_count":  1
+                    },
+                    {
+                        "x":  39.5,
+                        "y":  223.5,
+                        "pixel_count":  1
+                    },
+                    {
+                        "x":  211.5,
+                        "y":  243.5,
+                        "pixel_count":  1
+                    },
+                    {
+                        "x":  52.5,
+                        "y":  276.5,
+                        "pixel_count":  1
+                    },
+                    {
+                        "x":  280.5,
+                        "y":  276.5,
+                        "pixel_count":  1
+                    },
+                    {
+                        "x":  327.5,
+                        "y":  277.5,
+                        "pixel_count":  1
+                    },
+                    {
+                        "x":  6.5,
+                        "y":  279.5,
+                        "pixel_count":  1
+                    },
+                    {
+                        "x":  120.5,
+                        "y":  289.5,
+                        "pixel_count":  1
+                    },
+                    {
+                        "x":  183.5,
+                        "y":  289.5,
+                        "pixel_count":  1
+                    },
+                    {
+                        "x":  104.5,
+                        "y":  290.5,
+                        "pixel_count":  1
+                    },
+                    {
+                        "x":  135.5,
+                        "y":  290.5,
+                        "pixel_count":  1
+                    },
+                    {
+                        "x":  311.5,
+                        "y":  300.5,
+                        "pixel_count":  1
+                    },
+                    {
+                        "x":  328.5,
+                        "y":  301.5,
+                        "pixel_count":  1
+                    },
+                    {
+                        "x":  8.5,
+                        "y":  302.5,
+                        "pixel_count":  1
+                    },
+                    {
+                        "x":  15.5,
+                        "y":  302.5,
+                        "pixel_count":  1
+                    },
+                    {
+                        "x":  293.5,
+                        "y":  318.5,
+                        "pixel_count":  1
+                    },
+                    {
+                        "x":  151.5,
+                        "y":  322.5,
+                        "pixel_count":  1
+                    },
+                    {
+                        "x":  72.5,
+                        "y":  329.5,
+                        "pixel_count":  1
+                    },
+                    {
+                        "x":  214.5,
+                        "y":  353.5,
+                        "pixel_count":  1
+                    },
+                    {
+                        "x":  264.5,
+                        "y":  353.5,
+                        "pixel_count":  1
+                    },
+                    {
+                        "x":  87.5,
+                        "y":  360.5,
+                        "pixel_count":  1
+                    },
+                    {
+                        "x":  148.5,
+                        "y":  374.5,
+                        "pixel_count":  1
+                    },
+                    {
+                        "x":  196.5,
+                        "y":  375.5,
+                        "pixel_count":  1
+                    },
+                    {
+                        "x":  222.5,
+                        "y":  378.5,
+                        "pixel_count":  1
+                    },
+                    {
+                        "x":  273.5,
+                        "y":  382.5,
+                        "pixel_count":  1
+                    },
+                    {
+                        "x":  277.5,
+                        "y":  394.5,
+                        "pixel_count":  1
+                    },
+                    {
+                        "x":  311.5,
+                        "y":  394.5,
+                        "pixel_count":  1
+                    }
+                ]
+}

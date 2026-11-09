@@ -1,0 +1,10 @@
+{
+  "replace": false,
+  "values": [
+    "#crysismod:nanovision_heat_visible",
+    "minecraft:witch",
+    "minecraft:piglin",
+    "minecraft:piglin_brute",
+    "minecraft:hoglin"
+  ]
+}

@@ -1,0 +1,29 @@
+{
+  "vertex": "crysismod:thermal_first_person_arm",
+  "fragment": "crysismod:thermal_first_person_item_geometry",
+  "attributes": [
+    "Position",
+    "UV0",
+    "Color",
+    "Normal"
+  ],
+  "samplers": [
+    { "name": "Sampler0" },
+    { "name": "LeftArmMaskSampler" },
+    { "name": "LeftArmDepthSampler" },
+    { "name": "RightArmMaskSampler" },
+    { "name": "RightArmDepthSampler" }
+  ],
+  "uniforms": [
+    { "name": "ModelViewMat", "type": "matrix4x4", "count": 16, "values": [ 1.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 1.0 ] },
+    { "name": "ProjMat", "type": "matrix4x4", "count": 16, "values": [ 1.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 1.0 ] },
+    { "name": "InSize", "type": "float", "count": 2, "values": [ 1.0, 1.0 ] },
+    { "name": "LeftArmEnabled", "type": "int", "count": 1, "values": [ 0 ] },
+    { "name": "RightArmEnabled", "type": "int", "count": 1, "values": [ 0 ] },
+    { "name": "ContactHeatStrength", "type": "float", "count": 1, "values": [ 0.32 ] },
+    { "name": "ModelOpacity", "type": "float", "count": 1, "values": [ 1.0 ] },
+    { "name": "ScanlineStrength", "type": "float", "count": 1, "values": [ 0.08 ] },
+    { "name": "ScanlineSpacingPx", "type": "float", "count": 1, "values": [ 4.0 ] },
+    { "name": "ActivationFlash", "type": "float", "count": 1, "values": [ 0.0 ] }
+  ]
+}

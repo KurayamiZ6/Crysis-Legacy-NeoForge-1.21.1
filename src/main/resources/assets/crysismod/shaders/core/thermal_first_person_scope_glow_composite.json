@@ -1,0 +1,15 @@
+{
+  "vertex": "crysismod:thermal_first_person_arm_composite",
+  "fragment": "crysismod:thermal_first_person_item_glow_composite",
+  "attributes": [ "Position", "UV0" ],
+  "samplers": [
+    { "name": "MaskSampler" }
+  ],
+  "uniforms": [
+    { "name": "ModelViewMat", "type": "matrix4x4", "count": 16, "values": [ 1.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 1.0 ] },
+    { "name": "ProjMat", "type": "matrix4x4", "count": 16, "values": [ 1.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 1.0 ] },
+    { "name": "InSize", "type": "float", "count": 2, "values": [ 1.0, 1.0 ] },
+    { "name": "GlowRadiusPx", "type": "float", "count": 1, "values": [ 3.0 ] },
+    { "name": "GlowStrength", "type": "float", "count": 1, "values": [ 1.0 ] }
+  ]
+}

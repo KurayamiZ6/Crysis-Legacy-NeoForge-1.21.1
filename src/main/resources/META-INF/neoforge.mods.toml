@@ -1,0 +1,32 @@
+modLoader="javafml"
+loaderVersion="[4,)"
+license="All Rights Reserved"
+[[mods]]
+modId="crysismod"
+version="1.1.1-port-dev"
+displayName="Crysis Legacy NeoForge (experimental)"
+description='''Experimental private port of Crysis Legacy.'''
+[[dependencies.crysismod]]
+modId="neoforge"
+type="required"
+versionRange="[21.1,)"
+ordering="NONE"
+side="BOTH"
+[[dependencies.crysismod]]
+modId="minecraft"
+type="required"
+versionRange="[1.21.1,1.21.2)"
+ordering="NONE"
+side="BOTH"
+[[dependencies.crysismod]]
+modId="cloth_config"
+type="required"
+versionRange="[15,)"
+ordering="AFTER"
+side="CLIENT"
+[[mixins]]
+config="crysismod.mixins.json"
+[[mixins]]
+config="crysisscopefix.mixins.json"
+[[mixins]]
+config="crysisscopeadspatch.mixins.json"

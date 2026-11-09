@@ -1,0 +1,529 @@
+{
+  "cloak_engaged": {
+    "subtitle": "subtitle.crysismod.cloak_engaged",
+    "sounds": [
+      {
+        "name": "crysismod:cloak_engaged",
+        "stream": false,
+        "volume": 0.8
+      }
+    ]
+  },
+  "cloak_activation": {
+    "sounds": [
+      {
+        "name": "crysismod:cloak_activation",
+        "volume": 0.48
+      }
+    ]
+  },
+  "cloak_deactivation": {
+    "subtitle": "subtitle.crysismod.cloak_deactivation",
+    "sounds": [
+      {
+        "name": "crysismod:cloak_deactivation",
+        "volume": 0.8
+      }
+    ]
+  },
+  "cloak_ambience": {
+    "sounds": [
+      {
+        "name": "crysismod:cloak_ambience",
+        "volume": 0.345
+      }
+    ]
+  },
+  "maximum_armor": {
+    "subtitle": "subtitle.crysismod.maximum_armor",
+    "sounds": [
+      {
+        "name": "crysismod:max_armor",
+        "stream": false,
+        "volume": 0.8
+      }
+    ]
+  },
+  "armor_mode_activation": {
+    "sounds": [
+      {
+        "name": "crysismod:armor_mode_activation",
+        "stream": false,
+        "volume": 0.8
+      }
+    ]
+  },
+  "armor_mode_disable": {
+    "subtitle": "subtitle.crysismod.armor_mode_disable",
+    "sounds": [
+      {
+        "name": "crysismod:armor_mode_disable",
+        "stream": false,
+        "volume": 0.8
+      }
+    ]
+  },
+  "nanovision_activation": {
+    "subtitle": "subtitle.crysismod.nanovision_activation",
+    "sounds": [
+      {
+        "name": "crysismod:nanovision_activation",
+        "stream": false,
+        "volume": 0.8
+      }
+    ]
+  },
+  "nanovision_deactivation": {
+    "subtitle": "subtitle.crysismod.nanovision_deactivation",
+    "sounds": [
+      {
+        "name": "crysismod:nanovision_deactivation",
+        "stream": false,
+        "volume": 0.8
+      }
+    ]
+  },
+  "nanovision_ambience": {
+    "sounds": [
+      {
+        "name": "crysismod:nanovision_ambience",
+        "volume": 0.3
+      }
+    ]
+  },
+  "nanovision_enabled": {
+    "subtitle": "subtitle.crysismod.nanovision_enabled",
+    "sounds": [
+      {
+        "name": "crysismod:nanovision_enabled",
+        "stream": false,
+        "volume": 0.8
+      }
+    ]
+  },
+  "power_jump": {
+    "subtitle": "subtitle.crysismod.power_jump",
+    "sounds": [
+      {
+        "name": "crysismod:powerjump_sound",
+        "stream": false,
+        "volume": 0.8
+      }
+    ]
+  },
+  "step_stone_walk": {
+    "subtitle": "subtitles.block.generic.footsteps",
+    "sounds": [
+      {
+        "name": "crysismod:movement/footstep_concrete_walk_01",
+        "volume": 0.8
+      },
+      {
+        "name": "crysismod:movement/footstep_concrete_walk_02",
+        "volume": 0.8
+      },
+      {
+        "name": "crysismod:movement/footstep_concrete_walk_03",
+        "volume": 0.8
+      }
+    ]
+  },
+  "step_stone_run": {
+    "subtitle": "subtitles.block.generic.footsteps",
+    "sounds": [
+      {
+        "name": "crysismod:movement/footstep_concrete_run_01",
+        "volume": 0.8
+      },
+      {
+        "name": "crysismod:movement/footstep_concrete_run_02",
+        "volume": 0.8
+      },
+      {
+        "name": "crysismod:movement/footstep_concrete_run_03",
+        "volume": 0.8
+      }
+    ]
+  },
+  "step_dirt_walk": {
+    "subtitle": "subtitles.block.generic.footsteps",
+    "sounds": [
+      {
+        "name": "crysismod:movement/footstep_dirt_walk_01",
+        "volume": 0.8
+      },
+      {
+        "name": "crysismod:movement/footstep_dirt_walk_02",
+        "volume": 0.8
+      },
+      {
+        "name": "crysismod:movement/footstep_dirt_walk_03",
+        "volume": 0.8
+      }
+    ]
+  },
+  "step_dirt_run": {
+    "subtitle": "subtitles.block.generic.footsteps",
+    "sounds": [
+      {
+        "name": "crysismod:movement/footstep_dirt_run_01",
+        "volume": 0.8
+      },
+      {
+        "name": "crysismod:movement/footstep_dirt_run_02",
+        "volume": 0.8
+      },
+      {
+        "name": "crysismod:movement/footstep_dirt_run_03",
+        "volume": 0.8
+      }
+    ]
+  },
+  "step_grass_walk": {
+    "subtitle": "subtitles.block.generic.footsteps",
+    "sounds": [
+      {
+        "name": "crysismod:movement/footstep_grass_walk_01",
+        "volume": 0.8
+      },
+      {
+        "name": "crysismod:movement/footstep_grass_walk_02",
+        "volume": 0.8
+      },
+      {
+        "name": "crysismod:movement/footstep_grass_walk_03",
+        "volume": 0.8
+      }
+    ]
+  },
+  "step_grass_run": {
+    "subtitle": "subtitles.block.generic.footsteps",
+    "sounds": [
+      {
+        "name": "crysismod:movement/footstep_grass_run_01",
+        "volume": 0.8
+      },
+      {
+        "name": "crysismod:movement/footstep_grass_run_02",
+        "volume": 0.8
+      },
+      {
+        "name": "crysismod:movement/footstep_grass_run_03",
+        "volume": 0.8
+      }
+    ]
+  },
+  "step_gravel_walk": {
+    "subtitle": "subtitles.block.generic.footsteps",
+    "sounds": [
+      {
+        "name": "crysismod:movement/footstep_gravel_walk_01",
+        "volume": 0.8
+      },
+      {
+        "name": "crysismod:movement/footstep_gravel_walk_02",
+        "volume": 0.8
+      },
+      {
+        "name": "crysismod:movement/footstep_gravel_walk_03",
+        "volume": 0.8
+      }
+    ]
+  },
+  "step_gravel_run": {
+    "subtitle": "subtitles.block.generic.footsteps",
+    "sounds": [
+      {
+        "name": "crysismod:movement/footstep_gravel_run_01",
+        "volume": 0.8
+      },
+      {
+        "name": "crysismod:movement/footstep_gravel_run_02",
+        "volume": 0.8
+      },
+      {
+        "name": "crysismod:movement/footstep_gravel_run_03",
+        "volume": 0.8
+      }
+    ]
+  },
+  "step_metal_walk": {
+    "subtitle": "subtitles.block.generic.footsteps",
+    "sounds": [
+      {
+        "name": "crysismod:movement/foostep_metal_thick_walk_01",
+        "volume": 0.8
+      },
+      {
+        "name": "crysismod:movement/foostep_metal_thick_walk_02",
+        "volume": 0.8
+      },
+      {
+        "name": "crysismod:movement/foostep_metal_thick_walk_03",
+        "volume": 0.8
+      }
+    ]
+  },
+  "step_metal_run": {
+    "subtitle": "subtitles.block.generic.footsteps",
+    "sounds": [
+      {
+        "name": "crysismod:movement/foostep_metal_thick_run_01",
+        "volume": 0.8
+      },
+      {
+        "name": "crysismod:movement/foostep_metal_thick_run_02",
+        "volume": 0.8
+      },
+      {
+        "name": "crysismod:movement/foostep_metal_thick_run_03",
+        "volume": 0.8
+      }
+    ]
+  },
+  "step_sand_walk": {
+    "subtitle": "subtitles.block.generic.footsteps",
+    "sounds": [
+      {
+        "name": "crysismod:movement/foostep_sand_dry_walk_01",
+        "volume": 0.8
+      },
+      {
+        "name": "crysismod:movement/foostep_sand_dry_walk_02",
+        "volume": 0.8
+      },
+      {
+        "name": "crysismod:movement/foostep_sand_dry_walk_03",
+        "volume": 0.8
+      }
+    ]
+  },
+  "step_sand_run": {
+    "subtitle": "subtitles.block.generic.footsteps",
+    "sounds": [
+      {
+        "name": "crysismod:movement/foostep_sand_dry_run_01",
+        "volume": 0.8
+      },
+      {
+        "name": "crysismod:movement/foostep_sand_dry_run_02",
+        "volume": 0.8
+      },
+      {
+        "name": "crysismod:movement/foostep_sand_dry_run_03",
+        "volume": 0.8
+      }
+    ]
+  },
+  "step_wood_walk": {
+    "subtitle": "subtitles.block.generic.footsteps",
+    "sounds": [
+      {
+        "name": "crysismod:movement/foostep_wood_solid_walk_01",
+        "volume": 0.8
+      },
+      {
+        "name": "crysismod:movement/foostep_wood_solid_walk_02",
+        "volume": 0.8
+      },
+      {
+        "name": "crysismod:movement/foostep_wood_solid_walk_03",
+        "volume": 0.8
+      }
+    ]
+  },
+  "step_wood_run": {
+    "subtitle": "subtitles.block.generic.footsteps",
+    "sounds": [
+      {
+        "name": "crysismod:movement/foostep_wood_solid_run_01",
+        "volume": 0.8
+      },
+      {
+        "name": "crysismod:movement/foostep_wood_solid_run_02",
+        "volume": 0.8
+      },
+      {
+        "name": "crysismod:movement/foostep_wood_solid_run_03",
+        "volume": 0.8
+      }
+    ]
+  },
+  "step_fabric": {
+    "subtitle": "subtitles.block.generic.footsteps",
+    "sounds": [
+      {
+        "name": "crysismod:movement/footstep_fabric_walk_01",
+        "volume": 0.8
+      },
+      {
+        "name": "crysismod:movement/footstep_fabric_walk_02",
+        "volume": 0.8
+      },
+      {
+        "name": "crysismod:movement/footstep_fabric_walk_03",
+        "volume": 0.8
+      }
+    ]
+  },
+  "step_armor_run": {
+    "subtitle": "subtitles.block.generic.footsteps",
+    "sounds": [
+      {
+        "name": "crysismod:movement/armor_boot_run_01",
+        "volume": 0.8
+      },
+      {
+        "name": "crysismod:movement/armor_boot_run_02",
+        "volume": 0.8
+      },
+      {
+        "name": "crysismod:movement/armor_boot_run_03",
+        "volume": 0.8
+      }
+    ]
+  },
+  "nanosuit_landing": {
+    "subtitle": "subtitles.entity.generic.big_fall",
+    "sounds": [
+      {
+        "name": "crysismod:movement/nanosuit_gear_land_01",
+        "volume": 0.8
+      },
+      {
+        "name": "crysismod:movement/nanosuit_gear_land_03",
+        "volume": 0.8
+      }
+    ]
+  },
+  "energy_critical": {
+    "subtitle": "subtitle.crysismod.energy_critical",
+    "sounds": [
+      {
+        "name": "crysismod:energy_critical",
+        "volume": 0.8
+      }
+    ]
+  },
+  "suit_disabled_state_initial": {
+    "subtitle": "subtitle.crysismod.suit_disabled_state_initial",
+    "sounds": [
+      {
+        "name": "crysismod:suit_disabled_state_initial",
+        "volume": 0.8
+      }
+    ]
+  },
+  "suit_disabled_state_loop": {
+    "sounds": [
+      {
+        "name": "crysismod:suit_disabled_state_loop",
+        "volume": 0.8
+      }
+    ]
+  },
+  "energy_charge": {
+    "subtitle": "subtitle.crysismod.energy_charge",
+    "sounds": [
+      {
+        "name": "crysismod:energy_charge",
+        "volume": 0.8
+      }
+    ]
+  },
+  "energy_restored": {
+    "subtitle": "subtitle.crysismod.energy_restored",
+    "sounds": [
+      {
+        "name": "crysismod:energy_restored",
+        "volume": 0.8
+      }
+    ]
+  },
+  "armor_ambience": {
+    "sounds": [
+      {
+        "name": "crysismod:armor_loop",
+        "volume": 0.345
+      }
+    ]
+  },
+  "hydro_thruster": {
+    "sounds": [
+      {
+        "name": "crysismod:endurance_hydro_thruster_loop",
+        "volume": 0.39
+      }
+    ]
+  },
+  "power_sprint_ambience": {
+    "sounds": [
+      {
+        "name": "crysismod:suit_speed_run_loop",
+        "volume": 0.3
+      }
+    ]
+  },
+  "power_melee": {
+    "subtitle": "subtitle.crysismod.power_melee",
+    "sounds": [
+      {
+        "name": "crysismod:player_punch_strength",
+        "volume": 0.8
+      }
+    ]
+  },
+  "binocular_on": {
+    "subtitle": "subtitle.crysismod.binocular_on",
+    "sounds": [
+      {
+        "name": "crysismod:binocular_on",
+        "volume": 0.8
+      }
+    ]
+  },
+  "binocular_off": {
+    "subtitle": "subtitle.crysismod.binocular_off",
+    "sounds": [
+      {
+        "name": "crysismod:binocular_off",
+        "volume": 0.8
+      }
+    ]
+  },
+  "binocular_zoom_in": {
+    "subtitle": "subtitle.crysismod.binocular_zoom_in",
+    "sounds": [
+      {
+        "name": "crysismod:binocular_zoom_in",
+        "volume": 0.8
+      }
+    ]
+  },
+  "binocular_zoom_out": {
+    "subtitle": "subtitle.crysismod.binocular_zoom_out",
+    "sounds": [
+      {
+        "name": "crysismod:binocular_zoom_out",
+        "volume": 0.8
+      }
+    ]
+  },
+  "power_melee_stock": {
+    "subtitle": "subtitle.crysismod.power_melee_stock",
+    "sounds": [
+      {
+        "name": "crysismod:hit_feedback_melee_01",
+        "volume": 0.8
+      },
+      {
+        "name": "crysismod:hit_feedback_melee_02",
+        "volume": 0.8
+      },
+      {
+        "name": "crysismod:hit_feedback_melee_03",
+        "volume": 0.8
+      }
+    ]
+  }
+}

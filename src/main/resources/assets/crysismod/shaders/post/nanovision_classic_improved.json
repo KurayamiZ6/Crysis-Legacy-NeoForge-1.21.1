@@ -1,0 +1,7 @@
+{
+  "targets": [
+    "nanovision_heat_a",
+    "nanovision_heat_b",
+    "nanovision_final"
+  ]
+}

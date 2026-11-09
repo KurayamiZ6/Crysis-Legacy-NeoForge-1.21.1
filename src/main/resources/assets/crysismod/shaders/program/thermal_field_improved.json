@@ -1,0 +1,41 @@
+{
+  "blend": {
+    "func": "add",
+    "srcrgb": "one",
+    "dstrgb": "zero"
+  },
+  "vertex": "sobel",
+  "fragment": "crysismod:thermal_field",
+  "attributes": [ "Position" ],
+  "samplers": [
+    { "name": "DiffuseSampler" },
+    { "name": "MarkerDepthSampler" }
+  ],
+  "uniforms": [
+    { "name": "ProjMat", "type": "matrix4x4", "count": 16, "values": [ 1.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0 ] },
+    { "name": "InSize", "type": "float", "count": 2, "values": [ 1.0, 1.0 ] },
+    { "name": "OutSize", "type": "float", "count": 2, "values": [ 1.0, 1.0 ] },
+    { "name": "EncodedHeightRangePx", "type": "float", "count": 1, "values": [ 512.0 ] },
+    { "name": "InnerRadiusRatio", "type": "float", "count": 1, "values": [ 0.48 ] },
+    { "name": "MaxSearchRadiusPx", "type": "float", "count": 1, "values": [ 80.0 ] },
+    { "name": "ThermalQuality", "type": "int", "count": 1, "values": [ 2 ] },
+    { "name": "DiffusionStrength", "type": "float", "count": 1, "values": [ 0.82 ] },
+    { "name": "TapSpacing", "type": "float", "count": 1, "values": [ 1.28 ] },
+    { "name": "GeometryDepthStrength", "type": "float", "count": 1, "values": [ 1.0 ] },
+    { "name": "GeometryDepthRadius", "type": "float", "count": 1, "values": [ 1.35 ] },
+    { "name": "GeometryDepthContrast", "type": "float", "count": 1, "values": [ 1.15 ] },
+    { "name": "ImprovedReliefMode", "type": "int", "count": 1, "values": [ 1 ] },
+    { "name": "DebugGeometryReliefOnly", "type": "int", "count": 1, "values": [ 0 ] },
+    { "name": "ImprovedSilhouetteWidth", "type": "float", "count": 1, "values": [ 0.90 ] },
+    { "name": "ImprovedRimCurve", "type": "float", "count": 1, "values": [ 0.82 ] },
+    { "name": "ImprovedCoreHeat", "type": "float", "count": 1, "values": [ 0.79 ] },
+    { "name": "ImprovedFacingStrength", "type": "float", "count": 1, "values": [ 0.08 ] },
+    { "name": "ImprovedSmoothNormalStrength", "type": "float", "count": 1, "values": [ 0.92 ] },
+    { "name": "ImprovedReliefScale", "type": "float", "count": 1, "values": [ 1.15 ] },
+    { "name": "ImprovedReliefThreshold", "type": "float", "count": 1, "values": [ 1.0 ] },
+    { "name": "ImprovedProtrusionCooling", "type": "float", "count": 1, "values": [ 0.12 ] },
+    { "name": "ImprovedRecessCooling", "type": "float", "count": 1, "values": [ 0.10 ] },
+    { "name": "ImprovedReliefSmoothing", "type": "float", "count": 1, "values": [ 0.88 ] },
+    { "name": "ImprovedV2HotPeakArea", "type": "float", "count": 1, "values": [ 0.50 ] }
+  ]
+}

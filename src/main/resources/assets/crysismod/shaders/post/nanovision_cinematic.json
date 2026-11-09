@@ -1,0 +1,9 @@
+{
+  "targets": [
+    "cinematic_heat_a",
+    "cinematic_heat_b",
+    "cinematic_geometry_a",
+    "cinematic_geometry_b",
+    "cinematic_final"
+  ]
+}

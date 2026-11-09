@@ -1,0 +1,43 @@
+{
+  "required": false,
+  "minVersion": "0.8",
+  "package": "io.github.painworks.crysisscopeadspatch.mixin",
+  "compatibilityLevel": "JAVA_21",
+  "client": [
+    "ArmOcclusionDepthComparativeProfilerMixin",
+    "ArmSnapshotComparativeProfilerMixin",
+    "ComparativeProfilerCommandMixin",
+    "CrysisCaptureLifecycleMixin",
+    "GameRendererComparativeProfilerMixin",
+    "GameRendererThermalBoundaryMixin",
+    "ItemInHandRendererComparativeProfilerMixin",
+    "LevelRendererComparativeProfilerMixin",
+    "NanovisionClientEventsComparativeProfilerMixin",
+    "NanovisionPostProcessorComparativeProfilerMixin",
+    "NanovisionSceneDepthMixin",
+    "RenderSystemStencilClearMixin",
+    "ScopeDeferredComparativeProfilerMixin",
+    "ScopeDeferredCompositeMixin",
+    "TaczAnimatedOcularThermalMixin",
+    "TaczCaptureOptimizationContextMixin",
+    "TaczGunComparativeProfilerMixin",
+    "TaczOpticalStencilCompletionMixin",
+    "ThermalFirstPersonItemOpacityMixin",
+    "ThermalItemRenderTypesInvoker",
+    "ThermalItemShaderPreparationMixin",
+    "ThermalItemShadersInvoker",
+    "ThermalTaczCaptureOptimizationMixin",
+    "ThermalFirstPersonArmComparativeProfilerMixin",
+    "ThermalFirstPersonItemComparativeProfilerMixin",
+    "ThermalHeldItemBufferReuseMixin",
+    "ThermalHeldItemCausalProfilerMixin",
+    "ThermalMarkerDepthAlignmentMixin",
+    "ThermalWorldLayerCausalProfilerMixin",
+    "ThermalWorldServicesCausalProfilerMixin",
+    "ThermalMarkerTargetClearMixin",
+    "ThermalMarkerShadowPassGuardMixin"
+  ],
+  "injectors": {
+    "defaultRequire": 0
+  }
+}

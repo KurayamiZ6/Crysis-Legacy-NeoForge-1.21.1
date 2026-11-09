@@ -1,0 +1,11 @@
+Manifest-Version: 1.0
+Specification-Title: crysis_legacy
+Specification-Vendor: YourNameHere, OtherNameHere
+Specification-Version: 1
+Implementation-Title: Crysis Legacy
+Implementation-Version: 1.1.1-1.20.1
+Implementation-Vendor: YourNameHere, OtherNameHere
+Implementation-Timestamp: 2026-08-09T23:34:27+0200
+MixinConfigs: crysismod.mixins.json,crysisscopefix.mixins.json,crysissco
+ peadspatch.mixins.json
+

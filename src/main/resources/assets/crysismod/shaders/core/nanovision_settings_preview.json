@@ -1,0 +1,42 @@
+{
+  "vertex": "crysismod:nanovision_settings_preview",
+  "fragment": "crysismod:nanovision_settings_preview",
+  "attributes": [ "Position", "UV0" ],
+  "samplers": [
+    { "name": "SourceSampler" },
+    { "name": "DepthSampler" }
+  ],
+  "uniforms": [
+    { "name": "ModelViewMat", "type": "matrix4x4", "count": 16, "values": [ 1.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0 ] },
+    { "name": "ProjMat", "type": "matrix4x4", "count": 16, "values": [ 1.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0 ] },
+    { "name": "InSize", "type": "float", "count": 2, "values": [ 1.0, 1.0 ] },
+    { "name": "MarkerEnabled", "type": "int", "count": 1, "values": [ 1 ] },
+    { "name": "InnerRadiusRatio", "type": "float", "count": 1, "values": [ 0.48 ] },
+    { "name": "OuterGlowRatio", "type": "float", "count": 1, "values": [ 0.06 ] },
+    { "name": "InnerStrength", "type": "float", "count": 1, "values": [ 1.0 ] },
+    { "name": "ModelOpacity", "type": "float", "count": 1, "values": [ 0.9 ] },
+    { "name": "OuterGlowStrength", "type": "float", "count": 1, "values": [ 0.66 ] },
+    { "name": "HeatPower", "type": "float", "count": 1, "values": [ 2.46 ] },
+    { "name": "BandingStrength", "type": "float", "count": 1, "values": [ 0.18 ] },
+    { "name": "WarmGreenWidth", "type": "float", "count": 1, "values": [ 4.0 ] },
+    { "name": "WarmRedWidth", "type": "float", "count": 1, "values": [ 0.9 ] },
+    { "name": "WarmPinkWidth", "type": "float", "count": 1, "values": [ 0.95 ] },
+    { "name": "WarmWhiteWidth", "type": "float", "count": 1, "values": [ 0.55 ] },
+    { "name": "MaxSearchRadiusPx", "type": "float", "count": 1, "values": [ 80.0 ] },
+    { "name": "ThermalQuality", "type": "int", "count": 1, "values": [ 2 ] },
+    { "name": "CinematicPreset", "type": "int", "count": 1, "values": [ 0 ] },
+    { "name": "ThermalPresetMode", "type": "int", "count": 1, "values": [ 0 ] },
+    { "name": "ImprovedV2HotPeakArea", "type": "float", "count": 1, "values": [ 0.50 ] },
+    { "name": "ScanlineStrength", "type": "float", "count": 1, "values": [ 0.08 ] },
+    { "name": "ScanlineSpacingPx", "type": "float", "count": 1, "values": [ 4.0 ] },
+    { "name": "ScanlineSharpness", "type": "float", "count": 1, "values": [ 2.4 ] },
+    { "name": "ScanlineIrregularityPx", "type": "float", "count": 1, "values": [ 0.55 ] },
+    { "name": "ScanlinePaletteShift", "type": "float", "count": 1, "values": [ 0.11 ] },
+    { "name": "ScanlineBreakup", "type": "float", "count": 1, "values": [ 0.96 ] },
+    { "name": "ScanlineWhiteHotSuppression", "type": "float", "count": 1, "values": [ 0.96 ] },
+    { "name": "DebugRawMarker", "type": "int", "count": 1, "values": [ 0 ] },
+    { "name": "DebugMask", "type": "int", "count": 1, "values": [ 0 ] },
+    { "name": "DebugDistance", "type": "int", "count": 1, "values": [ 0 ] },
+    { "name": "DisablePalette", "type": "int", "count": 1, "values": [ 0 ] }
+  ]
+}

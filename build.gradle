@@ -1,0 +1,37 @@
+plugins {
+    id 'java-library'
+    id 'net.neoforged.moddev' version '2.0.148'
+}
+version = '1.1.1-port-dev'
+group = 'io.github.painworks'
+base { archivesName = 'crysis-legacy-neoforge-port' }
+java.toolchain.languageVersion = JavaLanguageVersion.of(21)
+neoForge {
+    version = '21.1.265'
+    runs {
+        client {
+            client()
+            gameDirectory = project.file(providers.gradleProperty('crysisClientDir').getOrElse('run/client'))
+            def quickPlayWorld = providers.gradleProperty('crysisQuickPlay').orNull
+            if (quickPlayWorld != null) {
+                programArgument '--quickPlaySingleplayer'
+                programArgument quickPlayWorld
+            }
+        }
+        server {
+            server()
+            gameDirectory = project.file('run/server')
+            programArgument '--nogui'
+        }
+    }
+    mods {
+        crysismod { sourceSet sourceSets.main }
+    }
+}
+dependencies {
+    implementation files('libs/cloth-config-15.0.140-neoforge.jar')
+    compileOnly files('libs/punchy-3.2-neoforge-1.21.1.jar')
+    compileOnly files('libs/tacz-neoforge-1.21.1-1.2.0.jar')
+    runtimeOnly files('libs/tacz-neoforge-1.21.1-1.2.0.jar')
+}
+tasks.withType(JavaCompile).configureEach { options.encoding = 'UTF-8'; options.compilerArgs += ['-Xmaxerrs', '1000'] }

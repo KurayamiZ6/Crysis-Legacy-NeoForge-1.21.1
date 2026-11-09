@@ -1,0 +1,72 @@
+{
+  "mappings": {
+    "io/github/painworks/crysismod/mixin/client/nanosuit/LocalPlayerEnhancedJumpMixin": {
+      "isMovingSlowly": "Lnet/minecraft/client/player/LocalPlayer;m_108635_()Z"
+    },
+    "io/github/painworks/crysismod/mixin/client/nanovision/TextureStateShardAccessor": {
+      "cutoutTexture": "m_142706_()Ljava/util/Optional;"
+    },
+    "io/github/painworks/crysismod/mixin/client/nanovision/ItemInHandRendererTransitionStateMixin": {
+      "renderHandsWithItems": "Lnet/minecraft/client/renderer/ItemInHandRenderer;m_109314_(FLcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/client/renderer/MultiBufferSource$BufferSource;Lnet/minecraft/client/player/LocalPlayer;I)V"
+    },
+    "io/github/painworks/crysismod/mixin/client/nanovision/ThermalFirstPersonEmptySlotTransitionMixin": {
+      "Lnet/minecraft/world/item/ItemStack;isEmpty()Z": "Lnet/minecraft/world/item/ItemStack;m_41619_()Z"
+    },
+    "io/github/painworks/crysismod/mixin/client/nanovision/ItemInHandRendererItemMaskMixin": {
+      "renderHandsWithItems": "Lnet/minecraft/client/renderer/ItemInHandRenderer;m_109314_(FLcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/client/renderer/MultiBufferSource$BufferSource;Lnet/minecraft/client/player/LocalPlayer;I)V"
+    },
+    "io/github/painworks/crysismod/mixin/client/nanosuit/KeyboardInputEnhancedJumpMixin": {
+      "tick": "Lnet/minecraft/client/player/KeyboardInput;m_214106_(ZF)V"
+    },
+    "io/github/painworks/crysismod/mixin/client/nanovision/PlayerRendererHeldItemCaptureMixin": {
+      "renderLeftHand": "Lnet/minecraft/client/renderer/entity/player/PlayerRenderer;m_117813_(Lcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/client/renderer/MultiBufferSource;ILnet/minecraft/client/player/AbstractClientPlayer;)V",
+      "renderRightHand": "Lnet/minecraft/client/renderer/entity/player/PlayerRenderer;m_117770_(Lcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/client/renderer/MultiBufferSource;ILnet/minecraft/client/player/AbstractClientPlayer;)V"
+    },
+    "io/github/painworks/crysismod/mixin/client/nanovision/ThirdPersonHeldItemThermalMixin": {
+      "render": "Lnet/minecraft/client/renderer/entity/layers/ItemInHandLayer;m_6494_(Lcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/client/renderer/MultiBufferSource;ILnet/minecraft/world/entity/LivingEntity;FFFFFF)V"
+    },
+    "io/github/painworks/crysismod/mixin/client/nanovision/RenderTypeCompositeAccessor": {
+      "net.minecraft.client.renderer.RenderType$CompositeRenderType": "net/minecraft/client/renderer/RenderType$CompositeRenderType",
+      "state": "f_110511_:Lnet/minecraft/client/renderer/RenderType$CompositeState;"
+    },
+    "io/github/painworks/crysismod/mixin/client/nanovision/RenderTypeCompositeStateAccessor": {
+      "textureState": "f_110576_:Lnet/minecraft/client/renderer/RenderStateShard$EmptyTextureStateShard;"
+    }
+  },
+  "data": {
+    "searge": {
+      "io/github/painworks/crysismod/mixin/client/nanosuit/LocalPlayerEnhancedJumpMixin": {
+        "isMovingSlowly": "Lnet/minecraft/client/player/LocalPlayer;m_108635_()Z"
+      },
+      "io/github/painworks/crysismod/mixin/client/nanovision/TextureStateShardAccessor": {
+        "cutoutTexture": "m_142706_()Ljava/util/Optional;"
+      },
+      "io/github/painworks/crysismod/mixin/client/nanovision/ItemInHandRendererTransitionStateMixin": {
+        "renderHandsWithItems": "Lnet/minecraft/client/renderer/ItemInHandRenderer;m_109314_(FLcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/client/renderer/MultiBufferSource$BufferSource;Lnet/minecraft/client/player/LocalPlayer;I)V"
+      },
+      "io/github/painworks/crysismod/mixin/client/nanovision/ThermalFirstPersonEmptySlotTransitionMixin": {
+        "Lnet/minecraft/world/item/ItemStack;isEmpty()Z": "Lnet/minecraft/world/item/ItemStack;m_41619_()Z"
+      },
+      "io/github/painworks/crysismod/mixin/client/nanovision/ItemInHandRendererItemMaskMixin": {
+        "renderHandsWithItems": "Lnet/minecraft/client/renderer/ItemInHandRenderer;m_109314_(FLcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/client/renderer/MultiBufferSource$BufferSource;Lnet/minecraft/client/player/LocalPlayer;I)V"
+      },
+      "io/github/painworks/crysismod/mixin/client/nanosuit/KeyboardInputEnhancedJumpMixin": {
+        "tick": "Lnet/minecraft/client/player/KeyboardInput;m_214106_(ZF)V"
+      },
+      "io/github/painworks/crysismod/mixin/client/nanovision/PlayerRendererHeldItemCaptureMixin": {
+        "renderLeftHand": "Lnet/minecraft/client/renderer/entity/player/PlayerRenderer;m_117813_(Lcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/client/renderer/MultiBufferSource;ILnet/minecraft/client/player/AbstractClientPlayer;)V",
+        "renderRightHand": "Lnet/minecraft/client/renderer/entity/player/PlayerRenderer;m_117770_(Lcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/client/renderer/MultiBufferSource;ILnet/minecraft/client/player/AbstractClientPlayer;)V"
+      },
+      "io/github/painworks/crysismod/mixin/client/nanovision/ThirdPersonHeldItemThermalMixin": {
+        "render": "Lnet/minecraft/client/renderer/entity/layers/ItemInHandLayer;m_6494_(Lcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/client/renderer/MultiBufferSource;ILnet/minecraft/world/entity/LivingEntity;FFFFFF)V"
+      },
+      "io/github/painworks/crysismod/mixin/client/nanovision/RenderTypeCompositeAccessor": {
+        "net.minecraft.client.renderer.RenderType$CompositeRenderType": "net/minecraft/client/renderer/RenderType$CompositeRenderType",
+        "state": "f_110511_:Lnet/minecraft/client/renderer/RenderType$CompositeState;"
+      },
+      "io/github/painworks/crysismod/mixin/client/nanovision/RenderTypeCompositeStateAccessor": {
+        "textureState": "f_110576_:Lnet/minecraft/client/renderer/RenderStateShard$EmptyTextureStateShard;"
+      }
+    }
+  }
+}

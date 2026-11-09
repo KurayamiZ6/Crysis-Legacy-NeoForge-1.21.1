@@ -1,0 +1,14 @@
+{
+  "blend": { "func": "add", "srcrgb": "one", "dstrgb": "zero" },
+  "vertex": "sobel",
+  "fragment": "crysismod:cinematic_geometry",
+  "attributes": [ "Position" ],
+  "samplers": [ { "name": "DiffuseSampler" }, { "name": "MarkerDepthSampler" } ],
+  "uniforms": [
+    { "name": "ProjMat", "type": "matrix4x4", "count": 16, "values": [ 1.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 1.0 ] },
+    { "name": "InSize", "type": "float", "count": 2, "values": [ 1.0, 1.0 ] },
+    { "name": "OutSize", "type": "float", "count": 2, "values": [ 1.0, 1.0 ] },
+    { "name": "EncodedHeightRangePx", "type": "float", "count": 1, "values": [ 512.0 ] },
+    { "name": "ThermalQuality", "type": "int", "count": 1, "values": [ 2 ] }
+  ]
+}

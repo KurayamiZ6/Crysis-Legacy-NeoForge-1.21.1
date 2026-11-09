@@ -1,0 +1,17 @@
+{
+  "vertex": "crysismod:thermal_first_person_item_block",
+  "fragment": "crysismod:thermal_first_person_item_glow_mask",
+  "attributes": [ "Position", "Color", "UV0", "UV2", "Normal" ],
+  "samplers": [
+    { "name": "Sampler0" },
+    { "name": "LeftArmMaskSampler" }, { "name": "LeftArmDepthSampler" },
+    { "name": "RightArmMaskSampler" }, { "name": "RightArmDepthSampler" }
+  ],
+  "uniforms": [
+    { "name": "ModelViewMat", "type": "matrix4x4", "count": 16, "values": [ 1.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 1.0 ] },
+    { "name": "ProjMat", "type": "matrix4x4", "count": 16, "values": [ 1.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 1.0 ] },
+    { "name": "InSize", "type": "float", "count": 2, "values": [ 1.0, 1.0 ] },
+    { "name": "LeftArmEnabled", "type": "int", "count": 1, "values": [ 0 ] },
+    { "name": "RightArmEnabled", "type": "int", "count": 1, "values": [ 0 ] }
+  ]
+}

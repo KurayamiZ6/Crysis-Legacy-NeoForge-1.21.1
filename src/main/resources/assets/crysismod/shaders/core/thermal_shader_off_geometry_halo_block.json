@@ -1,0 +1,13 @@
+{
+  "vertex": "crysismod:thermal_shader_off_geometry_halo_block",
+  "fragment": "crysismod:thermal_shader_off_geometry_halo",
+  "attributes": ["Position", "Color", "UV0", "UV2", "Normal"],
+  "samplers": [{ "name": "Sampler0" }],
+  "uniforms": [
+    { "name": "ModelViewMat", "type": "matrix4x4", "count": 16, "values": [1.0,0.0,0.0,0.0,0.0,1.0,0.0,0.0,0.0,0.0,1.0,0.0,0.0,0.0,0.0,1.0] },
+    { "name": "ProjMat", "type": "matrix4x4", "count": 16, "values": [1.0,0.0,0.0,0.0,0.0,1.0,0.0,0.0,0.0,0.0,1.0,0.0,0.0,0.0,0.0,1.0] },
+    { "name": "Viewport", "type": "float", "count": 2, "values": [1.0,1.0] },
+    { "name": "HaloRadiusPx", "type": "float", "count": 1, "values": [2.0] },
+    { "name": "HaloOpacity", "type": "float", "count": 1, "values": [0.4] }
+  ]
+}

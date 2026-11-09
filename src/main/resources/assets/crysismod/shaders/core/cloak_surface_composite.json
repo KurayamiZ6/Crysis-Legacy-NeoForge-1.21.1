@@ -1,0 +1,12 @@
+{
+  "vertex": "crysismod:cloak_surface_composite",
+  "fragment": "crysismod:cloak_surface_composite",
+  "attributes": ["Position", "UV0"],
+  "samplers": [
+    {"name": "SceneSampler"}, {"name": "SceneDepthSampler"}, {"name": "MaskSampler"}, {"name": "MaskDepthSampler"}
+  ],
+  "uniforms": [
+    {"name": "CompareDepth", "type": "int", "count": 1, "values": [1]},
+    {"name": "CloakTime", "type": "float", "count": 1, "values": [0.0]}
+  ]
+}
