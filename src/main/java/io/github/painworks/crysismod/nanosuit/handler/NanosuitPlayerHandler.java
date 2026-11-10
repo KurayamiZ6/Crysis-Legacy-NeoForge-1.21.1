@@ -50,7 +50,6 @@ import org.slf4j.Logger;
 public class NanosuitPlayerHandler {
    private static final Logger LOGGER = LogUtils.getLogger();
    private static final float ENERGY_PER_DIVISION = 5.0F;
-   private static final int ENHANCED_JUMP_ENERGY_SEGMENTS = 2;
    private static final float ENHANCED_JUMP_VERTICAL_VELOCITY = 0.685F;
    public static final int ENHANCED_JUMP_HOLD_TICKS = 4;
    private static final int ENHANCED_JUMP_CHARGE_TIMEOUT = 40;
@@ -798,7 +797,7 @@ public class NanosuitPlayerHandler {
    }
 
    public static float enhancedJumpEnergyCost() {
-      return energyPerHudSegment() * 2.0F;
+      return NanosuitProfile.LEGACY_CURRENT.enhancedJumpEnergyCost();
    }
 
    private float getModeDrainPerTick(NanosuitMode mode, boolean sprintDrainRequested, boolean movingNow) {
