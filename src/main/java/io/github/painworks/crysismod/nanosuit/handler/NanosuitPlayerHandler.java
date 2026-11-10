@@ -4,6 +4,7 @@ import io.github.painworks.crysismod.nanosuit.network.SyncPowerFeedbackPacket;
 
 import com.mojang.logging.LogUtils;
 import io.github.painworks.crysismod.nanosuit.NanosuitMode;
+import io.github.painworks.crysismod.nanosuit.NanosuitProfile;
 import io.github.painworks.crysismod.nanosuit.config.NanosuitServerConfig;
 import io.github.painworks.crysismod.nanosuit.energy.INanosuitEnergy;
 import io.github.painworks.crysismod.nanosuit.energy.NanosuitCapabilities;
@@ -54,7 +55,6 @@ public class NanosuitPlayerHandler {
    public static final int ENHANCED_JUMP_HOLD_TICKS = 4;
    private static final int ENHANCED_JUMP_CHARGE_TIMEOUT = 40;
    private static final int ENHANCED_JUMP_COOLDOWN_TICKS = 8;
-   private static final int MODE_COOLDOWN_TICKS = 20;
    private static final int POWER_SPRINT_COOLDOWN_TICKS = 20;
    private static final int HEALTH_RECOVERY_DELAY_TICKS = 80;
    private static final int HEALTH_RECOVERY_INTERVAL_TICKS = 60;
@@ -547,7 +547,8 @@ public class NanosuitPlayerHandler {
    public static boolean tryToggleMode(ServerPlayer player, NanosuitMode requestedMode) {
       INanosuitEnergy data = NanosuitCapabilities.get(player);
       PlayerRuntimeState runtime = runtimeState(player.getUUID());
-      if (!NanosuitArmorUtil.hasFullSet(player) || data.isRecoveryLocked()
+      NanosuitProfile profile = NanosuitArmorUtil.hasFullSet(player) ? NanosuitProfile.LEGACY_CURRENT : null;
+      if (profile == null || data.isRecoveryLocked()
             || player.tickCount < runtime.modeCooldownUntilTick) {
          return false;
       }
@@ -556,7 +557,7 @@ public class NanosuitPlayerHandler {
          return false;
       }
       data.setMode(nextMode);
-      runtime.modeCooldownUntilTick = player.tickCount + MODE_COOLDOWN_TICKS;
+      runtime.modeCooldownUntilTick = player.tickCount + profile.modeCooldownTicks();
       NanosuitSyncManager.syncToClient(player);
       return true;
    }
