@@ -549,7 +549,8 @@ public final class ThermalMarkerCompatibilityRenderer {
          }
       }
 
-      public VertexConsumer getBuffer(RenderType renderType) {
+      public VertexConsumer getBuffer(RenderType sourceType) {
+         RenderType renderType = ThermalExternalModelCompatibility.unwrapIrisRenderType(sourceType);
          if (this.traceEnabled) {
             this.bufferRequests++;
          }
