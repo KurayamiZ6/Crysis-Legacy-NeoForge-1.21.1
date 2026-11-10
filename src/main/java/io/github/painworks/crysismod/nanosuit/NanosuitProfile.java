@@ -3,6 +3,10 @@ package io.github.painworks.crysismod.nanosuit;
 import io.github.painworks.crysismod.nanosuit.rules.NanosuitControls;
 import io.github.painworks.crysismod.nanosuit.rules.NanosuitControls.Ability;
 import io.github.painworks.crysismod.nanosuit.rules.NanosuitControls.ManualMode;
+import io.github.painworks.crysismod.nanosuit.rules.NanosuitEnergyRules;
+import io.github.painworks.crysismod.nanosuit.rules.NanosuitMobilityRules;
+import java.util.EnumMap;
+import java.util.Map;
 import java.util.Set;
 
 public enum NanosuitProfile {
@@ -13,23 +17,39 @@ public enum NanosuitProfile {
          Set.of(Ability.POWER_JUMP, Ability.POWER_SPRINT, Ability.POWER_SWIM, Ability.POWER_MELEE)
       ),
       20,
-      10.0F
+      NanosuitEnergyRules.LEGACY_CURRENT,
+      NanosuitMobilityRules.LEGACY_CURRENT
    );
+
+   private static final Map<NanosuitGeneration, NanosuitProfile> ACTIVE_BY_GENERATION = new EnumMap<>(NanosuitGeneration.class);
+
+   static {
+      for (NanosuitProfile profile : values()) {
+         ACTIVE_BY_GENERATION.put(profile.generation, profile);
+      }
+   }
 
    private final NanosuitGeneration generation;
    private final NanosuitControls controls;
    private final int modeCooldownTicks;
-   private final float enhancedJumpEnergyCost;
+   private final NanosuitEnergyRules energy;
+   private final NanosuitMobilityRules mobility;
 
-   NanosuitProfile(NanosuitGeneration generation, NanosuitControls controls, int modeCooldownTicks, float enhancedJumpEnergyCost) {
+   NanosuitProfile(NanosuitGeneration generation, NanosuitControls controls, int modeCooldownTicks,
+      NanosuitEnergyRules energy, NanosuitMobilityRules mobility) {
       this.generation = generation;
       this.controls = controls;
       this.modeCooldownTicks = modeCooldownTicks;
-      this.enhancedJumpEnergyCost = enhancedJumpEnergyCost;
+      this.energy = energy;
+      this.mobility = mobility;
    }
 
    public static NanosuitProfile forGeneration(NanosuitGeneration generation) {
-      return generation == LEGACY_CURRENT.generation ? LEGACY_CURRENT : null;
+      return ACTIVE_BY_GENERATION.get(generation);
+   }
+
+   public NanosuitGeneration generation() {
+      return generation;
    }
 
    public NanosuitControls controls() {
@@ -41,6 +61,14 @@ public enum NanosuitProfile {
    }
 
    public float enhancedJumpEnergyCost() {
-      return enhancedJumpEnergyCost;
+      return mobility.jump().energyCost();
+   }
+
+   public NanosuitEnergyRules energy() {
+      return energy;
+   }
+
+   public NanosuitMobilityRules mobility() {
+      return mobility;
    }
 }

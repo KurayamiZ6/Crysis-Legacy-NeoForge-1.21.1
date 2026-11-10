@@ -123,19 +123,19 @@ public final class EnhancedJumpClientState {
       if (launchedWhileHeld) {
          return false;
       }
-      boolean canCharge = NanosuitPlayerHandler.canChargeEnhancedJump(player);
-      if (chargeTicks > 0 && !canCharge) {
+      var jump = NanosuitPlayerHandler.availablePowerJump(player);
+      if (chargeTicks > 0 && jump == null) {
          chargeTicks = 0;
          sendChargePhase(Phase.RELEASE);
          return true;
       }
       if (chargeTicks == 0) {
-         if (!pressed || !canCharge) {
+         if (!pressed || jump == null) {
             return true;
          }
          sendChargePhase(Phase.BEGIN);
       }
-      if (++chargeTicks >= NanosuitPlayerHandler.ENHANCED_JUMP_HOLD_TICKS) {
+      if (++chargeTicks >= jump.holdTicks()) {
          chargeTicks = 0;
          launchedWhileHeld = true;
          beginRequest();

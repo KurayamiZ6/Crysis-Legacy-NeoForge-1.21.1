@@ -8,7 +8,6 @@ import net.neoforged.neoforge.common.NeoForgeMod;
 
 public final class NanosuitSwimBoost {
    private static final ResourceLocation ID = ResourceLocation.fromNamespaceAndPath("crysismod", "hydro_thruster");
-   private static final AttributeModifier BOOST = new AttributeModifier(ID, 0.40, AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL);
 
    private NanosuitSwimBoost() {
    }
@@ -22,12 +21,12 @@ public final class NanosuitSwimBoost {
       return player.isSwimming() && player.isUnderWater() && player.isSprinting();
    }
 
-   static void update(ServerPlayer player, boolean powerSprintActive) {
+   static void update(ServerPlayer player, boolean powerSprintActive, double speedBonus) {
       var attribute = player.getAttribute(NeoForgeMod.SWIM_SPEED);
       if (attribute != null) {
          if (powerSprintActive && isSwimmingSprint(player)) {
             if (!attribute.hasModifier(ID)) {
-               attribute.addTransientModifier(BOOST);
+               attribute.addTransientModifier(new AttributeModifier(ID, speedBonus, AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL));
             }
          } else {
             attribute.removeModifier(ID);
