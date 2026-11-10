@@ -546,9 +546,9 @@ public class NanosuitPlayerHandler {
    public static boolean tryToggleMode(ServerPlayer player, NanosuitMode requestedMode) {
       INanosuitEnergy data = NanosuitCapabilities.get(player);
       PlayerRuntimeState runtime = runtimeState(player.getUUID());
-      NanosuitProfile profile = NanosuitArmorUtil.hasFullSet(player) ? NanosuitProfile.LEGACY_CURRENT : null;
+      NanosuitProfile profile = NanosuitArmorUtil.getEquippedProfile(player);
       if (profile == null || data.isRecoveryLocked()
-            || player.tickCount < runtime.modeCooldownUntilTick) {
+            || player.tickCount < runtime.modeCooldownUntilTick || !profile.controls().allowsMode(requestedMode)) {
          return false;
       }
       NanosuitMode nextMode = data.getMode() == requestedMode ? NanosuitMode.NONE : requestedMode;

@@ -1,6 +1,8 @@
 package io.github.painworks.crysismod.nanosuit.util;
 
 import com.mojang.logging.LogUtils;
+import io.github.painworks.crysismod.nanosuit.NanosuitGeneration;
+import io.github.painworks.crysismod.nanosuit.NanosuitProfile;
 import io.github.painworks.crysismod.nanosuit.config.NanosuitArmorIdentityConfig;
 import io.github.painworks.crysismod.registry.ModItems;
 import java.util.Map;
@@ -20,9 +22,17 @@ public final class NanosuitArmorUtil {
    }
 
    public static boolean hasFullSet(Player player) {
+      return getEquippedProfile(player) != null;
+   }
+
+   public static NanosuitProfile getEquippedProfile(Player player) {
       NanosuitArmorUtil.Evaluation evaluation = evaluate(player);
       maybeLogIdentity(player, evaluation);
-      return evaluation.hasFullSet;
+      return evaluation.profile();
+   }
+
+   public static NanosuitProfile getPieceProfile(ItemStack stack, EquipmentSlot slot) {
+      return NanosuitProfile.forGeneration(getPieceGeneration(stack, slot));
    }
 
    public static boolean hasFullSet(Player player, boolean ignoredAllowLegacy) {
@@ -42,17 +52,21 @@ public final class NanosuitArmorUtil {
    }
 
    public static boolean isNanosuitArmorPiece(ItemStack stack, EquipmentSlot slot) {
+      return getPieceGeneration(stack, slot) != null;
+   }
+
+   private static NanosuitGeneration getPieceGeneration(ItemStack stack, EquipmentSlot slot) {
       if (slot == null) {
-         return false;
-      } else {
-         return switch (slot) {
-            case HEAD -> isNanosuitHelmet(stack);
-            case CHEST -> isNanosuitChestplate(stack);
-            case LEGS -> isNanosuitLeggings(stack);
-            case FEET -> isNanosuitBoots(stack);
-            default -> false;
-         };
+         return null;
       }
+      boolean legacyPiece = switch (slot) {
+         case HEAD -> isNanoGeoHelmet(stack);
+         case CHEST -> isNanoGeoChestplate(stack);
+         case LEGS -> isNanoGeoLeggings(stack);
+         case FEET -> isNanoGeoBoots(stack);
+         default -> false;
+      };
+      return legacyPiece ? NanosuitArmorVariant.NANOGEO.generation() : null;
    }
 
    public static boolean isNanosuitHelmet(ItemStack stack) {
@@ -136,11 +150,11 @@ public final class NanosuitArmorUtil {
    }
 
    private static NanosuitArmorUtil.Evaluation evaluate(Player player) {
-      boolean head = isNanoGeoHelmet(player.getItemBySlot(EquipmentSlot.HEAD));
-      boolean chest = isNanoGeoChestplate(player.getItemBySlot(EquipmentSlot.CHEST));
-      boolean legs = isNanoGeoLeggings(player.getItemBySlot(EquipmentSlot.LEGS));
-      boolean feet = isNanoGeoBoots(player.getItemBySlot(EquipmentSlot.FEET));
-      return new NanosuitArmorUtil.Evaluation(head, chest, legs, feet, head && chest && legs && feet);
+      NanosuitGeneration head = getPieceGeneration(player.getItemBySlot(EquipmentSlot.HEAD), EquipmentSlot.HEAD);
+      NanosuitGeneration chest = getPieceGeneration(player.getItemBySlot(EquipmentSlot.CHEST), EquipmentSlot.CHEST);
+      NanosuitGeneration legs = getPieceGeneration(player.getItemBySlot(EquipmentSlot.LEGS), EquipmentSlot.LEGS);
+      NanosuitGeneration feet = getPieceGeneration(player.getItemBySlot(EquipmentSlot.FEET), EquipmentSlot.FEET);
+      return new NanosuitArmorUtil.Evaluation(head, chest, legs, feet);
    }
 
    private static void maybeLogIdentity(Player player, NanosuitArmorUtil.Evaluation evaluation) {
@@ -156,9 +170,14 @@ public final class NanosuitArmorUtil {
       }
    }
 
-   private record Evaluation(boolean head, boolean chest, boolean legs, boolean feet, boolean hasFullSet) {
+   private record Evaluation(NanosuitGeneration head, NanosuitGeneration chest, NanosuitGeneration legs, NanosuitGeneration feet) {
+      private NanosuitProfile profile() {
+         return NanosuitProfile.forGeneration(NanosuitGeneration.fullSet(head, chest, legs, feet));
+      }
+
       private String signature() {
-         return "variant=NANOGEO head=" + this.head + " chest=" + this.chest + " legs=" + this.legs + " boots=" + this.feet + " fullSet=" + this.hasFullSet;
+         return "variant=NANOGEO head=" + (head != null) + " chest=" + (chest != null) + " legs=" + (legs != null)
+            + " boots=" + (feet != null) + " fullSet=" + (profile() != null);
       }
    }
 }
