@@ -8,7 +8,6 @@ import io.github.painworks.crysismod.client.nanogeo.NanoGeoArmorModeDynamicTextu
 import io.github.painworks.crysismod.client.nanogeo.NanoGeoArmorModeRenderTypes;
 import io.github.painworks.crysismod.client.nanogeo.NanoGeoArmorModeXShimmerShader;
 import io.github.painworks.crysismod.client.nanogeo.NanoGeoArmorRenderer;
-import io.github.painworks.crysismod.client.nanogeo.NanoGeoArmorTextures;
 import io.github.painworks.crysismod.client.nanogeo.NanoGeoClientConfig;
 import io.github.painworks.crysismod.client.nanogeo.NanoGeoShaderpackCompatibility;
 import io.github.painworks.crysismod.client.nanogeo.NanoGeoTextureCache;
@@ -21,8 +20,7 @@ import io.github.painworks.crysismod.client.nanovision.thermal.ThermalFirstPerso
 import io.github.painworks.crysismod.client.nanovision.thermal.ThermalFirstPersonArmShaderpackShaders;
 import io.github.painworks.crysismod.client.nanovision.thermal.ThermalFirstPersonArmShaders;
 import io.github.painworks.crysismod.nanosuit.item.ExperimentalNanoGeoArmorItem;
-import io.github.painworks.crysismod.nanosuit.util.NanosuitArmorUtil;
-import io.github.painworks.crysismod.nanosuit.util.NanosuitArmorVariant;
+import io.github.painworks.crysismod.nanosuit.NanosuitPresentation;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.model.PlayerModel;
 import net.minecraft.client.model.geom.ModelPart;
@@ -45,7 +43,6 @@ public final class NanoGeoFirstPersonArmRenderer {
    private static final float COMPAT_PULSE_MIN_SHELL_SCALE = 0.006F;
    private static NanoGeoArmorRenderer armorRenderer;
    private static final NanoGeoTextureCache TEXTURE_CACHE = new NanoGeoTextureCache();
-   private static final ResourceLocation FALLBACK_TEXTURE = NanoGeoArmorTextures.BASE_ARMOR;
    private static boolean loggedModelData;
    private static boolean warnedFallback;
 
@@ -60,9 +57,8 @@ public final class NanoGeoFirstPersonArmRenderer {
          return false;
       } else {
          ItemStack chestStack = player.getItemBySlot(EquipmentSlot.CHEST);
-         if (!NanosuitArmorUtil.isNanosuitChestplate(chestStack)) {
-            return false;
-         } else if (NanosuitArmorUtil.getVariant(chestStack) != NanosuitArmorVariant.NANOGEO) {
+         NanosuitPresentation presentation = NanosuitPresentation.forPiece(chestStack, EquipmentSlot.CHEST);
+         if (presentation == null) {
             return false;
          } else {
             PlayerModel<AbstractClientPlayer> playerModel = getPlayerModel(player);
@@ -89,7 +85,7 @@ public final class NanoGeoFirstPersonArmRenderer {
                         renderer.beginFirstPersonArmOnly(playerModel, selectedArmPart, event.getArm());
                         renderer.prepForRender(player, chestStack, EquipmentSlot.CHEST, playerModel);
                         renderer.setSuppressRender(false);
-                        ResourceLocation texture = resolveArmorTexture(chestStack, player, event.getArm());
+                        ResourceLocation texture = resolveArmorTexture(chestStack, player, event.getArm(), presentation.armorTexture());
                         BufferSource immediateBuffer = bufferSource instanceof BufferSource source ? source : null;
                         boolean deferThermalComposite = NanoGeoShaderpackCompatibility.isShaderPackActive();
                         boolean thermalFirstPersonArm = !NanosuitCloakRender.isDrawing() && NanovisionState.isActive()
@@ -259,7 +255,7 @@ public final class NanoGeoFirstPersonArmRenderer {
                            loggedModelData = true;
                            LOGGER.info(
                               "[CrysisMod][NanoGeo][FPV Arms] renderer=NANOGEO_FPV arm={} model={} texture={}",
-                              new Object[]{event.getArm(), "crysismod:nanogeo/nanosuit_armor.json", texture}
+                              new Object[]{event.getArm(), presentation.armorModel(), texture}
                            );
                         }
 
@@ -386,7 +382,9 @@ public final class NanoGeoFirstPersonArmRenderer {
       return (rgb >> shift & 0xFF) / 255.0F;
    }
 
-   private static ResourceLocation resolveArmorTexture(ItemStack chestStack, AbstractClientPlayer player, HumanoidArm arm) {
+   private static ResourceLocation resolveArmorTexture(
+      ItemStack chestStack, AbstractClientPlayer player, HumanoidArm arm, ResourceLocation fallbackTexture
+   ) {
       if (chestStack.getItem() instanceof ExperimentalNanoGeoArmorItem armorItem) {
          try {
             ResourceLocation resolved = armorItem.getArmorTexture(
@@ -402,7 +400,7 @@ public final class NanoGeoFirstPersonArmRenderer {
          }
       }
 
-      return FALLBACK_TEXTURE;
+      return fallbackTexture;
    }
 
    private static void applyCommonTransform(PoseStack poseStack) {

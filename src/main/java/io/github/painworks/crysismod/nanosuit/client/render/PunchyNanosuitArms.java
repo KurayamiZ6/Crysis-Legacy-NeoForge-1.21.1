@@ -4,14 +4,13 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.logging.LogUtils;
 import io.github.painworks.crysismod.client.nanogeo.NanoGeoBakedModelCache;
 import io.github.painworks.crysismod.client.nanogeo.NanoGeoClientConfig;
+import io.github.painworks.crysismod.nanosuit.NanosuitPresentation;
 import io.github.painworks.crysismod.nanosuit.config.NanosuitClientConfig;
 import io.github.painworks.crysismod.nanosuit.util.NanosuitArmorUtil;
-import io.github.painworks.crysismod.nanosuit.util.NanosuitArmorVariant;
 import net.minecraft.client.model.geom.ModelPart;
 import net.minecraft.client.player.AbstractClientPlayer;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.resources.PlayerSkin;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.HumanoidArm;
 import net.neoforged.api.distmarker.Dist;
@@ -25,8 +24,6 @@ import punchy.api.PunchyApi;
 /** Submits NanoGeo's arm at Punchy's animated arm pivot. */
 @EventBusSubscriber(modid = "crysismod", value = Dist.CLIENT, bus = EventBusSubscriber.Bus.MOD)
 public final class PunchyNanosuitArms {
-   private static final ResourceLocation ARMOR_MODEL = ResourceLocation.fromNamespaceAndPath("crysismod", "nanogeo/nanosuit_armor.json");
-
    private PunchyNanosuitArms() {
    }
 
@@ -61,13 +58,15 @@ public final class PunchyNanosuitArms {
       }
 
       private static boolean eligible(AbstractClientPlayer player, boolean left) {
-         return !failed && NanosuitClientConfig.nanosuitFirstPersonArmsEnabled()
-            && NanosuitClientConfig.nanosuitFirstPersonArmsUseNanoGeo()
-            && NanoGeoClientConfig.nanoGeoFpvArmsEnabled()
-            && (NanoGeoClientConfig.nanoGeoFpvArmsRenderBothHands() || player.getMainArm() == (left ? HumanoidArm.LEFT : HumanoidArm.RIGHT))
-            && NanosuitArmorUtil.hasFullSet(player)
-            && NanosuitArmorUtil.getVariant(player.getItemBySlot(EquipmentSlot.CHEST)) == NanosuitArmorVariant.NANOGEO
-            && NanoGeoBakedModelCache.INSTANCE.getBakedModelOrNull(ARMOR_MODEL) != null;
+         if (failed || !NanosuitClientConfig.nanosuitFirstPersonArmsEnabled()
+            || !NanosuitClientConfig.nanosuitFirstPersonArmsUseNanoGeo()
+            || !NanoGeoClientConfig.nanoGeoFpvArmsEnabled()
+            || (!NanoGeoClientConfig.nanoGeoFpvArmsRenderBothHands() && player.getMainArm() != (left ? HumanoidArm.LEFT : HumanoidArm.RIGHT))
+            || !NanosuitArmorUtil.hasFullSet(player)) {
+            return false;
+         }
+         NanosuitPresentation presentation = NanosuitPresentation.forPiece(player.getItemBySlot(EquipmentSlot.CHEST), EquipmentSlot.CHEST);
+         return presentation != null && NanoGeoBakedModelCache.INSTANCE.getBakedModelOrNull(presentation.armorModel()) != null;
       }
 
       private static void draw(PunchyApi.ArmDraw draw) {

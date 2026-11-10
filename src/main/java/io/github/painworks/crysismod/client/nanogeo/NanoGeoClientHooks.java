@@ -1,10 +1,10 @@
 package io.github.painworks.crysismod.client.nanogeo;
 
+import io.github.painworks.crysismod.nanosuit.NanosuitPresentation;
 import io.github.painworks.crysismod.registry.ModItems;
 import java.util.List;
 import net.minecraft.client.resources.PlayerSkin;
 import net.minecraft.client.renderer.entity.player.PlayerRenderer;
-import net.minecraft.resources.ResourceLocation;
 import net.neoforged.neoforge.client.event.RegisterClientReloadListenersEvent;
 import net.neoforged.neoforge.client.event.RegisterShadersEvent;
 import net.neoforged.neoforge.client.event.EntityRenderersEvent.AddLayers;
@@ -31,7 +31,7 @@ public final class NanoGeoClientHooks {
    }
 
    private static void onRegisterClientReloadListeners(RegisterClientReloadListenersEvent event) {
-      NanoGeoBakedModelCache.INSTANCE.setPreloadModels(List.of(ResourceLocation.fromNamespaceAndPath("crysismod", "nanogeo/nanosuit_armor.json")));
+      NanoGeoBakedModelCache.INSTANCE.setPreloadModels(List.of(NanosuitPresentation.LEGACY_CURRENT.armorModel()));
       event.registerReloadListener(NanoGeoBakedModelCache.INSTANCE);
       event.registerReloadListener(NanoGeoArmorModePulseCenters.INSTANCE);
    }

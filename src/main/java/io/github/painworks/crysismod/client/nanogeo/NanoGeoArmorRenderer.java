@@ -3,6 +3,7 @@ package io.github.painworks.crysismod.client.nanogeo;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.logging.LogUtils;
+import io.github.painworks.crysismod.nanosuit.NanosuitPresentation;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.EnumMap;
@@ -28,11 +29,10 @@ import org.slf4j.Logger;
 
 public final class NanoGeoArmorRenderer extends HumanoidModel<LivingEntity> {
    private static final Logger LOGGER = LogUtils.getLogger();
-   private static final ResourceLocation MODEL_RESOURCE = ResourceLocation.fromNamespaceAndPath("crysismod", "nanogeo/nanosuit_armor.json");
-   private static final ResourceLocation TEXTURE_RESOURCE = NanoGeoArmorTextures.BASE_ARMOR;
    private final NanoGeoRenderer renderer = new NanoGeoRenderer();
    private EquipmentSlot currentSlot = EquipmentSlot.CHEST;
-   private String currentArmorTexture = TEXTURE_RESOURCE.toString();
+   private NanosuitPresentation presentation = NanosuitPresentation.LEGACY_CURRENT;
+   private String currentArmorTexture = presentation.armorTexture().toString();
    private boolean loggedCacheHit;
    private boolean loggedCacheMiss;
    private boolean loggedChestOnlyDebugMode;
@@ -73,6 +73,8 @@ public final class NanoGeoArmorRenderer extends HumanoidModel<LivingEntity> {
 
    public void prepForRender(LivingEntity livingEntity, ItemStack stack, EquipmentSlot slot, HumanoidModel<?> baseModel) {
       this.currentSlot = slot;
+      NanosuitPresentation equippedPresentation = NanosuitPresentation.forPiece(stack, slot);
+      this.presentation = equippedPresentation != null ? equippedPresentation : NanosuitPresentation.LEGACY_CURRENT;
       this.updateBasePoses(baseModel);
       this.resolveArmorTextureForLogs(livingEntity, stack, slot);
    }
@@ -127,11 +129,12 @@ public final class NanoGeoArmorRenderer extends HumanoidModel<LivingEntity> {
       if (!this.suppressRender) {
          boolean ownedProfilerFrame = NanoGeoProfiler.INSTANCE.beginFrameIfNeeded(NanoGeoProfiler.PassType.ARMOR);
          long renderSection = NanoGeoProfiler.INSTANCE.beginSection(NanoGeoProfilerSection.ARMOR_RENDERER_ENTRY);
-         NanoGeoBakedModel bakedModel = NanoGeoBakedModelCache.INSTANCE.getBakedModelOrNull(MODEL_RESOURCE);
+         ResourceLocation model = this.presentation.armorModel();
+         NanoGeoBakedModel bakedModel = NanoGeoBakedModelCache.INSTANCE.getBakedModelOrNull(model);
          if (bakedModel == null) {
             if (NanoGeoClientConfig.nanoGeoLogModelLoad() && !this.loggedCacheMiss) {
                this.loggedCacheMiss = true;
-               LOGGER.warn("[CrysisMod][NanoGeo] Armor model cache miss for {} (renderer=NanoGeo experimental)", MODEL_RESOURCE);
+               LOGGER.warn("[CrysisMod][NanoGeo] Armor model cache miss for {} (renderer=NanoGeo experimental)", model);
             }
 
             NanoGeoProfiler.INSTANCE.endSection(NanoGeoProfilerSection.ARMOR_RENDERER_ENTRY, renderSection);
@@ -141,14 +144,14 @@ public final class NanoGeoArmorRenderer extends HumanoidModel<LivingEntity> {
             this.ensureResolvedBoneBindings(bakedModel);
             if (NanoGeoClientConfig.nanoGeoLogModelLoad() && !this.loggedCacheHit) {
                this.loggedCacheHit = true;
-               LOGGER.info("[CrysisMod][NanoGeo] Armor model cache hit for {} texture={} (renderer=NanoGeo experimental)", MODEL_RESOURCE, TEXTURE_RESOURCE);
+               LOGGER.info("[CrysisMod][NanoGeo] Armor model cache hit for {} texture={} (renderer=NanoGeo experimental)", model, this.presentation.armorTexture());
             }
 
             if ((NanoGeoClientConfig.nanoGeoLogModelLoad() || NanoGeoClientConfig.nanoGeoDebugLogResources()) && !this.loggedResourceSelection) {
                this.loggedResourceSelection = true;
                LOGGER.info(
                   "[CrysisMod][NanoGeo] Experimental armor resources model={} texture(item)={} texture(rendererFallback)={}",
-                  new Object[]{MODEL_RESOURCE, this.currentArmorTexture, TEXTURE_RESOURCE}
+                  new Object[]{model, this.currentArmorTexture, this.presentation.armorTexture()}
                );
             }
 
@@ -658,7 +661,7 @@ public final class NanoGeoArmorRenderer extends HumanoidModel<LivingEntity> {
    }
 
    private void resolveArmorTextureForLogs(LivingEntity entity, ItemStack stack, EquipmentSlot slot) {
-      this.currentArmorTexture = TEXTURE_RESOURCE.toString();
+      this.currentArmorTexture = this.presentation.armorTexture().toString();
       if (stack.getItem() instanceof ArmorItem armorItem) {
          List<ArmorMaterial.Layer> layers = armorItem.getMaterial().value().layers();
          if (!layers.isEmpty()) {

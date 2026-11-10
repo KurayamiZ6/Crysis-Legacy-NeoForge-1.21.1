@@ -2,6 +2,7 @@ package io.github.painworks.crysismod.nanosuit.client.render;
 
 import com.mojang.logging.LogUtils;
 import io.github.painworks.crysismod.client.nanogeo.NanoGeoClientConfig;
+import io.github.painworks.crysismod.nanosuit.NanosuitPresentation;
 import io.github.painworks.crysismod.nanosuit.config.NanosuitClientConfig;
 import io.github.painworks.crysismod.nanosuit.util.NanosuitArmorUtil;
 import io.github.painworks.crysismod.nanosuit.util.NanosuitArmorVariant;
@@ -23,35 +24,27 @@ public final class NanosuitFirstPersonArmRenderDispatcher {
    public static boolean renderArm(RenderArmEvent event) {
       if (!NanosuitClientConfig.nanosuitFirstPersonArmsEnabled()) {
          return false;
-      } else {
-         AbstractClientPlayer player = event.getPlayer();
-         if (player == null) {
-            return false;
-         } else {
-            ItemStack chestStack = player.getItemBySlot(EquipmentSlot.CHEST);
-            if (!NanosuitArmorUtil.isNanosuitChestplate(chestStack)) {
-               return false;
-            } else {
-               NanosuitArmorVariant variant = NanosuitArmorUtil.getVariant(chestStack);
-               if (variant == NanosuitArmorVariant.NANOGEO) {
-                  if (!NanosuitClientConfig.nanosuitFirstPersonArmsUseNanoGeo() || !NanoGeoClientConfig.nanoGeoFpvArmsEnabled()) {
-                     logSelectionIfNeeded("NONE", variant, event.getArm(), "nanogeo path disabled by config");
-                     return false;
-                  } else if (!NanoGeoClientConfig.nanoGeoFpvArmsRenderBothHands() && !isMainArm(player, event.getArm())) {
-                     logSelectionIfNeeded("NONE", variant, event.getArm(), "offhand fpv arm disabled");
-                     return false;
-                  } else {
-                     boolean rendered = NanoGeoFirstPersonArmRenderer.renderArmFromArmorModel(event);
-                     logSelectionIfNeeded(rendered ? "NANOGEO_FPV" : "NONE", variant, event.getArm(), rendered ? "selected" : "nanogeo renderer returned false");
-                     return rendered;
-                  }
-               } else {
-                  logSelectionIfNeeded("NONE", null, event.getArm(), "unknown armor variant");
-                  return false;
-               }
-            }
-         }
       }
+      AbstractClientPlayer player = event.getPlayer();
+      if (player == null) {
+         return false;
+      }
+      ItemStack chestStack = player.getItemBySlot(EquipmentSlot.CHEST);
+      if (NanosuitPresentation.forPiece(chestStack, EquipmentSlot.CHEST) == null) {
+         return false;
+      }
+      NanosuitArmorVariant variant = NanosuitArmorUtil.getVariant(chestStack);
+      if (!NanosuitClientConfig.nanosuitFirstPersonArmsUseNanoGeo() || !NanoGeoClientConfig.nanoGeoFpvArmsEnabled()) {
+         logSelectionIfNeeded("NONE", variant, event.getArm(), "nanogeo path disabled by config");
+         return false;
+      }
+      if (!NanoGeoClientConfig.nanoGeoFpvArmsRenderBothHands() && !isMainArm(player, event.getArm())) {
+         logSelectionIfNeeded("NONE", variant, event.getArm(), "offhand fpv arm disabled");
+         return false;
+      }
+      boolean rendered = NanoGeoFirstPersonArmRenderer.renderArmFromArmorModel(event);
+      logSelectionIfNeeded(rendered ? "NANOGEO_FPV" : "NONE", variant, event.getArm(), rendered ? "selected" : "nanogeo renderer returned false");
+      return rendered;
    }
 
    public static void resetTransientRenderState() {
