@@ -145,7 +145,13 @@ public final class NanosuitDebugCommands {
       try {
          mode = NanosuitMode.valueOf(rawMode.toUpperCase(Locale.ROOT));
       } catch (IllegalArgumentException var5) {
-         ((CommandSourceStack)context.getSource()).sendFailure(Component.literal("Invalid mode. Use: none, armor, cloak"));
+         context.getSource().sendFailure(Component.literal("Invalid mode. Use none, armor, strength, speed or cloak."));
+         return 0;
+      }
+
+      var profile = NanosuitArmorUtil.getEquippedProfile(target);
+      if (mode != NanosuitMode.NONE && (profile == null || !profile.controls().allowsMode(mode))) {
+         context.getSource().sendFailure(Component.literal("The equipped Nanosuit does not support " + mode.name() + "."));
          return 0;
       }
 
@@ -238,6 +244,8 @@ public final class NanosuitDebugCommands {
    private static CompletableFuture<Suggestions> suggestModes(SuggestionsBuilder builder) {
       builder.suggest("none");
       builder.suggest("armor");
+      builder.suggest("strength");
+      builder.suggest("speed");
       builder.suggest("cloak");
       return builder.buildFuture();
    }

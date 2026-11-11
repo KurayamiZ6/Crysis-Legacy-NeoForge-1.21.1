@@ -9,6 +9,7 @@ import com.mojang.blaze3d.vertex.Tesselator;
 import com.mojang.blaze3d.vertex.VertexFormat.Mode;
 import com.mojang.math.Axis;
 import io.github.painworks.crysismod.nanosuit.NanosuitMode;
+import io.github.painworks.crysismod.nanosuit.NanosuitProfile;
 import io.github.painworks.crysismod.nanosuit.config.NanosuitClientConfig;
 import io.github.painworks.crysismod.nanosuit.config.NanosuitServerConfig;
 import io.github.painworks.crysismod.nanosuit.energy.INanosuitEnergy;
@@ -24,6 +25,7 @@ import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.client.renderer.texture.AbstractTexture;
 import net.minecraft.client.resources.sounds.SimpleSoundInstance;
+import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.util.Mth;
@@ -185,7 +187,8 @@ public final class NanosuitHudOverlay {
             resetArmorOverlayIntroState();
          } else {
             Player player = minecraft.player;
-            if (player != null && !minecraft.options.hideGui && NanosuitArmorUtil.hasFullSet(player)) {
+            NanosuitProfile profile = player != null && !minecraft.options.hideGui ? NanosuitArmorUtil.getEquippedProfile(player) : null;
+            if (profile != null) {
                Optional<INanosuitEnergy> energyCap = java.util.Optional.<INanosuitEnergy>of(NanosuitCapabilities.get(player));
                if (!energyCap.isPresent()) {
                   resetArmorOverlayIntroState();
@@ -208,11 +211,15 @@ public final class NanosuitHudOverlay {
                         renderArmorModeOverlay(guiGraphics, screenWidth, screenHeight, screenCenterX, screenCenterY, event.getPartialTick().getGameTimeDeltaPartialTick(false), armorModeActive);
                         renderEnergyOffLayer(guiGraphics, x, y, screenCenterX, screenCenterY);
                         renderEnergyActiveLayer(guiGraphics, x, y, screenCenterX, screenCenterY, targetEnergy);
-                        renderModesLayer(
-                           guiGraphics, groupCenterX, groupCenterY, screenCenterX, screenCenterY, armorModeActive, forceModeActive, cloakModeActive
-                        );
+                        if (profile == NanosuitProfile.NANOSUIT_1) {
+                           renderNanosuit1Mode(guiGraphics, groupCenterX, groupCenterY, screenCenterX, screenCenterY, data);
+                        } else {
+                           renderModesLayer(
+                              guiGraphics, groupCenterX, groupCenterY, screenCenterX, screenCenterY, armorModeActive, forceModeActive, cloakModeActive
+                           );
+                        }
                         if (NanosuitClientConfig.debugEnergyDrainInfo() && player instanceof LocalPlayer localPlayer) {
-                           renderEnergyDrainDebug(guiGraphics, localPlayer, data, screenCenterX, screenCenterY);
+                           renderEnergyDrainDebug(guiGraphics, localPlayer, data, profile, screenCenterX, screenCenterY);
                         }
                      }
                   );
@@ -224,13 +231,32 @@ public final class NanosuitHudOverlay {
       }
    }
 
-   private static void renderEnergyDrainDebug(GuiGraphics guiGraphics, LocalPlayer player, INanosuitEnergy data, int screenCenterX, int screenCenterY) {
+   private static void renderNanosuit1Mode(
+      GuiGraphics guiGraphics, float groupCenterX, float groupCenterY, int screenCenterX, int screenCenterY, INanosuitEnergy data
+   ) {
+      boolean locked = data.isRecoveryLocked();
+      String modeKey = locked ? "locked" : data.getMode().name().toLowerCase(Locale.ROOT);
+      Component label = Component.translatable("hud.crysismod.nanosuit1.mode." + modeKey);
+      guiGraphics.pose().pushPose();
+      applyVisorInertiaTransform(guiGraphics, screenCenterX, screenCenterY);
+      guiGraphics.pose().translate(groupCenterX, groupCenterY + 54.0F * hudScale, 0.0F);
+      guiGraphics.pose().scale(5.0F * hudScale, 5.0F * hudScale, 1.0F);
+      guiGraphics.drawCenteredString(Minecraft.getInstance().font, label, 0, 0, locked ? 0xA0A0A0 : 0xE0FFF8);
+      guiGraphics.pose().popPose();
+   }
+
+   private static void renderEnergyDrainDebug(
+      GuiGraphics guiGraphics, LocalPlayer player, INanosuitEnergy data, NanosuitProfile profile, int screenCenterX, int screenCenterY
+   ) {
       boolean sprint = NanosuitPlayerHandler.isLandPowerSprintActive(player) || NanosuitSwimBoost.isActive(player);
       boolean moving = isMovingClient(player);
       NanosuitMode mode = data.getMode();
       String branch;
       float drainPerTick;
-      if (mode == NanosuitMode.CLOAK) {
+      if (profile == NanosuitProfile.NANOSUIT_1 && mode != NanosuitMode.CLOAK) {
+         branch = data.isRecoveryLocked() ? "LOCKED" : mode.name() + (sprint ? "_BOOST" : "_IDLE");
+         drainPerTick = sprint ? NanosuitServerConfig.nanosuit1SprintDrainPerTick() : 0.0F;
+      } else if (mode == NanosuitMode.CLOAK) {
          if (sprint) {
             branch = "CLOAK_SPRINT";
             drainPerTick = 0.5F;

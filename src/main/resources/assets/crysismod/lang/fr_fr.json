@@ -1,0 +1,9 @@
+{
+  "key.crysismod.cycle_nanosuit1_mode": "Mode suivant de la Nanosuit 1",
+  "hud.crysismod.nanosuit1.mode.none": "Inactif",
+  "hud.crysismod.nanosuit1.mode.armor": "Armure",
+  "hud.crysismod.nanosuit1.mode.cloak": "Camouflage",
+  "hud.crysismod.nanosuit1.mode.strength": "Force",
+  "hud.crysismod.nanosuit1.mode.speed": "Vitesse",
+  "hud.crysismod.nanosuit1.mode.locked": "Verrouillé"
+}
