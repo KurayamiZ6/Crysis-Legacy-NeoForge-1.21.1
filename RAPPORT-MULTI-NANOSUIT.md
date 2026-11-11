@@ -28,7 +28,7 @@ Les emplacements indiqués dans les matrices sont relatifs à `src/main/java/io/
 | Données et sauvegarde | `nanosuit/energy/NanosuitEnergy`, `INanosuitEnergy`, `NanosuitCapabilities` | Attachement `crysismod:nanosuit_energy`, lecture/écriture joueur. | NBT `Energy` float, `Mode` chaîne, `RegenDelayTicks` et `RecoveryTicks` int. Pas de boost ni de profil sauvegardé. Mode inconnu → NONE, énergie bornée 0–100, ancien NBT à 0 sans champ de panne → verrou. À 100 la panne est levée. | NeoForge attachment serializable, `copyOnDeath`. | Aller-retour NBT avec panne et sans champ historique. Test complet de migration de mondes anciens à distinguer. |
 | Action serveur | `nanosuit/network/NanosuitNetwork`, `ToggleNanosuitModePacket`, `RequestSprintBoostPacket`, `RequestEnhancedJumpPacket`, `SetNanovisionActivePacket`, `SetNanoVisorActivePacket`, `RequestNanoVisorMarkTargetPacket` | Le joueur envoie une intention. Les handlers exigent un `ServerPlayer` et recalculent l’éligibilité. | Protocole 4, aucun profil, coût, énergie ni identité d’équipement n’est fourni par le client. Les enums v4 de mode et phase conservent leur ordinal. La charge est bornée et le marquage a ses propres filtres serveur. | NeoForge payloads, aucune API de mod tiers dans le format. | Demande de saut sans BEGIN, requêtes à 9 points et pendant panne, refus de mode sans équipement. |
 | Réplique propriétaire | `NanosuitSyncManager`, `SyncNanosuitDataPacket`, `ClientNanosuitPacketHandlers`, `SyncEnhancedJumpPacket`, `SyncMantleMotionPacket`, `SyncPowerJumpDebugPacket`, `SyncSuitEnergySoundPacket`, `SyncPowerFeedbackPacket`, `SyncThreatLevelPacket`, `SyncNanoVisorMarkedTargetsPacket` | Actions réussies, ticks et événements de cycle de vie. | Énergie/mode/boost/verrou vers le joueur. Le client reconstruit l’attachement et déclenche le feedback de changement de mode. Impulsion et guidage ont leur propre retour. Menace, sons, marquage et flashs ont leurs paquets. | Réseau v4. | Confronter énergie client/serveur à 90 et 0, son et HUD, export codec bytecode avant/après. Serveur dédié à couvrir séparément. |
-| Vue d’un autre joueur | `nanosuit/client/render/NanosuitCloakRender`, `NanosuitArmorModeOverlayState`, mixins de joueur et objets tenus | Render distant, équipement et métadonnées d’entité synchronisés. | Cloak distant déduit du set et du flag invisible hors effet de potion. Armure distante déduite du set et de l’absorption. Les rendus ne commandent aucun pouvoir serveur. | Rendu Minecraft, raccords Punchy/TaCZ/Iris facultatifs. | Deux clients sur serveur intégré en loopback, vérifier visibilité et retour opaque. Limite future si mode Armor et absorption externe doivent devenir distincts. |
+| Vue d’un autre joueur | `nanosuit/client/render/NanosuitCloakRender`, `NanosuitArmorModeOverlayState`, mixins de joueur et objets tenus | Render distant, équipement et métadonnées d’entité synchronisés. | Cloak distant déduit du set et du flag invisible hors effet de potion. L’overlay Armure lit aussi l’attachement client du joueur rendu. La synchronisation du mode vise le propriétaire, donc l’affichage Armure distant reste à vérifier. Les rendus ne commandent aucun pouvoir serveur. | Rendu Minecraft, raccords Punchy/TaCZ/Iris facultatifs. | Deux clients sur serveur intégré en loopback, vérifier visibilité et retour opaque. Limite future si mode Armor et absorption externe doivent devenir distincts. |
 | Options, commandes et ressources auxiliaires | `CrysisMod`, `CrysisModClientBootstrap`, `nanosuit/command/NanosuitDebugCommands`, `PowerJumpDebugCommands`, `META-INF/neoforge.mods.toml` | Enregistrement des événements, réglages et commande avec permission. | Les commandes d’administration et les écrans de diagnostic exposent certaines valeurs. Java 21, NeoForge 21.1.265 en dev, Cloth Config côté client. Aucun nouveau point d’entrée gameplay pour les générations inactives. | Versions facultatives vérifiées dans les rapports locaux. | Build avec/sans mods optionnels dans profils isolés. Pas d’affirmation de compatibilité universelle. |
 
 ## Énergie, état persistant et mobilité
@@ -99,7 +99,7 @@ Racine des chemins Java `src/main/java/io/github/painworks/crysismod/`. Les vale
 | Réfraction, profondeur et shaders | `NanosuitCloakRefraction.java:87,101,223`, shaders `cloak_surface_mask` et `cloak_surface_composite`, événements Nanovision de frame. | Masque de surface et copie couleur de scène. Corps compare la profondeur scène/masque. Passe mains sans comparaison de profondeur scène. Pour Iris actif, dessin différé jusqu’à fin du monde, avec limite 128 batches / 131072 sommets. | Iris facultatif via `NanoGeoShaderpackCompatibility`. En cas de shader non pris en charge ou erreur de passe, la géométrie n’est pas dessinée en opaque. Restaure états GL. | `run/qa-consolidated-render/screenshots/07-euphoria-cloak-fps.png`, 08 et 09. Erreurs de profondeur OpenGL préexistantes dans le journal, attribution au cloak non démontrée. |
 | Rendu Cloak TaCZ et Punchy | `CloakTaczGunMixin`, `CloakTaczScopeMixin`, `CloakTaczStaticGunMixin`, `CloakPunchyArmsMixin` et `PunchyNanosuitArms`. | Remplacements durant le dessin réfracté. Les chemins TaCZ évitent VBO ou sous-rendus incompatibles et Punchy conserve sa géométrie d’arme/bras quand nécessaire. | Ponts facultatifs. Le comportement de la lunette en nanovision relève d’une passe distincte. | Punchy/outil PASS en 1P sur les captures 07 et 09. Cloak en ADS TaCZ NON TESTÉ dans ce scénario. |
 | Armure, HUD et son | `nanosuit/client/NanosuitHudOverlay.java:461`, `ClientNanosuitPacketHandlers.java:18`, `CloakAmbientSound.java:37`. | Sons et transition Armure déclenchés depuis le rendu HUD, selon option d’animation. Activation et maximum armor à l’entrée, disable à la sortie. Cloak déclenche flash et sons à la réception du changement de mode. Boucles client si set complet, vivant, énergie >0 et hors panne. | Gains Armure 0,232, Cloak 0,192 × volume ambiance. Les réglages sont locaux. Sons d’activation Cloak 0,75 × volume modes. Un HUD caché peut empêcher la logique de son d’entrée/sortie Armure. | Vérifier mode, écran caché, rejoin, panne, gains et répétition. Pas de banc audio exhaustif. |
-| Armure, overlay de surface | `nanosuit/client/render/NanosuitArmorModeOverlayState.java`, `NanosuitArmorModeOverlayTransitionState`, `client/nanogeo/NanoGeoArmorModeOverlayLayer`, `NanoGeoFirstPersonArmRenderer` et `PunchyNanosuitArms`. | État local selon mode+énergie. Pour les autres joueurs, état visuel dérivé de l’absorption si activé par config. Intensité, couleurs, trajectoires de pulse, transitions et backend configurables. | Bras et corps réutilisent modèle, texture et UV. `NanoGeoShaderpackCompatibility.resolveArmorModeOverlayBackend` sélectionne shader custom ou texture dynamique en AUTO selon pack. Textures armor_mode et `armor_mode/pulse_centers.json`, ressources réutilisables. | Rejeu visuel Armure 1P/3P et joueur distant avec/sans Iris. Pas de capture dédiée Armure dans la validation consolidée. |
+| Armure, overlay de surface | `nanosuit/client/render/NanosuitArmorModeOverlayState.java`, `NanosuitArmorModeOverlayTransitionState`, `client/nanogeo/NanoGeoArmorModeOverlayLayer`, `NanoGeoFirstPersonArmRenderer` et `PunchyNanosuitArms`. | État visuel selon set, mode et énergie de l’attachement client du joueur rendu. La synchronisation de ces champs vise le propriétaire. Intensité, couleurs, trajectoires de pulse, transitions et backend configurables. | Bras et corps réutilisent modèle, texture et UV. `NanoGeoShaderpackCompatibility.resolveArmorModeOverlayBackend` sélectionne shader custom ou texture dynamique en AUTO selon pack. Textures armor_mode et `armor_mode/pulse_centers.json`, ressources réutilisables. | Rejeu visuel Armure 1P/3P et joueur distant avec/sans Iris. Pas de capture dédiée Armure dans la validation consolidée. |
 | Menace vanilla | `nanosuit/threat/NanosuitThreatTracker.java:21–115`, paquet `SyncThreatLevelPacket`. Post-tick joueur serveur tous les 10 ticks, décalé par ID. | Joueur vivant non spectateur en set complet. Mob vivant non allié dans 32 blocs, volume de recherche vertical ±16 blocs. Cible/mémoire + visibilité → DETECTED, sinon SEARCHING. Dernier agresseur récent/colère → SEARCHING. Ennemi sans cible visible ≤8, joueur non invisible → SUSPICIOUS. | SEARCHING persiste 60 ticks, sync au changement ou toutes les 40 ticks. Set incomplet remet CALM, dimension réinitialise la fenêtre, sortie nettoie la map. L’indicateur client ne change pas l’IA. | `build/legacy-functional-qa/after-controls-instrumented/console.log:441–448`, calme, suspect, détecté, mur et extinction. |
 | Menace Zombie Awareness | `nanosuit/threat/ZombieAwarenessThreat.java:12` et tracker secteur ≤12 blocs. | Charge facultative par `ModList` et réflexion sur `ZombieAwareness.entityData`. Navigation active et entrée `za_last_action` datée de 0 à 80 ticks → recherche détectée. | Retourne une map vide si le mod ou son API manque. L’horodatage ZA ne nomme aucun joueur, donc alerte du secteur. CoroUtil vient avec ZA, aucun appel direct du port. | `qa-cloak-visual.log:190–199`, trace externe confirmée mais approche NON OBSERVÉE. Intensité, compatibilité avec d’autres versions et alerte de secteur réelle restent à vérifier. |
 
@@ -136,3 +136,109 @@ Les emplacements Java sont relatifs à `src/main/java/io/github/painworks/crysis
 - Une petite politique auxiliaire par profil décrit les capacités Nanovision et marquage NanoVisor. Garder les réglages actuels, la priorité fullSet/casque, le cas sans équipement et la différence client/serveur de NanoVisor. La limite de confiance du paquet de marquage est indépendante de cette migration.
 - Un descripteur de ressources par profil porte au minimum le modèle NanoGeo et la texture d'armure. Garder le slot et l'objet portés comme source de vérité de la présentation, même quand un set est incomplet. Les caches, hooks optionnels, shaders, son et options ne doivent pas être réimplémentés pour chaque génération.
 - Laisser les paquets et le rendu d'effets en place. Les futurs réglages du masque, sons et palettes seront de la présentation, les permissions/conditions et priorités appartiennent aux règles. Un nouveau modèle requiert de valider les os en 1P/3P et les masques d'overlay avant de l'exposer.
+
+## Mise en œuvre
+
+```mermaid
+flowchart LR
+  E["Objets équipés dans les quatre slots"] --> R["Résolution de la génération"]
+  R --> P["Profil actif et règles par domaine"]
+  P --> H["Handlers communs et état par joueur"]
+  H --> N["Sauvegarde NBT et paquets v4"]
+  E --> D["Descripteur de modèle par pièce"]
+  D --> V["Rendu 1P, 3P et raccords optionnels"]
+```
+
+| Domaine | Règles du profil | Mécanismes communs et fichiers |
+| --- | --- | --- |
+| Équipement et contrôles | `NanosuitGeneration`, `NanosuitControls` et `NanosuitProfile` associent une identité homogène aux modes manuels Armure/Camouflage et aux quatre pouvoirs contextuels historiques. | `NanosuitArmorUtil` et `NanosuitArmorVariant` reconnaissent les objets enregistrés par emplacement. `NanosuitPlayerHandler.tryToggleMode` utilise le profil actif. |
+| Énergie et mobilité | `NanosuitEnergyRules` porte les jalons de récupération, seuils critiques et soin. `NanosuitMobilityRules` porte le coût, la charge, l’impulsion et le cooldown du saut, le cooldown du sprint et le bonus de nage. | `NanosuitPlayerHandler` gère l’exécution, le réservoir, le verrou et les échéances par joueur. `EnhancedJumpClientState` partage le seuil de charge. `NanosuitSwimBoost` applique l’attribut existant. La géométrie d’agrippement et les réglages de dépense, régénération et synchronisation issus du TOML sont communs. |
+| Combat | `NanosuitCombatRules` porte le coût et le multiplicateur de mêlée, les drains Armure/Camouflage, les plages et le bruit de détection, les coûts de combat du cloak et le multiplicateur Predator. | `NanosuitPowerMelee` débite chaque impact réussi. `NanosuitCloak` gère le ciblage et la réaction aux dégâts. `TaczCloakGunfireMixin` lit le profil dans les points d’injection existants et identifie l’arme. Le handler applique les dégâts et le paramètre serveur d’absorption Armure. |
+| Auxiliaires | `NanosuitAuxiliaryRules` porte l’accès à la Nanovision et au marquage NanoVisor. | `NanovisionState`, `NanovisionServerState` et `NanoVisorServerState` appliquent ces règles. La configuration détermine la priorité set complet, casque, puis accès sans équipement. Le zoom local du NanoVisor et la validation des cibles utilisent les chemins historiques. |
+| Présentation | `NanosuitPresentation` référence le modèle, la texture et l’overlay historiques. | `ExperimentalNanoGeoArmorItem`, `NanoGeoArmorRenderer`, `NanoGeoArmorTextures`, `NanoGeoClientHooks`, `NanoGeoFirstPersonArmRenderer`, `NanosuitFirstPersonArmRenderDispatcher` et `PunchyNanosuitArms` lisent les ressources depuis le descripteur. Les moteurs communs gèrent les caches, os, masques et effets. |
+
+### Activation des deux générations
+
+- **Nanosuit 1.** L’identité logique et les quatre modes manuels sont représentables dans les règles et le banc. L’activation demande les transitions et coûts d’Armor, Strength, Speed et Cloak, les choix de contrôle, puis une représentation réseau capable de transporter ces nouveaux modes avec des IDs stables.
+- **Nanosuit 2.** L’identité logique, la sélection d’Armor/Cloak et les pouvoirs contextuels peuvent être composés séparément. Les règles de coexistence, les coûts et les ressources de la génération sont à définir. Les améliorations pourront ensuite étendre ses règles à travers les points d’entrée serveur.
+- **Passage d’une tenue à l’autre.** La réserve, le verrou et les échéances sont au joueur. À la première activation de profils dont les durées diffèrent, figer la règle de récupération à son déclenchement, conserver l’échéance acquise d’un boost interrompu et invalider les demandes en cours devenues incompatibles. La reprise d’une récupération après reconnexion devra conserver sa durée avec une donnée versionnée si la règle historique ne suffit plus. Les tests de retrait/remise concernent aujourd’hui le seul set équipé.
+- **Présentation et observateurs.** Ajouter les descripteurs, préchargements, os et masques UV de chaque tenue. Le client peut déduire les ressources et le rendu distant des objets qui identifient la génération. Les états distants que l’équipement et les métadonnées vanilla ne distinguent pas demanderont une synchronisation explicite.
+
+Le banc `qa/NanosuitArchitectureQa.java` s’exécute après le build avec `java -cp build/classes/java/main qa/NanosuitArchitectureQa.java` sous Java 21. Il couvre l’homogénéité, les deux identités inactives, la représentation des modes manuels et contextuels, les valeurs historiques et les ordinaux v4.
+
+### Ordre d’activation recommandé
+
+1. Tester un échange de profil avec le banc interne. À charge et panne identiques, un retrait, un set mixte, un retour en jeu ou un changement de dimension doivent conserver la réserve et les échéances acquises.
+2. Fixer séparément les règles Nanosuit 1 et 2. Valider la sélection et les transitions des quatre modes de la première, les conditions des pouvoirs contextuels de la seconde, ainsi que les priorités entre Armure, Camouflage et pouvoirs physiques.
+3. Associer les objets et leurs descripteurs aux profils validés. Tester les pièces seules, les sets mixtes, les deux modèles en première et troisième personne et la lisibilité du HUD existant.
+4. Introduire les états réseau manquants avec une version explicite. Vérifier le gameplay côté serveur dédié, les états sur deux clients et le chargement des données historiques avant d’activer les nouveaux profils.
+
+## Validation différentielle
+
+Build hors ligne réussi sous Java 21 et NeoForge 21.1.265. Le JAR final testé porte le SHA-256 `FF06F30592250D907EC665B5E58FC5C40DAB84D677F363DD40CBA35BCB3EA918`. La copie figée est dans `build/multi-suit-reference/candidate.jar`. Le JAR énergie et mobilité testé avant l’intégration finale porte le SHA-256 `A1FC0202042CACBBDF5E91104187C3C6657E1ACDD664585B3F31C1A1F4733BD1` sous `build/multi-suit-reference/mobility.jar`.
+
+Les chemins des preuves sont relatifs au projet NeoForge. La référence Power Jump a le même SHA que le JAR `545d51d` et provient de la consolidation. Les profils Minecraft de cette mission sont des copies isolées.
+
+| Scénario | Résultat | Preuve |
+| --- | --- | --- |
+| Identité, slots, contrôles et ordinaux v4 | PASS | Le banc Java 21 `qa/NanosuitArchitectureQa.java` émet `NANOSUIT_ARCHITECTURE_QA_PASS` avec les classes finales. Il couvre les sets homogènes, incomplets et mixtes, les deux identités sans profil actif, les modes et pouvoirs indépendants et les valeurs historiques. |
+| Énergie, panne, sons, nage, poings et ciblage de base | PASS | 35 lignes concordent à l’identique entre la référence, le JAR mobilité et le JAR final. Elles couvrent le refus de changement de mode au tick 19, son acceptation au tick 20 et la priorité du verrou de panne sur le cooldown. Journaux `build/legacy-functional-qa/multi-suit-before-core/console.log`, `multi-suit-mobility-core/console.log` et `multi-suit-final-core/console.log`. Le dernier charge Zombie Awareness 1.13.2 et CoroUtil 1.3.8. Le zombie de test perd puis reprend le joueur comme avant. |
+| Power Jump | PASS | 29 assertions identiques sur la référence, le JAR mobilité et le JAR final. Demande et lancement au quatrième tick, coût 10, énergie client et serveur à 90, cooldown t7/t8, saut bref, rebords de quatre et cinq blocs, obstacle bloqué, relâchement et retrait de pièce. `build/consolidation-jump-qa/after/console.log`, `multi-suit-mobility/console.log` et `multi-suit-final-loopback/console.log`. La position précise sur un rebord varie entre exécutions. |
+| Sprint et commandes remappées | PASS | Premier appui vanilla, second appui boosté, refus pendant cooldown, reprise après cooldown et boucle de sprint à 0,126. La demande de saut au tick 4 et son impulsion concordent. Le son unique arrive au tick 4 sur la référence et le rejeu isolé, au tick 5 pendant le rejeu simultané. Le relevé d’énergie du client vaut 91 dans la référence et le rejeu simultané, 91,75 dans le rejeu isolé. Cet écart représente un tick du débit historique de 0,75. Les deux mesures sont relevées sur l’horloge client. `build/legacy-functional-qa/multi-suit-before-controls/console.log`, `multi-suit-mobility-controls/console.log`, `multi-suit-final-controls-loopback/console.log` et `multi-suit-final-controls-solo/console.log`. |
+| Soin passif | PASS | Sept assertions et résultats avant/après identiques, dont soin à 80 ticks, intervalle 60, énergie et nourriture constantes, retrait de pièce et panne. `build/multi-suit-audit/health-qa/{before,after}/console.log`, après sur le JAR mobilité. |
+| Armure, NBT et retrait/remise | PASS | 22 assertions avant et après et relevés identiques. Absorption et reliquat, exclusion noyade/faim/vide, chemin créatif, round-trip NBT normal et verrouillé, valeurs de repli anciennes. Retrait/remise du casque sans remise à zéro du cooldown ni levée de panne. `build/multi-suit-combat-qa/v2/{before,after}/console.log`. Les essais NBT passent par le sérialiseur réel, sur le serveur intégré. |
+| TaCZ, Predator et crosse | PASS | 17 relevés avant/après identiques, dont tir non silencieux à 20, silencieux à 7, dégâts Predator de 25 à 37,5 et coût de crosse de 30 pour deux impacts réussis. `build/legacy-functional-qa/multi-suit-{before,final}-tacz/console.log`. |
+| Nanovision et NanoVisor | PASS | 16 assertions de permission dans chaque profil. Casque, priorité du set complet, accès configuré sans équipement, verrou énergétique et différence entre autorisation locale et serveur du NanoVisor. `build/multi-suit-auxiliary-qa/{before,after}/console.log`. La référence répète le marqueur de fin à zéro échec. La comparaison utilise les assertions, et le banc appelle les APIs plutôt qu’un paquet de capacité. |
+| Rendu, occlusion et compatibilités | PASS | 14 captures finales dans `run/qa-multi-suit-render/screenshots/` et arrêt normal. Fresh Animations 1.11.2, EMF 3.3.12, ETF 7.2.7, Punchy 3.2, TaCZ 1.2.0, Iris, Sodium et Complementary + Euphoria. 612 sommets Fresh en thermique avec ou sans pack, vache cachée par le mur, bras Punchy, camouflage 1P et 3P dans les scènes prévues, ACOG/552/EXP3 en six visées à 1,00. `run/qa-multi-suit-render/console.log`, lignes 899, 1827, 2572, 3329 et 3853–3873. |
+| Camouflage depuis un second client | PASS | Deux clients à quatre blocs sur le serveur intégré en boucle locale. Les trois états relevés concordent avec la référence, avec activation puis disparition du marqueur distant et de la réfraction. Les captures `legacy-observer-1.png` et `legacy-observer-2.png` montrent le camouflage et le retour à la tenue opaque. La première capture est encore sur le chargement, et son état visible est contrôlé par le journal. `build/legacy-functional-qa/before-observer-guest-retry/console.log` et `multi-suit-final-observer-{host,guest}-loopback/console.log`. |
+| OpenGL sous pack | FAIL préexistant | Le journal final contient 1 095 erreurs `Depth formats do not match`. La consolidation avait relevé la même erreur dans ce scénario. Les totaux de deux sessions dépendent du nombre d’images. Les holographiques restent peu contrastés sur une cible thermique sous Euphoria. |
+| Cas supplémentaires | NOT TESTED | Échange entre deux générations réellement équipables, serveur dédié et second client avec shader pack, reprise de la panne après fermeture et réouverture du monde, locomotion et extensions Fresh, suivi des bruits et de la lumière par Zombie Awareness, marquage NanoVisor de bout en bout, respiration sous panne dans cette campagne, modpack principal complet. |
+
+La comparaison avant/après de 244 entrées des archives confirme une égalité octet pour octet du registre des objets, des classes énergie et réseau, des déclarations de mixins, du manifeste NeoForge et des ressources. Le protocole reste en version 4. Les invariants de gameplay ont été rejoués dans les limites de la matrice. Les branches `main`, `migration/nanosuit-legacy-current`, `fix/nanovision-fresh-iris` et `consolidation/nanosuit-legacy-current` pointent toujours sur leurs commits de départ.
+
+### Historique de la branche
+
+| Commit | Contenu |
+| --- | --- |
+| `85ed56e` | Audit et architecture. |
+| `4a6b094` | Identités, résolution de tenue et règles de contrôle. |
+| `65f2c20` | Énergie et mobilité. |
+| `19e6613` | Présentation commune par pièce. |
+| `749cd7c` | Combat, camouflage et raccord TaCZ. |
+| `aee5f7f` | Permissions des visières. |
+| `96d648e` | Banc de résolution et invariants historiques. |
+
+### Fichiers de la mission
+
+Les 26 fichiers de production ci-dessous sont relatifs à `src/main/java/io/github/painworks/crysismod/`. La mission ajoute aussi `qa/NanosuitArchitectureQa.java` et ce rapport. Aucun fichier n’a été supprimé.
+
+| Fichier Java | Opération |
+| --- | --- |
+| `client/nanogeo/NanoGeoArmorRenderer.java` | Modifié |
+| `client/nanogeo/NanoGeoArmorTextures.java` | Modifié |
+| `client/nanogeo/NanoGeoClientHooks.java` | Modifié |
+| `client/nanovision/NanovisionState.java` | Modifié |
+| `mixin/nanosuit/TaczCloakGunfireMixin.java` | Modifié |
+| `nanosuit/NanosuitGeneration.java` | Créé |
+| `nanosuit/NanosuitPresentation.java` | Créé |
+| `nanosuit/NanosuitProfile.java` | Modifié |
+| `nanosuit/client/EnhancedJumpClientState.java` | Modifié |
+| `nanosuit/client/render/NanoGeoFirstPersonArmRenderer.java` | Modifié |
+| `nanosuit/client/render/NanosuitFirstPersonArmRenderDispatcher.java` | Modifié |
+| `nanosuit/client/render/PunchyNanosuitArms.java` | Modifié |
+| `nanosuit/handler/NanosuitCloak.java` | Modifié |
+| `nanosuit/handler/NanosuitPlayerHandler.java` | Modifié |
+| `nanosuit/handler/NanosuitPowerMelee.java` | Modifié |
+| `nanosuit/handler/NanosuitSwimBoost.java` | Modifié |
+| `nanosuit/item/ExperimentalNanoGeoArmorItem.java` | Modifié |
+| `nanosuit/rules/NanosuitAuxiliaryRules.java` | Créé |
+| `nanosuit/rules/NanosuitCombatRules.java` | Créé |
+| `nanosuit/rules/NanosuitControls.java` | Créé |
+| `nanosuit/rules/NanosuitEnergyRules.java` | Créé |
+| `nanosuit/rules/NanosuitMobilityRules.java` | Créé |
+| `nanosuit/util/NanosuitArmorUtil.java` | Modifié |
+| `nanosuit/util/NanosuitArmorVariant.java` | Modifié |
+| `nanovision/server/NanovisionServerState.java` | Modifié |
+| `nanovisor/server/NanoVisorServerState.java` | Modifié |
+
+`git diff --name-status 545d51d HEAD` affiche le relevé complet depuis la consolidation.
