@@ -12,7 +12,8 @@ import net.neoforged.neoforge.network.event.RegisterPayloadHandlersEvent;
 import net.neoforged.neoforge.network.registration.PayloadRegistrar;
 
 public final class NanosuitNetwork {
-   private static final String PROTOCOL_VERSION = "4";
+   // Protocol 5 uses stable mode IDs and adds Strength and Speed.
+   private static final String PROTOCOL_VERSION = "5";
 
    private NanosuitNetwork() {
    }

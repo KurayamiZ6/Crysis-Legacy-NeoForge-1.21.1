@@ -64,6 +64,8 @@ public class NanosuitPlayerHandler {
    private static final Map<UUID, NanosuitPlayerHandler.PlayerRuntimeState> PLAYER_RUNTIME_STATE = new HashMap<>();
    private static final Map<UUID, NanosuitPlayerHandler.PowerJumpDebugSession> POWER_JUMP_DEBUG_SESSIONS = new HashMap<>();
    private static final net.minecraft.resources.ResourceLocation PASSIVE_SPEED_MODIFIER_ID = net.minecraft.resources.ResourceLocation.fromNamespaceAndPath("crysismod", "nanosuit_passive_speed");
+   private static final net.minecraft.resources.ResourceLocation NANOSUIT_1_WALK_SPEED_MODIFIER_ID =
+      net.minecraft.resources.ResourceLocation.fromNamespaceAndPath("crysismod", "nanosuit_1_walk_speed");
    private static final String PASSIVE_SPEED_MODIFIER_NAME = "nanosuit_passive_speed";
    private static final float ENERGY_BOUND_EPSILON = 0.001F;
    private static boolean profilingEnabled = false;
@@ -79,7 +81,7 @@ public class NanosuitPlayerHandler {
    public void onPlayerClone(Clone event) {
       UUID playerId = event.getEntity().getUUID();
       resetRuntimeStateForPlayer(playerId);
-      NanosuitCapabilities.get(event.getEntity()).setSprintBoostReady(false);
+      restoreEquippedMode(event.getEntity());
       this.syncToClient(event.getEntity());
    }
 
@@ -160,6 +162,9 @@ public class NanosuitPlayerHandler {
                                     float energyCost = absorbedHp / hpPerEnergy;
                                     float currentEnergyAfter = Math.max(0.0F, currentEnergyBefore - energyCost);
                                     data.setEnergy(currentEnergyAfter);
+                                    if (profile == NanosuitProfile.NANOSUIT_1 && energyCost > 0.0F) {
+                                       data.setRegenDelayTicks(NanosuitServerConfig.regenDelayAfterDrainTicks());
+                                    }
                                     if (currentEnergyAfter <= 0.0F) {
                                        data.setMode(NanosuitMode.NONE);
                                        data.setSprintBoostReady(false);
@@ -206,7 +211,7 @@ public class NanosuitPlayerHandler {
    public void onPlayerLoggedIn(PlayerLoggedInEvent event) {
       UUID playerId = event.getEntity().getUUID();
       resetRuntimeStateForPlayer(playerId);
-      NanosuitCapabilities.get(event.getEntity()).setSprintBoostReady(false);
+      restoreEquippedMode(event.getEntity());
       this.ensurePassiveSpeed(event.getEntity());
       this.syncToClient(event.getEntity());
    }
@@ -215,7 +220,7 @@ public class NanosuitPlayerHandler {
    public void onPlayerRespawn(PlayerRespawnEvent event) {
       UUID playerId = event.getEntity().getUUID();
       resetRuntimeStateForPlayer(playerId);
-      NanosuitCapabilities.get(event.getEntity()).setSprintBoostReady(false);
+      restoreEquippedMode(event.getEntity());
       this.ensurePassiveSpeed(event.getEntity());
       this.syncToClient(event.getEntity());
    }
@@ -228,7 +233,7 @@ public class NanosuitPlayerHandler {
          updateCloakVisibility(event.getEntity(), runtime, false);
       }
       resetRuntimeStateForPlayer(playerId);
-      NanosuitCapabilities.get(event.getEntity()).setSprintBoostReady(false);
+      restoreEquippedMode(event.getEntity());
       this.ensurePassiveSpeed(event.getEntity());
       this.syncToClient(event.getEntity());
    }
@@ -255,9 +260,8 @@ public class NanosuitPlayerHandler {
       boolean hasFullSet = equippedProfile != null;
       // Recovery and the end of a boost still advance after unequipping the suit.
       NanosuitProfile rulesProfile = hasFullSet ? equippedProfile : NanosuitProfile.LEGACY_CURRENT;
-      if (hasFullSet && !equippedProfile.controls().allowsMode(data.getMode())) {
-         data.setMode(NanosuitMode.NONE);
-      }
+      reconcileEquippedMode(data, runtime, equippedProfile);
+      boolean nanosuit1 = equippedProfile == NanosuitProfile.NANOSUIT_1;
       if (runtime.powerSprintProfile != null && runtime.powerSprintProfile != equippedProfile) {
          updatePowerSprint(player, data, runtime, rulesProfile, false);
       }
@@ -272,6 +276,9 @@ public class NanosuitPlayerHandler {
          if (creativeInfiniteEnergy) {
             data.setEnergy(100.0F);
             data.setRegenDelayTicks(0);
+            if (nanosuit1) {
+               data.setMode(NanosuitMode.ARMOR);
+            }
             this.syncToClient(player);
          } else if (player instanceof ServerPlayer serverPlayer) {
             this.tickRecovery(serverPlayer, data, runtime, rulesProfile, hasFullSet);
@@ -281,6 +288,7 @@ public class NanosuitPlayerHandler {
       boolean nanovisionActive = player instanceof ServerPlayer serverPlayer && NanovisionServerState.isActive(serverPlayer);
       this.ensurePassiveSpeed(player);
       if (!hasFullSet) {
+         updateNanosuit1WalkSpeed(player, false);
          updatePowerSprint(player, data, runtime, rulesProfile, false);
          updateSustainedPower(player, runtime, false);
          if (data.getMode() != NanosuitMode.NONE) {
@@ -320,28 +328,29 @@ public class NanosuitPlayerHandler {
       } else {
          float standingDrain = NanosuitServerConfig.standingDrainPerTick();
          float walkingDrain = NanosuitServerConfig.walkingDrainPerTick();
-         float sprintingDrain = NanosuitServerConfig.sprintingDrainPerTick();
+         float sprintingDrain = nanosuit1 ? NanosuitServerConfig.nanosuit1SprintDrainPerTick() : NanosuitServerConfig.sprintingDrainPerTick();
          int regenDelayAfterDrainTicks = NanosuitServerConfig.regenDelayAfterDrainTicks();
          float regenPerTick = NanosuitServerConfig.energyRegenPerTick();
          int effectDurationTicks = NanosuitServerConfig.effectDurationTicks();
          int effectRefreshThresholdTicks = NanosuitServerConfig.effectRefreshThresholdTicks();
          int armorAbsorptionAmplifier = NanosuitServerConfig.armorAbsorptionAmplifier();
-         int sprintSpeedAmplifier = NanosuitServerConfig.sprintSpeedAmplifier();
+         int sprintSpeedAmplifier = nanosuit1 ? NanosuitServerConfig.nanosuit1SprintSpeedAmplifier() : NanosuitServerConfig.sprintSpeedAmplifier();
          float energySyncStep = NanosuitServerConfig.energySyncStep();
          int energySyncInterval = NanosuitServerConfig.energySyncIntervalTicks();
          NanosuitMode mode = data.getMode();
          boolean sprintDrainRequested = data.getEnergy() > 0.0F && player.isAlive() && !player.isSpectator()
             && player.tickCount >= runtime.powerSprintCooldownUntilTick
-            && (landSprinting && data.isSprintBoostReady() && rulesProfile.controls().supports(Ability.POWER_SPRINT)
-               || NanosuitSwimBoost.isSwimmingSprint(player) && rulesProfile.controls().supports(Ability.POWER_SWIM));
-         boolean hasActiveMode = mode != NanosuitMode.NONE;
-         NanosuitPlayerHandler.DrainState drainState = hasActiveMode
+            && (landSprinting && (nanosuit1 || data.isSprintBoostReady()) && rulesProfile.controls().supports(Ability.POWER_SPRINT, mode)
+               || NanosuitSwimBoost.isSwimmingSprint(player) && rulesProfile.controls().supports(Ability.POWER_SWIM, mode));
+         // Nanosuit 1 Armor spends on impact. Strength and Speed spend when a power runs.
+         boolean hasModeDrain = mode == NanosuitMode.CLOAK || !nanosuit1 && mode != NanosuitMode.NONE;
+         NanosuitPlayerHandler.DrainState drainState = hasModeDrain
             ? NanosuitPlayerHandler.DrainState.MODE_ACTIVE
             : (sprintDrainRequested ? NanosuitPlayerHandler.DrainState.BASE_SPRINT : NanosuitPlayerHandler.DrainState.NONE);
          boolean activeDrainSource = drainState != NanosuitPlayerHandler.DrainState.NONE || nanovisionActive;
          boolean movingNow = this.isMoving(player, runtime);
-         int sprintSpeedAmplifierToApply = hasActiveMode ? 0 : sprintSpeedAmplifier;
-         float baselineDrain = hasActiveMode
+         int sprintSpeedAmplifierToApply = hasModeDrain ? 0 : sprintSpeedAmplifier;
+         float baselineDrain = hasModeDrain
             ? this.getModeDrainPerTick(rulesProfile.combat(), mode, sprintDrainRequested, movingNow)
             : this.getBaseDrainPerTick(sprintDrainRequested, movingNow, standingDrain, walkingDrain, sprintingDrain);
          float drain = (drainState != NanosuitPlayerHandler.DrainState.NONE ? baselineDrain : 0.0F)
@@ -356,7 +365,7 @@ public class NanosuitPlayerHandler {
             int regenDelayTicks = data.getRegenDelayTicks();
             if (regenDelayTicks > 0) {
                data.setRegenDelayTicks(regenDelayTicks - 1);
-            } else if (mode == NanosuitMode.NONE) {
+            } else {
                data.addEnergy(regenPerTick - baselineDrain);
             }
          }
@@ -371,6 +380,7 @@ public class NanosuitPlayerHandler {
          boolean powerSprintActive = sprintDrainRequested && data.getEnergy() > 0.0F && !data.isRecoveryLocked();
          updatePowerSprint(player, data, runtime, rulesProfile, powerSprintActive);
          updateSustainedPower(player, runtime, powerSprintActive && baselineDrain > 0.0F && !creativeInfiniteEnergy);
+         updateNanosuit1WalkSpeed(player, nanosuit1 && mode == NanosuitMode.SPEED && isWalkingMovement(player));
 
          updateCloakVisibility(player, runtime, mode == NanosuitMode.CLOAK && data.getEnergy() > 0.0F);
 
@@ -418,6 +428,7 @@ public class NanosuitPlayerHandler {
       runtime.nextHealthRecoveryTick = -1;
       runtime.energyCriticalWarned = true;
       updateCloakVisibility(player, runtime, false);
+      updateNanosuit1WalkSpeed(player, false);
       this.removeEffectIfPresent(player, MobEffects.ABSORPTION);
       this.removeEffectIfPresent(player, MobEffects.MOVEMENT_SPEED);
 
@@ -440,6 +451,9 @@ public class NanosuitPlayerHandler {
       if (tick >= chargeStartTick + recovery.chargeTicks()) {
          data.setEnergy(100.0F);
          data.setRegenDelayTicks(0);
+         if (profile == NanosuitProfile.NANOSUIT_1) {
+            data.setMode(NanosuitMode.ARMOR);
+         }
          this.syncToClient(player);
          if (hasFullSet) {
             sendEnergyCue(player, Cue.RESTORED, 0.72F);
@@ -462,8 +476,15 @@ public class NanosuitPlayerHandler {
          runtime.powerSprintReadyProfile = null;
       }
       runtime.powerSprintProfile = active ? profile : null;
+      if (profile == NanosuitProfile.NANOSUIT_1) {
+         boolean landBoost = active && isLandSprinting(player);
+         data.setSprintBoostReady(landBoost);
+         runtime.powerSprintReadyProfile = landBoost ? profile : null;
+      }
       if (player instanceof ServerPlayer serverPlayer) {
-         NanosuitSwimBoost.update(serverPlayer, active && profile.controls().supports(Ability.POWER_SWIM), profile.mobility().swimSpeedBonus());
+         NanosuitSwimBoost.update(
+            serverPlayer, active && profile.controls().supports(Ability.POWER_SWIM, data.getMode()), profile.mobility().swimSpeedBonus()
+         );
       }
    }
 
@@ -474,7 +495,7 @@ public class NanosuitPlayerHandler {
       if (runtime.landSprintingLastTick && isLandSprinting(player)
          && player.tickCount >= runtime.powerSprintCooldownUntilTick && !data.isSprintBoostReady()
          && !data.isRecoveryLocked() && data.getEnergy() > 0.0F
-         && profile != null && profile.controls().supports(Ability.POWER_SPRINT)) {
+         && profile != null && profile != NanosuitProfile.NANOSUIT_1 && profile.controls().supports(Ability.POWER_SPRINT, data.getMode())) {
          data.setSprintBoostReady(true);
          runtime.powerSprintReadyProfile = profile;
          NanosuitSyncManager.syncToClient(player);
@@ -482,20 +503,25 @@ public class NanosuitPlayerHandler {
    }
 
    public static boolean isLandPowerSprintActive(Player player) {
-      if (!isLandSprinting(player) || !hasPowerSprintProfile(player)) {
+      if (!isLandSprinting(player)) {
+         return false;
+      }
+      NanosuitProfile profile = NanosuitArmorUtil.getEquippedProfile(player);
+      if (profile == null) {
          return false;
       }
       INanosuitEnergy data = NanosuitCapabilities.get(player);
-      return data.isSprintBoostReady() && data.getEnergy() > 0.0F && !data.isRecoveryLocked();
-   }
-
-   private static boolean hasPowerSprintProfile(Player player) {
-      NanosuitProfile profile = NanosuitArmorUtil.getEquippedProfile(player);
-      return profile != null && profile.controls().supports(Ability.POWER_SPRINT);
+      return profile.controls().supports(Ability.POWER_SPRINT, data.getMode()) && data.isSprintBoostReady()
+         && data.getEnergy() > 0.0F && !data.isRecoveryLocked();
    }
 
    private static boolean isLandSprinting(Player player) {
       return player.isSprinting() && player.isAlive() && !player.isSpectator() && !player.isInWaterOrBubble()
+         && !player.getAbilities().flying && !player.isFallFlying() && !player.isPassenger();
+   }
+
+   private static boolean isWalkingMovement(Player player) {
+      return !player.isSprinting() && player.isAlive() && !player.isSpectator() && !player.isInWaterOrBubble()
          && !player.getAbilities().flying && !player.isFallFlying() && !player.isPassenger();
    }
 
@@ -569,14 +595,66 @@ public class NanosuitPlayerHandler {
             || player.tickCount < runtime.modeCooldownUntilTick || !profile.controls().allowsMode(requestedMode)) {
          return false;
       }
-      NanosuitMode nextMode = data.getMode() == requestedMode ? NanosuitMode.NONE : requestedMode;
-      if (nextMode == data.getMode()) {
+      boolean nanosuit1 = profile == NanosuitProfile.NANOSUIT_1;
+      NanosuitMode oldMode = data.getMode();
+      if (nanosuit1) {
+         if (requestedMode == null || requestedMode == NanosuitMode.NONE) {
+            return false;
+         }
+         reconcileEquippedMode(data, runtime, profile);
+      }
+      NanosuitMode previousMode = data.getMode();
+      NanosuitMode nextMode = !nanosuit1 && previousMode == requestedMode ? NanosuitMode.NONE : requestedMode;
+      if (nextMode == previousMode) {
+         if (previousMode != oldMode) {
+            NanosuitSyncManager.syncToClient(player);
+         }
          return false;
       }
       data.setMode(nextMode);
       runtime.modeCooldownUntilTick = player.tickCount + profile.modeCooldownTicks();
+      if (nanosuit1) {
+         stopIncompatibleNanosuit1Powers(player, data, runtime, previousMode);
+      }
       NanosuitSyncManager.syncToClient(player);
       return true;
+   }
+
+   private static void restoreEquippedMode(Player player) {
+      INanosuitEnergy data = NanosuitCapabilities.get(player);
+      data.setSprintBoostReady(false);
+      reconcileEquippedMode(data, runtimeState(player.getUUID()), NanosuitArmorUtil.getEquippedProfile(player));
+   }
+
+   private static void reconcileEquippedMode(INanosuitEnergy data, PlayerRuntimeState runtime, NanosuitProfile profile) {
+      if (profile == NanosuitProfile.NANOSUIT_1 && !data.isRecoveryLocked() && runtime.lastEquippedProfile != profile) {
+         NanosuitMode mode = data.getMode();
+         if (runtime.equippedProfileObserved || mode == NanosuitMode.NONE || !profile.controls().allowsMode(mode)) {
+            data.setMode(NanosuitMode.ARMOR);
+         }
+      } else if (profile != null && !profile.controls().allowsMode(data.getMode())) {
+         data.setMode(NanosuitMode.NONE);
+      }
+      runtime.lastEquippedProfile = profile;
+      runtime.equippedProfileObserved = true;
+   }
+
+   private static void stopIncompatibleNanosuit1Powers(ServerPlayer player, INanosuitEnergy data, PlayerRuntimeState runtime, NanosuitMode previousMode) {
+      switch (previousMode) {
+         case ARMOR -> player.removeEffect(MobEffects.ABSORPTION);
+         case STRENGTH -> {
+            cancelEnhancedJumpCharge(player);
+            clearEnhancedJumpMantle(runtime);
+         }
+         case SPEED -> {
+            updatePowerSprint(player, data, runtime, NanosuitProfile.NANOSUIT_1, false);
+            updateSustainedPower(player, runtime, false);
+            updateNanosuit1WalkSpeed(player, false);
+            player.removeEffect(MobEffects.MOVEMENT_SPEED);
+         }
+         case CLOAK -> updateCloakVisibility(player, runtime, false);
+         case NONE -> {}
+      }
    }
 
    private static boolean hasInfiniteCreativeEnergy(Player player) {
@@ -622,11 +700,12 @@ public class NanosuitPlayerHandler {
          return null;
       }
       NanosuitProfile profile = NanosuitArmorUtil.getEquippedProfile(player);
-      if (profile == null || !profile.controls().supports(Ability.POWER_JUMP)) {
+      if (profile == null) {
          return null;
       }
       INanosuitEnergy data = NanosuitCapabilities.get(player);
-      return !data.isRecoveryLocked() && data.getEnergy() >= profile.mobility().jump().energyCost() ? profile : null;
+      return profile.controls().supports(Ability.POWER_JUMP, data.getMode())
+         && !data.isRecoveryLocked() && data.getEnergy() >= profile.mobility().jump().energyCost() ? profile : null;
    }
 
    public static void beginEnhancedJumpCharge(ServerPlayer player) {
@@ -678,14 +757,15 @@ public class NanosuitPlayerHandler {
       Vec3 position = player.position();
       Vec3 movement = position.subtract(runtime.enhancedJumpLastPosition);
       runtime.enhancedJumpLastPosition = position;
+      INanosuitEnergy data = NanosuitCapabilities.get(player);
       if ((player.onGround() && player.tickCount >= runtime.enhancedJumpCooldownUntilTick)
             || !player.isAlive() || player.isSpectator() || player.getAbilities().flying
             || player.isFallFlying() || player.isInWaterOrBubble() || player.onClimbable() || player.isPassenger()
             || NanosuitArmorUtil.getEquippedProfile(player) != runtime.enhancedJumpMantleProfile
-            || NanosuitCapabilities.get(player).isRecoveryLocked()) {
-         runtime.enhancedJumpMantleUntilTick = 0;
-         runtime.enhancedJumpMantlePlan = null;
-         runtime.enhancedJumpMantleProfile = null;
+            || runtime.enhancedJumpMantleProfile == null
+            || !runtime.enhancedJumpMantleProfile.controls().supports(Ability.POWER_JUMP, data.getMode())
+            || data.isRecoveryLocked()) {
+         clearEnhancedJumpMantle(runtime);
          return;
       }
       if (runtime.enhancedJumpMantlePlan != null) {
@@ -716,13 +796,19 @@ public class NanosuitPlayerHandler {
       }
    }
 
+   private static void clearEnhancedJumpMantle(PlayerRuntimeState runtime) {
+      runtime.enhancedJumpMantleUntilTick = 0;
+      runtime.enhancedJumpMantlePlan = null;
+      runtime.enhancedJumpMantleProfile = null;
+   }
+
    private static boolean tryPerformEnhancedJump(ServerPlayer player) {
       if (!player.onGround()) {
          tracePowerJumpRejection(player, "not_on_ground");
          return false;
       }
       NanosuitProfile profile = NanosuitArmorUtil.getEquippedProfile(player);
-      if (profile == null || !profile.controls().supports(Ability.POWER_JUMP)) {
+      if (profile == null || !profile.controls().supports(Ability.POWER_JUMP, NanosuitCapabilities.get(player).getMode())) {
          tracePowerJumpRejection(player, "no_full_suit");
          return false;
       } else if (player.getAbilities().flying) {
@@ -948,6 +1034,22 @@ public class NanosuitPlayerHandler {
       }
    }
 
+   private static void updateNanosuit1WalkSpeed(Player player, boolean active) {
+      AttributeInstance speed = player.getAttribute(Attributes.MOVEMENT_SPEED);
+      if (speed == null) {
+         return;
+      }
+      double bonus = active ? NanosuitServerConfig.nanosuit1WalkBonus() : 0.0;
+      AttributeModifier modifier = speed.getModifier(NANOSUIT_1_WALK_SPEED_MODIFIER_ID);
+      if (modifier != null && modifier.amount() != bonus) {
+         speed.removeModifier(NANOSUIT_1_WALK_SPEED_MODIFIER_ID);
+         modifier = null;
+      }
+      if (bonus > 0.0 && modifier == null) {
+         speed.addTransientModifier(new AttributeModifier(NANOSUIT_1_WALK_SPEED_MODIFIER_ID, bonus, Operation.ADD_MULTIPLIED_TOTAL));
+      }
+   }
+
    private void syncToClient(Player player) {
       if (player instanceof ServerPlayer serverPlayer) {
          NanosuitSyncManager.syncToClient(serverPlayer);
@@ -973,11 +1075,11 @@ public class NanosuitPlayerHandler {
       runtime.enhancedJumpChargeTick = -1;
       runtime.enhancedJumpChargeProfile = null;
       runtime.enhancedJumpRequested = false;
-      runtime.enhancedJumpMantleUntilTick = 0;
-      runtime.enhancedJumpMantlePlan = null;
-      runtime.enhancedJumpMantleProfile = null;
+      clearEnhancedJumpMantle(runtime);
       runtime.modeCooldownUntilTick = 0;
       runtime.enhancedJumpFallProtectionActive = false;
+      runtime.lastEquippedProfile = null;
+      runtime.equippedProfileObserved = false;
    }
 
    private static boolean consumeEnhancedJumpFallProtection(Player player) {
@@ -1057,6 +1159,8 @@ public class NanosuitPlayerHandler {
       private int cloakCombatNoiseUntilTick;
       private int modeCooldownUntilTick;
       private boolean energyCriticalWarned;
+      private NanosuitProfile lastEquippedProfile;
+      private boolean equippedProfileObserved;
    }
 
    private static final class PowerJumpDebugSession {

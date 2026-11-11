@@ -47,13 +47,15 @@ public class SyncNanosuitDataPacket implements CustomPacketPayload {
 
    public static void encode(SyncNanosuitDataPacket packet, FriendlyByteBuf buffer) {
       buffer.writeFloat(packet.energy);
-      buffer.writeEnum(packet.mode);
+      buffer.writeVarInt(packet.mode.wireId());
       buffer.writeBoolean(packet.sprintBoostReady);
       buffer.writeBoolean(packet.recoveryLocked);
    }
 
    public static SyncNanosuitDataPacket decode(FriendlyByteBuf buffer) {
-      return new SyncNanosuitDataPacket(buffer.readFloat(), buffer.readEnum(NanosuitMode.class), buffer.readBoolean(), buffer.readBoolean());
+      return new SyncNanosuitDataPacket(
+         buffer.readFloat(), NanosuitMode.fromWireId(buffer.readVarInt()), buffer.readBoolean(), buffer.readBoolean()
+      );
    }
 
    public static void handle(SyncNanosuitDataPacket packet, IPayloadContext context) {

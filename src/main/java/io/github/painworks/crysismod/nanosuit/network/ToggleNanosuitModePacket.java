@@ -25,11 +25,11 @@ public class ToggleNanosuitModePacket implements CustomPacketPayload {
    }
 
    public static void encode(ToggleNanosuitModePacket packet, FriendlyByteBuf buffer) {
-      buffer.writeEnum(packet.mode);
+      buffer.writeVarInt(packet.mode.wireId());
    }
 
    public static ToggleNanosuitModePacket decode(FriendlyByteBuf buffer) {
-      return new ToggleNanosuitModePacket((NanosuitMode)buffer.readEnum(NanosuitMode.class));
+      return new ToggleNanosuitModePacket(NanosuitMode.fromWireId(buffer.readVarInt()));
    }
 
    public static void handle(ToggleNanosuitModePacket packet, IPayloadContext context) {

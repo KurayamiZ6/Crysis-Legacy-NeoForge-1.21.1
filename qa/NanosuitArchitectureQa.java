@@ -17,7 +17,7 @@ public final class NanosuitArchitectureQa {
       checkProfileSelection();
       checkControls();
       checkLegacyRules();
-      checkModeWireOrdinals();
+      checkModeWireIds();
       System.out.println("NANOSUIT_ARCHITECTURE_QA_PASS");
    }
 
@@ -44,8 +44,22 @@ public final class NanosuitArchitectureQa {
       var legacyControls = NanosuitProfile.LEGACY_CURRENT.controls();
       check(legacyControls.manualModes().equals(Set.of(ManualMode.ARMOR, ManualMode.CLOAK)), "legacy manual modes");
       check(legacyControls.contextualAbilities().equals(EnumSet.allOf(Ability.class)), "legacy contextual abilities");
-      for (NanosuitMode mode : NanosuitMode.values()) {
-         check(legacyControls.allowsMode(mode), "legacy mode gate for " + mode);
+      var firstControls = NanosuitProfile.NANOSUIT_1.controls();
+      check(firstControls.manualModes().equals(EnumSet.allOf(ManualMode.class)), "Nanosuit 1 has four selectable modes");
+      for (var mode : NanosuitMode.values()) {
+         boolean legacyMode = mode == NanosuitMode.NONE || mode == NanosuitMode.ARMOR || mode == NanosuitMode.CLOAK;
+         check(legacyControls.allowsMode(mode) == legacyMode, "legacy mode gate for " + mode);
+         check(firstControls.allowsMode(mode), "Nanosuit 1 mode gate for " + mode);
+         for (var ability : Ability.values()) {
+            NanosuitMode requiredMode = switch (ability) {
+               case POWER_JUMP, POWER_MELEE -> NanosuitMode.STRENGTH;
+               case POWER_SPRINT, POWER_SWIM -> NanosuitMode.SPEED;
+            };
+            check(firstControls.supports(ability, mode) == (mode == requiredMode), "Nanosuit 1 " + mode + " gates " + ability);
+            if (legacyMode) {
+               check(legacyControls.supports(ability, mode), "legacy " + mode + " preserves " + ability);
+            }
+         }
       }
       check(legacyControls.allowsMode(null), "legacy internal null mode");
 
@@ -73,24 +87,36 @@ public final class NanosuitArchitectureQa {
       check(combat.predatorDamageMultiplier() == 1.5F, "legacy Predator Bow multiplier");
 
       for (var generationProfile : Set.of(NanosuitProfile.NANOSUIT_1, NanosuitProfile.NANOSUIT_2)) {
-         check(generationProfile.controls() == profile.controls()
-            && generationProfile.modeCooldownTicks() == profile.modeCooldownTicks()
+         check(generationProfile.modeCooldownTicks() == profile.modeCooldownTicks()
             && generationProfile.energy() == profile.energy()
             && generationProfile.mobility() == profile.mobility()
             && generationProfile.combat() == profile.combat()
             && generationProfile.auxiliary() == profile.auxiliary(),
             "historical rules shared by " + generationProfile.generation());
       }
+      check(NanosuitProfile.NANOSUIT_2.controls() == profile.controls(), "Nanosuit 2 shares legacy controls");
    }
 
-   private static void checkModeWireOrdinals() {
-      NanosuitMode[] expected = {NanosuitMode.NONE, NanosuitMode.ARMOR, NanosuitMode.CLOAK};
-      NanosuitMode[] decodedByOrdinal = NanosuitMode.values();
-      check(decodedByOrdinal.length == expected.length, "protocol v4 mode count");
-      for (int wireOrdinal = 0; wireOrdinal < expected.length; wireOrdinal++) {
-         NanosuitMode mode = expected[wireOrdinal];
-         check(mode.ordinal() == wireOrdinal && decodedByOrdinal[mode.ordinal()] == mode,
-            "protocol v4 mode ordinal for " + mode);
+   private static void checkModeWireIds() {
+      NanosuitMode[] expected = {
+         NanosuitMode.NONE, NanosuitMode.ARMOR, NanosuitMode.CLOAK, NanosuitMode.STRENGTH, NanosuitMode.SPEED
+      };
+      check(NanosuitMode.values().length == expected.length, "protocol v5 mode count");
+      for (int wireId = 0; wireId < expected.length; wireId++) {
+         NanosuitMode mode = expected[wireId];
+         check(mode.wireId() == wireId && NanosuitMode.fromWireId(wireId) == mode, "protocol v5 mode ID for " + mode);
+         check(NanosuitMode.valueOf(mode.name()) == mode, "persisted mode name " + mode);
+      }
+      checkUnknownWireId(-1);
+      checkUnknownWireId(5);
+   }
+
+   private static void checkUnknownWireId(int wireId) {
+      try {
+         NanosuitMode.fromWireId(wireId);
+         throw new AssertionError("Accepted unknown mode ID " + wireId);
+      } catch (IllegalArgumentException expected) {
+         // The packet decoder rejects this ID.
       }
    }
 

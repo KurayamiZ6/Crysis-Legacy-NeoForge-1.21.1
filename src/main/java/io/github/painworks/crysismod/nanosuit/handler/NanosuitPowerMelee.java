@@ -2,6 +2,7 @@ package io.github.painworks.crysismod.nanosuit.handler;
 
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import io.github.painworks.crysismod.nanosuit.NanosuitProfile;
+import io.github.painworks.crysismod.nanosuit.energy.NanosuitCapabilities;
 import io.github.painworks.crysismod.nanosuit.network.NanosuitNetwork;
 import io.github.painworks.crysismod.nanosuit.network.SyncPowerFeedbackPacket;
 import io.github.painworks.crysismod.nanosuit.rules.NanosuitCombatRules.Melee;
@@ -27,7 +28,7 @@ public final class NanosuitPowerMelee {
       }
 
       NanosuitProfile profile = NanosuitArmorUtil.getEquippedProfile(player);
-      if (profile == null || !profile.controls().supports(Ability.POWER_MELEE)) {
+      if (profile == null || !profile.controls().supports(Ability.POWER_MELEE, NanosuitCapabilities.get(player).getMode())) {
          return original.call(target, source, damage);
       }
       Melee rules = profile.combat().melee();

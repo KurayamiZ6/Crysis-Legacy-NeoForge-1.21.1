@@ -24,7 +24,20 @@ public enum NanosuitProfile {
       NanosuitCombatRules.LEGACY_CURRENT,
       NanosuitAuxiliaryRules.LEGACY_CURRENT
    ),
-   NANOSUIT_1(NanosuitGeneration.NANOSUIT_1, LEGACY_CURRENT),
+   NANOSUIT_1(
+      NanosuitGeneration.NANOSUIT_1,
+      new NanosuitControls(
+         Set.of(ManualMode.ARMOR, ManualMode.STRENGTH, ManualMode.SPEED, ManualMode.CLOAK),
+         LEGACY_CURRENT.controls.contextualAbilities(),
+         Map.of(
+            Ability.POWER_JUMP, NanosuitMode.STRENGTH,
+            Ability.POWER_MELEE, NanosuitMode.STRENGTH,
+            Ability.POWER_SPRINT, NanosuitMode.SPEED,
+            Ability.POWER_SWIM, NanosuitMode.SPEED
+         )
+      ),
+      LEGACY_CURRENT
+   ),
    NANOSUIT_2(NanosuitGeneration.NANOSUIT_2, LEGACY_CURRENT);
 
    private static final Map<NanosuitGeneration, NanosuitProfile> ACTIVE_BY_GENERATION = new EnumMap<>(NanosuitGeneration.class);
@@ -44,7 +57,11 @@ public enum NanosuitProfile {
    private final NanosuitAuxiliaryRules auxiliary;
 
    NanosuitProfile(NanosuitGeneration generation, NanosuitProfile rules) {
-      this(generation, rules.controls, rules.modeCooldownTicks, rules.energy, rules.mobility, rules.combat, rules.auxiliary);
+      this(generation, rules.controls, rules);
+   }
+
+   NanosuitProfile(NanosuitGeneration generation, NanosuitControls controls, NanosuitProfile rules) {
+      this(generation, controls, rules.modeCooldownTicks, rules.energy, rules.mobility, rules.combat, rules.auxiliary);
    }
 
    NanosuitProfile(NanosuitGeneration generation, NanosuitControls controls, int modeCooldownTicks,

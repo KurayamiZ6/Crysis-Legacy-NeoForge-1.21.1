@@ -33,6 +33,9 @@ public final class NanosuitServerConfig {
    private static final double DEFAULT_ARMOR_MODE_FULL_ENERGY_BLOCK_CAPACITY_HP = 200.0;
    private static final boolean DEFAULT_DEBUG_COMMANDS_ENABLED = true;
    private static final boolean DEFAULT_DEBUG_ARMOR_DAMAGE_ABSORPTION = false;
+   private static final double DEFAULT_NANOSUIT_1_WALK_BONUS = 0.10;
+   private static final double DEFAULT_NANOSUIT_1_SPRINT_DRAIN_PER_TICK = 0.75;
+   private static final int DEFAULT_NANOSUIT_1_SPRINT_SPEED_AMPLIFIER = 1;
    public static final DoubleValue ENERGY_REGEN_PER_TICK = BUILDER.comment("Energy regenerated per tick when regeneration is allowed.")
       .defineInRange("energy.regenPerTick", 1.2, 0.0, 100.0);
    public static final DoubleValue STANDING_DRAIN_PER_TICK = BUILDER.comment("Base energy drain per tick while standing.")
@@ -61,6 +64,18 @@ public final class NanosuitServerConfig {
       .defineInRange("effects.armorAbsorptionAmplifier", 3, 0, 255);
    public static final IntValue SPRINT_SPEED_AMPLIFIER = BUILDER.comment("Enhanced sprint speed amplifier. Vanilla level shown to player is value + 1.")
       .defineInRange("effects.sprintSpeedAmplifier", 1, 0, 255);
+   public static final DoubleValue NANOSUIT_1_WALK_BONUS = BUILDER.comment(
+         "Additional movement multiplier in Nanosuit 1 Speed mode while walking. 0.10 adds ten percent."
+      )
+      .defineInRange("nanosuit1.speed.walkBonus", DEFAULT_NANOSUIT_1_WALK_BONUS, 0.0, 1.0);
+   public static final DoubleValue NANOSUIT_1_SPRINT_DRAIN_PER_TICK = BUILDER.comment(
+         "Nanosuit 1 energy spent per tick of enhanced sprint or swim in Speed mode."
+      )
+      .defineInRange("nanosuit1.speed.sprintDrainPerTick", DEFAULT_NANOSUIT_1_SPRINT_DRAIN_PER_TICK, 0.0, 100.0);
+   public static final IntValue NANOSUIT_1_SPRINT_SPEED_AMPLIFIER = BUILDER.comment(
+         "Nanosuit 1 enhanced sprint speed amplifier. Vanilla level shown to player is value + 1."
+      )
+      .defineInRange("nanosuit1.speed.sprintSpeedAmplifier", DEFAULT_NANOSUIT_1_SPRINT_SPEED_AMPLIFIER, 0, 255);
    public static final DoubleValue ENERGY_SYNC_STEP = BUILDER.comment("Minimum energy delta to trigger immediate server->client sync.")
       .defineInRange("sync.energyStep", 1.26, 0.01, 100.0);
    public static final IntValue ENERGY_SYNC_INTERVAL_TICKS = BUILDER.comment("Heartbeat sync interval in ticks while energy changes.")
@@ -104,6 +119,9 @@ public final class NanosuitServerConfig {
             safeGetInt(EFFECT_REFRESH_THRESHOLD_TICKS, 4),
             safeGetInt(ARMOR_ABSORPTION_AMPLIFIER, 3),
             safeGetInt(SPRINT_SPEED_AMPLIFIER, 1),
+            safeGetDouble(NANOSUIT_1_WALK_BONUS, DEFAULT_NANOSUIT_1_WALK_BONUS),
+            safeGetDouble(NANOSUIT_1_SPRINT_DRAIN_PER_TICK, DEFAULT_NANOSUIT_1_SPRINT_DRAIN_PER_TICK).floatValue(),
+            safeGetInt(NANOSUIT_1_SPRINT_SPEED_AMPLIFIER, DEFAULT_NANOSUIT_1_SPRINT_SPEED_AMPLIFIER),
             safeGetDouble(ENERGY_SYNC_STEP, 1.26).floatValue(),
             safeGetInt(ENERGY_SYNC_INTERVAL_TICKS, 13),
             safeGetDouble(ARMOR_MODE_FULL_ENERGY_BLOCK_CAPACITY_HP, 200.0).floatValue(),
@@ -163,6 +181,18 @@ public final class NanosuitServerConfig {
 
    public static int sprintSpeedAmplifier() {
       return CACHED_VALUES.sprintSpeedAmplifier();
+   }
+
+   public static double nanosuit1WalkBonus() {
+      return CACHED_VALUES.nanosuit1WalkBonus();
+   }
+
+   public static float nanosuit1SprintDrainPerTick() {
+      return CACHED_VALUES.nanosuit1SprintDrainPerTick();
+   }
+
+   public static int nanosuit1SprintSpeedAmplifier() {
+      return CACHED_VALUES.nanosuit1SprintSpeedAmplifier();
    }
 
    public static float energySyncStep() {
@@ -227,6 +257,9 @@ public final class NanosuitServerConfig {
       int effectRefreshThresholdTicks,
       int armorAbsorptionAmplifier,
       int sprintSpeedAmplifier,
+      double nanosuit1WalkBonus,
+      float nanosuit1SprintDrainPerTick,
+      int nanosuit1SprintSpeedAmplifier,
       float energySyncStep,
       int energySyncIntervalTicks,
       float armorModeFullEnergyBlockCapacityHp,
@@ -235,7 +268,9 @@ public final class NanosuitServerConfig {
    ) {
       private static NanosuitServerConfig.CachedValues defaults() {
          return new NanosuitServerConfig.CachedValues(
-            1.2F, 0.05F, 0.25F, 0.75F, 0.5F, 0.083333336F, 30, 0.15, 0.6F, 10, 4, 3, 1, 1.26F, 13, 200.0F, true, false
+            1.2F, 0.05F, 0.25F, 0.75F, 0.5F, 0.083333336F, 30, 0.15, 0.6F, 10, 4, 3, 1,
+            DEFAULT_NANOSUIT_1_WALK_BONUS, (float)DEFAULT_NANOSUIT_1_SPRINT_DRAIN_PER_TICK, DEFAULT_NANOSUIT_1_SPRINT_SPEED_AMPLIFIER,
+            1.26F, 13, 200.0F, true, false
          );
       }
    }
