@@ -28,9 +28,11 @@ public final class NanosuitCloak {
 
    private static NanosuitProfile activeProfile(ServerPlayer player) {
       var suit = NanosuitCapabilities.get(player);
-      return suit.getMode() == NanosuitMode.CLOAK && suit.getEnergy() > 0.0F
-         ? NanosuitArmorUtil.getEquippedProfile(player)
-         : null;
+      if (suit.getMode() != NanosuitMode.CLOAK || !(suit.getEnergy() > 0.0F)) {
+         return null;
+      }
+      NanosuitProfile profile = NanosuitArmorUtil.getEquippedProfile(player);
+      return profile != null && profile.controls().allowsMode(NanosuitMode.CLOAK) ? profile : null;
    }
 
    public static boolean mufflesSteps(Player player) {
