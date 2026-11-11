@@ -1,7 +1,10 @@
 package io.github.painworks.crysismod.nanosuit.handler;
 
 import io.github.painworks.crysismod.nanosuit.NanosuitMode;
+import io.github.painworks.crysismod.nanosuit.NanosuitProfile;
 import io.github.painworks.crysismod.nanosuit.energy.NanosuitCapabilities;
+import io.github.painworks.crysismod.nanosuit.rules.NanosuitCombatRules.CloakCost;
+import io.github.painworks.crysismod.nanosuit.rules.NanosuitCombatRules.Detection;
 import io.github.painworks.crysismod.nanosuit.util.NanosuitArmorUtil;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.effect.MobEffects;
@@ -19,14 +22,15 @@ import net.neoforged.neoforge.event.entity.living.LivingDamageEvent;
 import net.neoforged.neoforge.event.tick.EntityTickEvent;
 
 public final class NanosuitCloak {
-   private static final double QUIET_RANGE = 1.5;
-   private static final double WALKING_RANGE = 4.0;
-   private static final double SPRINTING_RANGE = 9.0;
-   private static final double COMBAT_RANGE = 12.0;
-
    public static boolean isActive(ServerPlayer player) {
+      return activeProfile(player) != null;
+   }
+
+   private static NanosuitProfile activeProfile(ServerPlayer player) {
       var suit = NanosuitCapabilities.get(player);
-      return suit.getMode() == NanosuitMode.CLOAK && suit.getEnergy() > 0.0F && NanosuitArmorUtil.hasFullSet(player);
+      return suit.getMode() == NanosuitMode.CLOAK && suit.getEnergy() > 0.0F
+         ? NanosuitArmorUtil.getEquippedProfile(player)
+         : null;
    }
 
    public static boolean mufflesSteps(Player player) {
@@ -40,25 +44,37 @@ public final class NanosuitCloak {
       return player.isInvisible() && !player.hasEffect(MobEffects.INVISIBILITY) && NanosuitArmorUtil.hasFullSet(player);
    }
 
-   private static double detectionRange(ServerPlayer player) {
+   private static double detectionRange(ServerPlayer player, Detection rules) {
       if (NanosuitPlayerHandler.hasCloakCombatNoise(player)) {
-         return COMBAT_RANGE;
+         return rules.combatRange();
       }
       if (player.isSprinting()) {
-         return SPRINTING_RANGE;
+         return rules.sprintingRange();
       }
       if (!player.isCrouching() && NanosuitPlayerHandler.isMovingForCloak(player)) {
-         return WALKING_RANGE;
+         return rules.walkingRange();
       }
-      return QUIET_RANGE;
+      return rules.quietRange();
    }
 
    public static boolean hidesFrom(LivingEntity observer, LivingEntity candidate) {
-      if (!(candidate instanceof ServerPlayer player) || !isActive(player)) {
+      if (!(candidate instanceof ServerPlayer player)) {
          return false;
       }
-      double range = detectionRange(player);
+      NanosuitProfile profile = activeProfile(player);
+      if (profile == null) {
+         return false;
+      }
+      double range = detectionRange(player, profile.combat().cloak().detection());
       return observer.distanceToSqr(player) > range * range;
+   }
+
+   public static void chargeConfirmedShot(ServerPlayer player, boolean silenced) {
+      NanosuitProfile profile = activeProfile(player);
+      if (profile != null) {
+         CloakCost cost = profile.combat().cloak().shot(silenced);
+         NanosuitPlayerHandler.applyActiveCloakCombatCost(player, cost.energyCost(), cost.breaksCloak());
+      }
    }
 
    @SubscribeEvent
@@ -74,10 +90,17 @@ public final class NanosuitCloak {
          return;
       }
       if (event.getEntity() instanceof ServerPlayer victim && attacker != victim && !victim.isAlliedTo(attacker)) {
-         NanosuitPlayerHandler.applyCloakCombatCost(victim, 100.0F, true);
+         NanosuitProfile profile = activeProfile(victim);
+         if (profile != null) {
+            CloakCost cost = profile.combat().cloak().receivedHit();
+            NanosuitPlayerHandler.applyActiveCloakCombatCost(victim, cost.energyCost(), cost.breaksCloak());
+         }
       }
-      if (attacker instanceof ServerPlayer player && isActive(player)) {
-         NanosuitPlayerHandler.recordCloakCombatNoise(player);
+      if (attacker instanceof ServerPlayer player) {
+         NanosuitProfile profile = activeProfile(player);
+         if (profile != null) {
+            NanosuitPlayerHandler.recordCloakCombatNoise(player, profile.combat().cloak().detection().combatNoiseTicks());
+         }
       }
    }
 

@@ -1,7 +1,8 @@
 package io.github.painworks.crysismod.mixin.nanosuit;
 
 import com.llamalad7.mixinextras.sugar.Local;
-import io.github.painworks.crysismod.nanosuit.handler.NanosuitPlayerHandler;
+import io.github.painworks.crysismod.nanosuit.NanosuitProfile;
+import io.github.painworks.crysismod.nanosuit.handler.NanosuitCloak;
 import io.github.painworks.crysismod.nanosuit.util.NanosuitArmorUtil;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
@@ -30,9 +31,11 @@ public abstract class TaczCloakGunfireMixin {
    @ModifyArg(method = "lambda$shootOnce$2", index = 0, require = 1, at = @At(value = "INVOKE",
       target = "Lcom/tacz/guns/entity/EntityKineticBullet;setShotDamageMultiplier(F)V"))
    private float crysismod$boostPredatorProjectile(float original) {
-      if (CRYSISMOD_PREDATOR_BOW.equals(this.gunId) && this.getShooter() instanceof ServerPlayer player
-            && NanosuitArmorUtil.hasFullSet(player)) {
-         return original * 1.5F;
+      if (CRYSISMOD_PREDATOR_BOW.equals(this.gunId) && this.getShooter() instanceof ServerPlayer player) {
+         NanosuitProfile profile = NanosuitArmorUtil.getEquippedProfile(player);
+         if (profile != null) {
+            return original * profile.combat().predatorDamageMultiplier();
+         }
       }
       return original;
    }
@@ -43,7 +46,7 @@ public abstract class TaczCloakGunfireMixin {
    private void crysismod$chargeConfirmedShot(CallbackInfoReturnable<Boolean> callback,
          @Local(argsOnly = true, ordinal = 1) boolean silenced) {
       if (!CRYSISMOD_PREDATOR_BOW.equals(this.gunId) && this.getShooter() instanceof ServerPlayer player) {
-         NanosuitPlayerHandler.applyCloakCombatCost(player, silenced ? 7.0F : 20.0F, !silenced);
+         NanosuitCloak.chargeConfirmedShot(player, silenced);
       }
    }
 }

@@ -13,6 +13,7 @@ import io.github.painworks.crysismod.nanosuit.network.NanosuitSyncManager;
 import io.github.painworks.crysismod.nanosuit.network.SyncEnhancedJumpPacket;
 import io.github.painworks.crysismod.nanosuit.network.SyncSuitEnergySoundPacket;
 import io.github.painworks.crysismod.nanosuit.network.SyncSuitEnergySoundPacket.Cue;
+import io.github.painworks.crysismod.nanosuit.rules.NanosuitCombatRules;
 import io.github.painworks.crysismod.nanosuit.rules.NanosuitControls.Ability;
 import io.github.painworks.crysismod.nanosuit.rules.NanosuitEnergyRules;
 import io.github.painworks.crysismod.nanosuit.rules.NanosuitMobilityRules;
@@ -54,11 +55,6 @@ public class NanosuitPlayerHandler {
    private static final Logger LOGGER = LogUtils.getLogger();
    private static final float ENERGY_PER_DIVISION = 5.0F;
    public static final int ENHANCED_JUMP_HOLD_TICKS = NanosuitMobilityRules.LEGACY_JUMP_HOLD_TICKS;
-   private static final float ARMOR_OR_CLOAK_STANDING_DRAIN_PER_TICK = 0.0625F;
-   private static final float CLOAK_WALKING_DRAIN_PER_TICK = 0.25F;
-   private static final float ARMOR_WALKING_DRAIN_PER_TICK = 0.083333336F;
-   private static final float CLOAK_SPRINTING_DRAIN_PER_TICK = 0.5F;
-   private static final float ARMOR_SPRINTING_DRAIN_PER_TICK = 0.25F;
    private static final int ACTIVE_DRAIN_SYNC_INTERVAL_TICKS = 2;
    private static final double MOVEMENT_POSITION_EPSILON_SQR = 6.25E-4;
    private static final float MOVEMENT_INPUT_EPSILON = 0.01F;
@@ -338,7 +334,7 @@ public class NanosuitPlayerHandler {
          boolean movingNow = this.isMoving(player, runtime);
          int sprintSpeedAmplifierToApply = hasActiveMode ? 0 : sprintSpeedAmplifier;
          float baselineDrain = hasActiveMode
-            ? this.getModeDrainPerTick(mode, sprintDrainRequested, movingNow)
+            ? this.getModeDrainPerTick(rulesProfile.combat(), mode, sprintDrainRequested, movingNow)
             : this.getBaseDrainPerTick(sprintDrainRequested, movingNow, standingDrain, walkingDrain, sprintingDrain);
          float drain = (drainState != NanosuitPlayerHandler.DrainState.NONE ? baselineDrain : 0.0F)
             + (nanovisionActive ? NanosuitServerConfig.nanovisionDrainPerTick() : 0.0F);
@@ -536,10 +532,12 @@ public class NanosuitPlayerHandler {
    }
 
    public static void applyCloakCombatCost(ServerPlayer player, float amount, boolean breakCloak) {
-      if (!NanosuitCloak.isActive(player)) {
-         return;
+      if (NanosuitCloak.isActive(player)) {
+         applyActiveCloakCombatCost(player, amount, breakCloak);
       }
+   }
 
+   static void applyActiveCloakCombatCost(ServerPlayer player, float amount, boolean breakCloak) {
       INanosuitEnergy data = NanosuitCapabilities.get(player);
       data.consumeEnergy(amount);
       data.setRegenDelayTicks(NanosuitServerConfig.regenDelayAfterDrainTicks());
@@ -586,8 +584,8 @@ public class NanosuitPlayerHandler {
       return runtime != null && runtime.movingHoldTicks > 0;
    }
 
-   static void recordCloakCombatNoise(ServerPlayer player) {
-      runtimeState(player.getUUID()).cloakCombatNoiseUntilTick = player.tickCount + 40;
+   static void recordCloakCombatNoise(ServerPlayer player, int durationTicks) {
+      runtimeState(player.getUUID()).cloakCombatNoiseUntilTick = player.tickCount + durationTicks;
    }
 
    static boolean hasCloakCombatNoise(ServerPlayer player) {
@@ -824,22 +822,14 @@ public class NanosuitPlayerHandler {
       return NanosuitProfile.LEGACY_CURRENT.enhancedJumpEnergyCost();
    }
 
-   private float getModeDrainPerTick(NanosuitMode mode, boolean sprintDrainRequested, boolean movingNow) {
+   private float getModeDrainPerTick(NanosuitCombatRules combat, NanosuitMode mode, boolean sprintDrainRequested, boolean movingNow) {
       if (mode == NanosuitMode.CLOAK) {
-         if (sprintDrainRequested) {
-            return 0.5F;
-         } else {
-            return movingNow ? 0.25F : 0.0625F;
-         }
-      } else if (mode == NanosuitMode.ARMOR) {
-         if (sprintDrainRequested) {
-            return 0.25F;
-         } else {
-            return movingNow ? 0.083333336F : 0.0625F;
-         }
-      } else {
-         return 0.0625F;
+         return combat.cloak().drain().perTick(sprintDrainRequested, movingNow);
       }
+      if (mode == NanosuitMode.ARMOR) {
+         return combat.armorDrain().perTick(sprintDrainRequested, movingNow);
+      }
+      return combat.armorDrain().standing();
    }
 
    private float getBaseDrainPerTick(boolean sprintDrainRequested, boolean movingNow, float standingDrain, float walkingDrain, float sprintingDrain) {
