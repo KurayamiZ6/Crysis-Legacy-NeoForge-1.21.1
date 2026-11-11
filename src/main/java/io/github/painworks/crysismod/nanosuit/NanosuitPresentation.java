@@ -15,6 +15,7 @@ public record NanosuitPresentation(ResourceLocation armorModel, ResourceLocation
 
    public static NanosuitPresentation forPiece(ItemStack stack, EquipmentSlot slot) {
       NanosuitProfile profile = stack == null ? null : NanosuitArmorUtil.getPieceProfile(stack, slot);
-      return profile != null && profile.generation() == NanosuitGeneration.LEGACY_CURRENT ? LEGACY_CURRENT : null;
+      // Both generations use the same model and textures while their equipment is validated.
+      return profile != null ? LEGACY_CURRENT : null;
    }
 }

@@ -299,9 +299,13 @@
     "screen.crysismod.nanovisor.tooltip.nanogeo_perf_track_allocations": "Включает счётчики подозрений на аллокации в профайлере NanoGeo.",
     "screen.crysismod.nanovisor.option.nanogeo_perf_show_overlay": "NanoGeo perf overlay",
     "screen.crysismod.nanovisor.tooltip.nanogeo_perf_show_overlay": "Резервный переключатель для будущего in-game overlay профилировщика NanoGeo.",
-    "item.crysismod.nanogeo_nanosuit_helmet": "NanoSuit Helmet",
-    "item.crysismod.nanogeo_nanosuit_chestplate": "NanoSuit Chestplate",
-    "item.crysismod.nanogeo_nanosuit_leggings": "NanoSuit Leggings",
-    "item.crysismod.nanogeo_nanosuit_boots": "NanoSuit Boots"
+    "item.crysismod.nanogeo_nanosuit_helmet": "Шлем нанокостюма 1",
+    "item.crysismod.nanogeo_nanosuit_chestplate": "Нагрудник нанокостюма 1",
+    "item.crysismod.nanogeo_nanosuit_leggings": "Поножи нанокостюма 1",
+    "item.crysismod.nanogeo_nanosuit_boots": "Ботинки нанокостюма 1",
+    "item.crysismod.nanosuit_2_helmet": "Шлем нанокостюма 2",
+    "item.crysismod.nanosuit_2_chestplate": "Нагрудник нанокостюма 2",
+    "item.crysismod.nanosuit_2_leggings": "Поножи нанокостюма 2",
+    "item.crysismod.nanosuit_2_boots": "Ботинки нанокостюма 2"
 }
 

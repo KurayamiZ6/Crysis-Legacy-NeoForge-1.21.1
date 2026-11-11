@@ -55,5 +55,9 @@ public final class NanoGeoClientHooks {
       event.registerItem(NanoGeoArmorClientExtensions.create(), ModItems.NANOGEO_NANOSUIT_CHESTPLATE);
       event.registerItem(NanoGeoArmorClientExtensions.create(), ModItems.NANOGEO_NANOSUIT_LEGGINGS);
       event.registerItem(NanoGeoArmorClientExtensions.create(), ModItems.NANOGEO_NANOSUIT_BOOTS);
+      event.registerItem(NanoGeoArmorClientExtensions.create(), ModItems.NANOSUIT_2_HELMET);
+      event.registerItem(NanoGeoArmorClientExtensions.create(), ModItems.NANOSUIT_2_CHESTPLATE);
+      event.registerItem(NanoGeoArmorClientExtensions.create(), ModItems.NANOSUIT_2_LEGGINGS);
+      event.registerItem(NanoGeoArmorClientExtensions.create(), ModItems.NANOSUIT_2_BOOTS);
    }
 }

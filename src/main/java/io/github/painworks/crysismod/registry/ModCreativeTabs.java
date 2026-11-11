@@ -20,6 +20,10 @@ public final class ModCreativeTabs {
             output.accept((ItemLike)ModItems.NANOGEO_NANOSUIT_CHESTPLATE.get());
             output.accept((ItemLike)ModItems.NANOGEO_NANOSUIT_LEGGINGS.get());
             output.accept((ItemLike)ModItems.NANOGEO_NANOSUIT_BOOTS.get());
+            output.accept((ItemLike)ModItems.NANOSUIT_2_HELMET.get());
+            output.accept((ItemLike)ModItems.NANOSUIT_2_CHESTPLATE.get());
+            output.accept((ItemLike)ModItems.NANOSUIT_2_LEGGINGS.get());
+            output.accept((ItemLike)ModItems.NANOSUIT_2_BOOTS.get());
          })
          .build()
    );

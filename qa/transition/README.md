@@ -1,12 +1,14 @@
 # Banc intégré de transition Nanosuit
 
+Ce banc historique utilise des générations synthétiques. Pour reproduire la comparaison, utiliser les sources et les JARs de la validation précédente. La référence est `6cffe6a` et le candidat est `29ae988`. Les générations désormais équipables font l’objet du banc d’équipement réel.
+
 Le lanceur PowerShell 7 utilise Java 21 et le profil NeoForge isolé des essais précédents. Depuis la racine du projet, compiler d’abord le JAR habituel et préparer les arguments ModDev de lancement client. `-LaunchFixture` désigne un dossier contenant `classpath.txt` (un chemin absolu par ligne), `program.txt` (arguments DevLaunch avec chargement d’un monde isolé) et `template` (copie vierge du profil avec ce monde). Le dossier historique `build/legacy-functional-qa` possède cette structure.
 
 ```powershell
 ./qa/transition/run.ps1 -Profile reference -SourceRef 6cffe6a -AllowFailures `
     -ModJar build/multi-suit-reference/candidate.jar
-./qa/transition/run.ps1 -Profile candidate `
-    -ModJar build/libs/crysis-legacy-neoforge-port-1.1.1-port-dev.jar
+./qa/transition/run.ps1 -Profile candidate -SourceRef 29ae988 `
+    -ModJar build/legacy-functional-qa/multi-suit-transition-core/mods/crysis-legacy-port.jar
 ```
 
 Définir `JAVA_HOME` ou passer `-JavaHome` pour sélectionner le JDK. Utiliser un nom de profil neuf à chaque rejeu. Sur Windows, le serveur intégré requiert l’accès à la boucle locale. Le lanceur écrit le hash du JAR d’entrée et les résultats sous `build/transition-qa/<profil>/`. Chercher `^TRANSITION_QA_` dans `transition.log`. `-AllowFailures` laisse terminer un test différentiel sur la référence même quand des assertions échouent.

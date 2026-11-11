@@ -2,7 +2,6 @@ package io.github.painworks.crysismod.client.nanogeo;
 
 import io.github.painworks.crysismod.nanosuit.client.render.NanosuitArmorModeOverlayState;
 import io.github.painworks.crysismod.nanosuit.util.NanosuitArmorUtil;
-import io.github.painworks.crysismod.nanosuit.util.NanosuitArmorVariant;
 import net.minecraft.world.entity.player.Player;
 
 final class NanoGeoArmorModeBaseCompositeCompat {
@@ -15,7 +14,6 @@ final class NanoGeoArmorModeBaseCompositeCompat {
       return player != null
             && replacementEligible()
             && NanosuitArmorUtil.hasFullSet(player)
-            && NanosuitArmorUtil.getEquippedVariant(player) == NanosuitArmorVariant.NANOGEO
          ? shouldReplaceBaseArmor(NanosuitArmorModeOverlayState.resolveForThirdPerson(player))
          : false;
    }

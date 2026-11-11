@@ -27,16 +27,16 @@ public final class NanosuitArchitectureQa {
       var second = NanosuitGeneration.NANOSUIT_2;
 
       check(NanosuitGeneration.fullSet(legacy, legacy, legacy, legacy) == legacy, "complete legacy set");
-      check(NanosuitGeneration.fullSet(first, first, first, first) == first, "complete Nanosuit 1 prototype");
-      check(NanosuitGeneration.fullSet(second, second, second, second) == second, "complete Nanosuit 2 prototype");
+      check(NanosuitGeneration.fullSet(first, first, first, first) == first, "complete Nanosuit 1 set");
+      check(NanosuitGeneration.fullSet(second, second, second, second) == second, "complete Nanosuit 2 set");
       check(NanosuitGeneration.fullSet(legacy, legacy, legacy, null) == null, "missing boots");
       check(NanosuitGeneration.fullSet(null, legacy, legacy, legacy) == null, "missing helmet");
       check(NanosuitGeneration.fullSet(first, first, second, first) == null, "mixed generations");
       check(NanosuitGeneration.fullSet(null, null, null, null) == null, "empty equipment");
       check(NanosuitProfile.forGeneration(legacy) == NanosuitProfile.LEGACY_CURRENT, "active legacy profile");
       check(NanosuitProfile.LEGACY_CURRENT.generation() == legacy, "legacy profile identity");
-      check(NanosuitProfile.forGeneration(first) == null, "inactive Nanosuit 1 profile");
-      check(NanosuitProfile.forGeneration(second) == null, "inactive Nanosuit 2 profile");
+      check(NanosuitProfile.forGeneration(first) == NanosuitProfile.NANOSUIT_1, "active Nanosuit 1 profile");
+      check(NanosuitProfile.forGeneration(second) == NanosuitProfile.NANOSUIT_2, "active Nanosuit 2 profile");
       check(NanosuitProfile.forGeneration(null) == null, "no equipped profile");
    }
 
@@ -71,6 +71,16 @@ public final class NanosuitArchitectureQa {
       check(combat.cloak().shot(true).equals(new CloakCost(7.0F, false))
          && combat.cloak().shot(false).equals(new CloakCost(20.0F, true)), "legacy cloak shot costs and breaks");
       check(combat.predatorDamageMultiplier() == 1.5F, "legacy Predator Bow multiplier");
+
+      for (var generationProfile : Set.of(NanosuitProfile.NANOSUIT_1, NanosuitProfile.NANOSUIT_2)) {
+         check(generationProfile.controls() == profile.controls()
+            && generationProfile.modeCooldownTicks() == profile.modeCooldownTicks()
+            && generationProfile.energy() == profile.energy()
+            && generationProfile.mobility() == profile.mobility()
+            && generationProfile.combat() == profile.combat()
+            && generationProfile.auxiliary() == profile.auxiliary(),
+            "historical rules shared by " + generationProfile.generation());
+      }
    }
 
    private static void checkModeWireOrdinals() {

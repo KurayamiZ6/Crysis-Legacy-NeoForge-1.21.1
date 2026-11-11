@@ -4,13 +4,12 @@ import com.mojang.logging.LogUtils;
 import io.github.painworks.crysismod.nanosuit.NanosuitGeneration;
 import io.github.painworks.crysismod.nanosuit.NanosuitProfile;
 import io.github.painworks.crysismod.nanosuit.config.NanosuitArmorIdentityConfig;
-import io.github.painworks.crysismod.registry.ModItems;
 import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ArmorItem;
 import net.minecraft.world.item.ItemStack;
 import org.slf4j.Logger;
 
@@ -48,15 +47,15 @@ public final class NanosuitArmorUtil {
    }
 
    public static boolean hasFullExperimentalSet(Player player) {
-      return hasFullSet(player);
+      return getEquippedVariant(player) == NanosuitArmorVariant.NANOGEO;
    }
 
    public static boolean hasFullProductionSet(Player player) {
-      return hasFullSet(player);
+      return getEquippedVariant(player) == NanosuitArmorVariant.NANOGEO;
    }
 
    public static boolean isNanosuitArmorPiece(ItemStack stack) {
-      return isNanoGeoArmorPiece(stack);
+      return getVariant(stack) != null;
    }
 
    public static boolean isNanosuitArmorPiece(ItemStack stack, EquipmentSlot slot) {
@@ -64,41 +63,43 @@ public final class NanosuitArmorUtil {
    }
 
    private static NanosuitGeneration getPieceGeneration(ItemStack stack, EquipmentSlot slot) {
-      if (slot == null) {
+      NanosuitArmorVariant variant = getPieceVariant(stack, slot);
+      return variant == null ? null : variant.generation();
+   }
+
+   private static NanosuitArmorVariant getPieceVariant(ItemStack stack, EquipmentSlot slot) {
+      if (slot == null || stack.isEmpty()) {
          return null;
       }
-      boolean legacyPiece = switch (slot) {
-         case HEAD -> isNanoGeoHelmet(stack);
-         case CHEST -> isNanoGeoChestplate(stack);
-         case LEGS -> isNanoGeoLeggings(stack);
-         case FEET -> isNanoGeoBoots(stack);
-         default -> false;
-      };
-      return legacyPiece ? NanosuitArmorVariant.NANOGEO.generation() : null;
+      if (NanosuitArmorVariant.NANOGEO.matches(stack, slot)) {
+         return NanosuitArmorVariant.NANOGEO;
+      }
+      return NanosuitArmorVariant.NANOSUIT_2.matches(stack, slot) ? NanosuitArmorVariant.NANOSUIT_2 : null;
    }
 
    public static boolean isNanosuitHelmet(ItemStack stack) {
-      return isNanoGeoHelmet(stack);
+      return isNanosuitArmorPiece(stack, EquipmentSlot.HEAD);
    }
 
    public static boolean isNanosuitChestplate(ItemStack stack) {
-      return isNanoGeoChestplate(stack);
+      return isNanosuitArmorPiece(stack, EquipmentSlot.CHEST);
    }
 
    public static boolean isNanosuitLeggings(ItemStack stack) {
-      return isNanoGeoLeggings(stack);
+      return isNanosuitArmorPiece(stack, EquipmentSlot.LEGS);
    }
 
    public static boolean isNanosuitBoots(ItemStack stack) {
-      return isNanoGeoBoots(stack);
+      return isNanosuitArmorPiece(stack, EquipmentSlot.FEET);
    }
 
    public static NanosuitArmorVariant getVariant(ItemStack stack) {
-      return isNanoGeoArmorPiece(stack) ? NanosuitArmorVariant.NANOGEO : null;
+      return stack.getItem() instanceof ArmorItem armor ? getPieceVariant(stack, armor.getEquipmentSlot()) : null;
    }
 
    public static NanosuitArmorVariant getEquippedVariant(Player player) {
-      return hasFullSet(player) ? NanosuitArmorVariant.NANOGEO : null;
+      NanosuitProfile profile = getEquippedProfile(player);
+      return profile == null ? null : NanosuitArmorVariant.forGeneration(profile.generation());
    }
 
    public static boolean isFullSetSameVariant(Player player) {
@@ -106,7 +107,7 @@ public final class NanosuitArmorUtil {
    }
 
    public static boolean isNanoGeoArmorPiece(ItemStack stack) {
-      return isNanoGeoHelmet(stack) || isNanoGeoChestplate(stack) || isNanoGeoLeggings(stack) || isNanoGeoBoots(stack);
+      return getVariant(stack) == NanosuitArmorVariant.NANOGEO;
    }
 
    public static boolean isExperimentalHelmet(ItemStack stack) {
@@ -142,19 +143,19 @@ public final class NanosuitArmorUtil {
    }
 
    public static boolean isNanoGeoHelmet(ItemStack stack) {
-      return stack.is((Item)ModItems.NANOGEO_NANOSUIT_HELMET.get());
+      return NanosuitArmorVariant.NANOGEO.matches(stack, EquipmentSlot.HEAD);
    }
 
    public static boolean isNanoGeoChestplate(ItemStack stack) {
-      return stack.is((Item)ModItems.NANOGEO_NANOSUIT_CHESTPLATE.get());
+      return NanosuitArmorVariant.NANOGEO.matches(stack, EquipmentSlot.CHEST);
    }
 
    public static boolean isNanoGeoLeggings(ItemStack stack) {
-      return stack.is((Item)ModItems.NANOGEO_NANOSUIT_LEGGINGS.get());
+      return NanosuitArmorVariant.NANOGEO.matches(stack, EquipmentSlot.LEGS);
    }
 
    public static boolean isNanoGeoBoots(ItemStack stack) {
-      return stack.is((Item)ModItems.NANOGEO_NANOSUIT_BOOTS.get());
+      return NanosuitArmorVariant.NANOGEO.matches(stack, EquipmentSlot.FEET);
    }
 
    private static NanosuitArmorUtil.Evaluation evaluate(Player player) {
@@ -184,8 +185,7 @@ public final class NanosuitArmorUtil {
       }
 
       private String signature() {
-         return "variant=NANOGEO head=" + (head != null) + " chest=" + (chest != null) + " legs=" + (legs != null)
-            + " boots=" + (feet != null) + " fullSet=" + (profile() != null);
+         return "profile=" + profile() + " head=" + head + " chest=" + chest + " legs=" + legs + " boots=" + feet;
       }
    }
 }

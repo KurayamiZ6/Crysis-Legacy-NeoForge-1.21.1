@@ -23,7 +23,9 @@ public enum NanosuitProfile {
       NanosuitMobilityRules.LEGACY_CURRENT,
       NanosuitCombatRules.LEGACY_CURRENT,
       NanosuitAuxiliaryRules.LEGACY_CURRENT
-   );
+   ),
+   NANOSUIT_1(NanosuitGeneration.NANOSUIT_1, LEGACY_CURRENT),
+   NANOSUIT_2(NanosuitGeneration.NANOSUIT_2, LEGACY_CURRENT);
 
    private static final Map<NanosuitGeneration, NanosuitProfile> ACTIVE_BY_GENERATION = new EnumMap<>(NanosuitGeneration.class);
 
@@ -40,6 +42,10 @@ public enum NanosuitProfile {
    private final NanosuitMobilityRules mobility;
    private final NanosuitCombatRules combat;
    private final NanosuitAuxiliaryRules auxiliary;
+
+   NanosuitProfile(NanosuitGeneration generation, NanosuitProfile rules) {
+      this(generation, rules.controls, rules.modeCooldownTicks, rules.energy, rules.mobility, rules.combat, rules.auxiliary);
+   }
 
    NanosuitProfile(NanosuitGeneration generation, NanosuitControls controls, int modeCooldownTicks,
       NanosuitEnergyRules energy, NanosuitMobilityRules mobility, NanosuitCombatRules combat, NanosuitAuxiliaryRules auxiliary) {

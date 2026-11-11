@@ -2,9 +2,9 @@ package io.github.painworks.crysismod.client.nanogeo;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
+import io.github.painworks.crysismod.nanosuit.NanosuitPresentation;
 import io.github.painworks.crysismod.nanosuit.client.render.NanosuitArmorModeOverlayState;
 import io.github.painworks.crysismod.nanosuit.util.NanosuitArmorUtil;
-import io.github.painworks.crysismod.nanosuit.util.NanosuitArmorVariant;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.model.HumanoidModel;
 import net.minecraft.client.model.PlayerModel;
@@ -39,7 +39,7 @@ public final class NanoGeoArmorModeOverlayLayer extends RenderLayer<AbstractClie
    ) {
       if (NanoGeoClientConfig.armorModeOverlayRenderInThirdPerson()) {
          if (NanosuitArmorUtil.hasFullSet(player)) {
-            if (NanosuitArmorUtil.getEquippedVariant(player) == NanosuitArmorVariant.NANOGEO) {
+            if (NanosuitPresentation.forPiece(player.getItemBySlot(EquipmentSlot.CHEST), EquipmentSlot.CHEST) != null) {
                NanosuitArmorModeOverlayState.OverlayRenderState overlayState = NanosuitArmorModeOverlayState.resolveForThirdPerson(player);
                if (overlayState.enabled()) {
                   NanoGeoArmorRenderer renderer = getOverlayRenderer();
@@ -231,7 +231,7 @@ public final class NanoGeoArmorModeOverlayLayer extends RenderLayer<AbstractClie
       float overlayAlpha
    ) {
       ItemStack chestStack = player.getItemBySlot(EquipmentSlot.CHEST);
-      if (NanosuitArmorUtil.isNanosuitArmorPiece(chestStack, EquipmentSlot.CHEST) && NanosuitArmorUtil.getVariant(chestStack) == NanosuitArmorVariant.NANOGEO) {
+      if (NanosuitPresentation.forPiece(chestStack, EquipmentSlot.CHEST) != null) {
          renderer.endFirstPersonArmOnly();
          renderer.beginFullModelRenderOverride();
          renderer.prepForRender(player, chestStack, EquipmentSlot.CHEST, playerModel);
