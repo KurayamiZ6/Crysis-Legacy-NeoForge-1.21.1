@@ -1,5 +1,6 @@
 package io.github.painworks.crysismod.nanosuit;
 
+import io.github.painworks.crysismod.nanosuit.rules.NanosuitAuxiliaryRules;
 import io.github.painworks.crysismod.nanosuit.rules.NanosuitCombatRules;
 import io.github.painworks.crysismod.nanosuit.rules.NanosuitControls;
 import io.github.painworks.crysismod.nanosuit.rules.NanosuitControls.Ability;
@@ -20,7 +21,8 @@ public enum NanosuitProfile {
       20,
       NanosuitEnergyRules.LEGACY_CURRENT,
       NanosuitMobilityRules.LEGACY_CURRENT,
-      NanosuitCombatRules.LEGACY_CURRENT
+      NanosuitCombatRules.LEGACY_CURRENT,
+      NanosuitAuxiliaryRules.LEGACY_CURRENT
    );
 
    private static final Map<NanosuitGeneration, NanosuitProfile> ACTIVE_BY_GENERATION = new EnumMap<>(NanosuitGeneration.class);
@@ -37,15 +39,17 @@ public enum NanosuitProfile {
    private final NanosuitEnergyRules energy;
    private final NanosuitMobilityRules mobility;
    private final NanosuitCombatRules combat;
+   private final NanosuitAuxiliaryRules auxiliary;
 
    NanosuitProfile(NanosuitGeneration generation, NanosuitControls controls, int modeCooldownTicks,
-      NanosuitEnergyRules energy, NanosuitMobilityRules mobility, NanosuitCombatRules combat) {
+      NanosuitEnergyRules energy, NanosuitMobilityRules mobility, NanosuitCombatRules combat, NanosuitAuxiliaryRules auxiliary) {
       this.generation = generation;
       this.controls = controls;
       this.modeCooldownTicks = modeCooldownTicks;
       this.energy = energy;
       this.mobility = mobility;
       this.combat = combat;
+      this.auxiliary = auxiliary;
    }
 
    public static NanosuitProfile forGeneration(NanosuitGeneration generation) {
@@ -78,5 +82,9 @@ public enum NanosuitProfile {
 
    public NanosuitCombatRules combat() {
       return combat;
+   }
+
+   public NanosuitAuxiliaryRules auxiliary() {
+      return auxiliary;
    }
 }

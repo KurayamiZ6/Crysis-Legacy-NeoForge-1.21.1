@@ -1,15 +1,14 @@
 package io.github.painworks.crysismod.nanovision.server;
 
-import io.github.painworks.crysismod.nanosuit.energy.INanosuitEnergy;
-
 import io.github.painworks.crysismod.client.nanovision.NanovisionConfig;
+import io.github.painworks.crysismod.nanosuit.NanosuitProfile;
+import io.github.painworks.crysismod.nanosuit.energy.INanosuitEnergy;
 import io.github.painworks.crysismod.nanosuit.energy.NanosuitCapabilities;
 import io.github.painworks.crysismod.nanosuit.util.NanosuitArmorUtil;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.world.entity.EquipmentSlot;
 
 public final class NanovisionServerState {
    private static final ConcurrentMap<UUID, Boolean> ACTIVE_BY_PLAYER = new ConcurrentHashMap<>();
@@ -43,14 +42,14 @@ public final class NanovisionServerState {
    private static boolean canUse(ServerPlayer player) {
       if (!NanovisionConfig.nanovisionEnabled()) {
          return false;
-      } else if (NanovisionConfig.nanovisionRequiresFullSet() && !NanosuitArmorUtil.hasFullSet(player)) {
-         return false;
-      } else {
-         return !NanovisionConfig.nanovisionRequiresFullSet()
-               && NanovisionConfig.nanovisionRequiresHelmet()
-               && !NanosuitArmorUtil.isNanosuitHelmet(player.getItemBySlot(EquipmentSlot.HEAD))
-            ? false
-            : java.util.Optional.<INanosuitEnergy>of(NanosuitCapabilities.get(player)).map(data -> !data.isRecoveryLocked() && data.getEnergy() > 0.0F).orElse(false);
       }
+      NanosuitProfile profile = NanosuitArmorUtil.getNanovisionProfile(
+         player, NanovisionConfig.nanovisionRequiresFullSet(), NanovisionConfig.nanovisionRequiresHelmet()
+      );
+      if (profile == null || !profile.auxiliary().nanovision()) {
+         return false;
+      }
+      INanosuitEnergy data = NanosuitCapabilities.get(player);
+      return !data.isRecoveryLocked() && data.getEnergy() > 0.0F;
    }
 }

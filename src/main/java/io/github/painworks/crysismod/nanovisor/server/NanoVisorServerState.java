@@ -1,5 +1,6 @@
 package io.github.painworks.crysismod.nanovisor.server;
 
+import io.github.painworks.crysismod.nanosuit.NanosuitProfile;
 import io.github.painworks.crysismod.nanosuit.energy.INanosuitEnergy;
 
 import io.github.painworks.crysismod.nanosuit.energy.NanosuitCapabilities;
@@ -43,8 +44,11 @@ public final class NanoVisorServerState {
    }
 
    private static boolean canActivate(ServerPlayer player) {
-      return !NanosuitArmorUtil.hasFullSet(player)
-         ? false
-         : java.util.Optional.<INanosuitEnergy>of(NanosuitCapabilities.get(player)).map(data -> !data.isRecoveryLocked() && data.getEnergy() > 0.0F).orElse(false);
+      NanosuitProfile profile = NanosuitArmorUtil.getEquippedProfile(player);
+      if (profile == null || !profile.auxiliary().nanoVisorMarking()) {
+         return false;
+      }
+      INanosuitEnergy data = NanosuitCapabilities.get(player);
+      return !data.isRecoveryLocked() && data.getEnergy() > 0.0F;
    }
 }

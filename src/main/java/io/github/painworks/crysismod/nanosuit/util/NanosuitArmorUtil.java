@@ -35,6 +35,14 @@ public final class NanosuitArmorUtil {
       return NanosuitProfile.forGeneration(getPieceGeneration(stack, slot));
    }
 
+   public static NanosuitProfile getNanovisionProfile(Player player, boolean requiresFullSet, boolean requiresHelmet) {
+      if (requiresFullSet) {
+         return getEquippedProfile(player);
+      }
+      NanosuitProfile helmet = getPieceProfile(player.getItemBySlot(EquipmentSlot.HEAD), EquipmentSlot.HEAD);
+      return helmet == null && !requiresHelmet ? NanosuitProfile.LEGACY_CURRENT : helmet;
+   }
+
    public static boolean hasFullSet(Player player, boolean ignoredAllowLegacy) {
       return hasFullSet(player);
    }

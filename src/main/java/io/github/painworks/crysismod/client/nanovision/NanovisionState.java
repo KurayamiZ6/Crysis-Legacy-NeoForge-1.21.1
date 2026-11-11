@@ -1,14 +1,13 @@
 package io.github.painworks.crysismod.client.nanovision;
 
-import io.github.painworks.crysismod.nanosuit.energy.INanosuitEnergy;
-
+import io.github.painworks.crysismod.nanosuit.NanosuitProfile;
 import io.github.painworks.crysismod.nanosuit.energy.NanosuitCapabilities;
+import io.github.painworks.crysismod.nanosuit.energy.INanosuitEnergy;
 import io.github.painworks.crysismod.nanosuit.util.NanosuitArmorUtil;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
-import net.minecraft.world.entity.EquipmentSlot;
 
 public final class NanovisionState {
    private static final int INFINITE_NIGHT_VISION_DURATION_TICKS = -1;
@@ -28,16 +27,15 @@ public final class NanovisionState {
    public static boolean canUseNanovision(LocalPlayer player) {
       if (player == null) {
          return false;
-      } else {
-         boolean hasEnergy = java.util.Optional.<INanosuitEnergy>of(NanosuitCapabilities.get(player)).map(data -> !data.isRecoveryLocked() && data.getEnergy() > 0.0F).orElse(false);
-         if (!hasEnergy) {
-            return false;
-         } else if (NanovisionConfig.nanovisionRequiresFullSet()) {
-            return NanosuitArmorUtil.hasFullSet(player);
-         } else {
-            return NanovisionConfig.nanovisionRequiresHelmet() ? NanosuitArmorUtil.isNanosuitHelmet(player.getItemBySlot(EquipmentSlot.HEAD)) : true;
-         }
       }
+      INanosuitEnergy data = NanosuitCapabilities.get(player);
+      if (data.isRecoveryLocked() || !(data.getEnergy() > 0.0F)) {
+         return false;
+      }
+      NanosuitProfile profile = NanosuitArmorUtil.getNanovisionProfile(
+         player, NanovisionConfig.nanovisionRequiresFullSet(), NanovisionConfig.nanovisionRequiresHelmet()
+      );
+      return profile != null && profile.auxiliary().nanovision();
    }
 
    public static void tickClientEffects(Minecraft minecraft) {
