@@ -1,0 +1,8 @@
+modLoader="javafml"
+loaderVersion="[4,)"
+license="Local QA"
+
+[[mods]]
+modId="crysisequipmentrenderqa"
+version="1.0"
+displayName="Crysis Equipment Render QA"
