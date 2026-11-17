@@ -178,7 +178,7 @@ public final class Nanosuit1ModesQa {
                 drive = Drive.SPRINT;
             }
             case 59 -> check("SPEED_SPRINT_WITHOUT_SECOND_PRESS", NanosuitPlayerHandler.isLandPowerSprintActive(player)
-                && near(data.getEnergy(), 85.0 - 8 * 0.9), player);
+                && near(data.getEnergy(), 85.0 - 8 * 2.25), player);
             case 64 -> select(player, NanosuitMode.CLOAK);
             case 72 -> {
                 check("CLOAK_SYNC_AND_BOOST_REMOVED", modesMatch(player, NanosuitMode.CLOAK)
@@ -306,12 +306,12 @@ public final class Nanosuit1ModesQa {
                 drainStart = data.getEnergy();
             }
             case 388 -> {
-                check("CLASSIC_CLOAK_STILL_DRAIN", Math.abs(drainStart - data.getEnergy() - 0.10F) < 0.01F, player);
+                check("CLASSIC_CLOAK_STILL_DRAIN", Math.abs(drainStart - data.getEnergy() - 10 * 0.025F) < 0.01F, player);
                 player.setForcedPose(Pose.SWIMMING);
                 drainStart = data.getEnergy();
             }
             case 398 -> {
-                check("CLASSIC_CLOAK_PRONE_DRAIN", Math.abs(drainStart - data.getEnergy() - 0.225F) < 0.01F, player);
+                check("CLASSIC_CLOAK_PRONE_DRAIN", Math.abs(drainStart - data.getEnergy() - 10 * 0.05625F) < 0.01F, player);
                 player.setForcedPose(null);
                 setEnergy(player, 10.05F);
             }

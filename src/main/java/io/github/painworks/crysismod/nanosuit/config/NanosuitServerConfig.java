@@ -70,13 +70,13 @@ public final class NanosuitServerConfig {
    private static final DoubleValue CLASSIC_CROUCH = classicRate("speed.crouchMultiplier", 2.0);
    private static final DoubleValue CLASSIC_CRAWL = classicRate("speed.crawlMultiplier", 2.0);
    private static final DoubleValue CLASSIC_SPRINT = classicRate("speed.sprintMultiplier", 2.0);
-   private static final DoubleValue CLASSIC_SPRINT_DRAIN = classicRate("speed.landSprintDrainPerTick", 0.9);
+   private static final DoubleValue CLASSIC_SPRINT_DRAIN = classicRate("speed.landSprintDrainPerTick", 2.25);
    private static final DoubleValue CLASSIC_SWIM_DRAIN = classicRate("speed.swimDrainPerTick", 0.75);
-   private static final DoubleValue CLASSIC_CLOAK_STANDING = classicRate("cloak.standingDrainPerTick", 0.010);
-   private static final DoubleValue CLASSIC_CLOAK_PRONE = classicRate("cloak.proneDrainPerTick", 0.0225);
-   private static final DoubleValue CLASSIC_CLOAK_CROUCH = classicRate("cloak.crouchDrainPerTick", 0.060);
-   private static final DoubleValue CLASSIC_CLOAK_WALK = classicRate("cloak.walkDrainPerTick", 0.150);
-   private static final DoubleValue CLASSIC_CLOAK_RUN = classicRate("cloak.runDrainPerTick", 0.300);
+   private static final DoubleValue CLASSIC_CLOAK_STANDING = classicRate("cloak.standingDrainPerTick", 0.025);
+   private static final DoubleValue CLASSIC_CLOAK_PRONE = classicRate("cloak.proneDrainPerTick", 0.05625);
+   private static final DoubleValue CLASSIC_CLOAK_CROUCH = classicRate("cloak.crouchDrainPerTick", 0.15);
+   private static final DoubleValue CLASSIC_CLOAK_WALK = classicRate("cloak.walkDrainPerTick", 0.375);
+   private static final DoubleValue CLASSIC_CLOAK_RUN = classicRate("cloak.runDrainPerTick", 0.75);
    private static final DoubleValue CLASSIC_ARMOR_CAPACITY = BUILDER.comment("Provisional incoming HP absorbed by 100 Nanosuit 1 energy.")
       .defineInRange("nanosuit1.armor.fullEnergyBlockCapacityHp", 200.0, 1.0, 10000.0);
    private static final BooleanValue CLASSIC_ARMOR_ENVIRONMENT = BUILDER.comment("Also protect against fall, drowning and other legacy-exempt sources where damage is absorbable.")
@@ -263,8 +263,8 @@ public final class NanosuitServerConfig {
       float cloakWalk, float cloakRun, float armorCapacity, boolean protectEnvironmental, double meleeKnockback
    ) {
       private static ClassicValues defaults() {
-         return new ClassicValues(2, 30, 1.2F, 2.0, 2.0, 2.0, 2.0, 0.9F, 0.75F,
-            0.010F, 0.0225F, 0.060F, 0.150F, 0.300F, 200.0F, false, 0.30);
+         return new ClassicValues(2, 30, 1.2F, 2.0, 2.0, 2.0, 2.0, 2.25F, 0.75F,
+            0.025F, 0.05625F, 0.15F, 0.375F, 0.75F, 200.0F, false, 0.30);
       }
 
       private static ClassicValues load() {
