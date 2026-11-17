@@ -46,9 +46,6 @@ public final class NanoGeoArmorModeOverlayLayer extends RenderLayer<AbstractClie
                   if (renderer != null) {
                      HumanoidModel<?> playerModel = (HumanoidModel<?>)this.getParentModel();
                      NanoGeoClientConfig.ArmorModeOverlayBackend backend = NanoGeoShaderpackCompatibility.resolveArmorModeOverlayBackend();
-                     if (overlayState.usesClassicFibers() && backend != NanoGeoClientConfig.ArmorModeOverlayBackend.DISABLED) {
-                        backend = NanoGeoClientConfig.ArmorModeOverlayBackend.TEXTURE_FALLBACK;
-                     }
                      switch (backend) {
                         case DISABLED:
                            return;
@@ -173,7 +170,7 @@ public final class NanoGeoArmorModeOverlayLayer extends RenderLayer<AbstractClie
                                  resolveThirdPersonPulseRenderType(pulseTextures.glowTexture(), smoothPulsePreset, culledPulseCompat)
                               );
                               int pulsePackedLight = 15728880;
-                              int glowRgb = NanoGeoClientConfig.armorModePulseGlowColorRgb();
+                              int glowRgb = overlayState.pulseGlowColorRgb();
                               poseStack.pushPose();
                               poseStack.scale(shellScale, shellScale, shellScale);
                               this.renderOverlayFullModel(
@@ -196,7 +193,7 @@ public final class NanoGeoArmorModeOverlayLayer extends RenderLayer<AbstractClie
                                  resolveThirdPersonPulseRenderType(pulseTextures.coreTexture(), smoothPulsePreset, culledPulseCompat)
                               );
                               int pulsePackedLight = 15728880;
-                              int coreRgb = pulseTextures.glowTexture() == null ? 16777215 : NanoGeoClientConfig.armorModePulseCoreColorRgb();
+                              int coreRgb = overlayState.pulseCoreColorRgb(pulseTextures.glowTexture() != null);
                               poseStack.pushPose();
                               poseStack.scale(shellScale, shellScale, shellScale);
                               this.renderOverlayFullModel(

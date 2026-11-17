@@ -132,9 +132,6 @@ public final class NanoGeoFirstPersonArmRenderer {
                            renderThermalPulseOnly(renderer, player, poseStack, bufferSource, overlayState);
                         } else if (overlayState.enabled()) {
                            NanoGeoClientConfig.ArmorModeOverlayBackend backend = NanoGeoShaderpackCompatibility.resolveArmorModeOverlayBackend();
-                           if (overlayState.usesClassicFibers() && backend != NanoGeoClientConfig.ArmorModeOverlayBackend.DISABLED) {
-                              backend = NanoGeoClientConfig.ArmorModeOverlayBackend.TEXTURE_FALLBACK;
-                           }
                            if (backend == NanoGeoClientConfig.ArmorModeOverlayBackend.CUSTOM_SHADER) {
                               NanoGeoArmorModeXShimmerShader.prepare(overlayState, true);
                               VertexConsumer overlayConsumer = bufferSource.getBuffer(
@@ -199,7 +196,7 @@ public final class NanoGeoFirstPersonArmRenderer {
                                        : NanoGeoArmorModeRenderTypes.armorModeOverlayCompatibilityPulseUnshaded(pulseTextures.glowTexture())
                                  );
                                  int pulsePackedLight = 15728880;
-                                 int glowRgb = NanoGeoClientConfig.armorModePulseGlowColorRgb();
+                                 int glowRgb = overlayState.pulseGlowColorRgb();
                                  poseStack.pushPose();
                                  poseStack.scale(shellScale, shellScale, shellScale);
                                  renderer.renderToBuffer(
@@ -222,7 +219,7 @@ public final class NanoGeoFirstPersonArmRenderer {
                                        : NanoGeoArmorModeRenderTypes.armorModeOverlayCompatibilityPulseUnshaded(pulseTextures.coreTexture())
                                  );
                                  int pulsePackedLight = 15728880;
-                                 int coreRgb = pulseTextures.glowTexture() == null ? 16777215 : NanoGeoClientConfig.armorModePulseCoreColorRgb();
+                                 int coreRgb = overlayState.pulseCoreColorRgb(pulseTextures.glowTexture() != null);
                                  poseStack.pushPose();
                                  poseStack.scale(shellScale, shellScale, shellScale);
                                  renderer.renderToBuffer(
@@ -312,7 +309,7 @@ public final class NanoGeoFirstPersonArmRenderer {
                      ? NanoGeoArmorModeRenderTypes.armorModeOverlayCompatibilityPulseUnshadedSmooth(pulseTextures.glowTexture())
                      : NanoGeoArmorModeRenderTypes.armorModeOverlayCompatibilityPulseUnshaded(pulseTextures.glowTexture())
                );
-               int glowRgb = NanoGeoClientConfig.armorModePulseGlowColorRgb();
+               int glowRgb = overlayState.pulseGlowColorRgb();
                poseStack.pushPose();
                poseStack.scale(shellScale, shellScale, shellScale);
                renderer.renderToBuffer(
@@ -334,7 +331,7 @@ public final class NanoGeoFirstPersonArmRenderer {
                      ? NanoGeoArmorModeRenderTypes.armorModeOverlayCompatibilityPulseUnshadedSmooth(pulseTextures.coreTexture())
                      : NanoGeoArmorModeRenderTypes.armorModeOverlayCompatibilityPulseUnshaded(pulseTextures.coreTexture())
                );
-               int coreRgb = pulseTextures.glowTexture() == null ? 16777215 : NanoGeoClientConfig.armorModePulseCoreColorRgb();
+               int coreRgb = overlayState.pulseCoreColorRgb(pulseTextures.glowTexture() != null);
                poseStack.pushPose();
                poseStack.scale(shellScale, shellScale, shellScale);
                renderer.renderToBuffer(

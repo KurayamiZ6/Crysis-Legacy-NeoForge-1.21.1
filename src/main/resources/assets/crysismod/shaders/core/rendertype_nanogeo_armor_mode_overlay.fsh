@@ -12,6 +12,7 @@ uniform vec4 FogColor;
 uniform int PatternMode;
 uniform float TimeSeconds;
 uniform float OverlayAlpha;
+uniform int ClassicModeTint;
 uniform float OverlayBrightness;
 uniform float XAlpha;
 uniform float XSizePx;
@@ -796,6 +797,14 @@ vec4 ring_pulse_components(vec2 uv) {
     return total;
 }
 
+vec4 recolor_classic_effect(vec4 color) {
+    if (ClassicModeTint != 0) {
+        float brightness = max(color.r, max(color.g, color.b));
+        color.rgb = brightness * (ClassicModeTint == 1 ? vec3(1.0, 0.0, 0.0) : vec3(1.0, 1.0, 0.0));
+    }
+    return color;
+}
+
 void main() {
     vec4 color = texture(Sampler0, texCoord0);
     float textureAlphaMask = color.a > 0.0 ? 1.0 : 0.0;
@@ -873,7 +882,7 @@ void main() {
             if (color.a < 0.0039215686) {
                 discard;
             }
-            fragColor = linear_fog(color, vertexDistance, FogStart, FogEnd, FogColor);
+            fragColor = linear_fog(recolor_classic_effect(color), vertexDistance, FogStart, FogEnd, FogColor);
             return;
         }
 
@@ -903,7 +912,7 @@ void main() {
             if (color.a < 0.0039215686) {
                 discard;
             }
-            fragColor = linear_fog(color, vertexDistance, FogStart, FogEnd, FogColor);
+            fragColor = linear_fog(recolor_classic_effect(color), vertexDistance, FogStart, FogEnd, FogColor);
             return;
         }
 
@@ -920,5 +929,5 @@ void main() {
         discard;
     }
 
-    fragColor = linear_fog(color, vertexDistance, FogStart, FogEnd, FogColor);
+    fragColor = linear_fog(recolor_classic_effect(color), vertexDistance, FogStart, FogEnd, FogColor);
 }

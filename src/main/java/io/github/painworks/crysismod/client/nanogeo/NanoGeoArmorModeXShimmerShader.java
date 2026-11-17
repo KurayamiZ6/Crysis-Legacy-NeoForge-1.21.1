@@ -66,6 +66,7 @@ public final class NanoGeoArmorModeXShimmerShader {
          setInt(shader, "PatternMode", shaderPatternMode(patternMode));
          setFloat(shader, "TimeSeconds", state.timeSeconds());
          setFloat(shader, "OverlayAlpha", overlayAlpha);
+         setInt(shader, "ClassicModeTint", state.classicModeTint());
          setFloat(shader, "OverlayBrightness", NanoGeoClientConfig.armorModeOverlayBrightness());
          setFloat(shader, "TextureSizePx", textureSizePx);
          setInt(shader, "TransitionEnabled", NanoGeoClientConfig.armorModeTransitionEnabled() ? 1 : 0);
@@ -377,14 +378,15 @@ public final class NanoGeoArmorModeXShimmerShader {
       }
    }
 
-   private record PreparedState(ResourceLocation texture, float overlayAlpha, float timeSeconds, boolean firstPerson, float transitionProgress) {
+   private record PreparedState(ResourceLocation texture, float overlayAlpha, float timeSeconds, boolean firstPerson, float transitionProgress, int classicModeTint) {
       private static final NanoGeoArmorModeXShimmerShader.PreparedState DEFAULT = new NanoGeoArmorModeXShimmerShader.PreparedState(
-         NanoGeoArmorTextures.ARMOR_MODE_OVERLAY, NanoGeoClientConfig.armorModeOverlayAlpha() / 255.0F, 0.0F, false, 0.0F
+         NanoGeoArmorTextures.ARMOR_MODE_OVERLAY, NanoGeoClientConfig.armorModeOverlayAlpha() / 255.0F, 0.0F, false, 0.0F, 0
       );
 
       private static NanoGeoArmorModeXShimmerShader.PreparedState from(NanosuitArmorModeOverlayState.OverlayRenderState overlayState, boolean firstPerson) {
          return new NanoGeoArmorModeXShimmerShader.PreparedState(
-            overlayState.texture(), overlayState.alpha(), overlayState.shimmerTime() / 20.0F, firstPerson, overlayState.transitionProgress()
+            overlayState.texture(), overlayState.alpha(), overlayState.shimmerTime() / 20.0F, firstPerson, overlayState.transitionProgress(),
+            overlayState.classicMode() ? (overlayState.green() == 0.0F ? 1 : 2) : 0
          );
       }
    }

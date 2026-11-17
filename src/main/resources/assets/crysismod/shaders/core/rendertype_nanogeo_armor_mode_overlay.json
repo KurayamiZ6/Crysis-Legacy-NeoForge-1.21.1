@@ -132,6 +132,7 @@
     { "name": "PulseEdgeRoughness", "type": "float", "count": 1, "values": [ 0.35 ] },
     { "name": "PulsePatternRotationRandomness", "type": "float", "count": 1, "values": [ 1.0 ] },
     { "name": "PulseRingMergingEnabled", "type": "int", "count": 1, "values": [ 1 ] },
+    { "name": "ClassicModeTint", "type": "int", "count": 1, "values": [ 0 ] },
     { "name": "PulseDebugForceVisible", "type": "int", "count": 1, "values": [ 0 ] },
     { "name": "PulseDebugOutputOnlyPulse", "type": "int", "count": 1, "values": [ 0 ] }
   ]

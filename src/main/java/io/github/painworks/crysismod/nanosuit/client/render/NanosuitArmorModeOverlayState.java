@@ -21,9 +21,6 @@ import org.slf4j.Logger;
 public final class NanosuitArmorModeOverlayState {
    private static final Logger LOGGER = LogUtils.getLogger();
    private static final ResourceLocation DEFAULT_OVERLAY_TEXTURE = NanoGeoArmorTextures.ARMOR_MODE_OVERLAY;
-   private static final ResourceLocation CLASSIC_FIBER_TEXTURE = ResourceLocation.fromNamespaceAndPath(
-      "crysismod", "textures/armor/classic_mode_fibers.png"
-   );
    private static final String LEGACY_OVERLAY_TEXTURE = "crysismod:textures/armor/armor_mode.png";
    private static final Map<UUID, String> DEBUG_SIGNATURE_BY_PLAYER = new ConcurrentHashMap<>();
    private static volatile String cachedTexturePath = DEFAULT_OVERLAY_TEXTURE.toString();
@@ -64,10 +61,16 @@ public final class NanosuitArmorModeOverlayState {
          NanosuitProfile profile = NanosuitArmorUtil.getEquippedProfile(player);
          if (profile == null) {
             return NanosuitArmorModeOverlayState.OverlayRenderState.DISABLED;
-         } else if (profile == NanosuitProfile.NANOSUIT_1) {
-            return resolveClassicFibers(player);
          } else {
-            NanosuitArmorModeOverlayState.EnergyAndMode state = readEnergyAndMode(player);
+            boolean classicMode = profile == NanosuitProfile.NANOSUIT_1;
+            NanosuitMode mode = NanosuitCapabilities.get(player).getMode();
+            if (classicMode && (player != Minecraft.getInstance().player
+                  || NanosuitCapabilities.get(player).isRecoveryLocked()
+                  || (mode != NanosuitMode.STRENGTH && mode != NanosuitMode.SPEED))) {
+               return OverlayRenderState.DISABLED;
+            }
+            NanosuitArmorModeOverlayState.EnergyAndMode state = classicMode
+               ? new EnergyAndMode(NanosuitCapabilities.get(player).getEnergy(), true) : readEnergyAndMode(player);
             float transitionProgress = NanosuitArmorModeOverlayTransitionState.resolveProgress(player, state.armorModeActive());
             if (!state.armorModeActive() && transitionProgress <= 1.0E-4F) {
                maybeDebugLog(player, renderPath, state, NanosuitArmorModeOverlayState.OverlayRenderState.DISABLED);
@@ -79,15 +82,16 @@ public final class NanosuitArmorModeOverlayState {
                   true,
                   state.armorModeActive(),
                   overlayTexture(),
-                  NanoGeoClientConfig.armorModeOverlayTintR(),
-                  NanoGeoClientConfig.armorModeOverlayTintG(),
-                  NanoGeoClientConfig.armorModeOverlayTintB(),
+                  classicMode ? 1.0F : NanoGeoClientConfig.armorModeOverlayTintR(),
+                  classicMode ? (mode == NanosuitMode.STRENGTH ? 0.0F : 1.0F) : NanoGeoClientConfig.armorModeOverlayTintG(),
+                  classicMode ? 0.0F : NanoGeoClientConfig.armorModeOverlayTintB(),
                   alpha,
                   0.0F,
                   0.0F,
                   NanoGeoClientConfig.armorModeOverlayFullbright() ? 15728880 : -1,
                   shimmerTime,
-                  transitionProgress
+                  transitionProgress,
+                  classicMode
                );
                maybeDebugLog(player, renderPath, state, resolved);
                return resolved;
@@ -96,21 +100,6 @@ public final class NanosuitArmorModeOverlayState {
       } else {
          return NanosuitArmorModeOverlayState.OverlayRenderState.DISABLED;
       }
-   }
-
-   private static OverlayRenderState resolveClassicFibers(Player player) {
-      // Only the wearer receives the exact selected mode from the server.
-      if (player != Minecraft.getInstance().player) {
-         return OverlayRenderState.DISABLED;
-      }
-      INanosuitEnergy data = NanosuitCapabilities.get(player);
-      NanosuitMode mode = data.getMode();
-      if (data.isRecoveryLocked() || (mode != NanosuitMode.STRENGTH && mode != NanosuitMode.SPEED)) {
-         return OverlayRenderState.DISABLED;
-      }
-      boolean strength = mode == NanosuitMode.STRENGTH;
-      return new OverlayRenderState(true, false, CLASSIC_FIBER_TEXTURE, 1.0F, strength ? 0.15F : 0.82F, 0.04F,
-         0.82F, 0.0F, 0.0F, 15728880, player.tickCount, 1.0F);
    }
 
    private static NanosuitArmorModeOverlayState.EnergyAndMode readEnergyAndMode(Player player) {
@@ -174,10 +163,28 @@ public final class NanosuitArmorModeOverlayState {
       float activationBoost,
       int overlayPackedLight,
       float shimmerTime,
-      float transitionProgress
+      float transitionProgress,
+      boolean classicMode
    ) {
-      public boolean usesClassicFibers() {
-         return CLASSIC_FIBER_TEXTURE.equals(texture);
+      public OverlayRenderState(
+         boolean enabled, boolean armorModeActive, ResourceLocation texture, float red, float green, float blue,
+         float alpha, float pulse, float activationBoost, int overlayPackedLight, float shimmerTime, float transitionProgress
+      ) {
+         this(enabled, armorModeActive, texture, red, green, blue, alpha, pulse, activationBoost,
+            overlayPackedLight, shimmerTime, transitionProgress, false);
+      }
+
+      public int pulseGlowColorRgb() {
+         return classicMode ? classicColorRgb() : NanoGeoClientConfig.armorModePulseGlowColorRgb();
+      }
+
+      public int pulseCoreColorRgb(boolean hasGlowTexture) {
+         return classicMode ? classicColorRgb()
+            : hasGlowTexture ? NanoGeoClientConfig.armorModePulseCoreColorRgb() : 16777215;
+      }
+
+      private int classicColorRgb() {
+         return green == 0.0F ? 0xFF0000 : 0xFFFF00;
       }
 
       private static final NanosuitArmorModeOverlayState.OverlayRenderState DISABLED = new NanosuitArmorModeOverlayState.OverlayRenderState(
