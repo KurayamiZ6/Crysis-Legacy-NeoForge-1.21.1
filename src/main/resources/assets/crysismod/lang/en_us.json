@@ -9,6 +9,7 @@
     "hud.crysismod.nanosuit1.mode.strength": "Strength",
     "hud.crysismod.nanosuit1.mode.speed": "Speed",
     "hud.crysismod.nanosuit1.mode.locked": "Locked",
+    "hud.crysismod.nanosuit1.energy_critical": "Energy critical",
     "key.crysismod.open_perspective_debug_settings":  "Open Perspective Debug Settings",
     "key.crysismod.toggle_enhanced_jump_debug":  "Toggle Enhanced Jump Debug",
     "key.crysismod.toggle_nano_visor":  "Toggle Nano Visor",

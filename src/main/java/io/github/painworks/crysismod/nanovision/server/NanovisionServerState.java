@@ -46,7 +46,7 @@ public final class NanovisionServerState {
       NanosuitProfile profile = NanosuitArmorUtil.getNanovisionProfile(
          player, NanovisionConfig.nanovisionRequiresFullSet(), NanovisionConfig.nanovisionRequiresHelmet()
       );
-      if (profile == null || !profile.auxiliary().nanovision()) {
+      if (profile == null || profile == NanosuitProfile.NANOSUIT_1 || !profile.auxiliary().nanovision()) {
          return false;
       }
       INanosuitEnergy data = NanosuitCapabilities.get(player);

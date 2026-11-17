@@ -1,4 +1,14 @@
 {
+  "classic_maximum_armor": {"sounds": ["crysismod:classic/maximum_armor"]},
+  "classic_maximum_strength": {"sounds": ["crysismod:classic/maximum_strength"]},
+  "classic_maximum_speed": {"sounds": ["crysismod:classic/maximum_speed"]},
+  "classic_cloak_on": {"sounds": ["crysismod:classic/cloak_on"]},
+  "classic_cloak_off": {"sounds": ["crysismod:classic/cloak_off"]},
+  "classic_energy_critical": {"sounds": ["crysismod:classic/energy_critical"]},
+  "classic_energy_low": {"sounds": ["crysismod:classic/energy_low"]},
+  "classic_power_melee": {"sounds": ["crysismod:classic/power_melee"]},
+  "classic_night_vision_on": {"sounds": ["crysismod:classic/night_vision_on"]},
+  "classic_night_vision_off": {"sounds": ["crysismod:classic/night_vision_off"]},
   "cloak_engaged": {
     "subtitle": "subtitle.crysismod.cloak_engaged",
     "sounds": [

@@ -36,7 +36,11 @@ public enum NanosuitProfile {
             Ability.POWER_SWIM, NanosuitMode.SPEED
          )
       ),
-      LEGACY_CURRENT
+      2,
+      NanosuitEnergyRules.LEGACY_CURRENT,
+      NanosuitMobilityRules.CLASSIC,
+      NanosuitCombatRules.CLASSIC,
+      NanosuitAuxiliaryRules.LEGACY_CURRENT
    ),
    NANOSUIT_2(NanosuitGeneration.NANOSUIT_2, LEGACY_CURRENT);
 

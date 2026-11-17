@@ -197,6 +197,7 @@ public final class NanosuitHudOverlay {
                      data -> {
                         GuiGraphics guiGraphics = event.getGuiGraphics();
                         float targetEnergy = Mth.clamp(data.getEnergy(), 0.0F, 100.0F);
+                        boolean classic = profile == NanosuitProfile.NANOSUIT_1;
                         boolean armorModeActive = data.getMode() == NanosuitMode.ARMOR && targetEnergy > 0.0F;
                         boolean forceModeActive = NanosuitPowerFeedback.isForceActive();
                         boolean cloakModeActive = data.getMode() == NanosuitMode.CLOAK && targetEnergy > 0.0F;
@@ -208,10 +209,16 @@ public final class NanosuitHudOverlay {
                         int screenCenterY = Minecraft.getInstance().getWindow().getGuiScaledHeight() / 2;
                         int screenWidth = Minecraft.getInstance().getWindow().getGuiScaledWidth();
                         int screenHeight = Minecraft.getInstance().getWindow().getGuiScaledHeight();
-                        renderArmorModeOverlay(guiGraphics, screenWidth, screenHeight, screenCenterX, screenCenterY, event.getPartialTick().getGameTimeDeltaPartialTick(false), armorModeActive);
-                        renderEnergyOffLayer(guiGraphics, x, y, screenCenterX, screenCenterY);
-                        renderEnergyActiveLayer(guiGraphics, x, y, screenCenterX, screenCenterY, targetEnergy);
-                        if (profile == NanosuitProfile.NANOSUIT_1) {
+                        if (classic) {
+                           resetArmorOverlayIntroState();
+                        } else {
+                           renderArmorModeOverlay(guiGraphics, screenWidth, screenHeight, screenCenterX, screenCenterY,
+                              event.getPartialTick().getGameTimeDeltaPartialTick(false), armorModeActive);
+                        }
+                        boolean lowEnergy = classic && targetEnergy <= 15.0F;
+                        renderEnergyOffLayer(guiGraphics, x, y, screenCenterX, screenCenterY, lowEnergy);
+                        renderEnergyActiveLayer(guiGraphics, x, y, screenCenterX, screenCenterY, targetEnergy, lowEnergy);
+                        if (classic) {
                            renderNanosuit1Mode(guiGraphics, groupCenterX, groupCenterY, screenCenterX, screenCenterY, data);
                         } else {
                            renderModesLayer(
@@ -252,10 +259,12 @@ public final class NanosuitHudOverlay {
       boolean moving = isMovingClient(player);
       NanosuitMode mode = data.getMode();
       String branch;
+      String drainLabel;
       float drainPerTick;
-      if (profile == NanosuitProfile.NANOSUIT_1 && mode != NanosuitMode.CLOAK) {
+      boolean classic = profile == NanosuitProfile.NANOSUIT_1;
+      if (classic) {
          branch = data.isRecoveryLocked() ? "LOCKED" : mode.name() + (sprint ? "_BOOST" : "_IDLE");
-         drainPerTick = sprint ? NanosuitServerConfig.nanosuit1SprintDrainPerTick() : 0.0F;
+         drainPerTick = 0.0F;
       } else if (mode == NanosuitMode.CLOAK) {
          if (sprint) {
             branch = "CLOAK_SPRINT";
@@ -285,7 +294,12 @@ public final class NanosuitHudOverlay {
             : (moving ? NanosuitServerConfig.walkingDrainPerTick() : NanosuitServerConfig.standingDrainPerTick());
       }
 
-      float drainPerSec = drainPerTick * 20.0F;
+      if (classic) {
+         drainLabel = String.format(Locale.ROOT, "server energy=%.2f", data.getEnergy());
+      } else {
+         drainLabel = String.format(Locale.ROOT, "drain/tick=%.5f  drain/sec=%.3f  energy=%.2f",
+            drainPerTick, drainPerTick * 20.0F, data.getEnergy());
+      }
       float walkDistDelta = player.walkDist - player.walkDistO;
       double dx = player.getX() - player.xo;
       double dz = player.getZ() - player.zo;
@@ -299,7 +313,7 @@ public final class NanosuitHudOverlay {
       );
       guiGraphics.drawString(
          Minecraft.getInstance().font,
-         String.format(Locale.ROOT, "drain/tick=%.5f  drain/sec=%.3f  energy=%.2f", drainPerTick, drainPerSec, data.getEnergy()),
+         drainLabel,
          x,
          y + 12,
          -6620161,
@@ -327,15 +341,17 @@ public final class NanosuitHudOverlay {
       }
    }
 
-   private static void renderEnergyOffLayer(GuiGraphics guiGraphics, int x, int y, int screenCenterX, int screenCenterY) {
+   private static void renderEnergyOffLayer(GuiGraphics guiGraphics, int x, int y, int screenCenterX, int screenCenterY, boolean lowEnergy) {
       applyConfiguredTextureFilterIfNeeded();
       enableDefaultHudBlend();
-      renderHudSlice(guiGraphics, NanosuitHudOverlay.RightHud.ENERGY_BAR_OFF, x, y, screenCenterX, screenCenterY, 0, 450, 450, 180, offLayerAlpha, 1.0F, 1.0F);
+      renderHudSlice(guiGraphics, NanosuitHudOverlay.RightHud.ENERGY_BAR_OFF, x, y, screenCenterX, screenCenterY,
+         0, 450, 450, 180, offLayerAlpha, 1.0F, 1.0F, lowEnergy);
       guiGraphics.setColor(1.0F, 1.0F, 1.0F, 1.0F);
       RenderSystem.disableBlend();
    }
 
-   private static void renderEnergyActiveLayer(GuiGraphics guiGraphics, int x, int y, int screenCenterX, int screenCenterY, float energy) {
+   private static void renderEnergyActiveLayer(GuiGraphics guiGraphics, int x, int y, int screenCenterX, int screenCenterY,
+      float energy, boolean lowEnergy) {
       float progress = Mth.clamp(energy / 100.0F, 0.0F, 1.0F);
       boolean treatAsFull = energy >= 99.999F;
       int filledSegments = !treatAsFull && !(progress >= 0.9975F) ? Mth.clamp(Mth.floor(progress * 20.0F + 1.0E-6F), 0, 20) : 20;
@@ -345,7 +361,8 @@ public final class NanosuitHudOverlay {
             applyConfiguredTextureFilterIfNeeded();
             enableDefaultHudBlend();
             renderHudSlice(
-               guiGraphics, NanosuitHudOverlay.RightHud.ENERGY_BAR_ACTIVE, x, y, screenCenterX, screenCenterY, 0, srcFillWidth, 450, 180, 1.0F, 1.0F, 1.0F
+               guiGraphics, NanosuitHudOverlay.RightHud.ENERGY_BAR_ACTIVE, x, y, screenCenterX, screenCenterY,
+               0, srcFillWidth, 450, 180, 1.0F, 1.0F, 1.0F, lowEnergy
             );
             guiGraphics.setColor(1.0F, 1.0F, 1.0F, 1.0F);
             RenderSystem.disableBlend();
@@ -367,7 +384,7 @@ public final class NanosuitHudOverlay {
       enableDefaultHudBlend();
       int modesX = NanosuitHudOverlay.RightHud.topLeftXFromCenter(groupCenterX, 450, hudScale);
       int modesY = NanosuitHudOverlay.RightHud.topLeftYFromCenter(groupCenterY, 300, hudScale);
-      renderHudSlice(guiGraphics, NanosuitHudOverlay.RightHud.MODES_OFF, modesX, modesY, screenCenterX, screenCenterY, 0, 450, 450, 300, 1.0F, 1.0F, 1.0F);
+      renderHudSlice(guiGraphics, NanosuitHudOverlay.RightHud.MODES_OFF, modesX, modesY, screenCenterX, screenCenterY, 0, 450, 450, 300, 1.0F, 1.0F, 1.0F, false);
       if (armorModeActive) {
          renderModeSegment(guiGraphics, modesX, modesY, screenCenterX, screenCenterY, 0);
       }
@@ -389,7 +406,7 @@ public final class NanosuitHudOverlay {
       int srcX = clampedIndex * 150;
       int srcW = Mth.clamp(450 - srcX, 0, 150);
       if (srcW > 0) {
-         renderHudSlice(guiGraphics, NanosuitHudOverlay.RightHud.MODES_ACTIVE, x, y, screenCenterX, screenCenterY, srcX, srcW, 450, 300, 1.0F, 1.0F, 1.0F);
+         renderHudSlice(guiGraphics, NanosuitHudOverlay.RightHud.MODES_ACTIVE, x, y, screenCenterX, screenCenterY, srcX, srcW, 450, 300, 1.0F, 1.0F, 1.0F, false);
       }
    }
 
@@ -707,13 +724,14 @@ public final class NanosuitHudOverlay {
       int textureH,
       float alpha,
       float scaleX,
-      float scaleY
+      float scaleY,
+      boolean lowEnergy
    ) {
       guiGraphics.pose().pushPose();
       applyVisorInertiaTransform(guiGraphics, screenCenterX, screenCenterY);
       guiGraphics.pose().translate(x, y, 0.0F);
       guiGraphics.pose().scale(hudScale * scaleX, hudScale * scaleY, 1.0F);
-      guiGraphics.setColor(1.0F, 1.0F, 1.0F, alpha);
+      guiGraphics.setColor(1.0F, lowEnergy ? 0.24F : 1.0F, lowEnergy ? 0.18F : 1.0F, alpha);
       guiGraphics.blit(texture, srcX, 0, srcX, 0.0F, srcFillWidth, textureH, textureW, textureH);
       guiGraphics.setColor(1.0F, 1.0F, 1.0F, 1.0F);
       guiGraphics.pose().popPose();

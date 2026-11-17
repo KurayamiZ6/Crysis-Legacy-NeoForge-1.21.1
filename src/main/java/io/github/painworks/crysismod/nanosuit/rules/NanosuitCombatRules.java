@@ -13,6 +13,9 @@ public record NanosuitCombatRules(Melee melee, Cloak cloak, ModeDrain armorDrain
       new ModeDrain(0.0625F, 0.083333336F, 0.25F),
       1.5F
    );
+   public static final NanosuitCombatRules CLASSIC = new NanosuitCombatRules(
+      new Melee(10.0F, LEGACY_CURRENT.melee.damageMultiplier()), LEGACY_CURRENT.cloak, LEGACY_CURRENT.armorDrain, 1.0F
+   );
 
    public record Melee(float energyCost, float damageMultiplier) {
    }

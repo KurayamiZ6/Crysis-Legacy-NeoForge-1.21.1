@@ -9,6 +9,7 @@
     "hud.crysismod.nanosuit1.mode.strength": "Сила",
     "hud.crysismod.nanosuit1.mode.speed": "Скорость",
     "hud.crysismod.nanosuit1.mode.locked": "Заблокирован",
+    "hud.crysismod.nanosuit1.energy_critical": "Критический уровень энергии",
     "key.crysismod.open_perspective_debug_settings":  "Открыть настройки псевдоперспективы",
     "key.crysismod.toggle_nano_visor":  "Переключить Nano Visor",
     "key.crysismod.mark_nano_visor_target":  "Пометить цель Nano Visor",

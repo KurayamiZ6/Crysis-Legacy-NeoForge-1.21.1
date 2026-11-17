@@ -3,6 +3,7 @@ package io.github.painworks.crysismod.nanosuit.client;
 import io.github.painworks.crysismod.client.nanovision.NanovisionState;
 import io.github.painworks.crysismod.nanosuit.config.NanosuitSoundVolumes;
 import io.github.painworks.crysismod.nanosuit.NanosuitMode;
+import io.github.painworks.crysismod.nanosuit.NanosuitProfile;
 import io.github.painworks.crysismod.nanosuit.energy.NanosuitCapabilities;
 import io.github.painworks.crysismod.nanosuit.handler.NanosuitPlayerHandler;
 import io.github.painworks.crysismod.nanosuit.handler.NanosuitSwimBoost;
@@ -40,8 +41,9 @@ public final class CloakAmbientSound {
       float volume = NanosuitSoundVolumes.ambience();
       boolean audible = minecraft.options.getSoundSourceVolume(SoundSource.MASTER) > 0.0F
          && minecraft.options.getSoundSourceVolume(SoundSource.PLAYERS) > 0.0F && volume > 0.0F;
+      NanosuitProfile profile = audible && player != null && player.isAlive() ? NanosuitArmorUtil.getEquippedProfile(player) : null;
       NanosuitMode activeMode = NanosuitMode.NONE;
-      if (audible && player != null && player.isAlive() && NanosuitArmorUtil.hasFullSet(player)) {
+      if (profile != null) {
          var data = NanosuitCapabilities.get(player);
          if (data.getEnergy() > 0.0F && !data.isRecoveryLocked()) {
             activeMode = data.getMode();
@@ -49,7 +51,7 @@ public final class CloakAmbientSound {
       }
 
       CLOAK.update(sounds, activeMode == NanosuitMode.CLOAK, ModSounds.CLOAK_AMBIENCE.get(), 0.192F * volume);
-      ARMOR.update(sounds, activeMode == NanosuitMode.ARMOR, ModSounds.ARMOR_AMBIENCE.get(), 0.232F * volume);
+      ARMOR.update(sounds, activeMode == NanosuitMode.ARMOR && profile != NanosuitProfile.NANOSUIT_1, ModSounds.ARMOR_AMBIENCE.get(), 0.232F * volume);
       THRUSTER.update(sounds, audible && player != null && NanosuitSwimBoost.isActive(player), ModSounds.HYDRO_THRUSTER.get(), 0.298F * volume);
       POWER_SPRINT.update(sounds, audible && player != null && NanosuitPlayerHandler.isLandPowerSprintActive(player),
          ModSounds.POWER_SPRINT_AMBIENCE.get(), 0.42F * volume);

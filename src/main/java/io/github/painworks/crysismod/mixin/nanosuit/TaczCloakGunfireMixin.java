@@ -45,8 +45,8 @@ public abstract class TaczCloakGunfireMixin {
       target = "com/tacz/guns/api/event/common/GunFirePostEvent"))
    private void crysismod$chargeConfirmedShot(CallbackInfoReturnable<Boolean> callback,
          @Local(argsOnly = true, ordinal = 1) boolean silenced) {
-      if (!CRYSISMOD_PREDATOR_BOW.equals(this.gunId) && this.getShooter() instanceof ServerPlayer player) {
-         NanosuitCloak.chargeConfirmedShot(player, silenced);
+      if (this.getShooter() instanceof ServerPlayer player) {
+         NanosuitCloak.chargeConfirmedShot(player, silenced, CRYSISMOD_PREDATOR_BOW.equals(this.gunId));
       }
    }
 }

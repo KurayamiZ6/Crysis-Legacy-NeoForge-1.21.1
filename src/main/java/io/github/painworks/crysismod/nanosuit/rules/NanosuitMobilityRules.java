@@ -7,6 +7,11 @@ public record NanosuitMobilityRules(Jump jump, int sprintCooldownTicks, double s
       20,
       0.40
    );
+   public static final NanosuitMobilityRules CLASSIC = new NanosuitMobilityRules(
+      new Jump(15.0F, 0, LEGACY_CURRENT.jump.chargeTimeoutTicks(), LEGACY_CURRENT.jump.cooldownTicks(),
+         LEGACY_CURRENT.jump.verticalVelocity()),
+      LEGACY_CURRENT.sprintCooldownTicks, LEGACY_CURRENT.swimSpeedBonus
+   );
 
    public record Jump(float energyCost, int holdTicks, int chargeTimeoutTicks, int cooldownTicks, float verticalVelocity) {
    }

@@ -132,6 +132,9 @@ public final class NanoGeoFirstPersonArmRenderer {
                            renderThermalPulseOnly(renderer, player, poseStack, bufferSource, overlayState);
                         } else if (overlayState.enabled()) {
                            NanoGeoClientConfig.ArmorModeOverlayBackend backend = NanoGeoShaderpackCompatibility.resolveArmorModeOverlayBackend();
+                           if (overlayState.usesClassicFibers() && backend != NanoGeoClientConfig.ArmorModeOverlayBackend.DISABLED) {
+                              backend = NanoGeoClientConfig.ArmorModeOverlayBackend.TEXTURE_FALLBACK;
+                           }
                            if (backend == NanoGeoClientConfig.ArmorModeOverlayBackend.CUSTOM_SHADER) {
                               NanoGeoArmorModeXShimmerShader.prepare(overlayState, true);
                               VertexConsumer overlayConsumer = bufferSource.getBuffer(

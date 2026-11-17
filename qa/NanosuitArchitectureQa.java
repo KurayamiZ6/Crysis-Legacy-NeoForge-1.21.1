@@ -86,15 +86,15 @@ public final class NanosuitArchitectureQa {
          && combat.cloak().shot(false).equals(new CloakCost(20.0F, true)), "legacy cloak shot costs and breaks");
       check(combat.predatorDamageMultiplier() == 1.5F, "legacy Predator Bow multiplier");
 
-      for (var generationProfile : Set.of(NanosuitProfile.NANOSUIT_1, NanosuitProfile.NANOSUIT_2)) {
-         check(generationProfile.modeCooldownTicks() == profile.modeCooldownTicks()
-            && generationProfile.energy() == profile.energy()
-            && generationProfile.mobility() == profile.mobility()
-            && generationProfile.combat() == profile.combat()
-            && generationProfile.auxiliary() == profile.auxiliary(),
-            "historical rules shared by " + generationProfile.generation());
-      }
-      check(NanosuitProfile.NANOSUIT_2.controls() == profile.controls(), "Nanosuit 2 shares legacy controls");
+      var second = NanosuitProfile.NANOSUIT_2;
+      check(second.modeCooldownTicks() == profile.modeCooldownTicks()
+         && second.energy() == profile.energy() && second.mobility() == profile.mobility()
+         && second.combat() == profile.combat() && second.auxiliary() == profile.auxiliary()
+         && second.controls() == profile.controls(), "Nanosuit 2 shares legacy rules");
+      var first = NanosuitProfile.NANOSUIT_1;
+      check(first.modeCooldownTicks() == 2 && first.mobility().jump().holdTicks() == 0
+         && first.enhancedJumpEnergyCost() == 15.0F && first.combat().melee().energyCost() == 10.0F,
+         "classic mode cooldown, instant jump and melee");
    }
 
    private static void checkModeWireIds() {

@@ -1,0 +1,132 @@
+package io.github.painworks.crysismod.client.nanovision;
+
+import com.mojang.blaze3d.platform.GlStateManager;
+import com.mojang.blaze3d.pipeline.RenderTarget;
+import com.mojang.logging.LogUtils;
+import io.github.painworks.crysismod.nanovision.ClassicNightVision;
+import io.github.painworks.crysismod.nanovision.ClassicNightVisionBattery;
+import io.github.painworks.crysismod.nanosuit.config.NanosuitSoundVolumes;
+import io.github.painworks.crysismod.registry.ModSounds;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.renderer.PostChain;
+import net.minecraft.client.resources.sounds.SimpleSoundInstance;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.util.Mth;
+import org.lwjgl.opengl.GL30;
+import org.slf4j.Logger;
+
+public final class ClassicNightVisionClient {
+   private static final Logger LOGGER = LogUtils.getLogger();
+   private static final String TARGET = "classic_night_vision_color";
+   private static final ResourceLocation POST_CHAIN =
+      ResourceLocation.fromNamespaceAndPath("crysismod", "shaders/post/classic_night_vision.json");
+   private static boolean active;
+   private static int batteryCharge = ClassicNightVisionBattery.FULL_CHARGE;
+   private static PostChain chain;
+   private static RenderTarget lastMainTarget;
+   private static int width;
+   private static int height;
+   private static boolean loadFailed;
+
+   private ClassicNightVisionClient() {}
+
+   public static void sync(boolean enabled, int charge) {
+      boolean wasActive = active;
+      batteryCharge = Mth.clamp(charge, 0, ClassicNightVisionBattery.FULL_CHARGE);
+      active = enabled && batteryCharge > 0;
+      if (active != wasActive) {
+         Minecraft minecraft = Minecraft.getInstance();
+         float volume = 0.55F * NanosuitSoundVolumes.visor();
+         if (minecraft.player != null && volume > 0.0F) {
+            var sound = active ? ModSounds.CLASSIC_NIGHT_VISION_ON : ModSounds.CLASSIC_NIGHT_VISION_OFF;
+            minecraft.getSoundManager().play(SimpleSoundInstance.forUI(sound.get(), 1.0F, volume));
+         }
+      }
+   }
+
+   public static boolean isActive() {
+      return active && ClassicNightVision.canUse(Minecraft.getInstance().player);
+   }
+
+   public static int batteryCharge() {
+      return batteryCharge;
+   }
+
+   static void renderScene(Minecraft minecraft, float partialTick) {
+      if (!isActive() || minecraft.level == null) {
+         closeChain();
+         return;
+      }
+      if (loadFailed) {
+         return;
+      }
+
+      RenderTarget main = minecraft.getMainRenderTarget();
+      if (chain == null || lastMainTarget != main) {
+         closeChain();
+         try {
+            chain = new PostChain(minecraft.getTextureManager(), minecraft.getResourceManager(), main, POST_CHAIN);
+            lastMainTarget = main;
+         } catch (Exception exception) {
+            loadFailed = true;
+            LOGGER.warn("Could not load classic night vision color pass", exception);
+            main.bindWrite(true);
+            return;
+         }
+      }
+      int previousFilter = main.filterMode;
+      try {
+         if (width != main.width || height != main.height) {
+            width = main.width;
+            height = main.height;
+            chain.resize(width, height);
+         }
+         chain.process(partialTick);
+         RenderTarget color = chain.getTempTarget(TARGET);
+         GlStateManager._glBindFramebuffer(GL30.GL_READ_FRAMEBUFFER, color.frameBufferId);
+         GlStateManager._glBindFramebuffer(GL30.GL_DRAW_FRAMEBUFFER, main.frameBufferId);
+         GL30.glBlitFramebuffer(0, 0, width, height, 0, 0, width, height, GL30.GL_COLOR_BUFFER_BIT, GL30.GL_NEAREST);
+      } finally {
+         if (main.filterMode != previousFilter) {
+            main.setFilterMode(previousFilter);
+         }
+         main.bindWrite(true);
+      }
+   }
+
+   static void renderBattery(Minecraft minecraft, GuiGraphics graphics) {
+      if (minecraft.options.hideGui || !active && batteryCharge == ClassicNightVisionBattery.FULL_CHARGE
+         || !ClassicNightVision.canUse(minecraft.player)) {
+         return;
+      }
+      int right = graphics.guiWidth() - 12;
+      int left = right - 62;
+      int top = 12;
+      graphics.fill(left - 1, top - 1, right + 1, top + 6, 0xBB191800);
+      graphics.fill(left, top, right, top + 5, 0xFF595018);
+      int filled = Math.round((right - left) * ((float)batteryCharge / ClassicNightVisionBattery.FULL_CHARGE));
+      graphics.fill(left, top, left + filled, top + 5, 0xFFFFDF45);
+   }
+
+   static void reset() {
+      active = false;
+      batteryCharge = ClassicNightVisionBattery.FULL_CHARGE;
+      reload();
+   }
+
+   static void reload() {
+      loadFailed = false;
+      closeChain();
+   }
+
+   private static void closeChain() {
+      if (chain != null) {
+         chain.close();
+         chain = null;
+         lastMainTarget = null;
+         width = 0;
+         height = 0;
+      }
+   }
+}

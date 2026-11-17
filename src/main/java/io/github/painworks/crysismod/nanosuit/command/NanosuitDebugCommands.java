@@ -8,6 +8,7 @@ import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.suggestion.Suggestions;
 import com.mojang.brigadier.suggestion.SuggestionsBuilder;
 import io.github.painworks.crysismod.nanosuit.NanosuitMode;
+import io.github.painworks.crysismod.nanosuit.NanosuitProfile;
 import io.github.painworks.crysismod.nanosuit.config.NanosuitServerConfig;
 import io.github.painworks.crysismod.nanosuit.energy.INanosuitEnergy;
 import io.github.painworks.crysismod.nanosuit.energy.NanosuitCapabilities;
@@ -128,7 +129,11 @@ public final class NanosuitDebugCommands {
       return withEnergy(
          target,
          data -> {
-            data.setEnergy(value);
+            if (NanosuitArmorUtil.getEquippedProfile(target) == NanosuitProfile.NANOSUIT_1 && !data.isRecoveryLocked()) {
+               data.setEnergyWithoutStartingRecovery(value);
+            } else {
+               data.setEnergy(value);
+            }
             if (data.getEnergy() <= 0.0F) {
                data.setSprintBoostReady(false);
             }

@@ -1,10 +1,12 @@
 package io.github.painworks.crysismod.nanosuit.client;
 
 import com.mojang.logging.LogUtils;
+import io.github.painworks.crysismod.nanosuit.NanosuitProfile;
 import io.github.painworks.crysismod.nanosuit.handler.NanosuitPlayerHandler;
 import io.github.painworks.crysismod.nanosuit.network.NanosuitNetwork;
 import io.github.painworks.crysismod.nanosuit.network.RequestEnhancedJumpPacket;
 import io.github.painworks.crysismod.nanosuit.network.RequestEnhancedJumpPacket.Phase;
+import io.github.painworks.crysismod.nanosuit.util.NanosuitArmorUtil;
 import io.github.painworks.crysismod.registry.ModSounds;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.player.LocalPlayer;
@@ -124,6 +126,19 @@ public final class EnhancedJumpClientState {
          return false;
       }
       var jump = NanosuitPlayerHandler.availablePowerJump(player);
+      if (NanosuitArmorUtil.getEquippedProfile(player) == NanosuitProfile.NANOSUIT_1) {
+         if (chargeTicks > 0) {
+            chargeTicks = 0;
+            sendChargePhase(Phase.RELEASE);
+         }
+         if (!pressed || jump == null) {
+            return true;
+         }
+         launchedWhileHeld = true;
+         beginRequest();
+         sendChargePhase(Phase.INSTANT);
+         return false;
+      }
       if (chargeTicks > 0 && jump == null) {
          chargeTicks = 0;
          sendChargePhase(Phase.RELEASE);

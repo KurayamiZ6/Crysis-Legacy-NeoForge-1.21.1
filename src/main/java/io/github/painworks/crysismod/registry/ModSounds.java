@@ -44,6 +44,16 @@ public final class ModSounds {
    public static final DeferredHolder<SoundEvent, SoundEvent> BINOCULAR_OFF = register("binocular_off");
    public static final DeferredHolder<SoundEvent, SoundEvent> BINOCULAR_ZOOM_IN = register("binocular_zoom_in");
    public static final DeferredHolder<SoundEvent, SoundEvent> BINOCULAR_ZOOM_OUT = register("binocular_zoom_out");
+   public static final DeferredHolder<SoundEvent, SoundEvent> CLASSIC_MAXIMUM_ARMOR = register("classic_maximum_armor");
+   public static final DeferredHolder<SoundEvent, SoundEvent> CLASSIC_MAXIMUM_STRENGTH = register("classic_maximum_strength");
+   public static final DeferredHolder<SoundEvent, SoundEvent> CLASSIC_MAXIMUM_SPEED = register("classic_maximum_speed");
+   public static final DeferredHolder<SoundEvent, SoundEvent> CLASSIC_CLOAK_ON = register("classic_cloak_on");
+   public static final DeferredHolder<SoundEvent, SoundEvent> CLASSIC_CLOAK_OFF = register("classic_cloak_off");
+   public static final DeferredHolder<SoundEvent, SoundEvent> CLASSIC_ENERGY_CRITICAL = register("classic_energy_critical");
+   public static final DeferredHolder<SoundEvent, SoundEvent> CLASSIC_ENERGY_LOW = register("classic_energy_low");
+   public static final DeferredHolder<SoundEvent, SoundEvent> CLASSIC_POWER_MELEE = register("classic_power_melee");
+   public static final DeferredHolder<SoundEvent, SoundEvent> CLASSIC_NIGHT_VISION_ON = register("classic_night_vision_on");
+   public static final DeferredHolder<SoundEvent, SoundEvent> CLASSIC_NIGHT_VISION_OFF = register("classic_night_vision_off");
 
    private ModSounds() {
    }

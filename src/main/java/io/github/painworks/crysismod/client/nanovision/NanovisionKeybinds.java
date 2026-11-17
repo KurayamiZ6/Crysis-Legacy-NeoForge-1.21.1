@@ -1,6 +1,8 @@
 package io.github.painworks.crysismod.client.nanovision;
 
 import com.mojang.blaze3d.platform.InputConstants.Type;
+import io.github.painworks.crysismod.nanovision.ClassicNightVision;
+import io.github.painworks.crysismod.nanovision.network.ToggleClassicNightVisionPacket;
 import io.github.painworks.crysismod.nanosuit.network.NanosuitNetwork;
 import io.github.painworks.crysismod.nanovision.network.SetNanovisionActivePacket;
 import net.minecraft.client.KeyMapping;
@@ -36,7 +38,11 @@ public final class NanovisionKeybinds {
          boolean wasActive = NanovisionController.isActive();
 
          while (TOGGLE_NANOVISION.consumeClick()) {
-            NanovisionController.toggle(minecraft);
+            if (ClassicNightVision.canUse(minecraft.player)) {
+               NanosuitNetwork.sendToServer(ToggleClassicNightVisionPacket.INSTANCE);
+            } else {
+               NanovisionController.toggle(minecraft);
+            }
          }
 
          while (CYCLE_NANOVISION_MODE.consumeClick()) {

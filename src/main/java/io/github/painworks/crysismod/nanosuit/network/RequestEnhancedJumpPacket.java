@@ -31,6 +31,7 @@ public record RequestEnhancedJumpPacket(Phase phase) implements CustomPacketPayl
             case BEGIN -> NanosuitPlayerHandler.beginEnhancedJumpCharge(player);
             case RELEASE -> NanosuitPlayerHandler.cancelEnhancedJumpCharge(player);
             case LAUNCH -> NanosuitPlayerHandler.requestChargedEnhancedJump(player);
+            case INSTANT -> NanosuitPlayerHandler.requestInstantClassicJump(player);
          }
       }
    }
@@ -38,6 +39,7 @@ public record RequestEnhancedJumpPacket(Phase phase) implements CustomPacketPayl
    public enum Phase {
       BEGIN,
       RELEASE,
-      LAUNCH
+      LAUNCH,
+      INSTANT
    }
 }

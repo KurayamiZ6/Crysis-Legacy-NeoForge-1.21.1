@@ -35,7 +35,7 @@ public final class NanovisionState {
       NanosuitProfile profile = NanosuitArmorUtil.getNanovisionProfile(
          player, NanovisionConfig.nanovisionRequiresFullSet(), NanovisionConfig.nanovisionRequiresHelmet()
       );
-      return profile != null && profile.auxiliary().nanovision();
+      return profile != null && profile != NanosuitProfile.NANOSUIT_1 && profile.auxiliary().nanovision();
    }
 
    public static void tickClientEffects(Minecraft minecraft) {

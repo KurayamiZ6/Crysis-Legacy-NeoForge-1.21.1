@@ -23,7 +23,7 @@ public final class NanosuitPositionalSoundGain {
 
       String name = sound.getLocation().getPath();
       float gain;
-      if (name.equals("power_melee") || name.equals("power_melee_stock")) {
+      if (name.equals("power_melee") || name.equals("power_melee_stock") || name.equals("classic_power_melee")) {
          gain = NanosuitSoundVolumes.melee();
       } else if (name.startsWith("step_") || name.equals("nanosuit_landing") || name.equals("power_jump")) {
          gain = NanosuitSoundVolumes.movement();

@@ -6,6 +6,8 @@ import io.github.painworks.crysismod.nanosuit.energy.NanosuitCapabilities;
 import io.github.painworks.crysismod.nanosuit.handler.NanosuitPlayerHandler;
 import io.github.painworks.crysismod.nanosuit.handler.NanosuitSwimBoost;
 import io.github.painworks.crysismod.nanosuit.network.NanosuitSyncManager;
+import io.github.painworks.crysismod.nanosuit.network.NanosuitNetwork;
+import io.github.painworks.crysismod.nanosuit.network.RequestEnhancedJumpPacket;
 import io.github.painworks.crysismod.nanosuit.util.NanosuitArmorUtil;
 import java.util.EnumSet;
 import java.util.Objects;
@@ -19,6 +21,7 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.EquipmentSlot;
+import net.minecraft.world.entity.Pose;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
@@ -53,6 +56,8 @@ public final class Nanosuit1ModesQa {
     private int recoveryBeforeSwap;
     private double baseWalk;
     private float energyBeforeReturn;
+    private float drainStart;
+    private volatile boolean instantJump;
     private volatile Drive drive = Drive.NONE;
     private volatile Snapshot client;
     private volatile boolean ready;
@@ -103,6 +108,10 @@ public final class Nanosuit1ModesQa {
         }
         if (minecraft.player != null && minecraft.screen == null) {
             client = Snapshot.of(minecraft.player);
+            if (instantJump) {
+                instantJump = false;
+                NanosuitNetwork.sendToServer(new RequestEnhancedJumpPacket(RequestEnhancedJumpPacket.Phase.INSTANT));
+            }
             ready = ++clientTicks >= 14;
             if (complete) {
                 reported = true;
@@ -129,7 +138,7 @@ public final class Nanosuit1ModesQa {
             case 1 -> prepareFloor(player);
             case 10 -> {
                 check("DEFAULT_ARMOR_SYNC", modesMatch(player, NanosuitMode.ARMOR)
-                    && player.hasEffect(MobEffects.ABSORPTION) && client.absorption(), player);
+                    && !player.hasEffect(MobEffects.ABSORPTION) && !client.absorption(), player);
                 check("ARMOR_NO_IDLE_COST", near(data.getEnergy(), 100.0), player);
                 check("ARMOR_JUMP_DENIED", !NanosuitPlayerHandler.canChargeEnhancedJump(player), player);
                 baseWalk = player.getAttributeValue(Attributes.MOVEMENT_SPEED);
@@ -145,7 +154,7 @@ public final class Nanosuit1ModesQa {
             case 30 -> {
                 check("STRENGTH_SYNC_AND_EXCLUSIVITY", modesMatch(player, NanosuitMode.STRENGTH)
                     && !player.hasEffect(MobEffects.ABSORPTION) && !client.absorption() && !player.isInvisible(), player);
-                punch(player, "STRENGTH_PUNCH", 2.0F, 15.0F);
+                punch(player, "STRENGTH_PUNCH", 2.0F, 10.0F);
                 setEnergy(player, 100.0F);
                 drive = Drive.SPRINT;
             }
@@ -155,24 +164,21 @@ public final class Nanosuit1ModesQa {
                 drive = Drive.NONE;
                 player.setSprinting(false);
                 check("STRENGTH_JUMP_ALLOWED", NanosuitPlayerHandler.canChargeEnhancedJump(player), player);
-                queueJump(player);
+                instantJump = true;
             }
-            case 42 -> check("STRENGTH_JUMP_COST_AND_IMPULSE", near(data.getEnergy(), 90.0)
-                && near(client.energy(), 90.0) && player.getY() > 181.5, player);
-            case 43 -> check("MODE_COOLDOWN_T19", !NanosuitPlayerHandler.tryToggleMode(player, NanosuitMode.SPEED)
-                && data.getMode() == NanosuitMode.STRENGTH, player);
+            case 42 -> check("STRENGTH_JUMP_COST_AND_IMPULSE", near(data.getEnergy(), 85.0)
+                && near(client.energy(), 85.0) && player.getY() > 181.5, player);
             case 44 -> select(player, NanosuitMode.SPEED);
             case 51 -> {
                 check("SPEED_SYNC_AND_JUMP_DENIED", modesMatch(player, NanosuitMode.SPEED)
                     && !NanosuitPlayerHandler.canChargeEnhancedJump(player) && !player.isInvisible()
                     && !player.hasEffect(MobEffects.ABSORPTION), player);
-                check("SPEED_WALK_WITHOUT_DRAIN", near(player.getAttributeValue(Attributes.MOVEMENT_SPEED), baseWalk * 1.10)
-                    && near(client.walkSpeed(), baseWalk * 1.10) && near(data.getEnergy(), 90.0), player);
+                check("SPEED_WALK_WITHOUT_DRAIN", near(player.getAttributeValue(Attributes.MOVEMENT_SPEED), baseWalk * 2.0)
+                    && near(client.walkSpeed(), baseWalk * 2.0) && near(data.getEnergy(), 85.0), player);
                 drive = Drive.SPRINT;
             }
             case 59 -> check("SPEED_SPRINT_WITHOUT_SECOND_PRESS", NanosuitPlayerHandler.isLandPowerSprintActive(player)
-                && player.hasEffect(MobEffects.MOVEMENT_SPEED) && client.speedEffect()
-                && data.getEnergy() < 90.0F, player);
+                && near(data.getEnergy(), 85.0 - 8 * 0.9), player);
             case 64 -> select(player, NanosuitMode.CLOAK);
             case 72 -> {
                 check("CLOAK_SYNC_AND_BOOST_REMOVED", modesMatch(player, NanosuitMode.CLOAK)
@@ -190,7 +196,7 @@ public final class Nanosuit1ModesQa {
             case 88 -> select(player, NanosuitMode.ARMOR);
             case 95 -> {
                 check("ARMOR_RESTORED_CLOAK_CLEARED", modesMatch(player, NanosuitMode.ARMOR)
-                    && !player.isInvisible() && !client.invisible() && player.hasEffect(MobEffects.ABSORPTION), player);
+                    && !player.isInvisible() && !client.invisible() && !player.hasEffect(MobEffects.ABSORPTION), player);
                 player.setItemSlot(EquipmentSlot.HEAD, ItemStack.EMPTY);
             }
             case 102 -> {
@@ -221,14 +227,24 @@ public final class Nanosuit1ModesQa {
             case 128 -> check("N2_TO_N1_DEFAULT_ARMOR", generation(player) == FIRST
                 && client.generation() == FIRST && modesMatch(player, NanosuitMode.ARMOR)
                 && near(data.getEnergy(), energyBeforeReturn) && !player.isInvisible(), player);
-            case 132 -> setEnergy(player, 0.0F);
+            case 132 -> {
+                setEnergy(player, 0.0F);
+                data.setRegenDelayTicks(2);
+            }
+            case 137 -> {
+                check("CLASSIC_ZERO_RECHARGES_WITHOUT_LOCK", !data.isRecoveryLocked() && client != null && !client.locked()
+                    && data.getEnergy() > 0.0F && data.getEnergy() < 10.0F && modesMatch(player, NanosuitMode.ARMOR), player);
+                equip(player, SECOND);
+            }
+            case 138 -> setEnergy(player, 0.0F);
             case 140 -> {
                 check("LOCKOUT_REJECTS_SELECTION", modesMatch(player, NanosuitMode.NONE)
                     && data.isRecoveryLocked() && client.locked() && !player.hasEffect(MobEffects.ABSORPTION)
                     && !NanosuitPlayerHandler.tryToggleMode(player, NanosuitMode.STRENGTH), player);
                 recoveryBeforeSwap = data.getRecoveryTicks();
-                equip(player, SECOND);
+                equip(player, FIRST);
             }
+            case 145 -> equip(player, SECOND);
             case 150 -> equip(player, FIRST);
             case 162 -> check("LOCKOUT_SURVIVES_BOTH_SWAPS", generation(player) == FIRST
                 && modesMatch(player, NanosuitMode.NONE) && data.isRecoveryLocked() && client.locked()
@@ -239,7 +255,7 @@ public final class Nanosuit1ModesQa {
             case 263 -> {
                 check("FULL_RECOVERY_DEFAULTS_ARMOR", near(data.getEnergy(), 100.0)
                     && near(client.energy(), 100.0) && !data.isRecoveryLocked() && !client.locked()
-                    && modesMatch(player, NanosuitMode.ARMOR) && player.hasEffect(MobEffects.ABSORPTION), player);
+                    && modesMatch(player, NanosuitMode.ARMOR) && !player.hasEffect(MobEffects.ABSORPTION), player);
                 enterPool(player);
                 drive = Drive.SWIM;
             }
@@ -265,7 +281,8 @@ public final class Nanosuit1ModesQa {
             }
             case 319 -> {
                 check("STRENGTH_CAN_QUEUE_JUMP_BEFORE_SWITCH", NanosuitPlayerHandler.canChargeEnhancedJump(player), player);
-                queueJump(player);
+                NanosuitPlayerHandler.beginEnhancedJumpCharge(player);
+                NanosuitPlayerHandler.requestChargedEnhancedJump(player);
             }
             case 320 -> select(player, NanosuitMode.ARMOR);
             case 329 -> check("MODE_CHANGE_CANCELS_QUEUED_JUMP", modesMatch(player, NanosuitMode.ARMOR)
@@ -283,6 +300,49 @@ public final class Nanosuit1ModesQa {
                 setEnergy(player, SAVED_ENERGY);
             }
             case 378 -> {
+                select(player, NanosuitMode.CLOAK);
+                player.setSprinting(false);
+                player.setShiftKeyDown(false);
+                drainStart = data.getEnergy();
+            }
+            case 388 -> {
+                check("CLASSIC_CLOAK_STILL_DRAIN", Math.abs(drainStart - data.getEnergy() - 0.10F) < 0.01F, player);
+                player.setForcedPose(Pose.SWIMMING);
+                drainStart = data.getEnergy();
+            }
+            case 398 -> {
+                check("CLASSIC_CLOAK_PRONE_DRAIN", Math.abs(drainStart - data.getEnergy() - 0.225F) < 0.01F, player);
+                player.setForcedPose(null);
+                setEnergy(player, 10.05F);
+            }
+            case 411 -> {
+                check("CLASSIC_CLOAK_TEN_PERCENT", near(data.getEnergy(), 10.0)
+                    && modesMatch(player, NanosuitMode.ARMOR) && !player.isInvisible(), player);
+                select(player, NanosuitMode.SPEED);
+                player.setShiftKeyDown(true);
+                setEnergy(player, 11.0F);
+            }
+            case 415 -> {
+                check("CLASSIC_SPEED_CROUCH_MULTIPLIER", near(player.getAttributeValue(Attributes.MOVEMENT_SPEED), baseWalk * 2.0)
+                    && near(data.getEnergy(), 11.0), player);
+                player.setShiftKeyDown(false);
+                player.setForcedPose(Pose.SWIMMING);
+            }
+            case 419 -> {
+                check("CLASSIC_SPEED_PRONE_MULTIPLIER", near(player.getAttributeValue(Attributes.MOVEMENT_SPEED), baseWalk * 2.0)
+                    && near(data.getEnergy(), 11.0), player);
+                player.setForcedPose(null);
+                drive = Drive.SPRINT;
+            }
+            case 427 -> {
+                check("CLASSIC_SPRINT_TEN_PERCENT", near(data.getEnergy(), 10.0) && !NanosuitPlayerHandler.isLandPowerSprintActive(player)
+                    && !data.isRecoveryLocked(), player);
+                drive = Drive.NONE;
+                player.setSprinting(false);
+                select(player, NanosuitMode.STRENGTH);
+                setEnergy(player, SAVED_ENERGY);
+            }
+            case 439 -> {
                 check("STRENGTH_SAVE_STATE", wearsFirst(player) && modesMatch(player, NanosuitMode.STRENGTH)
                     && near(data.getEnergy(), SAVED_ENERGY) && near(client.energy(), SAVED_ENERGY), player);
                 complete = true;
@@ -324,11 +384,6 @@ public final class Nanosuit1ModesQa {
         return NanosuitCapabilities.get(player).getMode() == mode && client.mode() == mode;
     }
 
-    private static void queueJump(ServerPlayer player) {
-        NanosuitPlayerHandler.beginEnhancedJumpCharge(player);
-        NanosuitPlayerHandler.requestChargedEnhancedJump(player);
-    }
-
     private static void prepareFloor(ServerPlayer player) {
         player.setGameMode(GameType.SURVIVAL);
         player.serverLevel().getGameRules().getRule(GameRules.RULE_DOMOBSPAWNING).set(false, player.server);
@@ -354,7 +409,11 @@ public final class Nanosuit1ModesQa {
 
     private static void setEnergy(ServerPlayer player, float value) {
         var data = NanosuitCapabilities.get(player);
-        data.setEnergy(value);
+        if (generation(player) == FIRST && !data.isRecoveryLocked()) {
+            data.setEnergyWithoutStartingRecovery(value);
+        } else {
+            data.setEnergy(value);
+        }
         data.setRegenDelayTicks(1200);
         NanosuitSyncManager.syncToClient(player);
     }

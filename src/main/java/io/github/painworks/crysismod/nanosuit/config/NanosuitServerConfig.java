@@ -33,9 +33,6 @@ public final class NanosuitServerConfig {
    private static final double DEFAULT_ARMOR_MODE_FULL_ENERGY_BLOCK_CAPACITY_HP = 200.0;
    private static final boolean DEFAULT_DEBUG_COMMANDS_ENABLED = true;
    private static final boolean DEFAULT_DEBUG_ARMOR_DAMAGE_ABSORPTION = false;
-   private static final double DEFAULT_NANOSUIT_1_WALK_BONUS = 0.10;
-   private static final double DEFAULT_NANOSUIT_1_SPRINT_DRAIN_PER_TICK = 0.75;
-   private static final int DEFAULT_NANOSUIT_1_SPRINT_SPEED_AMPLIFIER = 1;
    public static final DoubleValue ENERGY_REGEN_PER_TICK = BUILDER.comment("Energy regenerated per tick when regeneration is allowed.")
       .defineInRange("energy.regenPerTick", 1.2, 0.0, 100.0);
    public static final DoubleValue STANDING_DRAIN_PER_TICK = BUILDER.comment("Base energy drain per tick while standing.")
@@ -64,18 +61,28 @@ public final class NanosuitServerConfig {
       .defineInRange("effects.armorAbsorptionAmplifier", 3, 0, 255);
    public static final IntValue SPRINT_SPEED_AMPLIFIER = BUILDER.comment("Enhanced sprint speed amplifier. Vanilla level shown to player is value + 1.")
       .defineInRange("effects.sprintSpeedAmplifier", 1, 0, 255);
-   public static final DoubleValue NANOSUIT_1_WALK_BONUS = BUILDER.comment(
-         "Additional movement multiplier in Nanosuit 1 Speed mode while walking. 0.10 adds ten percent."
-      )
-      .defineInRange("nanosuit1.speed.walkBonus", DEFAULT_NANOSUIT_1_WALK_BONUS, 0.0, 1.0);
-   public static final DoubleValue NANOSUIT_1_SPRINT_DRAIN_PER_TICK = BUILDER.comment(
-         "Nanosuit 1 energy spent per tick of enhanced sprint or swim in Speed mode."
-      )
-      .defineInRange("nanosuit1.speed.sprintDrainPerTick", DEFAULT_NANOSUIT_1_SPRINT_DRAIN_PER_TICK, 0.0, 100.0);
-   public static final IntValue NANOSUIT_1_SPRINT_SPEED_AMPLIFIER = BUILDER.comment(
-         "Nanosuit 1 enhanced sprint speed amplifier. Vanilla level shown to player is value + 1."
-      )
-      .defineInRange("nanosuit1.speed.sprintSpeedAmplifier", DEFAULT_NANOSUIT_1_SPRINT_SPEED_AMPLIFIER, 0, 255);
+   private static final IntValue CLASSIC_MODE_COOLDOWN = BUILDER.comment("Technical cooldown between Nanosuit 1 selections.")
+      .defineInRange("nanosuit1.modeCooldownTicks", 2, 0, 20);
+   private static final IntValue CLASSIC_REGEN_DELAY = BUILDER.comment("Provisional Nanosuit 1 recharge delay after spending energy.")
+      .defineInRange("nanosuit1.energy.rechargeDelayTicks", 30, 0, 600);
+   private static final DoubleValue CLASSIC_REGEN = classicRate("energy.rechargePerTick", 1.2);
+   private static final DoubleValue CLASSIC_WALK = classicRate("speed.walkMultiplier", 2.0);
+   private static final DoubleValue CLASSIC_CROUCH = classicRate("speed.crouchMultiplier", 2.0);
+   private static final DoubleValue CLASSIC_CRAWL = classicRate("speed.crawlMultiplier", 2.0);
+   private static final DoubleValue CLASSIC_SPRINT = classicRate("speed.sprintMultiplier", 2.0);
+   private static final DoubleValue CLASSIC_SPRINT_DRAIN = classicRate("speed.landSprintDrainPerTick", 0.9);
+   private static final DoubleValue CLASSIC_SWIM_DRAIN = classicRate("speed.swimDrainPerTick", 0.75);
+   private static final DoubleValue CLASSIC_CLOAK_STANDING = classicRate("cloak.standingDrainPerTick", 0.010);
+   private static final DoubleValue CLASSIC_CLOAK_PRONE = classicRate("cloak.proneDrainPerTick", 0.0225);
+   private static final DoubleValue CLASSIC_CLOAK_CROUCH = classicRate("cloak.crouchDrainPerTick", 0.060);
+   private static final DoubleValue CLASSIC_CLOAK_WALK = classicRate("cloak.walkDrainPerTick", 0.150);
+   private static final DoubleValue CLASSIC_CLOAK_RUN = classicRate("cloak.runDrainPerTick", 0.300);
+   private static final DoubleValue CLASSIC_ARMOR_CAPACITY = BUILDER.comment("Provisional incoming HP absorbed by 100 Nanosuit 1 energy.")
+      .defineInRange("nanosuit1.armor.fullEnergyBlockCapacityHp", 200.0, 1.0, 10000.0);
+   private static final BooleanValue CLASSIC_ARMOR_ENVIRONMENT = BUILDER.comment("Also protect against fall, drowning and other legacy-exempt sources where damage is absorbable.")
+      .define("nanosuit1.armor.protectEnvironmental", false);
+   private static final DoubleValue POWER_MELEE_KNOCKBACK = BUILDER.comment("Extra vanilla knockback strength on a successful powered melee hit for either suit.")
+      .defineInRange("effects.powerMeleeKnockback", 0.30, 0.0, 2.0);
    public static final DoubleValue ENERGY_SYNC_STEP = BUILDER.comment("Minimum energy delta to trigger immediate server->client sync.")
       .defineInRange("sync.energyStep", 1.26, 0.01, 100.0);
    public static final IntValue ENERGY_SYNC_INTERVAL_TICKS = BUILDER.comment("Heartbeat sync interval in ticks while energy changes.")
@@ -89,6 +96,11 @@ public final class NanosuitServerConfig {
       .define("debug.armorDamageAbsorption", false);
    public static final ModConfigSpec SPEC = BUILDER.build();
    private static volatile NanosuitServerConfig.CachedValues CACHED_VALUES = NanosuitServerConfig.CachedValues.defaults();
+
+   private static DoubleValue classicRate(String key, double value) {
+      boolean multiplier = key.endsWith("Multiplier");
+      return BUILDER.defineInRange("nanosuit1." + key, value, multiplier ? 1.0 : 0.0, multiplier ? 5.0 : 100.0);
+   }
 
    private NanosuitServerConfig() {
    }
@@ -119,15 +131,13 @@ public final class NanosuitServerConfig {
             safeGetInt(EFFECT_REFRESH_THRESHOLD_TICKS, 4),
             safeGetInt(ARMOR_ABSORPTION_AMPLIFIER, 3),
             safeGetInt(SPRINT_SPEED_AMPLIFIER, 1),
-            safeGetDouble(NANOSUIT_1_WALK_BONUS, DEFAULT_NANOSUIT_1_WALK_BONUS),
-            safeGetDouble(NANOSUIT_1_SPRINT_DRAIN_PER_TICK, DEFAULT_NANOSUIT_1_SPRINT_DRAIN_PER_TICK).floatValue(),
-            safeGetInt(NANOSUIT_1_SPRINT_SPEED_AMPLIFIER, DEFAULT_NANOSUIT_1_SPRINT_SPEED_AMPLIFIER),
             safeGetDouble(ENERGY_SYNC_STEP, 1.26).floatValue(),
             safeGetInt(ENERGY_SYNC_INTERVAL_TICKS, 13),
             safeGetDouble(ARMOR_MODE_FULL_ENERGY_BLOCK_CAPACITY_HP, 200.0).floatValue(),
             safeGetBoolean(DEBUG_COMMANDS_ENABLED, true),
             safeGetBoolean(DEBUG_ARMOR_DAMAGE_ABSORPTION, false)
          );
+         classic = ClassicValues.load();
       }
    }
 
@@ -183,16 +193,18 @@ public final class NanosuitServerConfig {
       return CACHED_VALUES.sprintSpeedAmplifier();
    }
 
-   public static double nanosuit1WalkBonus() {
-      return CACHED_VALUES.nanosuit1WalkBonus();
+   private static volatile ClassicValues classic = ClassicValues.defaults();
+
+   public static ClassicValues classic() {
+      return classic;
    }
 
    public static float nanosuit1SprintDrainPerTick() {
-      return CACHED_VALUES.nanosuit1SprintDrainPerTick();
+      return classic.sprintDrain();
    }
 
-   public static int nanosuit1SprintSpeedAmplifier() {
-      return CACHED_VALUES.nanosuit1SprintSpeedAmplifier();
+   public static double powerMeleeKnockback() {
+      return classic.meleeKnockback();
    }
 
    public static float energySyncStep() {
@@ -217,6 +229,7 @@ public final class NanosuitServerConfig {
 
    public static void resetCachedValuesToDefaults() {
       CACHED_VALUES = NanosuitServerConfig.CachedValues.defaults();
+      classic = ClassicValues.defaults();
    }
 
    private static Double safeGetDouble(DoubleValue value, double fallback) {
@@ -243,6 +256,33 @@ public final class NanosuitServerConfig {
       }
    }
 
+   public record ClassicValues(
+      int modeCooldown, int rechargeDelay, float recharge, double walkMultiplier,
+      double crouchMultiplier, double crawlMultiplier, double sprintMultiplier, float sprintDrain,
+      float swimDrain, float cloakStanding, float cloakProne, float cloakCrouch,
+      float cloakWalk, float cloakRun, float armorCapacity, boolean protectEnvironmental, double meleeKnockback
+   ) {
+      private static ClassicValues defaults() {
+         return new ClassicValues(2, 30, 1.2F, 2.0, 2.0, 2.0, 2.0, 0.9F, 0.75F,
+            0.010F, 0.0225F, 0.060F, 0.150F, 0.300F, 200.0F, false, 0.30);
+      }
+
+      private static ClassicValues load() {
+         ClassicValues d = defaults();
+         return new ClassicValues(
+            safeGetInt(CLASSIC_MODE_COOLDOWN, d.modeCooldown), safeGetInt(CLASSIC_REGEN_DELAY, d.rechargeDelay),
+            safeGetDouble(CLASSIC_REGEN, d.recharge).floatValue(), safeGetDouble(CLASSIC_WALK, d.walkMultiplier),
+            safeGetDouble(CLASSIC_CROUCH, d.crouchMultiplier), safeGetDouble(CLASSIC_CRAWL, d.crawlMultiplier),
+            safeGetDouble(CLASSIC_SPRINT, d.sprintMultiplier), safeGetDouble(CLASSIC_SPRINT_DRAIN, d.sprintDrain).floatValue(),
+            safeGetDouble(CLASSIC_SWIM_DRAIN, d.swimDrain).floatValue(), safeGetDouble(CLASSIC_CLOAK_STANDING, d.cloakStanding).floatValue(),
+            safeGetDouble(CLASSIC_CLOAK_PRONE, d.cloakProne).floatValue(), safeGetDouble(CLASSIC_CLOAK_CROUCH, d.cloakCrouch).floatValue(),
+            safeGetDouble(CLASSIC_CLOAK_WALK, d.cloakWalk).floatValue(), safeGetDouble(CLASSIC_CLOAK_RUN, d.cloakRun).floatValue(),
+            safeGetDouble(CLASSIC_ARMOR_CAPACITY, d.armorCapacity).floatValue(),
+            safeGetBoolean(CLASSIC_ARMOR_ENVIRONMENT, d.protectEnvironmental), safeGetDouble(POWER_MELEE_KNOCKBACK, d.meleeKnockback)
+         );
+      }
+   }
+
    private record CachedValues(
       float energyRegenPerTick,
       float standingDrainPerTick,
@@ -257,9 +297,6 @@ public final class NanosuitServerConfig {
       int effectRefreshThresholdTicks,
       int armorAbsorptionAmplifier,
       int sprintSpeedAmplifier,
-      double nanosuit1WalkBonus,
-      float nanosuit1SprintDrainPerTick,
-      int nanosuit1SprintSpeedAmplifier,
       float energySyncStep,
       int energySyncIntervalTicks,
       float armorModeFullEnergyBlockCapacityHp,
@@ -269,7 +306,6 @@ public final class NanosuitServerConfig {
       private static NanosuitServerConfig.CachedValues defaults() {
          return new NanosuitServerConfig.CachedValues(
             1.2F, 0.05F, 0.25F, 0.75F, 0.5F, 0.083333336F, 30, 0.15, 0.6F, 10, 4, 3, 1,
-            DEFAULT_NANOSUIT_1_WALK_BONUS, (float)DEFAULT_NANOSUIT_1_SPRINT_DRAIN_PER_TICK, DEFAULT_NANOSUIT_1_SPRINT_SPEED_AMPLIFIER,
             1.26F, 13, 200.0F, true, false
          );
       }

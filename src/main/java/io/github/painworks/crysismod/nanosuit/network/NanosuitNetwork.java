@@ -1,6 +1,8 @@
 package io.github.painworks.crysismod.nanosuit.network;
 
 import io.github.painworks.crysismod.nanovision.network.SetNanovisionActivePacket;
+import io.github.painworks.crysismod.nanovision.network.SyncClassicNightVisionPacket;
+import io.github.painworks.crysismod.nanovision.network.ToggleClassicNightVisionPacket;
 import io.github.painworks.crysismod.nanovisor.network.RequestNanoVisorMarkTargetPacket;
 import io.github.painworks.crysismod.nanovisor.network.SetNanoVisorActivePacket;
 import io.github.painworks.crysismod.nanovisor.network.SyncNanoVisorMarkedTargetsPacket;
@@ -12,8 +14,8 @@ import net.neoforged.neoforge.network.event.RegisterPayloadHandlersEvent;
 import net.neoforged.neoforge.network.registration.PayloadRegistrar;
 
 public final class NanosuitNetwork {
-   // Protocol 5 uses stable mode IDs and adds Strength and Speed.
-   private static final String PROTOCOL_VERSION = "5";
+   // Protocol 6 adds the standalone classic night vision control and battery.
+   private static final String PROTOCOL_VERSION = "6";
 
    private NanosuitNetwork() {
    }
@@ -39,6 +41,9 @@ public final class NanosuitNetwork {
       registrar.playToServer(RequestNanoVisorMarkTargetPacket.TYPE, RequestNanoVisorMarkTargetPacket.STREAM_CODEC, RequestNanoVisorMarkTargetPacket::handle);
       registrar.playToClient(SyncNanoVisorMarkedTargetsPacket.TYPE, SyncNanoVisorMarkedTargetsPacket.STREAM_CODEC, SyncNanoVisorMarkedTargetsPacket::handle);
       registrar.playToServer(SetNanovisionActivePacket.TYPE, SetNanovisionActivePacket.STREAM_CODEC, SetNanovisionActivePacket::handle);
+      registrar.playToServer(ToggleClassicNightVisionPacket.TYPE, ToggleClassicNightVisionPacket.STREAM_CODEC, ToggleClassicNightVisionPacket::handle);
+      registrar.playToClient(SyncClassicNightVisionPacket.TYPE, SyncClassicNightVisionPacket.STREAM_CODEC, SyncClassicNightVisionPacket::handle);
+      registrar.playToServer(RequestClassicMissedMeleePacket.TYPE, RequestClassicMissedMeleePacket.STREAM_CODEC, RequestClassicMissedMeleePacket::handle);
    }
 
    public static void sendToServer(CustomPacketPayload message) {

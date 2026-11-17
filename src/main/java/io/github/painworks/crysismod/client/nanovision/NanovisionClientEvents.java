@@ -31,6 +31,7 @@ import net.minecraft.client.model.VillagerModel;
 import net.minecraft.client.renderer.entity.EntityRenderer;
 import net.minecraft.client.renderer.entity.LivingEntityRenderer;
 import net.minecraft.client.resources.PlayerSkin;
+import net.minecraft.server.packs.resources.ResourceManagerReloadListener;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.animal.Sheep;
 import net.minecraft.world.entity.monster.Slime;
@@ -42,6 +43,7 @@ import net.neoforged.neoforge.client.event.RenderLevelStageEvent;
 import net.neoforged.neoforge.client.event.ClientPlayerNetworkEvent.LoggingOut;
 import net.neoforged.neoforge.client.event.EntityRenderersEvent.AddLayers;
 import net.neoforged.neoforge.client.event.RenderGuiEvent.Pre;
+import net.neoforged.neoforge.client.event.RenderGuiEvent.Post;
 import net.neoforged.neoforge.client.event.RenderLevelStageEvent.Stage;
 import net.neoforged.neoforge.common.NeoForge;
 import net.neoforged.bus.api.EventPriority;
@@ -77,6 +79,7 @@ public final class NanovisionClientEvents {
 
    private static void onRegisterReloadListeners(RegisterClientReloadListenersEvent event) {
       event.registerReloadListener(ThermalMarkerTextureAtlas.INSTANCE);
+      event.registerReloadListener((ResourceManagerReloadListener) resources -> ClassicNightVisionClient.reload());
    }
 
    private static void onAddLayers(AddLayers event) {
@@ -165,6 +168,12 @@ public final class NanovisionClientEvents {
 
       ThermalShaderOffItemOutlineCapture.flush();
       NanovisionPerformanceProfiler.endFirstPersonFrame();
+      ClassicNightVisionClient.renderScene(Minecraft.getInstance(), event.getPartialTick().getGameTimeDeltaPartialTick(false));
+   }
+
+   @SubscribeEvent
+   public void onRenderClassicNightVisionBattery(Post event) {
+      ClassicNightVisionClient.renderBattery(Minecraft.getInstance(), event.getGuiGraphics());
    }
 
    @SubscribeEvent
@@ -174,6 +183,7 @@ public final class NanovisionClientEvents {
 
    @SubscribeEvent
    public void onClientLogout(LoggingOut event) {
+      ClassicNightVisionClient.reset();
       NanosuitCloakRefraction.close();
       NanovisionController.reset();
       NanovisionState.clearClientEffects(Minecraft.getInstance().player);

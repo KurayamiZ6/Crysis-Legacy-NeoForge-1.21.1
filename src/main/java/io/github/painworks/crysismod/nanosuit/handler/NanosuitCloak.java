@@ -16,7 +16,9 @@ import net.minecraft.world.entity.ai.behavior.EntityTracker;
 import net.minecraft.world.entity.ai.behavior.PositionTracker;
 import net.minecraft.world.entity.ai.memory.MemoryModuleType;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.entity.projectile.AbstractArrow;
 import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.neoforge.event.entity.EntityJoinLevelEvent;
 import net.neoforged.neoforge.event.entity.living.LivingChangeTargetEvent;
 import net.neoforged.neoforge.event.entity.living.LivingDamageEvent;
 import net.neoforged.neoforge.event.tick.EntityTickEvent;
@@ -72,10 +74,25 @@ public final class NanosuitCloak {
    }
 
    public static void chargeConfirmedShot(ServerPlayer player, boolean silenced) {
+      chargeConfirmedShot(player, silenced, false);
+   }
+
+   public static void chargeConfirmedShot(ServerPlayer player, boolean silenced, boolean predator) {
+      if (NanosuitPlayerHandler.breakClassicCloakOnAttack(player) || predator) {
+         return;
+      }
       NanosuitProfile profile = activeProfile(player);
       if (profile != null) {
          CloakCost cost = profile.combat().cloak().shot(silenced);
          NanosuitPlayerHandler.applyActiveCloakCombatCost(player, cost.energyCost(), cost.breaksCloak());
+      }
+   }
+
+   @SubscribeEvent
+   public void onVanillaArrow(EntityJoinLevelEvent event) {
+      if (!event.getLevel().isClientSide() && !event.loadedFromDisk()
+         && event.getEntity() instanceof AbstractArrow arrow && arrow.getOwner() instanceof ServerPlayer player) {
+         NanosuitPlayerHandler.breakClassicCloakOnAttack(player);
       }
    }
 

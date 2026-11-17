@@ -22,6 +22,7 @@ final class NanoGeoArmorModeBaseCompositeCompat {
       return replacementEligible()
          && overlayState != null
          && overlayState.enabled()
+         && !overlayState.usesClassicFibers()
          && (overlayState.armorModeActive() || overlayState.transitionProgress() > 1.0E-4F);
    }
 

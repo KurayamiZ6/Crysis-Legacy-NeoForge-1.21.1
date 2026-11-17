@@ -30,6 +30,8 @@ public record SyncSuitEnergySoundPacket(Cue cue, float volume) implements Custom
       DISABLED,
       WAIT,
       CHARGE,
-      RESTORED
+      RESTORED,
+      CLASSIC_CRITICAL,
+      CLASSIC_LOW
    }
 }

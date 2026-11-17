@@ -3,7 +3,7 @@
   "minVersion": "0.8",
   "package": "io.github.painworks.crysismod.mixin",
   "compatibilityLevel": "JAVA_21",
-  "mixins": ["nanosuit.CloakFootstepsMixin", "nanosuit.CloakTargetingConditionsMixin", "nanosuit.NanosuitLandingSoundMixin", "nanosuit.PlayerPowerMeleeMixin", "nanosuit.TaczPowerMeleeMixin", "nanosuit.TaczCloakGunfireMixin"],
+  "mixins": ["nanosuit.CloakFootstepsMixin", "nanosuit.CloakTargetingConditionsMixin", "nanosuit.NanosuitLandingSoundMixin", "nanosuit.PlayerPowerMeleeMixin", "nanosuit.PowerMeleeKnockbackMixin", "nanosuit.TaczClassicMeleeActionMixin", "nanosuit.TaczPowerMeleeMixin", "nanosuit.TaczCloakGunfireMixin"],
   "client": [
     "client.nanosuit.AbstractSoundVolumeAccessor",
     "client.nanosuit.CloakHandsMixin",

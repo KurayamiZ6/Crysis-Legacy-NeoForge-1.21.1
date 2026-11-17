@@ -33,6 +33,17 @@ public class NanosuitEnergy implements INanosuitEnergy, INBTSerializable<Compoun
    }
 
    @Override
+   public void setEnergyWithoutStartingRecovery(float energy) {
+      if (this.isRecoveryLocked()) {
+         return;
+      }
+      this.energy = Math.max(0.0F, Math.min(MAX_ENERGY, energy));
+      if (this.energy == 0.0F) {
+         this.sprintBoostReady = false;
+      }
+   }
+
+   @Override
    public NanosuitMode getMode() {
       return this.mode;
    }
@@ -105,10 +116,6 @@ public class NanosuitEnergy implements INanosuitEnergy, INBTSerializable<Compoun
       try {
          this.mode = NanosuitMode.valueOf(nbt.getString("Mode"));
       } catch (IllegalArgumentException var3) {
-         this.mode = NanosuitMode.NONE;
-      }
-
-      if (this.energy <= 0.0F) {
          this.mode = NanosuitMode.NONE;
       }
 

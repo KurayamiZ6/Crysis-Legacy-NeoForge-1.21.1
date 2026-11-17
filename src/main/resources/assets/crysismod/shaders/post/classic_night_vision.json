@@ -1,0 +1,10 @@
+{
+  "targets": ["classic_night_vision_color"],
+  "passes": [
+    {
+      "name": "crysismod:classic_night_vision",
+      "intarget": "minecraft:main",
+      "outtarget": "classic_night_vision_color"
+    }
+  ]
+}

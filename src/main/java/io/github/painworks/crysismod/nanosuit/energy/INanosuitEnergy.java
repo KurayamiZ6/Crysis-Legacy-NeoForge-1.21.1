@@ -7,6 +7,8 @@ public interface INanosuitEnergy {
 
    void setEnergy(float var1);
 
+   void setEnergyWithoutStartingRecovery(float energy);
+
    default void addEnergy(float amount) {
       this.setEnergy(this.getEnergy() + amount);
    }

@@ -46,6 +46,9 @@ public final class NanoGeoArmorModeOverlayLayer extends RenderLayer<AbstractClie
                   if (renderer != null) {
                      HumanoidModel<?> playerModel = (HumanoidModel<?>)this.getParentModel();
                      NanoGeoClientConfig.ArmorModeOverlayBackend backend = NanoGeoShaderpackCompatibility.resolveArmorModeOverlayBackend();
+                     if (overlayState.usesClassicFibers() && backend != NanoGeoClientConfig.ArmorModeOverlayBackend.DISABLED) {
+                        backend = NanoGeoClientConfig.ArmorModeOverlayBackend.TEXTURE_FALLBACK;
+                     }
                      switch (backend) {
                         case DISABLED:
                            return;
