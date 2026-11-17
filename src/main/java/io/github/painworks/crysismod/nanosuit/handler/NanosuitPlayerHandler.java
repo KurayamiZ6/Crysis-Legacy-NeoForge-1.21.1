@@ -701,6 +701,10 @@ public class NanosuitPlayerHandler {
       INanosuitEnergy data = NanosuitCapabilities.get(player);
       PlayerRuntimeState runtime = runtimeState(player.getUUID());
       NanosuitProfile profile = NanosuitArmorUtil.getEquippedProfile(player);
+      if (startEquippedRecoveryIfNeeded(data, profile)) {
+         NanosuitSyncManager.syncToClient(player);
+         return false;
+      }
       if (profile == null || data.isRecoveryLocked()
             || player.tickCount < runtime.modeCooldownUntilTick || !profile.controls().allowsMode(requestedMode)) {
          return false;
@@ -738,10 +742,16 @@ public class NanosuitPlayerHandler {
       reconcileEquippedMode(data, runtimeState(player.getUUID()), NanosuitArmorUtil.getEquippedProfile(player));
    }
 
-   private static void reconcileEquippedMode(INanosuitEnergy data, PlayerRuntimeState runtime, NanosuitProfile profile) {
+   private static boolean startEquippedRecoveryIfNeeded(INanosuitEnergy data, NanosuitProfile profile) {
       if (profile == NanosuitProfile.NANOSUIT_2 && data.getEnergy() <= 0.0F && !data.isRecoveryLocked()) {
          data.setEnergy(0.0F);
+         return true;
       }
+      return false;
+   }
+
+   private static void reconcileEquippedMode(INanosuitEnergy data, PlayerRuntimeState runtime, NanosuitProfile profile) {
+      startEquippedRecoveryIfNeeded(data, profile);
       if (profile == NanosuitProfile.NANOSUIT_1 && !data.isRecoveryLocked() && runtime.lastEquippedProfile != profile) {
          NanosuitMode mode = data.getMode();
          if (runtime.equippedProfileObserved || mode == NanosuitMode.NONE || !profile.controls().allowsMode(mode)) {
