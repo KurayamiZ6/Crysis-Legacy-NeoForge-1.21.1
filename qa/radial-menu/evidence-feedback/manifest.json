@@ -1,0 +1,29 @@
+{
+  "parent": "89321b2dcacc7ffb81ffb0521d178a762ee09eb7",
+  "jar_sha256": "02709b9b7fb7a0b15aa7277e91ad2254c81d6efd60dd1f48b3ab2c837eb1d3a4",
+  "mode_flash_class_identical_to_physical_test_03": true,
+  "hover_only_yellow": "PASS",
+  "audio_voice_user_confirmed": true,
+  "audio_activation_user_confirmed": true,
+  "render_fixture": "Actual production drawing, held open by test wrapper; this does not validate physical hold/release",
+  "files": {
+    "activation-armor-early.png": "17b75bdac2626cfb08906b5c4fe375fea5a171b4c61ad5b8defa49e4c4b1db01",
+    "activation-armor-late.png": "9c5fca64c0366df0d6882fbcc514e6647216473466c9de999e37056b188e9af0",
+    "activation-armor-middle.png": "59aa46199e67d690667c295933e07cc9a402d0bbd1af3c09979229873d61f8e4",
+    "activation-speed-early.png": "0f7cb32673c94a610ecc9a1e9d3a813992264b0290be7452cf9241b4da08ba9b",
+    "activation-speed-late.png": "ea8d6b3dc109fa3f1fbbd091eaee79d9dbc55212ba3573135472a07980e5874f",
+    "activation-speed-middle.png": "9ba771d936d61a5662f67393e94e5b0fdd69da1ba6a6ef84b3ee7b856356f233",
+    "activation-strength-early.png": "9f5effc83619c6f0ca9e6f5cacb4c5872f1ca42b8d553856112cd40ee6b147ef",
+    "activation-strength-late.png": "c3bde4eb5945256f037bfaed7358700a35114d8a11fa89ea1d69cf74ec2df361",
+    "activation-strength-middle.png": "e27cd072b5f3609b4b62b07063f7ea6a105d52e58df78d3ac7d9668c24546d49",
+    "feedback-armor-after-flash.png": "62c34ee81def01697c328b75d2dee674989d85588f20217e746946cf568fcdb5",
+    "feedback-cloak-after-flash.png": "bca540973a9a1334e2d4f06ab5ca4904bb1e86c45bff1482bfde666811f1a023",
+    "feedback-neutral.png": "94df46cddaed2c668966654a1d1fd6756b48865acec2f386051c605ee76a9916",
+    "feedback-speed-after-flash.png": "55802e2e36db9c1f2c83740ca077558b1653a2ae3b47652e91d4f74c4fcf1a3b",
+    "feedback-strength-after-flash.png": "a367654978d2c697bd37eb5e382e2bc62c13e92cdab3cc0d9937211a7300e205",
+    "gui3-strength-after-flash.png": "9083415d91ca461e39e373382fcd6c35a557ec08797531e8fbd3455d93f10101",
+    "gui3-strength-flash.png": "e086d602a9846bd231c5edcd05d9d0b8878bae135258579aba91c497459fc99b",
+    "gui3-strength-t250.png": "dfe333a2b39a8e641fad256bd6633e0e324b8cf9c7fe7fcca1955f3d7294e05e",
+    "selection-sequence.png": "492b5092958bcb16345d978afa8d0cf49d68f0623e288fd8c93005010a2da069"
+  }
+}

@@ -1,0 +1,11 @@
+{
+  "source": "Crysis Remastered/Game/sounds.pak::sounds/interface/interface_combined.fsb::cloak_activate",
+  "frames": 42624,
+  "rate": 44100,
+  "channels": 2,
+  "duration": 0.966530612244898,
+  "source_payload_sha256": "f0460e20cbd105224a45c3f0e46e2584f3eb063a940598dad51081d55793695b",
+  "output_sha256": "dc285d5aaacdb1b4b6d4d9fdc2446e29399e0a442dc62093aaa5598f47ee1a34",
+  "decoded_and_roundtrip_metadata": "PASS",
+  "auditory_validation": "Confirmed by user on 2026-11-18"
+}

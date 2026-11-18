@@ -15,6 +15,7 @@ import io.github.painworks.crysismod.nanosuit.util.NanosuitArmorUtil;
 import io.github.painworks.crysismod.registry.ModItems;
 import java.awt.Robot;
 import java.awt.event.KeyEvent;
+import java.awt.event.InputEvent;
 import java.io.PrintWriter;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
@@ -68,6 +69,10 @@ public final class RadialMenuQa {
     private final Set<String> samples=new HashSet<>();
     private long savedFlash;
     private float savedPointer;
+    private net.minecraft.world.phys.Vec3 movementStart;
+    private int forwardKey, strafeKey, sneakKey, sprintKey, jumpKey;
+    private boolean jumpObserved;
+    private long stepStartedAt;
 
     public RadialMenuQa() throws Exception {
         robot = new InputClient();
@@ -75,6 +80,10 @@ public final class RadialMenuQa {
         NeoForge.EVENT_BUS.addListener(this::client);
         NeoForge.EVENT_BUS.addListener(this::render);
         NeoForge.EVENT_BUS.addListener(this::renderActivation);
+        NeoForge.EVENT_BUS.addListener((net.neoforged.neoforge.client.event.InputEvent.Key event)->{
+            if(event.getKey()==GLFW.GLFW_KEY_F7)System.out.println("RADIAL_QA_F7 action="+event.getAction()+" focus="+mc().isWindowActive()+" screen="+mc().screen);
+        });
+        NeoForge.EVENT_BUS.addListener((ScreenEvent.Opening event)->System.out.println("RADIAL_QA_SCREEN "+event.getNewScreen()));
         NeoForge.EVENT_BUS.addListener((PlaySoundEvent event)-> {
             if(event.getSound()!=null) {
                 String name=event.getSound().getLocation().toString();
@@ -126,20 +135,31 @@ public final class RadialMenuQa {
     private void step(String name, int ticks, Runnable start, Runnable end) { steps.add(new Step(name, start, end, ticks)); }
     private void point(int dx, int dy) {
         var w = mc().getWindow();
+        if(mc().screen instanceof VisualRadial visual) {
+            visual.mouseX=w.getScreenWidth()/2.0+dx;visual.mouseY=w.getScreenHeight()/2.0+dy;return;
+        }
         GLFW.glfwSetCursorPos(w.getWindow(), w.getScreenWidth()/2.0 + dx, w.getScreenHeight()/2.0 + dy);
     }
     private void hold() {
+        if(Boolean.getBoolean("radialqa.feedbackvisualonly")) {mc().setScreen(new VisualRadial());return;}
         GLFW.glfwFocusWindow(mc().getWindow().getWindow());
         System.out.println("RADIAL_QA_INPUT hold focus="+mc().isWindowActive());
         if (mc().isWindowActive()) robot.keyPress(KeyEvent.VK_F7);
     }
-    private void release() { robot.keyRelease(KeyEvent.VK_F7); }
+    private void release() {
+        if(Boolean.getBoolean("radialqa.feedbackvisualonly")) {if(mc().screen instanceof VisualRadial visual)visual.onClose();return;}
+        robot.keyRelease(KeyEvent.VK_F7);
+    }
+    private Nanosuit1RadialScreen radial() {
+        return mc().screen instanceof VisualRadial visual?visual.delegate:mc().screen instanceof Nanosuit1RadialScreen screen?screen:null;
+    }
     private void capture(String name) {
         Screenshot.grab(mc().gameDirectory, name + ".png", mc().getMainRenderTarget(), ignored -> {});
         System.out.println("RADIAL_QA_CAPTURE " + name + " size=" + mc().getWindow().getWidth() + "x" + mc().getWindow().getHeight());
     }
     private void render(ScreenEvent.Render.Post e) {
-        if (!(e.getScreen() instanceof Nanosuit1RadialScreen) || index>=steps.size()) return;
+        var radial=radial();
+        if (radial==null || index>=steps.size()) return;
         String step=steps.get(index).name();
         if (!step.equals("strength-hover-3") && !step.equals("speed-hover-3")) return;
         try {
@@ -147,9 +167,9 @@ public final class RadialMenuQa {
             field.setAccessible(true);
             var hover=Nanosuit1RadialScreen.class.getDeclaredField("hovered");
             hover.setAccessible(true);
-            if (hover.get(e.getScreen())!=(step.equals("strength-hover-3")?NanosuitMode.STRENGTH:NanosuitMode.SPEED)) return;
-            if (field.getLong(e.getScreen())==0) return;
-            double seconds=(System.nanoTime()-field.getLong(e.getScreen()))/1e9;
+            if (hover.get(radial)!=(step.equals("strength-hover-3")?NanosuitMode.STRENGTH:NanosuitMode.SPEED)) return;
+            if (field.getLong(radial)==0) return;
+            double seconds=(System.nanoTime()-field.getLong(radial))/1e9;
             float flash=RadialLayout.hoverFlash(seconds,.50);
             if (step.equals("strength-hover-3")) {
                 for(double mark:new double[]{.08,.25,.55}) {
@@ -158,8 +178,8 @@ public final class RadialMenuQa {
                         System.out.println("RADIAL_QA_PANEL seconds="+seconds+" offset="+offset(1)+" flash="+flash);
                     }
                 }
-                if (!capturedFlashStart && flash>.5) {capture("gui3-strength-flash");capturedFlashStart=true;flashEntry=field.getLong(e.getScreen());System.out.println("RADIAL_QA_FLASH start="+flash+" seconds="+seconds);}
-                if (!capturedFlashEnd && seconds>.55 && capturedFlashStart) {capture("gui3-strength-after-flash");capturedFlashEnd=true;check("hover-stationary-does-not-retrigger",flashEntry==field.getLong(e.getScreen())&&flash==0);check("selected-panel-outward",Math.abs(offset(1)-2.5)<.001&&offset(0)==0&&offset(2)==0&&offset(3)==0);System.out.println("RADIAL_QA_FLASH end="+flash+" seconds="+seconds);}
+                if (!capturedFlashStart && flash>.5) {capture("gui3-strength-flash");capturedFlashStart=true;flashEntry=field.getLong(radial);System.out.println("RADIAL_QA_FLASH start="+flash+" seconds="+seconds);}
+                if (!capturedFlashEnd && seconds>.55 && capturedFlashStart) {capture("gui3-strength-after-flash");capturedFlashEnd=true;check("hover-stationary-does-not-retrigger",flashEntry==field.getLong(radial)&&flash==0);check("selected-panel-outward",Math.abs(offset(1)-NanosuitRadialConfig.SELECTED_PANEL_OFFSET.get())<.001&&offset(0)==0&&offset(2)==0&&offset(3)==0);System.out.println("RADIAL_QA_FLASH end="+flash+" seconds="+seconds);}
             } else if (!capturedSpeedFlash && flash>.5) {capture("gui3-speed-flash");capturedSpeedFlash=true;System.out.println("RADIAL_QA_FLASH speed="+flash+" seconds="+seconds);}
         } catch (ReflectiveOperationException ex) {throw new RuntimeException(ex);}
     }
@@ -173,7 +193,7 @@ public final class RadialMenuQa {
     private long flashStart() {return (long)field(NanosuitPowerFeedback.class,"flashStart",null);}
     private float pointer() {return (float)field(Nanosuit1RadialScreen.class,"lastPointerDegrees",null);}
     private float offset(int i) {
-        try {var m=Nanosuit1RadialScreen.class.getDeclaredMethod("panelOffset",int.class,long.class);m.setAccessible(true);return (float)m.invoke(mc().screen,i,System.nanoTime());}
+        try {var m=Nanosuit1RadialScreen.class.getDeclaredMethod("panelOffset",int.class,long.class);m.setAccessible(true);return (float)m.invoke(radial(),i,System.nanoTime());}
         catch(ReflectiveOperationException ex) {throw new RuntimeException(ex);}
     }
     private void expectedSounds(String name,String... sounds) {
@@ -201,7 +221,8 @@ public final class RadialMenuQa {
             capture("activation-"+label+"-early");
             System.out.println("RADIAL_QA_ACTIVATION "+label+" rgb="+Integer.toHexString(color)+" seconds="+seconds);
         }
-        if(start!=0 && seconds>.23 && !label.equals("n2-force") && samples.add("late-"+label))capture("activation-"+label+"-late");
+        if(start!=0 && seconds>.30 && seconds<.48 && !label.equals("n2-force") && samples.add("middle-"+label))capture("activation-"+label+"-middle");
+        if(start!=0 && seconds>.55 && !label.equals("n2-force") && samples.add("late-"+label))capture("activation-"+label+"-late");
     }
     private void buildSteps() {
         check("default-unbound", NanosuitKeyMappings.OPEN_NANOSUIT_1_RADIAL.isUnbound());
@@ -218,6 +239,7 @@ public final class RadialMenuQa {
         String localName=GLFW.glfwGetKeyName(NanosuitKeyMappings.TOGGLE_ARMOR.getKey().getValue(),0);
         armorKey=KeyEvent.getExtendedKeyCodeForChar(Character.toUpperCase(localName.charAt(0)));
         KeyMapping.resetMapping();
+        if(Boolean.getBoolean("radialqa.feedbackonly")) {buildFeedbackSteps();return;}
         if (Boolean.getBoolean("radialqa.n2only")) {
             step("n2-with-armor-active",20,()->commands.add(p->{equip(p,true);NanosuitCapabilities.get(p).setMode(NanosuitMode.ARMOR);NanosuitSyncManager.syncToClient(p);}),()->{});
             step("n2-menu-blocked",10,this::hold,()->{check("n2-radial-blocked",mc().screen==null);release();});
@@ -313,25 +335,112 @@ public final class RadialMenuQa {
         },()->{});
         step("n2-existing-check",8,()->{},()->mode("n2-armor-shortcut-"+expectedN2Shortcut,expectedN2Shortcut));
     }
+    private int awt(KeyMapping mapping) {
+        int code=mapping.getKey().getValue();
+        String name=GLFW.glfwGetKeyName(code,0);
+        if(name!=null)return KeyEvent.getExtendedKeyCodeForChar(Character.toUpperCase(name.charAt(0)));
+        return switch(code) {
+            case GLFW.GLFW_KEY_LEFT_SHIFT,GLFW.GLFW_KEY_RIGHT_SHIFT -> KeyEvent.VK_SHIFT;
+            case GLFW.GLFW_KEY_LEFT_CONTROL,GLFW.GLFW_KEY_RIGHT_CONTROL -> KeyEvent.VK_CONTROL;
+            case GLFW.GLFW_KEY_SPACE -> KeyEvent.VK_SPACE;
+            default -> throw new IllegalArgumentException("Unsupported QA binding "+mapping.getKey());
+        };
+    }
+    private void buildFeedbackSteps() {
+        var o=mc().options;
+        forwardKey=awt(o.keyUp);strafeKey=awt(o.keyRight);sneakKey=awt(o.keyShift);sprintKey=awt(o.keySprint);jumpKey=awt(o.keyJump);
+        step("gui-3",15,()->{o.guiScale().set(3);mc().resizeDisplay();},()->{});
+        step("neutral-3",12,this::hold,()->{
+            if(radial()==null) {
+                check("menu-open-required",false);System.out.println("RADIAL_QA_INPUT_ABORT raw="+GLFW.glfwGetKey(mc().getWindow().getWindow(),GLFW.GLFW_KEY_F7)+" focus="+mc().isWindowActive());
+                release();robot.close();finished=true;mc().stop();return;
+            }
+            capture("feedback-neutral");
+        });
+        step("strength-hover-3",20,()->point(135,0),()->capture("feedback-strength-after-flash"));
+        step("speed-hover-3",20,()->point(0,-135),()->{check("speed-selected-radius",Math.abs(offset(2)-16)<.001);capture("feedback-speed-after-flash");});
+        step("armor-hover-feedback",16,()->point(-135,0),()->{check("armor-travel-matches-speed",Math.abs(offset(0)-16)<.001);capture("feedback-armor-after-flash");});
+        step("cloak-hover-feedback",16,()->point(0,135),()->{check("cloak-travel-matches-speed",Math.abs(offset(3)-16)<.001);capture("feedback-cloak-after-flash");});
+        var oldContexts=new java.util.IdentityHashMap<KeyMapping,net.neoforged.neoforge.client.settings.IKeyConflictContext>();
+        for(var key:new KeyMapping[]{o.keyUp,o.keyDown,o.keyLeft,o.keyRight,o.keyJump,o.keySprint,o.keyShift})oldContexts.put(key,key.getKeyConflictContext());
+        step("visual-cancel",8,()->mc().screen.onClose(),()->{release();check("movement-contexts-restored",oldContexts.entrySet().stream().allMatch(entry->entry.getKey().getKeyConflictContext()==entry.getValue()));});
+        if(Boolean.getBoolean("radialqa.feedbackvisualonly")) {
+            step("feedback-visual-finish",8,()->{},()->check("feedback-visual-captures",capturedFlashStart&&capturedFlashEnd&&capturedSpeedFlash));
+            return;
+        }
+        step("walk-before-menu",10,()->robot.keyPress(forwardKey),()->movementStart=mc().player.position());
+        step("walk-open-menu",12,this::hold,()->{check("walking-through-opening",mc().screen instanceof Nanosuit1RadialScreen&&mc().player.position().distanceTo(movementStart)>.2);movementStart=mc().player.position();yaw=mc().player.getYRot();pitch=mc().player.getXRot();});
+        step("walk-select",12,()->point(135,0),()->{check("walk-while-selecting",mc().player.position().distanceTo(movementStart)>.2);check("camera-still-captured",mc().player.getYRot()==yaw&&mc().player.getXRot()==pitch);robot.keyRelease(forwardKey);});
+        step("walk-stop",8,()->{},()->{check("release-movement-key",mc().player.input.forwardImpulse==0&&!o.keyUp.isDown());movementStart=mc().player.position();});
+        step("strafe-in-menu",10,()->robot.keyPress(strafeKey),()->{check("strafe-in-menu",mc().player.position().distanceTo(movementStart)>.2);robot.keyRelease(strafeKey);});
+        step("crouch-in-menu",8,()->robot.keyPress(sneakKey),()->{check("crouch-in-menu",mc().player.input.shiftKeyDown);robot.keyRelease(sneakKey);});
+        step("sprint-in-menu",10,()->{robot.keyPress(forwardKey);robot.keyPress(sprintKey);},()->{check("sprint-in-menu",mc().player.isSprinting());robot.keyRelease(sprintKey);robot.keyRelease(forwardKey);});
+        step("settle",8,()->{},()->{});
+        step("jump-in-menu",8,()->{jumpObserved=false;robot.keyPress(jumpKey);},()->{check("jump-in-menu",jumpObserved);robot.keyRelease(jumpKey);});
+        step("block-attacks",8,()->robot.mousePress(InputEvent.BUTTON1_DOWN_MASK),()->{check("attack-blocked",!o.keyAttack.isDown()&&!mc().player.swinging);robot.mouseRelease(InputEvent.BUTTON1_DOWN_MASK);});
+        step("block-use",8,()->robot.mousePress(InputEvent.BUTTON3_DOWN_MASK),()->{check("use-blocked",!o.keyUse.isDown()&&!mc().player.isUsingItem());robot.mouseRelease(InputEvent.BUTTON3_DOWN_MASK);});
+        step("toggle-crouch-on",6,()->{o.toggleCrouch().set(true);robot.keyPress(sneakKey);},()->robot.keyRelease(sneakKey));
+        step("toggle-crouch-kept",8,()->{},()->check("toggle-crouch-not-repeated",o.keyShift.isDown()&&mc().player.input.shiftKeyDown));
+        step("toggle-crouch-off",6,()->robot.keyPress(sneakKey),()->robot.keyRelease(sneakKey));
+        step("toggle-crouch-finished",6,()->{},()->{check("toggle-crouch-off",!o.keyShift.isDown());o.toggleCrouch().set(false);});
+        step("commit-STRENGTH",16,()->{robot.keyPress(forwardKey);movementStart=mc().player.position();release();},()->{
+            check("walking-through-close",mc().screen==null&&mc().player.position().distanceTo(movementStart)>.2);
+            robot.keyRelease(forwardKey);mode("mode-while-moving",NanosuitMode.STRENGTH);capture("strength-flash-finished");
+        });
+        for(NanosuitMode mode:new NanosuitMode[]{NanosuitMode.SPEED,NanosuitMode.ARMOR}) {
+            step("open-"+mode,8,this::hold,()->{});
+            step("choose-"+mode,10,()->point(mode==NanosuitMode.ARMOR?-135:0,mode==NanosuitMode.SPEED?-135:0),this::release);
+            step("commit-"+mode,16,()->{},()->mode("confirmed-"+mode,mode));
+        }
+        step("n2-equip",15,()->commands.add(p->{equip(p,true);NanosuitSyncManager.syncToClient(p);}),()->{});
+        step("n2-force-feedback",14,()->NanosuitPowerFeedback.triggerForce(),()->check("n2-remains-blue",(int)field(NanosuitPowerFeedback.class,"flashColor",null)==0x73BAFF));
+        step("check-feedback-captures",8,()->{},()->check("feedback-captures",capturedFlashStart&&capturedFlashEnd&&capturedSpeedFlash&&samples.contains("middle-speed")&&samples.contains("late-speed")));
+    }
     private void client(ClientTickEvent.Post e) {
         if (finished) return;
         if (++timeout>3200) { System.out.println("RADIAL_QA_TIMEOUT");release();robot.close();finished=true;mc().stop();return; }
         if (mc().player==null || !serverReady) return;
         if (!initialized) {
+            if(Boolean.getBoolean("radialqa.feedbackvisualonly")&&mc().screen instanceof PauseScreen)mc().setScreen(null);
             if (mc().screen!=null || NanosuitArmorUtil.getEquippedProfile(mc().player)!=NanosuitProfile.NANOSUIT_1) return;
-            GLFW.glfwFocusWindow(mc().getWindow().getWindow());
-            if (!mc().isWindowActive()) return;
+            if(!Boolean.getBoolean("radialqa.feedbackvisualonly")) {
+                GLFW.glfwFocusWindow(mc().getWindow().getWindow());
+                if (!mc().isWindowActive()) return;
+            }
             initialized=true; buildSteps();
         }
-        if (!mc().isWindowActive()) {
+        if (!mc().isWindowActive()&&!Boolean.getBoolean("radialqa.feedbackvisualonly")) {
             release();
             GLFW.glfwFocusWindow(mc().getWindow().getWindow());
             return;
         }
         if (index==steps.size()) {release();robot.close();finished=true;System.out.println("RADIAL_QA_COMPLETE steps="+index+" pass="+passes.get()+" fail="+failures.get());mc().stop();return;}
         Step step=steps.get(index);
-        if (elapsed==0) {System.out.println("RADIAL_QA_STEP "+step.name());step.start().run();}
-        if (++elapsed>=step.ticks()) {step.end().run();index++;elapsed=0;}
+        if(step.name().equals("jump-in-menu")&&mc().player.getDeltaMovement().y>.1)jumpObserved=true;
+        if (elapsed==0) {stepStartedAt=System.nanoTime();System.out.println("RADIAL_QA_STEP "+step.name());step.start().run();}
+        if (++elapsed>=step.ticks() && System.nanoTime()-stepStartedAt>=step.ticks()*50_000_000L) {step.end().run();index++;elapsed=0;}
+    }
+
+    /** Render-only fixture: keep the real production screen open without OS keys.
+     * Its drawing, hover and animation methods are unchanged; only the hold gate
+     * is replaced. Actual movement/hold/release is tested by feedbackonly without this flag.
+     */
+    private final class VisualRadial extends net.minecraft.client.gui.screens.Screen {
+        final Nanosuit1RadialScreen delegate=new Nanosuit1RadialScreen(InputConstants.Type.KEYSYM.getOrCreate(GLFW.GLFW_KEY_F7));
+        double mouseX,mouseY;
+        VisualRadial(){super(net.minecraft.network.chat.Component.literal("Radial visual QA"));}
+        @Override protected void init(){delegate.init(mc(),width,height);mouseX=mc().getWindow().getScreenWidth()/2.0;mouseY=mc().getWindow().getScreenHeight()/2.0;}
+        @Override public boolean isPauseScreen(){return false;}
+        @Override public void render(net.minecraft.client.gui.GuiGraphics g,int x,int y,float partial){
+            try {
+                var xf=mc().mouseHandler.getClass().getDeclaredField("xpos");var yf=mc().mouseHandler.getClass().getDeclaredField("ypos");xf.setAccessible(true);yf.setAccessible(true);
+                double oldX=xf.getDouble(mc().mouseHandler),oldY=yf.getDouble(mc().mouseHandler);
+                try {xf.setDouble(mc().mouseHandler,mouseX);yf.setDouble(mc().mouseHandler,mouseY);delegate.render(g,x,y,partial);}
+                finally {xf.setDouble(mc().mouseHandler,oldX);yf.setDouble(mc().mouseHandler,oldY);}
+            } catch(ReflectiveOperationException ex){throw new RuntimeException(ex);}
+        }
+        @Override public void onClose(){delegate.onClose();}
+        @Override public void removed(){delegate.removed();}
     }
 
     // Minecraft forces AWT headless in Main. Keep OS input in a plain JRE child.
@@ -348,6 +457,8 @@ public final class RadialMenuQa {
         }
         void keyPress(int key) { commands.println("press "+key); }
         void keyRelease(int key) { commands.println("release "+key); }
+        void mousePress(int mask) {commands.println("mousepress "+mask);}
+        void mouseRelease(int mask) {commands.println("mouserelease "+mask);}
         void close() {commands.println("quit 0");commands.close();}
     }
     public static final class InputBridge {
@@ -355,13 +466,17 @@ public final class RadialMenuQa {
             var robot=new Robot();
             var scanner=new Scanner(System.in);
             System.out.println("READY");System.out.flush();
+            Set<Integer> heldKeys=new HashSet<>(),heldMouse=new HashSet<>();
             try {
                 while(scanner.hasNext()) {
                     String command=scanner.next();int key=scanner.nextInt();
                     if(command.equals("quit"))return;
-                    if(command.equals("press"))robot.keyPress(key);else robot.keyRelease(key);
+                    if(command.equals("press")){robot.keyPress(key);heldKeys.add(key);}
+                    else if(command.equals("release")){robot.keyRelease(key);heldKeys.remove(key);}
+                    else if(command.equals("mousepress")){robot.mousePress(key);heldMouse.add(key);}
+                    else if(command.equals("mouserelease")){robot.mouseRelease(key);heldMouse.remove(key);}
                 }
-            } finally {robot.keyRelease(KeyEvent.VK_F7);robot.keyRelease(KeyEvent.VK_ESCAPE);robot.keyRelease(KeyEvent.VK_Z);}
+            } finally {for(int key:heldKeys)robot.keyRelease(key);for(int mask:heldMouse)robot.mouseRelease(mask);}
         }
     }
 }

@@ -73,27 +73,37 @@ Le fichier client `nanosuit1-radial-client.toml` règle :
 | `hexAlpha` | 0,62 |
 | `selectionFlashSeconds` | 0,50 s |
 | `hoverFlashIntensity` | 0,65 |
-| `selectedPanelOffset` | 2,5 unités graphiques, environ 4 px à 1080p |
+| `selectedPanelTravel` | 16 unités graphiques, environ 26 px à 1080p |
 
 Le flash reste unique à l'entrée d'un secteur. Son intensité décroît selon
-`(1 - t / durée)²`. Le fond, le contour et le motif restent ambrés après le flash ;
-le contour et les hexagones reçoivent la surbrillance transitoire, l'icône reste
-jaune stable. Le panneau rejoint son décalage extérieur en 0,18 s et revient
+`(1 - t / durée)²`. Le fond et le contour reviennent au vert et le motif de fond
+disparaît après le flash. Seule l'icône survolée reste jaune stable, quel que soit
+le mode réellement actif. Le panneau rejoint son décalage extérieur en 0,18 s et revient
 lorsqu'il perd le survol. La flèche suit l'angle exact de la souris et conserve
 son orientation entre ouvertures, en mémoire uniquement.
-Une icône ambrée seule indique le mode confirmé par le serveur.
+Le mode actif du serveur n'impose pas de couleur à une icône non survolée.
+Vitesse est rapproché au repos (rayon 74 unités) ; sélectionné, il rejoint son
+ancienne position (rayon 90). Les quatre panneaux ont la même course de 16 unités.
 L'anneau reste indépendant : 36°/s, horloge monotone, tour en 10 secondes.
 
 L'ancien paramètre `hoverFlashSeconds` n'est plus lu : une configuration générée
 avec 0,30 s ne doit pas imposer involontairement cet ancien défaut. Vérifier
 `selectionFlashSeconds = 0.5` dans la configuration de l'instance utilisée.
 Aucune configuration de profil personnel n'est écrasée par le banc.
+`selectedPanelTravel` remplace également l'ancien réglage `selectedPanelOffset`
+dont le défaut de 2,5 unités ne correspond plus à la demande utilisateur.
+
+Le radial réactive temporairement le contexte de ses sept touches de déplacement
+et lit les touches réellement affectées. La logique de déplacement reste celle
+de Minecraft ; les contextes originaux sont restaurés à la fermeture. Le menu
+capture les attaques, l'utilisation et la caméra. Les options de marche/course
+et l'accroupissement basculant restent gérés sans répétition de bascule par frame.
 
 ## Transitions audiovisuelles N1
 
 Le flash de mode est déclenché par une différence de mode dans le paquet de
 synchronisation serveur existant. Armure bleu, Force rouge, Vitesse jaune :
-0,20 s, alpha maximal 32/255. Camouflage aucun flash. Les retours de dépense
+0,50 s, alpha maximal 32/255. Camouflage aucun flash. Les retours de dépense
 énergétique N1 gardent leur indication de force HUD mais n'amorcent plus ce flash.
 La branche N2 conserve ses 0,45 s, alpha 64/255 et son bleu historique.
 
@@ -116,3 +126,33 @@ La correspondance des voix est contrôlée sur les échantillons décodés, avec
 alignement du délai d'un bloc MPEG si nécessaire. Cela ne remplace pas l'écoute :
 le rôle de désactivation attribué au second effet de camouflage reste à confirmer
 auditivement. Aucun son de navigation au survol n'est ajouté.
+
+### Remplacement approuvé du camouflage
+
+L'effet d'activation et la voix proviennent désormais du **Remastered installé**.
+L'effet utilisateur validé est `interface_combined.fsb::cloak_activate`.
+La table `languages/ui_dialog_recording_list.xml` associe exactement « Cloak
+engaged » à `suit/male/suit_modification_engaged`. La voix et l'effet ont été
+confirmés par l'utilisateur. Voir `remastered-cloak-*.json` et
+`cloak-voice-dialog-proof.json` pour les empreintes et la preuve de correspondance.
+L'extraction FSB3 historique préserve maintenant l'activation Remastered approuvée.
+
+```powershell
+python qa/radial-menu/import_cloak_audio.py --game-root 'D:/Games/CrysisRemastered' `
+  --output src/main/resources/assets/crysismod/sounds/classic/cloak_activation.ogg `
+  --manifest qa/radial-menu/remastered-cloak-activation.json
+```
+
+Pour les voix vérifiées dans le Remastered, le script de comparaison utilise
+`CRYSIS_REMASTERED_DIR` s'il est défini (sinon l'installation locale ci-dessus).
+L'importeur peut également convertir un MP2 précisément identifié avec `--mpeg`,
+`--output`, `--manifest` et son identifiant d'archive `--origin`.
+
+Pour les nouveaux scénarios, ajouter `--jvm-arg=-Dradialqa.feedbackonly=true`.
+Le scénario inclut la marche avant/pendant/après ouverture, le déplacement latéral,
+le saut, l'accroupissement, le sprint et le blocage attaque/utilisation.
+Ajouter `--jvm-arg=-Dradialqa.feedbackvisualonly=true` pour capturer uniquement
+le dessin réel de l'écran de production, maintenu dans une enveloppe de test
+qui remplace son contrôle de maintien. Cette variante n'utilise pas de frappe
+système et ne valide pas les entrées physiques. Les phases attendent leur durée
+en temps réel en plus du nombre de ticks, pour résister au rattrapage de ticks.

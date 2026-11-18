@@ -53,6 +53,11 @@ public final class NanosuitKeyMappings {
    }
 
    @SubscribeEvent
+   public static void onRadialMovement(net.neoforged.neoforge.client.event.ClientTickEvent.Pre event) {
+      if (Minecraft.getInstance().screen instanceof Nanosuit1RadialScreen radial) radial.updateMovementKeys();
+   }
+
+   @SubscribeEvent
    public static void onClientTick(net.neoforged.neoforge.client.event.ClientTickEvent.Post event) {
       if (true) {
          Minecraft minecraft = Minecraft.getInstance();

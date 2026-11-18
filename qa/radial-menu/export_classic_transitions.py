@@ -63,6 +63,9 @@ def main():
     wanted = {'suit_speed_activate_07_good.wa': 'speed_activation',
               'cloak_chameleon_activate_12.wa': 'cloak_activation',
               'suit_cloak_chameleon_101_r.wav': 'cloak_deactivation'}
+    approved_remastered = root/'qa/radial-menu/remastered-cloak-activation.json'
+    if approved_remastered.exists():
+        wanted.pop('cloak_chameleon_activate_12.wa')  # Preserve the user-approved replacement.
     output = root/'src/main/resources/assets/crysismod/sounds/classic'
     manifest = {}
     with os.add_dll_directory(str(args.audacity.resolve())):
@@ -95,6 +98,8 @@ def main():
                     ogg_sha256=hashlib.sha256(target.read_bytes()).hexdigest(),
                     auditory_validation='PENDING; deactivation association inferred from the two available cloak cues')
             header += size; data += length
+    if approved_remastered.exists():
+        manifest['cloak_activation'] = json.loads(approved_remastered.read_text(encoding='utf-8'))
     assert len(manifest) == 3
     (root/'qa/radial-menu/classic-transition-sources.json').write_text(json.dumps(manifest, indent=2)+'\n', encoding='utf-8')
     print(json.dumps(manifest, indent=2))

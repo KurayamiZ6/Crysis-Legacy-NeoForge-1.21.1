@@ -1,0 +1,118 @@
+RADIAL_QA_SCREEN net.minecraft.client.gui.screens.GenericMessageScreen@77f1026e
+RADIAL_QA_SCREEN net.minecraft.client.gui.screens.GenericMessageScreen@79e591bb
+RADIAL_QA_SCREEN net.minecraft.client.gui.screens.GenericMessageScreen@54632794
+RADIAL_QA_SCREEN net.minecraft.client.gui.screens.ProgressScreen@5c0ae317
+RADIAL_QA_SCREEN net.minecraft.client.gui.screens.LevelLoadingScreen@30b3d9ef
+RADIAL_QA_SCREEN net.minecraft.client.gui.screens.ReceivingLevelScreen@1d9f9c9d
+RADIAL_QA_SERVER_MODE ARMOR tick=1
+RADIAL_QA_SCREEN net.minecraft.client.gui.screens.ReceivingLevelScreen@5ab0b773
+RADIAL_QA_SOUND crysismod:classic_maximum_armor
+RADIAL_QA PASS default-unbound
+RADIAL_QA PASS dead-zone
+RADIAL_QA PASS four-cardinals
+RADIAL_QA PASS ring-10s
+RADIAL_QA PASS single-flash-fades
+RADIAL_QA PASS configured-half-second
+RADIAL_QA PASS pointer-continuous
+RADIAL_QA PASS quadrant-boundaries
+RADIAL_QA_STEP gui-3
+RADIAL_QA_STEP neutral-3
+RADIAL_QA_INPUT hold focus=true
+RADIAL_QA_F7 action=1 focus=true screen=null
+RADIAL_QA_SCREEN io.github.painworks.crysismod.nanosuit.client.radial.Nanosuit1RadialScreen@3dad282e
+RADIAL_QA_CAPTURE feedback-neutral size=1920x1080
+RADIAL_QA_STEP strength-hover-3
+RADIAL_QA_CAPTURE gui3-strength-flash size=1920x1080
+RADIAL_QA_FLASH start=0.9189335 seconds=0.0206949
+RADIAL_QA_CAPTURE gui3-strength-t80 size=1920x1080
+RADIAL_QA_PANEL seconds=0.1063931 offset=15.560401 flash=0.61970556
+RADIAL_QA_CAPTURE gui3-strength-t250 size=1920x1080
+RADIAL_QA_PANEL seconds=0.2811115 offset=16.0 flash=0.1916487
+RADIAL_QA_CAPTURE feedback-strength-after-flash size=1920x1080
+RADIAL_QA_STEP speed-hover-3
+RADIAL_QA_CAPTURE gui3-speed-flash size=1920x1080
+RADIAL_QA_FLASH speed=0.931762 seconds=0.0173609
+RADIAL_QA PASS speed-selected-radius
+RADIAL_QA_CAPTURE feedback-speed-after-flash size=1920x1080
+RADIAL_QA_STEP visual-cancel
+RADIAL_QA_F7 action=0 focus=true screen=null
+RADIAL_QA_STEP walk-before-menu
+RADIAL_QA_STEP walk-open-menu
+RADIAL_QA_INPUT hold focus=true
+RADIAL_QA_F7 action=1 focus=true screen=null
+RADIAL_QA_SCREEN io.github.painworks.crysismod.nanosuit.client.radial.Nanosuit1RadialScreen@5a477651
+RADIAL_QA PASS walking-through-opening
+RADIAL_QA_STEP walk-select
+RADIAL_QA PASS walk-while-selecting
+RADIAL_QA PASS camera-still-captured
+RADIAL_QA_STEP walk-stop
+RADIAL_QA PASS release-movement-key
+RADIAL_QA_STEP strafe-in-menu
+RADIAL_QA PASS strafe-in-menu
+RADIAL_QA_STEP crouch-in-menu
+RADIAL_QA PASS crouch-in-menu
+RADIAL_QA_STEP sprint-in-menu
+RADIAL_QA PASS sprint-in-menu
+RADIAL_QA_STEP settle
+RADIAL_QA_STEP jump-in-menu
+RADIAL_QA PASS jump-in-menu
+RADIAL_QA_STEP block-attacks
+RADIAL_QA PASS attack-blocked
+RADIAL_QA_STEP block-use
+RADIAL_QA PASS use-blocked
+RADIAL_QA_STEP toggle-crouch-on
+RADIAL_QA_STEP toggle-crouch-kept
+RADIAL_QA PASS toggle-crouch-not-repeated
+RADIAL_QA_STEP toggle-crouch-off
+RADIAL_QA_STEP toggle-crouch-finished
+RADIAL_QA PASS toggle-crouch-off
+RADIAL_QA_STEP commit-STRENGTH
+RADIAL_QA_SOUND crysismod:classic_maximum_strength
+RADIAL_QA_SERVER_MODE STRENGTH tick=274
+RADIAL_QA PASS activation-color-strength
+RADIAL_QA_CAPTURE activation-strength-early size=1920x1080
+RADIAL_QA_ACTIVATION strength rgb=ff4b42 seconds=0.0335719
+RADIAL_QA_CAPTURE activation-strength-middle size=1920x1080
+RADIAL_QA_CAPTURE activation-strength-late size=1920x1080
+RADIAL_QA PASS walking-through-close
+RADIAL_QA PASS mode-while-moving
+RADIAL_QA_CAPTURE strength-flash-finished size=1920x1080
+RADIAL_QA_STEP open-SPEED
+RADIAL_QA_INPUT hold focus=true
+RADIAL_QA_F7 action=1 focus=true screen=null
+RADIAL_QA_SCREEN io.github.painworks.crysismod.nanosuit.client.radial.Nanosuit1RadialScreen@3c15ab2c
+RADIAL_QA_STEP choose-SPEED
+RADIAL_QA_SOUND crysismod:classic_maximum_speed
+RADIAL_QA_SOUND crysismod:classic_speed_activation
+RADIAL_QA PASS activation-color-speed
+RADIAL_QA_CAPTURE activation-speed-early size=1920x1080
+RADIAL_QA_ACTIVATION speed rgb=ffd44a seconds=0.009338
+RADIAL_QA_STEP commit-SPEED
+RADIAL_QA_SERVER_MODE SPEED tick=308
+RADIAL_QA_CAPTURE activation-speed-middle size=1920x1080
+RADIAL_QA_CAPTURE activation-speed-late size=1920x1080
+RADIAL_QA PASS confirmed-SPEED
+RADIAL_QA_STEP open-ARMOR
+RADIAL_QA_INPUT hold focus=true
+RADIAL_QA_F7 action=1 focus=true screen=null
+RADIAL_QA_SCREEN io.github.painworks.crysismod.nanosuit.client.radial.Nanosuit1RadialScreen@269a73d6
+RADIAL_QA_STEP choose-ARMOR
+RADIAL_QA_SOUND crysismod:classic_maximum_armor
+RADIAL_QA PASS activation-color-armor
+RADIAL_QA_SERVER_MODE ARMOR tick=341
+RADIAL_QA_CAPTURE activation-armor-early size=1920x1080
+RADIAL_QA_ACTIVATION armor rgb=73baff seconds=0.0053534
+RADIAL_QA_STEP commit-ARMOR
+RADIAL_QA_CAPTURE activation-armor-middle size=1920x1080
+RADIAL_QA_CAPTURE activation-armor-late size=1920x1080
+RADIAL_QA PASS confirmed-ARMOR
+RADIAL_QA_STEP n2-equip
+RADIAL_QA_STEP n2-force-feedback
+RADIAL_QA PASS activation-color-n2-force
+RADIAL_QA_CAPTURE activation-n2-force-early size=1920x1080
+RADIAL_QA_ACTIVATION n2-force rgb=73baff seconds=0.0053849
+RADIAL_QA PASS n2-remains-blue
+RADIAL_QA_STEP check-feedback-captures
+RADIAL_QA FAIL feedback-captures
+RADIAL_QA_COMPLETE steps=30 pass=30 fail=1
+RADIAL_QA_SCREEN net.minecraft.client.gui.screens.ProgressScreen@4daf8e98

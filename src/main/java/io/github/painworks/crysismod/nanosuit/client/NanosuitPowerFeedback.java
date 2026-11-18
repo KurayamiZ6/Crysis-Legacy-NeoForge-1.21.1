@@ -92,7 +92,7 @@ public final class NanosuitPowerFeedback {
       }
       long elapsed = System.nanoTime() - flashStart;
       boolean classic = NanosuitArmorUtil.getEquippedProfile(player) == NanosuitProfile.NANOSUIT_1;
-      long duration = classicModeFlash ? 200_000_000L : FLASH_NANOS;
+      long duration = classicModeFlash ? 500_000_000L : FLASH_NANOS;
       if (classic != classicModeFlash || flashStart == 0L || elapsed >= duration) {
          return;
       }

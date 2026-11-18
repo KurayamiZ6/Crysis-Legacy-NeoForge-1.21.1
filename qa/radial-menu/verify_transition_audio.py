@@ -34,7 +34,7 @@ with os.add_dll_directory('C:/Program Files/Audacity'):
         name=bank[header+2:header+32].split(b'\0')[0].decode('ascii')
         frames,length,_,_,mode,rate=struct.unpack_from('<6I',bank,header+32)
         channels=struct.unpack_from('<H',bank,header+62)[0]
-        cue=next((cue for cue,data in manifest.items() if data['sample']==name),None)
+        cue=next((cue for cue,data in manifest.items() if data.get('sample')==name),None)
         if cue:
             payload=bank[offset:offset+length]
             pcm=np.array(decode_ima(payload,channels,frames),dtype=np.int16).reshape(-1,channels)
@@ -56,6 +56,15 @@ with os.add_dll_directory('C:/Program Files/Audacity'):
             report[cue]={'independent_decoder_correlation':correlation,'ogg_frames':info.frames,
                          'rate':info.samplerate,'channels':info.channels,'status':'PASS'}
         header+=size;offset+=length
+    for cue,data in manifest.items():
+        if cue in report:continue
+        path=root/'src/main/resources/assets/crysismod/sounds/classic'/f'{cue}.ogg'
+        info,ogg=read(path)
+        assert (info.frames,info.samplerate,info.channels)==(data['frames'],data['rate'],data['channels'])
+        import hashlib
+        assert hashlib.sha256(path.read_bytes()).hexdigest()==data['output_sha256']
+        report[cue]={'source':data['source'],'ogg_frames':info.frames,'rate':info.samplerate,
+                     'channels':info.channels,'status':'PASS','decoder':'MPEG; source CRC/frame count verified by importer'}
 assert len(report)==3
 (root/'qa/radial-menu/classic-transition-audio-checks.json').write_text(json.dumps(report,indent=2)+'\n')
 print(json.dumps(report,indent=2))

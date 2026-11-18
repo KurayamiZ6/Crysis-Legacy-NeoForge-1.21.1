@@ -1,0 +1,23 @@
+{
+  "archive": "Crysis Remastered/Game/Localized/english.pak",
+  "table": "languages/ui_dialog_recording_list.xml",
+  "voice_member": "languages/dialog/suit/male/suit_modification_engaged.mp2",
+  "rows": [
+    [
+      "suit/male/suit_modification_engaged",
+      "SUIT VOICE MALE",
+      "Cloak engaged",
+      "0.7",
+      "suit",
+      "0",
+      "0.8",
+      "0.6",
+      "0",
+      "+ or - 10%",
+      "no",
+      "suit",
+      "male",
+      "suit_modification_engaged"
+    ]
+  ]
+}

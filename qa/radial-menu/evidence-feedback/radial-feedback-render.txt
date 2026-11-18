@@ -1,0 +1,52 @@
+RADIAL_QA_SCREEN net.minecraft.client.gui.screens.GenericMessageScreen@5a919251
+RADIAL_QA_SCREEN net.minecraft.client.gui.screens.GenericMessageScreen@fe58644
+RADIAL_QA_SCREEN net.minecraft.client.gui.screens.GenericMessageScreen@cc4a0dd
+RADIAL_QA_SCREEN net.minecraft.client.gui.screens.ProgressScreen@12f3e95d
+RADIAL_QA_SCREEN net.minecraft.client.gui.screens.LevelLoadingScreen@4c2f3f41
+RADIAL_QA_SCREEN net.minecraft.client.gui.screens.ReceivingLevelScreen@1235d778
+RADIAL_QA_SERVER_MODE ARMOR tick=1
+RADIAL_QA_SCREEN net.minecraft.client.gui.screens.ReceivingLevelScreen@1db203d2
+RADIAL_QA_SOUND crysismod:classic_maximum_armor
+RADIAL_QA PASS default-unbound
+RADIAL_QA PASS dead-zone
+RADIAL_QA PASS four-cardinals
+RADIAL_QA PASS ring-10s
+RADIAL_QA PASS single-flash-fades
+RADIAL_QA PASS configured-half-second
+RADIAL_QA PASS pointer-continuous
+RADIAL_QA PASS quadrant-boundaries
+RADIAL_QA_STEP gui-3
+RADIAL_QA_STEP neutral-3
+RADIAL_QA_SCREEN local.crysisqa.RadialMenuQa$VisualRadial@422e4aa0
+RADIAL_QA_CAPTURE feedback-neutral size=1920x1080
+RADIAL_QA_STEP strength-hover-3
+RADIAL_QA_CAPTURE gui3-strength-flash size=1920x1080
+RADIAL_QA_FLASH start=0.91131616 seconds=0.0226856
+RADIAL_QA_CAPTURE gui3-strength-t80 size=1920x1080
+RADIAL_QA_PANEL seconds=0.1321184 offset=15.888295 flash=0.5413475
+RADIAL_QA_CAPTURE gui3-strength-t250 size=1920x1080
+RADIAL_QA_PANEL seconds=0.2676812 offset=16.0 flash=0.2158881
+RADIAL_QA_CAPTURE gui3-strength-t550 size=1920x1080
+RADIAL_QA_PANEL seconds=0.5678744 offset=16.0 flash=0.0
+RADIAL_QA_CAPTURE gui3-strength-after-flash size=1920x1080
+RADIAL_QA PASS hover-stationary-does-not-retrigger
+RADIAL_QA PASS selected-panel-outward
+RADIAL_QA_FLASH end=0.0 seconds=0.5678744
+RADIAL_QA_CAPTURE feedback-strength-after-flash size=1920x1080
+RADIAL_QA_STEP speed-hover-3
+RADIAL_QA_CAPTURE gui3-speed-flash size=1920x1080
+RADIAL_QA_FLASH speed=0.9981249 seconds=4.69E-4
+RADIAL_QA PASS speed-selected-radius
+RADIAL_QA_CAPTURE feedback-speed-after-flash size=1920x1080
+RADIAL_QA_STEP armor-hover-feedback
+RADIAL_QA PASS armor-travel-matches-speed
+RADIAL_QA_CAPTURE feedback-armor-after-flash size=1920x1080
+RADIAL_QA_STEP cloak-hover-feedback
+RADIAL_QA PASS cloak-travel-matches-speed
+RADIAL_QA_CAPTURE feedback-cloak-after-flash size=1920x1080
+RADIAL_QA_STEP visual-cancel
+RADIAL_QA PASS movement-contexts-restored
+RADIAL_QA_STEP feedback-visual-finish
+RADIAL_QA PASS feedback-visual-captures
+RADIAL_QA_COMPLETE steps=8 pass=15 fail=0
+RADIAL_QA_SCREEN net.minecraft.client.gui.screens.ProgressScreen@2fa44cdf

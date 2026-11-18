@@ -1,11 +1,4 @@
 {
-  "cloak_activation": {
-    "independent_decoder_correlation": 1.0,
-    "ogg_frames": 49152,
-    "rate": 32000,
-    "channels": 2,
-    "status": "PASS"
-  },
   "cloak_deactivation": {
     "independent_decoder_correlation": 0.9999999999999998,
     "ogg_frames": 24256,
@@ -19,5 +12,13 @@
     "rate": 44100,
     "channels": 2,
     "status": "PASS"
+  },
+  "cloak_activation": {
+    "source": "Crysis Remastered/Game/sounds.pak::sounds/interface/interface_combined.fsb::cloak_activate",
+    "ogg_frames": 42624,
+    "rate": 44100,
+    "channels": 2,
+    "status": "PASS",
+    "decoder": "MPEG; source CRC/frame count verified by importer"
   }
 }

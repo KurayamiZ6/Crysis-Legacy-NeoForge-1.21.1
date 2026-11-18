@@ -1,12 +1,12 @@
 {
   "cloak_on": {
-    "source": "../Original games sounds/Crysis Sound, VO & Music/Languages/English/dialog/suit/male/suit_full_cloak_on.mp2",
+    "source": "Crysis Remastered/Game/Localized/english.pak::languages/dialog/suit/male/suit_modification_engaged.mp2",
     "rate": 44100,
     "channels": 2,
-    "source_frames": 50688,
-    "ogg_frames": 50688,
+    "source_frames": 61056,
+    "ogg_frames": 61056,
     "decoder_alignment_frames": 0,
-    "pcm_correlation": 0.9952623250643562,
+    "pcm_correlation": 0.9886702701785459,
     "audio_identity_match": true
   },
   "cloak_off": {

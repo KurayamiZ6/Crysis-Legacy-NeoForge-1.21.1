@@ -12,7 +12,7 @@ public final class NanosuitRadialConfig {
     // New key: an existing generated 0.30s default must not silently override the new animation.
     public static final ModConfigSpec.DoubleValue HOVER_FLASH_SECONDS = BUILDER.defineInRange("selectionFlashSeconds", .50, .05, 1.0);
     public static final ModConfigSpec.DoubleValue HOVER_FLASH_INTENSITY = BUILDER.defineInRange("hoverFlashIntensity", .65, 0, 1);
-    public static final ModConfigSpec.DoubleValue SELECTED_PANEL_OFFSET = BUILDER.defineInRange("selectedPanelOffset", 2.5, 0, 8);
+    public static final ModConfigSpec.DoubleValue SELECTED_PANEL_OFFSET = BUILDER.defineInRange("selectedPanelTravel", 16.0, 0, 24);
     public static final ModConfigSpec SPEC = BUILDER.build();
 
     private NanosuitRadialConfig() {}

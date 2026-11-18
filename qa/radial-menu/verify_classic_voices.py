@@ -6,13 +6,22 @@ This compares waveforms and does not assert an auditory validation of wording.
 from pathlib import Path
 import ctypes as C,os,json
 import numpy as np
+import zipfile
+from import_cloak_audio import read_pak
 class Info(C.Structure):_fields_=[('frames',C.c_longlong),('samplerate',C.c_int),('channels',C.c_int),('format',C.c_int),('sections',C.c_int),('seekable',C.c_int)]
 with os.add_dll_directory('C:/Program Files/Audacity'):
  m=C.CDLL('C:/Program Files/Audacity/mpg123.dll');m.mpg123_init();m.mpg123_new.argtypes=[C.c_char_p,C.POINTER(C.c_int)];m.mpg123_new.restype=C.c_void_p;m.mpg123_open.argtypes=[C.c_void_p,C.c_char_p];m.mpg123_getformat.argtypes=[C.c_void_p,C.POINTER(C.c_long),C.POINTER(C.c_int),C.POINTER(C.c_int)];m.mpg123_read.argtypes=[C.c_void_p,C.c_void_p,C.c_size_t,C.POINTER(C.c_size_t)];m.mpg123_delete.argtypes=[C.c_void_p]
  s=C.CDLL('C:/Program Files/Audacity/sndfile.dll');s.sf_open.argtypes=[C.c_char_p,C.c_int,C.POINTER(Info)];s.sf_open.restype=C.c_void_p;s.sf_readf_short.argtypes=[C.c_void_p,C.POINTER(C.c_short),C.c_longlong];s.sf_close.argtypes=[C.c_void_p]
  report={}
  for original,target in [('suit_full_cloak_on','cloak_on'),('suit_full_cloak_off','cloak_off'),('suit_maximum_armor','maximum_armor'),('suit_maximum_strength','maximum_strength'),('suit_maximum_speed','maximum_speed')]:
-  path=Path('../Original games sounds/Crysis Sound, VO & Music/Languages/English/dialog/suit/male')/(original+'.mp2');err=C.c_int();h=m.mpg123_new(None,C.byref(err));assert m.mpg123_open(h,str(path.resolve()).encode())==0
+  path=Path('../Original games sounds/Crysis Sound, VO & Music/Languages/English/dialog/suit/male')/(original+'.mp2')
+  source_description=str(path).replace('\\','/')
+  if target=='cloak_on' and Path('qa/radial-menu/remastered-cloak-voice.json').exists():
+   imported=json.loads(Path('qa/radial-menu/remastered-cloak-voice.json').read_text())
+   game=Path(os.environ.get('CRYSIS_REMASTERED_DIR','D:/Games/CrysisRemastered'))
+   with zipfile.ZipFile(game/'Game/Localized/english.pak') as archive: payload=read_pak(archive,'languages/dialog/suit/male/suit_modification_engaged.mp2')
+   path=Path('build/radial-menu/voice-verification-current-source.mp2');path.write_bytes(payload);source_description=imported['source']
+  err=C.c_int();h=m.mpg123_new(None,C.byref(err));assert m.mpg123_open(h,str(path.resolve()).encode())==0
   rate=C.c_long();ch=C.c_int();enc=C.c_int();assert m.mpg123_getformat(h,C.byref(rate),C.byref(ch),C.byref(enc))==0;assert enc.value==208,enc.value
   buf=C.create_string_buffer(32768);got=C.c_size_t();raw=bytearray()
   while True:
@@ -24,6 +33,6 @@ with os.add_dll_directory('C:/Program Files/Audacity'):
   candidates=[]
   for lag in [-2304,-1152,0,1152,2304]:
    a=pcm[max(0,lag):];b=ogg[max(0,-lag):];n=min(len(a),len(b));candidates.append((float(np.corrcoef(a[:n].ravel(),b[:n].ravel())[0,1]),lag))
-  corr,lag=max(candidates);report[target]={'source':str(path).replace('\\','/'),'rate':rate.value,'channels':ch.value,'source_frames':len(pcm),'ogg_frames':len(ogg),'decoder_alignment_frames':lag,'pcm_correlation':corr,'audio_identity_match':corr>.98}
+  corr,lag=max(candidates);report[target]={'source':source_description,'rate':rate.value,'channels':ch.value,'source_frames':len(pcm),'ogg_frames':len(ogg),'decoder_alignment_frames':lag,'pcm_correlation':corr,'audio_identity_match':corr>.98}
  Path('qa/radial-menu/classic-voice-verification.json').write_text(json.dumps(report,indent=2)+'\n',encoding='utf8');print(json.dumps(report,indent=2))
 

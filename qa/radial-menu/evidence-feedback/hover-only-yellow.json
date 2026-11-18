@@ -1,0 +1,26 @@
+{
+  "armor": {
+    "armor": 1829,
+    "strength": 0,
+    "speed": 0,
+    "cloak": 0
+  },
+  "strength": {
+    "armor": 0,
+    "strength": 1553,
+    "speed": 0,
+    "cloak": 0
+  },
+  "speed": {
+    "armor": 0,
+    "strength": 0,
+    "speed": 1181,
+    "cloak": 0
+  },
+  "cloak": {
+    "armor": 0,
+    "strength": 0,
+    "speed": 0,
+    "cloak": 1062
+  }
+}

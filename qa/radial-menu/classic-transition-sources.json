@@ -1,14 +1,14 @@
 {
   "cloak_activation": {
-    "bank": "Crysis Sound, VO & Music/Sounds/interface/interface_suit.fsb",
-    "sample": "cloak_chameleon_activate_12.wa",
-    "frames": 49152,
-    "rate": 32000,
+    "source": "Crysis Remastered/Game/sounds.pak::sounds/interface/interface_combined.fsb::cloak_activate",
+    "frames": 42624,
+    "rate": 44100,
     "channels": 2,
-    "duration": 1.536,
-    "source_payload_sha256": "2bd33f19834a25811c3fe27292e98f250783d0af634a47aa442f4d20af4b717e",
-    "ogg_sha256": "6e1497a6b54e54d27bb5b9c4a454eb20029a3c1d297b935cbf506eae375784f2",
-    "auditory_validation": "PENDING; deactivation association inferred from the two available cloak cues"
+    "duration": 0.966530612244898,
+    "source_payload_sha256": "f0460e20cbd105224a45c3f0e46e2584f3eb063a940598dad51081d55793695b",
+    "output_sha256": "dc285d5aaacdb1b4b6d4d9fdc2446e29399e0a442dc62093aaa5598f47ee1a34",
+    "decoded_and_roundtrip_metadata": "PASS",
+    "auditory_validation": "Confirmed by user on 2026-11-18"
   },
   "cloak_deactivation": {
     "bank": "Crysis Sound, VO & Music/Sounds/interface/interface_suit.fsb",
