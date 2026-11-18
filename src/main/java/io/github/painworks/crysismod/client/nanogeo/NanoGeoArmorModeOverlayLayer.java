@@ -61,9 +61,9 @@ public final class NanoGeoArmorModeOverlayLayer extends RenderLayer<AbstractClie
                               poseStack,
                               overlayConsumer,
                               overlayState.overlayPackedLight() >= 0 ? overlayState.overlayPackedLight() : packedLight,
-                              overlayState.red(),
-                              overlayState.green(),
-                              overlayState.blue(),
+                              overlayState.classicMode() ? 1.0F : overlayState.red(),
+                              overlayState.classicMode() ? 1.0F : overlayState.green(),
+                              overlayState.classicMode() ? 1.0F : overlayState.blue(),
                               1.0F
                            );
                            break;

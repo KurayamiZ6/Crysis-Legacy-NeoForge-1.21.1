@@ -155,7 +155,7 @@ public final class NanoGeoArmorModeDynamicTextureCompatRenderer {
          if (!transitionActive) {
             ResourceLocation steadyTextureId = steadyBaseFrameTextureId(steadyFrameIndex);
             maybeDebugLog(overlayState, false, steadyTextureId);
-            return steadyTextureId;
+            return NanoGeoClassicOverlayTint.resolve(steadyTextureId, 0, overlayState, "base");
          } else {
             NanoGeoArmorModeDynamicTextureCompatRenderer.DynamicTextureState state = playerId != null
                ? TRANSIENT_BASE_STATES.computeIfAbsent(playerId, NanoGeoArmorModeDynamicTextureCompatRenderer::createTransientBaseState)
@@ -164,7 +164,7 @@ public final class NanoGeoArmorModeDynamicTextureCompatRenderer {
             state.lastUseMillis = Util.getMillis();
             updateTransitionBaseIfNeeded(state, overlayState, steadyFrameIndex);
             maybeDebugLog(overlayState, true, state.textureId);
-            return state.textureId;
+            return NanoGeoClassicOverlayTint.resolve(state.textureId, state.lastUpdateMillis, overlayState, "base");
          }
       }
    }
@@ -202,7 +202,8 @@ public final class NanoGeoArmorModeDynamicTextureCompatRenderer {
          perfSection = perfAppend(perf, "updatePulse", perfSection);
          perfLog(perf, perfStart, "dynamic=true transitionSensitive=" + transitionSensitive + " visible=" + hasVisiblePulseContent(state));
          return hasVisiblePulseContent(state)
-            ? new NanoGeoArmorModeDynamicTextureCompatRenderer.PulseTextureSet(state.textureId, null)
+            ? new NanoGeoArmorModeDynamicTextureCompatRenderer.PulseTextureSet(
+               NanoGeoClassicOverlayTint.resolve(state.textureId, state.lastUpdateMillis, overlayState, "pulse"), null)
             : NanoGeoArmorModeDynamicTextureCompatRenderer.PulseTextureSet.empty();
       }
    }
@@ -263,7 +264,7 @@ public final class NanoGeoArmorModeDynamicTextureCompatRenderer {
                state.lastUseMillis = Util.getMillis();
                updateCompositeIfNeeded(state, overlayState, steadyFrameIndex, pulseFrameIndex, transitionActive, outputOnlyPulse, pulseFrame, pulseState);
                maybeDebugLog(overlayState, transitionActive, state.textureId);
-               return state.textureId;
+               return NanoGeoClassicOverlayTint.resolve(state.textureId, state.lastUpdateMillis, overlayState, "composite");
             }
          }
       } else {
@@ -2925,6 +2926,7 @@ public final class NanoGeoArmorModeDynamicTextureCompatRenderer {
    }
 
    private static void resetDynamicStatesAndCaches() {
+      NanoGeoClassicOverlayTint.clear();
       SHARED_BASE_STATE.close();
       SHARED_PULSE_STATE.close();
       SHARED_COMPOSITE_STATE.close();

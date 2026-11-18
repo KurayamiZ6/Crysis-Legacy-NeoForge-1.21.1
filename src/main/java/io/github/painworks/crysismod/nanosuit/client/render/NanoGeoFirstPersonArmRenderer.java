@@ -142,9 +142,9 @@ public final class NanoGeoFirstPersonArmRenderer {
                                  overlayConsumer,
                                  overlayState.overlayPackedLight() >= 0 ? overlayState.overlayPackedLight() : event.getPackedLight(),
                                  OverlayTexture.NO_OVERLAY,
-                                 overlayState.red(),
-                                 overlayState.green(),
-                                 overlayState.blue(),
+                                 overlayState.classicMode() ? 1.0F : overlayState.red(),
+                                 overlayState.classicMode() ? 1.0F : overlayState.green(),
+                                 overlayState.classicMode() ? 1.0F : overlayState.blue(),
                                  1.0F
                               );
                            } else if (backend == NanoGeoClientConfig.ArmorModeOverlayBackend.TEXTURE_FALLBACK) {
