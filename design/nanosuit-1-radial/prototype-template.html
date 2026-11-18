@@ -1,0 +1,60 @@
+<!doctype html>
+<html lang="fr">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Nanosuit 1 — Menu radial V3</title>
+<link rel="stylesheet" href="prototype.css">
+<main>
+  <header>
+    <h1>NANOSUIT 1 · MENU RADIAL V3</h1>
+    <nav><a href="v2/index.html">V2 conservée</a><a href="README.md">Références et paramètres</a></nav>
+  </header>
+  <div class="workbench">
+    <figure class="preview">
+      <!-- RADIAL_SVG -->
+      <figcaption id="view-status" aria-live="polite">Neutre · Fond clair</figcaption>
+    </figure>
+    <aside aria-label="Commandes de la maquette">
+      <h2>Sélection</h2>
+      <p>Survoler un panneau ou utiliser les boutons. Revenir au centre pour retrouver l'état neutre.</p>
+      <div class="mode-buttons">
+        <button data-select="neutral" aria-pressed="true">Neutre</button>
+        <button data-select="armor" aria-pressed="false">ARMOR</button>
+        <button data-select="strength" aria-pressed="false">STRENGTH</button>
+        <button data-select="speed" aria-pressed="false">SPEED</button>
+        <button data-select="cloak" aria-pressed="false">CLOAK</button>
+      </div>
+      <h2>Arrière-plan</h2>
+      <div class="background-buttons">
+        <button data-background="light" aria-pressed="true">Clair</button>
+        <button data-background="dark" aria-pressed="false">Sombre</button>
+      </div>
+      <h2>Anneau</h2>
+      <p>360° en 10 secondes<br>Rotation linéaire, horaire provisoire.</p>
+      <div class="animation-buttons">
+        <button id="pause-ring" aria-pressed="false">Pause</button>
+        <button id="restart-ring">Repartir à 0</button>
+      </div>
+      <p class="scope">Maquette graphique uniquement.<br>Touche d'ouverture future non attribuée par défaut.</p>
+    </aside>
+  </div>
+  <section class="references">
+    <h2>Captures Crysis Remastered fournies</h2>
+    <div class="reference-grid">
+      <figure><a href="assets/remastered-speed.png"><img src="assets/remastered-speed.png" alt="Menu Remastered avec Speed actif"></a><figcaption>Quatre modes en croix. Icône du mode courant ambrée, panneaux normaux verts translucides.</figcaption></figure>
+      <figure><a href="assets/remastered-strength.png"><img src="assets/remastered-strength.png" alt="Panneau Force sélectionné, avec bordure jaune et fond à hexagones sombres"></a><figcaption>Référence du survol complet. Contour lumineux, fond ambré et hexagones sombres derrière le poing.</figcaption></figure>
+      <figure><a href="assets/remastered-armor.png"><img src="assets/remastered-armor.png" alt="Menu sur un mur plus clair, avec Armor actif"></a><figcaption>Décor visible au travers des panneaux. Anneau indépendant et chevron extérieur fixe.</figcaption></figure>
+    </div>
+    <p>Les tracés des quatre icônes V2 sont inchangés. Les positions sont alignées sur ces nouvelles captures, avec l'accord de l'utilisateur. La scène Minecraft claire et la scène Crysis sombre servent à contrôler la transparence.</p>
+    <p>Le sens de rotation ne peut pas être établi depuis ces images fixes. Les teintes et les opacités sont des estimations visuelles, détaillées dans les notes.</p>
+    <a href="selection-comparison.png"><img class="quarters" src="selection-comparison.png" alt="Panneau Force de la capture fournie et panneau Force de la maquette V3 sur fond sombre"></a>
+  </section>
+  <section>
+    <h2>Rendus et contrôle du mouvement</h2>
+    <p><a href="neutral.png">Neutre</a> · <a href="strength.png">Force</a> · <a href="speed.png">Vitesse</a> · <a href="strength-dark.png">Force sur fond sombre</a> · <a href="neutral-dark.png">Neutre sur fond sombre</a></p>
+    <a href="rotation-quarters.png"><img class="quarters" src="rotation-quarters.png" alt="Anneau aux instants 0, 2,5, 5 et 7,5 secondes, avec les panneaux fixes"></a>
+    <p><a href="rotation-quarters.png">Quatre instants de la rotation réelle du prototype</a> · <a href="radial-neutral.svg">SVG animé transparent</a></p>
+  </section>
+</main>
+<script src="prototype.js"></script>
+</html>

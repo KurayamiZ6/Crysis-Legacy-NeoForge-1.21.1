@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="450" viewBox="0 0 1200 450">
+<title>Comparaison du menu complet — Référence, V1 et V2</title>
+<rect width="1200" height="450" fill="#101719"/>
+<g fill="#c8d0c5" font-family="Bahnschrift,Arial,sans-serif" font-size="17" text-anchor="middle">
+<text x="200" y="46">RÉFÉRENCE DU MANUEL</text><text x="600" y="46">PREMIÈRE MAQUETTE</text><text x="1000" y="46">NOUVELLE ITÉRATION</text>
+</g>
+<image href="assets/reference-menu.png" x="48" y="80" width="304" height="314"/>
+<image href="../v1/radial-neutral.svg" x="448" y="80" width="304" height="314"/>
+<image href="radial-neutral.svg" x="848" y="80" width="304" height="314"/>
+</svg>

@@ -1,0 +1,46 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="300" height="290" viewBox="0 0 263 271"><defs>
+<filter id="glow" x="-50%" y="-50%" width="200%" height="200%"><feGaussianBlur stdDeviation="1.15"/></filter>
+<pattern id="scan" width="4" height="4" patternUnits="userSpaceOnUse"><path d="M0 0H4" stroke="#a3b58d" stroke-opacity=".035" stroke-width=".5"/></pattern>
+<symbol id="armor" viewBox="0 0 64 64">
+ <path d="M12 10H52L50 32Q43 47 32 53Q19 46 14 33Z" fill="currentColor" opacity=".82"/>
+ <g fill="#09110c" stroke="currentColor" stroke-width=".6"><polygon points="20.90,33.25 17.00,35.50 13.10,33.25 13.10,28.75 17.00,26.50 20.90,28.75"/><polygon points="28.70,37.75 24.80,40.00 20.90,37.75 20.90,33.25 24.80,31.00 28.70,33.25"/><polygon points="20.90,42.25 17.00,44.50 13.10,42.25 13.10,37.75 17.00,35.50 20.90,37.75"/><polygon points="28.90,46.75 25.00,49.00 21.10,46.75 21.10,42.25 25.00,40.00 28.90,42.25"/><polygon points="36.70,42.25 32.80,44.50 28.90,42.25 28.90,37.75 32.80,35.50 36.70,37.75"/><polygon points="36.70,51.25 32.80,53.50 28.90,51.25 28.90,46.75 32.80,44.50 36.70,46.75"/></g>
+</symbol>
+<symbol id="strength" viewBox="0 0 64 64">
+ <g fill="currentColor" stroke="#0b140e" stroke-width="1.1">
+ <path d="M14 29L11 24Q11 21 15 20L19 28Z"/><path d="M20 26L17 18Q17 15 22 15L26 25Z"/>
+ <path d="M27 24L25 15Q27 12 31 14L34 24Z"/><path d="M35 24L34 17Q37 14 40 17L42 28Z"/>
+ <path d="M14 30L21 26L28 30L40 25L47 25Q52 27 49 31L44 40L39 44L20 42Z"/>
+ <path d="M20 43L39 45L40 54L22 54Z"/>
+ </g>
+ <g fill="#09110c" stroke="currentColor" stroke-width=".7"><polygon points="28.72,49.15 25.00,51.30 21.28,49.15 21.28,44.85 25.00,42.70 28.72,44.85"/><polygon points="36.22,49.15 32.50,51.30 28.78,49.15 28.78,44.85 32.50,42.70 36.22,44.85"/><polygon points="32.42,55.65 28.70,57.80 24.98,55.65 24.98,51.35 28.70,49.20 32.42,51.35"/><polygon points="39.92,55.65 36.20,57.80 32.48,55.65 32.48,51.35 36.20,49.20 39.92,51.35"/></g>
+</symbol>
+<symbol id="speed" viewBox="0 0 64 64">
+ <g fill="currentColor"><path d="M0 18H8L21 31L8 44H0L13 31Z"/><path d="M14 18H22L35 31L22 44H14L27 31Z"/><path d="M28 18H36L49 31L36 44H28L41 31Z"/>
+ <circle cx="53" cy="22" r="4.8"/></g>
+ <path d="M49 28L45 34L51 39L45 46M49 29L55 34L60 32M49 28L42 29M51 39L58 43" fill="none" stroke="currentColor" stroke-width="4.2" stroke-linejoin="bevel"/>
+</symbol>
+<clipPath id="head"><path d="M26 8L38 7L44 17L43 29L38 35L45 39L48 46L33 56L17 47L19 39L26 35L21 27L21 17Z"/></clipPath>
+<symbol id="cloak" viewBox="0 0 64 64">
+ <g clip-path="url(#head)" fill="currentColor" stroke="#0b140e" stroke-width="1"><polygon points="25.64,14.10 22.00,16.20 18.36,14.10 18.36,9.90 22.00,7.80 25.64,9.90"/><polygon points="33.24,14.10 29.60,16.20 25.96,14.10 25.96,9.90 29.60,7.80 33.24,9.90"/><polygon points="40.84,14.10 37.20,16.20 33.56,14.10 33.56,9.90 37.20,7.80 40.84,9.90"/><polygon points="48.44,14.10 44.80,16.20 41.16,14.10 41.16,9.90 44.80,7.80 48.44,9.90"/><polygon points="56.04,14.10 52.40,16.20 48.76,14.10 48.76,9.90 52.40,7.80 56.04,9.90"/><polygon points="29.44,20.60 25.80,22.70 22.16,20.60 22.16,16.40 25.80,14.30 29.44,16.40"/><polygon points="37.04,20.60 33.40,22.70 29.76,20.60 29.76,16.40 33.40,14.30 37.04,16.40"/><polygon points="44.64,20.60 41.00,22.70 37.36,20.60 37.36,16.40 41.00,14.30 44.64,16.40"/><polygon points="52.24,20.60 48.60,22.70 44.96,20.60 44.96,16.40 48.60,14.30 52.24,16.40"/><polygon points="59.84,20.60 56.20,22.70 52.56,20.60 52.56,16.40 56.20,14.30 59.84,16.40"/><polygon points="25.64,27.10 22.00,29.20 18.36,27.10 18.36,22.90 22.00,20.80 25.64,22.90"/><polygon points="33.24,27.10 29.60,29.20 25.96,27.10 25.96,22.90 29.60,20.80 33.24,22.90"/><polygon points="40.84,27.10 37.20,29.20 33.56,27.10 33.56,22.90 37.20,20.80 40.84,22.90"/><polygon points="48.44,27.10 44.80,29.20 41.16,27.10 41.16,22.90 44.80,20.80 48.44,22.90"/><polygon points="56.04,27.10 52.40,29.20 48.76,27.10 48.76,22.90 52.40,20.80 56.04,22.90"/><polygon points="29.44,33.60 25.80,35.70 22.16,33.60 22.16,29.40 25.80,27.30 29.44,29.40"/><polygon points="37.04,33.60 33.40,35.70 29.76,33.60 29.76,29.40 33.40,27.30 37.04,29.40"/><polygon points="44.64,33.60 41.00,35.70 37.36,33.60 37.36,29.40 41.00,27.30 44.64,29.40"/><polygon points="52.24,33.60 48.60,35.70 44.96,33.60 44.96,29.40 48.60,27.30 52.24,29.40"/><polygon points="59.84,33.60 56.20,35.70 52.56,33.60 52.56,29.40 56.20,27.30 59.84,29.40"/><polygon points="25.64,40.10 22.00,42.20 18.36,40.10 18.36,35.90 22.00,33.80 25.64,35.90"/><polygon points="33.24,40.10 29.60,42.20 25.96,40.10 25.96,35.90 29.60,33.80 33.24,35.90"/><polygon points="40.84,40.10 37.20,42.20 33.56,40.10 33.56,35.90 37.20,33.80 40.84,35.90"/><polygon points="48.44,40.10 44.80,42.20 41.16,40.10 41.16,35.90 44.80,33.80 48.44,35.90"/><polygon points="56.04,40.10 52.40,42.20 48.76,40.10 48.76,35.90 52.40,33.80 56.04,35.90"/><polygon points="29.44,46.60 25.80,48.70 22.16,46.60 22.16,42.40 25.80,40.30 29.44,42.40"/><polygon points="37.04,46.60 33.40,48.70 29.76,46.60 29.76,42.40 33.40,40.30 37.04,42.40"/><polygon points="44.64,46.60 41.00,48.70 37.36,46.60 37.36,42.40 41.00,40.30 44.64,42.40"/><polygon points="52.24,46.60 48.60,48.70 44.96,46.60 44.96,42.40 48.60,40.30 52.24,42.40"/><polygon points="59.84,46.60 56.20,48.70 52.56,46.60 52.56,42.40 56.20,40.30 59.84,42.40"/><polygon points="25.64,53.10 22.00,55.20 18.36,53.10 18.36,48.90 22.00,46.80 25.64,48.90"/><polygon points="33.24,53.10 29.60,55.20 25.96,53.10 25.96,48.90 29.60,46.80 33.24,48.90"/><polygon points="40.84,53.10 37.20,55.20 33.56,53.10 33.56,48.90 37.20,46.80 40.84,48.90"/><polygon points="48.44,53.10 44.80,55.20 41.16,53.10 41.16,48.90 44.80,46.80 48.44,48.90"/><polygon points="56.04,53.10 52.40,55.20 48.76,53.10 48.76,48.90 52.40,46.80 56.04,48.90"/></g>
+</symbol>
+</defs><g><g class="mode speed" data-hover="true" style="color:#edb540">
+ <path class="halo" d="M132 21L170 44V78L152 89L134 83L112 90L94 78V44Z" fill="none" stroke="#e4b84a" stroke-width="3" opacity=".4" filter="url(#glow)"/>
+ <path class="panel" d="M132 21L170 44V78L152 89L134 83L112 90L94 78V44Z" fill="#172017" fill-opacity=".86" stroke="#e4b84a" stroke-width="1.65" stroke-opacity=".95"/>
+ <path d="M132 21L170 44V78L152 89L134 83L112 90L94 78V44Z" fill="url(#scan)" pointer-events="none"/>
+ <use class="icon" href="#speed" x="103" y="40" width="58" height="45"/>
+ </g><g class="mode strength" data-hover="false" style="color:#6d8862">
+ <path class="halo" d="M211 77L240 105L246 117L236 149L211 160L187 148L191 120L176 108L182 88Z" fill="none" stroke="#536449" stroke-width="3" opacity="0" filter="url(#glow)"/>
+ <path class="panel" d="M211 77L240 105L246 117L236 149L211 160L187 148L191 120L176 108L182 88Z" fill="#050c08" fill-opacity=".86" stroke="#536449" stroke-width="1.65" stroke-opacity=".72"/>
+ <path d="M211 77L240 105L246 117L236 149L211 160L187 148L191 120L176 108L182 88Z" fill="url(#scan)" pointer-events="none"/>
+ <use class="icon" href="#strength" x="190" y="92" width="50" height="57"/>
+ </g><g class="mode cloak" data-hover="false" style="color:#6d8862">
+ <path class="halo" d="M191 184H215L231 211L213 252H166L150 225L159 205L175 205Z" fill="none" stroke="#536449" stroke-width="3" opacity="0" filter="url(#glow)"/>
+ <path class="panel" d="M191 184H215L231 211L213 252H166L150 225L159 205L175 205Z" fill="#050c08" fill-opacity=".86" stroke="#536449" stroke-width="1.65" stroke-opacity=".72"/>
+ <path d="M191 184H215L231 211L213 252H166L150 225L159 205L175 205Z" fill="url(#scan)" pointer-events="none"/>
+ <use class="icon" href="#cloak" x="169" y="193" width="48" height="56"/>
+ </g><g class="mode armor" data-hover="false" style="color:#93a589">
+ <path class="halo" d="M51 77L81 87L88 107L73 120L77 146L57 160L29 150L17 106Z" fill="none" stroke="#94a384" stroke-width="3" opacity="0" filter="url(#glow)"/>
+ <path class="panel" d="M51 77L81 87L88 107L73 120L77 146L57 160L29 150L17 106Z" fill="#050c08" fill-opacity=".86" stroke="#94a384" stroke-width="1.65" stroke-opacity=".72"/>
+ <path d="M51 77L81 87L88 107L73 120L77 146L57 160L29 150L17 106Z" fill="url(#scan)" pointer-events="none"/>
+ <use class="icon" href="#armor" x="30" y="95" width="48" height="57"/>
+ </g><circle cx="132" cy="141" r="34" fill="none" stroke="#91a28a" stroke-opacity=".72" stroke-width="5.5" stroke-dasharray="93 7 100 14" transform="rotate(-100 132 141)"/><g transform="rotate(-90 132 141)"><path d="M174 133L185 141L174 149" fill="none" stroke="#f2c867" stroke-width="1.4"/><path d="M171 135L179 141L171 147" fill="none" stroke="#c7b467" stroke-width=".7"/></g></g></svg>
