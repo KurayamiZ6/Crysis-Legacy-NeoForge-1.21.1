@@ -1,0 +1,52 @@
+{
+  "cloak_on": {
+    "source": "../Original games sounds/Crysis Sound, VO & Music/Languages/English/dialog/suit/male/suit_full_cloak_on.mp2",
+    "rate": 44100,
+    "channels": 2,
+    "source_frames": 50688,
+    "ogg_frames": 50688,
+    "decoder_alignment_frames": 0,
+    "pcm_correlation": 0.9952623250643562,
+    "audio_identity_match": true
+  },
+  "cloak_off": {
+    "source": "../Original games sounds/Crysis Sound, VO & Music/Languages/English/dialog/suit/male/suit_full_cloak_off.mp2",
+    "rate": 44100,
+    "channels": 2,
+    "source_frames": 52992,
+    "ogg_frames": 51840,
+    "decoder_alignment_frames": 1152,
+    "pcm_correlation": 0.9937917191871527,
+    "audio_identity_match": true
+  },
+  "maximum_armor": {
+    "source": "../Original games sounds/Crysis Sound, VO & Music/Languages/English/dialog/suit/male/suit_maximum_armor.mp2",
+    "rate": 44100,
+    "channels": 2,
+    "source_frames": 51840,
+    "ogg_frames": 51840,
+    "decoder_alignment_frames": 0,
+    "pcm_correlation": 0.9899327990373018,
+    "audio_identity_match": true
+  },
+  "maximum_strength": {
+    "source": "../Original games sounds/Crysis Sound, VO & Music/Languages/English/dialog/suit/male/suit_maximum_strength.mp2",
+    "rate": 44100,
+    "channels": 2,
+    "source_frames": 57600,
+    "ogg_frames": 56448,
+    "decoder_alignment_frames": 1152,
+    "pcm_correlation": 0.9833860857722512,
+    "audio_identity_match": true
+  },
+  "maximum_speed": {
+    "source": "../Original games sounds/Crysis Sound, VO & Music/Languages/English/dialog/suit/male/suit_maximum_speed.mp2",
+    "rate": 44100,
+    "channels": 2,
+    "source_frames": 57600,
+    "ogg_frames": 57600,
+    "decoder_alignment_frames": 0,
+    "pcm_correlation": 0.986701369976395,
+    "audio_identity_match": true
+  }
+}

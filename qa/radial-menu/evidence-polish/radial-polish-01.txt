@@ -1,0 +1,220 @@
+RADIAL_QA_SERVER_MODE ARMOR tick=1
+RADIAL_QA_SOUND crysismod:classic_maximum_armor
+RADIAL_QA PASS default-unbound
+RADIAL_QA PASS dead-zone
+RADIAL_QA PASS four-cardinals
+RADIAL_QA PASS ring-10s
+RADIAL_QA PASS single-flash-fades
+RADIAL_QA PASS configured-half-second
+RADIAL_QA PASS pointer-continuous
+RADIAL_QA PASS quadrant-boundaries
+RADIAL_QA_STEP gui-2
+RADIAL_QA_STEP neutral-2
+RADIAL_QA_INPUT hold focus=true
+RADIAL_QA PASS open-2
+RADIAL_QA_CAPTURE gui2-neutral size=1920x1080
+RADIAL_QA_STEP strength-hover-2
+RADIAL_QA PASS hover-no-change-2
+RADIAL_QA PASS hover-no-activation-flash-2
+RADIAL_QA PASS hover-silent-2
+RADIAL_QA_SOUND_LIST hover-silent-2 []
+RADIAL_QA_CAPTURE gui2-strength-hover-armor-active size=1920x1080
+RADIAL_QA_STEP speed-hover-2
+RADIAL_QA PASS old-panel-returned-2
+RADIAL_QA_CAPTURE gui2-speed-hover size=1920x1080
+RADIAL_QA_STEP neutral-release-2
+RADIAL_QA_STEP neutral-check-2
+RADIAL_QA PASS no-selection-keeps-armor-2
+RADIAL_QA PASS cursor-restored-2
+RADIAL_QA_STEP gui-3
+RADIAL_QA_STEP neutral-3
+RADIAL_QA_INPUT hold focus=true
+RADIAL_QA PASS open-3
+RADIAL_QA_CAPTURE gui3-neutral size=1920x1080
+RADIAL_QA_STEP strength-hover-3
+RADIAL_QA_CAPTURE gui3-strength-flash size=1920x1080
+RADIAL_QA_FLASH start=0.99896705 seconds=2.583E-4
+RADIAL_QA_CAPTURE gui3-strength-t80 size=1920x1080
+RADIAL_QA_PANEL seconds=0.0948888 offset=2.3062165 flash=0.65646034
+RADIAL_QA_CAPTURE gui3-strength-t250 size=1920x1080
+RADIAL_QA_PANEL seconds=0.2627647 offset=2.5 flash=0.22512235
+RADIAL_QA_CAPTURE gui3-strength-t550 size=1920x1080
+RADIAL_QA_PANEL seconds=0.5534198 offset=2.5 flash=0.0
+RADIAL_QA_CAPTURE gui3-strength-after-flash size=1920x1080
+RADIAL_QA PASS hover-stationary-does-not-retrigger
+RADIAL_QA PASS selected-panel-outward
+RADIAL_QA_FLASH end=0.0 seconds=0.5534198
+RADIAL_QA PASS hover-no-change-3
+RADIAL_QA PASS hover-no-activation-flash-3
+RADIAL_QA PASS hover-silent-3
+RADIAL_QA_SOUND_LIST hover-silent-3 []
+RADIAL_QA_CAPTURE gui3-strength-hover-armor-active size=1920x1080
+RADIAL_QA_STEP speed-hover-3
+RADIAL_QA_CAPTURE gui3-speed-flash size=1920x1080
+RADIAL_QA_FLASH speed=0.97069114 seconds=0.0073817
+RADIAL_QA PASS old-panel-returned-3
+RADIAL_QA_CAPTURE gui3-speed-hover size=1920x1080
+RADIAL_QA_STEP neutral-release-3
+RADIAL_QA_STEP neutral-check-3
+RADIAL_QA PASS no-selection-keeps-armor-3
+RADIAL_QA PASS cursor-restored-3
+RADIAL_QA_STEP free-pointer-open
+RADIAL_QA_INPUT hold focus=true
+RADIAL_QA_STEP free-pointer-angle
+RADIAL_QA PASS free-63-degree-pointer
+RADIAL_QA_CAPTURE pointer-63deg size=1920x1080
+RADIAL_QA_STEP close-before-reopen
+RADIAL_QA_STEP pointer-reopen
+RADIAL_QA_INPUT hold focus=true
+RADIAL_QA PASS pointer-orientation-retained
+RADIAL_QA_CAPTURE pointer-retained-neutral size=1920x1080
+RADIAL_QA_STEP boundary-strength
+RADIAL_QA PASS boundary-right
+RADIAL_QA_CAPTURE boundary-strength size=1920x1080
+RADIAL_QA_STEP boundary-speed
+RADIAL_QA PASS boundary-top
+RADIAL_QA PASS boundary-old-panel-returned
+RADIAL_QA_CAPTURE boundary-speed size=1920x1080
+RADIAL_QA_STEP pointer-cancel
+RADIAL_QA_STEP open-STRENGTH
+RADIAL_QA_INPUT hold focus=true
+RADIAL_QA_STEP hover-STRENGTH
+RADIAL_QA PASS no-commit-before-release-STRENGTH
+RADIAL_QA PASS camera-blocked-STRENGTH
+RADIAL_QA_SOUND crysismod:classic_maximum_strength
+RADIAL_QA_SERVER_MODE STRENGTH tick=300
+RADIAL_QA PASS activation-color-strength
+RADIAL_QA_CAPTURE activation-strength-early size=1920x1080
+RADIAL_QA_ACTIVATION strength rgb=ff4b42 seconds=0.0428264
+RADIAL_QA_STEP commit-STRENGTH
+RADIAL_QA_CAPTURE activation-strength-late size=1920x1080
+RADIAL_QA PASS release-STRENGTH
+RADIAL_QA PASS one-mode-transition-STRENGTH
+RADIAL_QA PASS strength-voice-only
+RADIAL_QA_SOUND_LIST strength-voice-only [crysismod:classic_maximum_strength]
+RADIAL_QA_STEP open-SPEED
+RADIAL_QA_INPUT hold focus=true
+RADIAL_QA_STEP hover-SPEED
+RADIAL_QA PASS no-commit-before-release-SPEED
+RADIAL_QA PASS camera-blocked-SPEED
+RADIAL_QA_SOUND crysismod:classic_maximum_speed
+RADIAL_QA_SOUND crysismod:classic_speed_activation
+RADIAL_QA PASS activation-color-speed
+RADIAL_QA_SERVER_MODE SPEED tick=328
+RADIAL_QA_CAPTURE activation-speed-early size=1920x1080
+RADIAL_QA_ACTIVATION speed rgb=ffd44a seconds=0.013055
+RADIAL_QA_STEP commit-SPEED
+RADIAL_QA_CAPTURE activation-speed-late size=1920x1080
+RADIAL_QA PASS release-SPEED
+RADIAL_QA PASS one-mode-transition-SPEED
+RADIAL_QA PASS speed-voice-and-effect
+RADIAL_QA_SOUND_LIST speed-voice-and-effect [crysismod:classic_maximum_speed, crysismod:classic_speed_activation]
+RADIAL_QA_STEP open-CLOAK
+RADIAL_QA_INPUT hold focus=true
+RADIAL_QA_STEP hover-CLOAK
+RADIAL_QA PASS no-commit-before-release-CLOAK
+RADIAL_QA PASS camera-blocked-CLOAK
+RADIAL_QA_SOUND crysismod:classic_cloak_on
+RADIAL_QA_SOUND crysismod:classic_cloak_activation
+RADIAL_QA_SERVER_MODE CLOAK tick=356
+RADIAL_QA PASS cloak-no-mode-flash
+RADIAL_QA_CAPTURE activation-cloak size=1920x1080
+RADIAL_QA_STEP commit-CLOAK
+RADIAL_QA PASS release-CLOAK
+RADIAL_QA PASS one-mode-transition-CLOAK
+RADIAL_QA PASS cloak-voice-and-effect
+RADIAL_QA_SOUND_LIST cloak-voice-and-effect [crysismod:classic_cloak_activation, crysismod:classic_cloak_on]
+RADIAL_QA_STEP open-ARMOR
+RADIAL_QA_INPUT hold focus=true
+RADIAL_QA_STEP hover-ARMOR
+RADIAL_QA PASS no-commit-before-release-ARMOR
+RADIAL_QA PASS camera-blocked-ARMOR
+RADIAL_QA_SOUND crysismod:classic_cloak_deactivation
+RADIAL_QA_SOUND crysismod:classic_maximum_armor
+RADIAL_QA PASS activation-color-armor
+RADIAL_QA_CAPTURE activation-armor-early size=1920x1080
+RADIAL_QA_ACTIVATION armor rgb=73baff seconds=0.0054661
+RADIAL_QA_SERVER_MODE ARMOR tick=384
+RADIAL_QA_STEP commit-ARMOR
+RADIAL_QA_CAPTURE activation-armor-late size=1920x1080
+RADIAL_QA PASS release-ARMOR
+RADIAL_QA PASS one-mode-transition-ARMOR
+RADIAL_QA PASS cloak-exit-and-armor-voice
+RADIAL_QA_SOUND_LIST cloak-exit-and-armor-voice [crysismod:classic_cloak_deactivation, crysismod:classic_maximum_armor]
+RADIAL_QA_STEP n1-expenditure-feedback
+RADIAL_QA PASS n1-power-no-new-flash
+RADIAL_QA PASS n1-force-hud-kept
+RADIAL_QA_CAPTURE n1-power-no-flash size=1920x1080
+RADIAL_QA_STEP same-open
+RADIAL_QA_INPUT hold focus=true
+RADIAL_QA_STEP same-hover
+RADIAL_QA_STEP same-check
+RADIAL_QA PASS same-mode-no-change
+RADIAL_QA PASS same-mode-no-flash
+RADIAL_QA PASS same-mode-no-audio
+RADIAL_QA_SOUND_LIST same-mode-no-audio []
+RADIAL_QA_STEP escape-open
+RADIAL_QA_INPUT hold focus=true
+RADIAL_QA_STEP escape-cancel
+RADIAL_QA_STEP escape-check
+RADIAL_QA PASS escape-keeps-mode
+RADIAL_QA PASS escape-closes
+RADIAL_QA_STEP equipment-open
+RADIAL_QA_INPUT hold focus=true
+RADIAL_QA_STEP equipment-remove
+RADIAL_QA_SERVER_MODE NONE tick=460
+RADIAL_QA_STEP equipment-check
+RADIAL_QA PASS equipment-removal-cancels
+RADIAL_QA_STEP repair-n1
+RADIAL_QA_SERVER_MODE ARMOR tick=480
+RADIAL_QA_SOUND crysismod:classic_maximum_armor
+RADIAL_QA_STEP n1-before-generation-swap
+RADIAL_QA_INPUT hold focus=true
+RADIAL_QA_STEP n2-equip
+RADIAL_QA PASS n2-swap-cancels-open-menu
+RADIAL_QA_STEP n2-open-refused
+RADIAL_QA_INPUT hold focus=true
+RADIAL_QA PASS n2-radial-blocked
+RADIAL_QA_STEP n2-force-feedback
+RADIAL_QA PASS n2-force-flash-retained
+RADIAL_QA PASS activation-color-n2-force
+RADIAL_QA_CAPTURE activation-n2-force-early size=1920x1080
+RADIAL_QA_ACTIVATION n2-force rgb=73baff seconds=0.0048275
+RADIAL_QA_STEP n2-existing-key
+RADIAL_QA_SERVER_MODE NONE tick=535
+RADIAL_QA_STEP n2-existing-check
+RADIAL_QA PASS n2-armor-shortcut-NONE
+RADIAL_QA_STEP restore-n1
+RADIAL_QA_SERVER_MODE ARMOR tick=550
+RADIAL_QA_STEP other-screen-open
+RADIAL_QA_INPUT hold focus=true
+RADIAL_QA_STEP other-screen-replace
+RADIAL_QA_STEP other-screen-check
+RADIAL_QA PASS other-screen-no-commit
+RADIAL_QA_STEP low-energy-prepare
+RADIAL_QA_SOUND crysismod:classic_energy_critical
+RADIAL_QA_SOUND crysismod:classic_energy_low
+RADIAL_QA_STEP low-energy-open
+RADIAL_QA_INPUT hold focus=true
+RADIAL_QA_STEP low-energy-release
+RADIAL_QA_STEP low-energy-check
+RADIAL_QA PASS low-energy-radial-refused-no-optimistic-state
+RADIAL_QA PASS refused-mode-no-flash
+RADIAL_QA PASS refused-mode-no-audio
+RADIAL_QA_SOUND_LIST refused-mode-no-audio []
+RADIAL_QA_STEP server-constraints
+RADIAL_QA PASS server-refuses-low-energy-cloak
+RADIAL_QA PASS server-accepts-strength
+RADIAL_QA PASS server-refuses-same-tick-cooldown
+RADIAL_QA PASS server-refuses-incomplete
+RADIAL_QA_SERVER_MODE STRENGTH tick=606
+RADIAL_QA_SOUND crysismod:classic_maximum_strength
+RADIAL_QA_STEP spin-open
+RADIAL_QA_INPUT hold focus=true
+RADIAL_QA_CAPTURE rotation-a size=1920x1080
+RADIAL_QA_STEP spin-later
+RADIAL_QA_CAPTURE rotation-b size=1920x1080
+RADIAL_QA_ROTATION elapsed=2.5159167
+RADIAL_QA_STEP flash-captures-check
+RADIAL_QA PASS flash-entry-and-end-captured
+RADIAL_QA_COMPLETE steps=60 pass=75 fail=0

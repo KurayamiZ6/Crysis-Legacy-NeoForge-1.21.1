@@ -1,0 +1,8 @@
+{
+  "n2_audio_branch_unchanged": true,
+  "all_previous_sound_definitions_unchanged": true,
+  "new_audio_and_gui_resources_in_jar": true,
+  "qa_mod_not_packaged": true,
+  "network_protocol": 6,
+  "jar_sha256": "d8c453c8346d110dded72afc136156f98fdc504f635c4c127de2747d59b86b44"
+}

@@ -9,8 +9,10 @@ public final class NanosuitRadialConfig {
     public static final ModConfigSpec.DoubleValue BACKGROUND_ALPHA = BUILDER.defineInRange("backgroundAlpha", .30, 0, 1);
     public static final ModConfigSpec.DoubleValue HOVER_BACKGROUND_ALPHA = BUILDER.defineInRange("hoverBackgroundAlpha", .48, 0, 1);
     public static final ModConfigSpec.DoubleValue HEX_ALPHA = BUILDER.defineInRange("hexAlpha", .62, 0, 1);
-    public static final ModConfigSpec.DoubleValue HOVER_FLASH_SECONDS = BUILDER.defineInRange("hoverFlashSeconds", .30, .05, 1.0);
+    // New key: an existing generated 0.30s default must not silently override the new animation.
+    public static final ModConfigSpec.DoubleValue HOVER_FLASH_SECONDS = BUILDER.defineInRange("selectionFlashSeconds", .50, .05, 1.0);
     public static final ModConfigSpec.DoubleValue HOVER_FLASH_INTENSITY = BUILDER.defineInRange("hoverFlashIntensity", .65, 0, 1);
+    public static final ModConfigSpec.DoubleValue SELECTED_PANEL_OFFSET = BUILDER.defineInRange("selectedPanelOffset", 2.5, 0, 8);
     public static final ModConfigSpec SPEC = BUILDER.build();
 
     private NanosuitRadialConfig() {}

@@ -1,0 +1,34 @@
+{
+  "gui3-strength-flash.png": {
+    "stable_gold_rgb": [
+      255,
+      196,
+      60
+    ],
+    "opaque_gold_pixels": 1539
+  },
+  "gui3-strength-t80.png": {
+    "stable_gold_rgb": [
+      255,
+      196,
+      60
+    ],
+    "opaque_gold_pixels": 1553
+  },
+  "gui3-strength-t250.png": {
+    "stable_gold_rgb": [
+      255,
+      196,
+      60
+    ],
+    "opaque_gold_pixels": 1546
+  },
+  "gui3-strength-t550.png": {
+    "stable_gold_rgb": [
+      255,
+      196,
+      60
+    ],
+    "opaque_gold_pixels": 1546
+  }
+}

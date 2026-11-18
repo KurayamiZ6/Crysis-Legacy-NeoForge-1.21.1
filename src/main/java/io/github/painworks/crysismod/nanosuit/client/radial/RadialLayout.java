@@ -28,4 +28,15 @@ public final class RadialLayout {
         double remaining = Math.max(0, 1 - Math.max(0, elapsedSeconds) / duration);
         return (float) (remaining * remaining);
     }
+
+    /** Artwork points up at zero degrees; atan2 keeps the pointer continuous at sector borders. */
+    public static float pointerDegrees(double dx, double dy, float previous) {
+        if (dx * dx + dy * dy < 1.0e-6) return previous;
+        return (float) ((Math.toDegrees(Math.atan2(dy, dx)) + 450) % 360);
+    }
+
+    public static float panelProgress(double elapsedSeconds) {
+        double t = Math.min(1, Math.max(0, elapsedSeconds / .18));
+        return (float) (1 - Math.pow(1 - t, 3));
+    }
 }

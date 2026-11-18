@@ -1,0 +1,168 @@
+{
+  "parent": "a79007b2f1eaaca1c53d18e54ecca6bf2250158c",
+  "jar_sha256": "d8c453c8346d110dded72afc136156f98fdc504f635c4c127de2747d59b86b44",
+  "validated_icons_unchanged": true,
+  "captures": {
+    "activation-armor-early.png": {
+      "dimensions": [
+        1920,
+        1080
+      ],
+      "sha256": "c73706af9ad7471c7db74fd6b90ced8d2ee4f542fe982e0c1284baa51b6d8645"
+    },
+    "activation-armor-late.png": {
+      "dimensions": [
+        1920,
+        1080
+      ],
+      "sha256": "5a5b26ab3f626b307859483ebb9d494b9f571c40ee0dc5b8fa262ba3f87e2e25"
+    },
+    "activation-cloak.png": {
+      "dimensions": [
+        1920,
+        1080
+      ],
+      "sha256": "818ed1929e8aa01e20b3f1118f5c4fa9e102324cb255be1a5609989f53c4e258"
+    },
+    "activation-n2-force-early.png": {
+      "dimensions": [
+        1920,
+        1080
+      ],
+      "sha256": "a455cd89c494c1ffafd3a281ef5f6d52191edcefafdff2bec58b0a12809d3405"
+    },
+    "activation-speed-early.png": {
+      "dimensions": [
+        1920,
+        1080
+      ],
+      "sha256": "7ddb0a8efa9a1e89498bf6843b2f84ae533a7df040835c7d9f0f85d874e80ca5"
+    },
+    "activation-speed-late.png": {
+      "dimensions": [
+        1920,
+        1080
+      ],
+      "sha256": "c0ec8613f616566b1183e7b480b4ecaa6ca1c92def3d933f22f46e6a004deadd"
+    },
+    "activation-strength-early.png": {
+      "dimensions": [
+        1920,
+        1080
+      ],
+      "sha256": "a8e4840cffbf12db536d9f179dd745cdd33e0986f784b08eea9ab5d1a6dcaa63"
+    },
+    "activation-strength-late.png": {
+      "dimensions": [
+        1920,
+        1080
+      ],
+      "sha256": "4f7138356e3ce319dedc4a21bffc5a53c8668d7ddc163475c8fc04e817308d1d"
+    },
+    "boundary-speed.png": {
+      "dimensions": [
+        1920,
+        1080
+      ],
+      "sha256": "d3495946a32b16815ebad22da24832b6117939afc4d6b810d766e748c9236be4"
+    },
+    "boundary-strength.png": {
+      "dimensions": [
+        1920,
+        1080
+      ],
+      "sha256": "f31adcda0030beefa0f0a939fc62e43075747dbfe2fb7ac0f15fc2735bd0677f"
+    },
+    "gui2-neutral.png": {
+      "dimensions": [
+        1920,
+        1080
+      ],
+      "sha256": "a27f8ed052470c55c50ac59f94ad8c2dffea9b5a137861c6eafe79762bf6e5d1"
+    },
+    "gui3-neutral.png": {
+      "dimensions": [
+        1920,
+        1080
+      ],
+      "sha256": "45456827cf7c8791e1742441dca18116da373f3ec464543443945ec9358e6a2e"
+    },
+    "gui3-speed-flash.png": {
+      "dimensions": [
+        1920,
+        1080
+      ],
+      "sha256": "1c8dd0f339ea9bf32bec48db96ea69a7de0c9a9ca979faad84c1457999d6db31"
+    },
+    "gui3-speed-hover.png": {
+      "dimensions": [
+        1920,
+        1080
+      ],
+      "sha256": "c035ed9fd26161bc9e261f35b291ae661b645b2212757f1771586f38f2c280d2"
+    },
+    "gui3-strength-after-flash.png": {
+      "dimensions": [
+        1920,
+        1080
+      ],
+      "sha256": "eacc765907125fc399ca510868fc5cf4f79aeb08b0c2b810dca7063f6ce1fe5c"
+    },
+    "gui3-strength-flash.png": {
+      "dimensions": [
+        1920,
+        1080
+      ],
+      "sha256": "dcf3245e60a7ab071d5999dc1d659e4f9299fec5b3d1bce08dc74248f4de1f81"
+    },
+    "gui3-strength-t250.png": {
+      "dimensions": [
+        1920,
+        1080
+      ],
+      "sha256": "7e377b579890afcbbcdf491b612148260c3a9c5f9f308a80827a43da99f8a977"
+    },
+    "gui3-strength-t550.png": {
+      "dimensions": [
+        1920,
+        1080
+      ],
+      "sha256": "eacc765907125fc399ca510868fc5cf4f79aeb08b0c2b810dca7063f6ce1fe5c"
+    },
+    "gui3-strength-t80.png": {
+      "dimensions": [
+        1920,
+        1080
+      ],
+      "sha256": "638ca3cbbdbbc94611ab662b42ec48dc9dd07bd8f27f6883039a199f0898a6cb"
+    },
+    "n1-power-no-flash.png": {
+      "dimensions": [
+        1920,
+        1080
+      ],
+      "sha256": "7cb9a0449ed7f3be09115cd7b96fcd4a6dba749444e7f388ca91d04d1798ef55"
+    },
+    "pointer-63deg.png": {
+      "dimensions": [
+        1920,
+        1080
+      ],
+      "sha256": "f6e4b4c95dcc4b714e515064fe0ebfa0c0589aefe15b8caa3ecdb7f979bf82b0"
+    },
+    "pointer-retained-neutral.png": {
+      "dimensions": [
+        1920,
+        1080
+      ],
+      "sha256": "08013cca28511871354660e40d892dcd7ba0385e219da79253ca598738050913"
+    },
+    "selection-sequence.png": {
+      "dimensions": [
+        1600,
+        430
+      ],
+      "sha256": "a16297379035aaedb55ebcbb50dc353dae72b0fef6f8db6b6b56791f214e40d9"
+    }
+  }
+}

@@ -20,10 +20,12 @@ import org.lwjgl.glfw.GLFW;
 public final class Nanosuit1RadialScreen extends Screen {
     private static final NanosuitMode[] MODES = {NanosuitMode.ARMOR, NanosuitMode.STRENGTH, NanosuitMode.SPEED, NanosuitMode.CLOAK};
     private static final double[][] CENTERS = {{-74, 0}, {74, 0}, {0, -90}, {0, 73}};
+    private static float lastPointerDegrees;
     private final InputConstants.Key openingKey;
     private final long openedAt = System.nanoTime();
     private NanosuitMode hovered = NanosuitMode.NONE;
     private long hoverStartedAt;
+    private final float[] offsetStarts = new float[MODES.length];
     private boolean finished;
 
     public Nanosuit1RadialScreen(InputConstants.Key openingKey) {
@@ -93,11 +95,22 @@ public final class Nanosuit1RadialScreen extends Screen {
 
     private void updateHover(double x, double y) {
         double scale = RadialLayout.scale(height, NanosuitRadialConfig.SCALE.get());
-        NanosuitMode next = RadialLayout.select((x - width / 2.0) / scale, (y - height / 2.0) / scale);
+        double dx = (x - width / 2.0) / scale;
+        double dy = (y - height / 2.0) / scale;
+        lastPointerDegrees = RadialLayout.pointerDegrees(dx, dy, lastPointerDegrees);
+        NanosuitMode next = RadialLayout.select(dx, dy);
         if (next != hovered) {
+            long now = System.nanoTime();
+            for (int i = 0; i < MODES.length; i++) offsetStarts[i] = panelOffset(i, now);
             hovered = next;
-            hoverStartedAt = System.nanoTime();
+            hoverStartedAt = now;
         }
+    }
+
+    private float panelOffset(int index, long now) {
+        float target = MODES[index] == hovered ? NanosuitRadialConfig.SELECTED_PANEL_OFFSET.get().floatValue() : 0;
+        float progress = RadialLayout.panelProgress((now - hoverStartedAt) / 1_000_000_000.0);
+        return offsetStarts[index] + (target - offsetStarts[index]) * progress;
     }
 
     private static ResourceLocation texture(String name) {
@@ -112,7 +125,9 @@ public final class Nanosuit1RadialScreen extends Screen {
     }
 
     @Override public void render(GuiGraphics g, int mouseX, int mouseY, float partialTick) {
-        updateHover(mouseX, mouseY);
+        // Screen's integer render coordinates would quantize the otherwise continuous pointer.
+        updateHover(minecraft.mouseHandler.xpos() * width / minecraft.getWindow().getScreenWidth(),
+            minecraft.mouseHandler.ypos() * height / minecraft.getWindow().getScreenHeight());
         double seconds = (System.nanoTime() - openedAt) / 1_000_000_000.0;
         float flash = RadialLayout.hoverFlash((System.nanoTime() - hoverStartedAt) / 1_000_000_000.0,
             NanosuitRadialConfig.HOVER_FLASH_SECONDS.get());
@@ -127,16 +142,20 @@ public final class Nanosuit1RadialScreen extends Screen {
             boolean hover = MODES[i] == hovered;
             boolean amberIcon = hover || MODES[i] == active;
             g.pose().pushPose();
-            g.pose().translate((float) CENTERS[i][0], (float) CENTERS[i][1], 0);
+            float offset = panelOffset(i, System.nanoTime());
+            g.pose().translate((float) CENTERS[i][0] + (float) Math.signum(CENTERS[i][0]) * offset,
+                (float) CENTERS[i][1] + (float) Math.signum(CENTERS[i][1]) * offset, 0);
             float panelScale = i == 2 ? 1f : .95f;
             g.pose().scale(panelScale / 3f, panelScale / 3f, 1);
             tile(g, hover ? "amber-fill" : "green-fill", i, 1, 1, 1,
                 (float) (hover ? NanosuitRadialConfig.HOVER_BACKGROUND_ALPHA.get() : NanosuitRadialConfig.BACKGROUND_ALPHA.get()).doubleValue());
+            if (hover) tile(g, "hex", i, 1, 1, 1, NanosuitRadialConfig.HEX_ALPHA.get().floatValue());
             if (hover && flash > 0) {
                 tile(g, "flash-fill", i, 1, 1, 1, flash * NanosuitRadialConfig.HOVER_FLASH_INTENSITY.get().floatValue());
-                tile(g, "hex", i, 1, 1, 1, NanosuitRadialConfig.HEX_ALPHA.get().floatValue() * flash);
+                tile(g, "hex-glow", i, 1, 1, 1, NanosuitRadialConfig.HEX_ALPHA.get().floatValue() * flash);
             }
             tile(g, hover ? "amber-frame" : "green-frame", i, 1, 1, 1, hover ? 1 : .78f);
+            if (hover && flash > 0) tile(g, "flash-frame", i, 1, 1, 1, flash);
             tile(g, "icons", i, amberIcon ? 1f : 118/255f, amberIcon ? 196/255f : 150/255f,
                 amberIcon ? 60/255f : 117/255f, 1);
             g.pose().popPose();
@@ -147,8 +166,7 @@ public final class Nanosuit1RadialScreen extends Screen {
         RenderSystem.disableDepthTest();
         g.blit(texture("ring"), -48, -48, 0f, 0f, 96, 96, 96, 96);
         g.pose().popPose();
-        float pointer = switch (hovered) { case ARMOR -> -90; case STRENGTH -> 90; case CLOAK -> 180; default -> 0; };
-        g.pose().mulPose(Axis.ZP.rotationDegrees(pointer));
+        g.pose().mulPose(Axis.ZP.rotationDegrees(lastPointerDegrees));
         g.setColor(1, 1, 1, 1);
         RenderSystem.disableDepthTest();
         g.blit(texture("pointer"), -56, -56, 0f, 0f, 112, 112, 112, 112);

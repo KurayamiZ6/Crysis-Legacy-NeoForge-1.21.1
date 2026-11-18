@@ -38,19 +38,22 @@ public final class ClientNanosuitPacketHandlers {
       }
 
       if (classic) {
+         NanosuitPowerFeedback.flashClassicMode(nextMode);
+         if (previousMode == NanosuitMode.CLOAK) {
+            playUiSound(ModSounds.CLASSIC_CLOAK_DEACTIVATION.get());
+         }
          switch (nextMode) {
             case ARMOR -> playUiSound(ModSounds.CLASSIC_MAXIMUM_ARMOR.get());
             case STRENGTH -> playUiSound(ModSounds.CLASSIC_MAXIMUM_STRENGTH.get());
-            case SPEED -> playUiSound(ModSounds.CLASSIC_MAXIMUM_SPEED.get());
+            case SPEED -> {
+               playUiSound(ModSounds.CLASSIC_MAXIMUM_SPEED.get());
+               playUiSound(ModSounds.CLASSIC_SPEED_ACTIVATION.get());
+            }
             case CLOAK -> {
-               NanosuitPowerFeedback.flash();
                playUiSound(ModSounds.CLASSIC_CLOAK_ON.get());
+               playUiSound(ModSounds.CLASSIC_CLOAK_ACTIVATION.get());
             }
-            case NONE -> {
-               if (previousMode == NanosuitMode.CLOAK) {
-                  playUiSound(ModSounds.CLASSIC_CLOAK_OFF.get());
-               }
-            }
+            case NONE -> { }
          }
       } else if (nextMode == NanosuitMode.CLOAK) {
          NanosuitPowerFeedback.flash();

@@ -7,7 +7,7 @@ Le mod de test ne doit jamais être livré dans le JAR Crysis.
 ## Reconstruction des textures
 
 1. `python qa/radial-menu/export_assets.py` : extrait les quatre symboles V3
-   inchangés et écrit neuf SVG en couches dans les ressources du menu.
+   inchangés et écrit onze SVG en couches dans les ressources du menu.
 2. `node qa/radial-menu/render-assets.cjs <module-playwright> <chrome.exe> <répertoire-des-SVG>`
    : produit les PNG RGBA à leurs dimensions natives, sur fond transparent.
 
@@ -48,6 +48,12 @@ Pour rejouer uniquement le contrôle du raccourci Armure N2, ajouter :
 --jvm-arg=-Dradialqa.n2only=true
 ```
 
+Pour rejouer uniquement les captures du menu et le contrôle de sa flèche :
+
+```text
+--jvm-arg=-Dradialqa.visualonly=true
+```
+
 Les options `--probe`, `--probe-mod-id`, `--width`, `--height` et `--jvm-arg`
 ajoutées au lanceur sont facultatives ; sa campagne graphique historique garde
 ses valeurs par défaut.
@@ -55,7 +61,8 @@ ses valeurs par défaut.
 ## Paramètres livrés
 
 La touche « Menu radial Nanosuit 1 (maintenir) » est **non attribuée** par défaut.
-Le V utilisé par le banc n'est affecté que dans l'instance isolée.
+Le F7 utilisé par le banc n'est affecté que dans l'instance isolée. V est déjà
+affecté au NanoVisor : ne pas le réutiliser pour ce test.
 Le fichier client `nanosuit1-radial-client.toml` règle :
 
 | Paramètre | Défaut |
@@ -64,11 +71,48 @@ Le fichier client `nanosuit1-radial-client.toml` règle :
 | `backgroundAlpha` | 0,30 |
 | `hoverBackgroundAlpha` | 0,48 |
 | `hexAlpha` | 0,62 |
-| `hoverFlashSeconds` | 0,30 s |
+| `selectionFlashSeconds` | 0,50 s |
 | `hoverFlashIntensity` | 0,65 |
+| `selectedPanelOffset` | 2,5 unités graphiques, environ 4 px à 1080p |
 
-Le dernier retour utilisateur remplace la pulsation périodique V3 par un flash
-unique à l'entrée d'un secteur. Son intensité décroît selon `(1 - t / durée)²`.
-Le motif disparaît à la fin ; le contour et l'icône restent ambrés au survol.
+Le flash reste unique à l'entrée d'un secteur. Son intensité décroît selon
+`(1 - t / durée)²`. Le fond, le contour et le motif restent ambrés après le flash ;
+le contour et les hexagones reçoivent la surbrillance transitoire, l'icône reste
+jaune stable. Le panneau rejoint son décalage extérieur en 0,18 s et revient
+lorsqu'il perd le survol. La flèche suit l'angle exact de la souris et conserve
+son orientation entre ouvertures, en mémoire uniquement.
 Une icône ambrée seule indique le mode confirmé par le serveur.
 L'anneau reste indépendant : 36°/s, horloge monotone, tour en 10 secondes.
+
+L'ancien paramètre `hoverFlashSeconds` n'est plus lu : une configuration générée
+avec 0,30 s ne doit pas imposer involontairement cet ancien défaut. Vérifier
+`selectionFlashSeconds = 0.5` dans la configuration de l'instance utilisée.
+Aucune configuration de profil personnel n'est écrasée par le banc.
+
+## Transitions audiovisuelles N1
+
+Le flash de mode est déclenché par une différence de mode dans le paquet de
+synchronisation serveur existant. Armure bleu, Force rouge, Vitesse jaune :
+0,20 s, alpha maximal 32/255. Camouflage aucun flash. Les retours de dépense
+énergétique N1 gardent leur indication de force HUD mais n'amorcent plus ce flash.
+La branche N2 conserve ses 0,45 s, alpha 64/255 et son bleu historique.
+
+Les sources et vérifications audio sont consignées dans
+`classic-transition-sources.json`, `classic-voice-verification.json` et
+`classic-transition-audio-checks.json`.
+
+```powershell
+python qa/radial-menu/export_classic_transitions.py `
+  --bank '../Original games sounds/Crysis Sound, VO & Music/Sounds/interface/interface_suit.fsb' `
+  --audacity 'C:/Program Files/Audacity'
+python qa/radial-menu/verify_transition_audio.py
+python qa/radial-menu/verify_classic_voices.py
+```
+
+Les bibliothèques Audacity déjà installées fournissent les décodeurs/encodeurs.
+L'extraction ne modifie jamais la banque originale. Le décodeur IMA est comparé
+à celui de libsndfile et les flux Ogg sont relus pour vérifier leur intégrité.
+La correspondance des voix est contrôlée sur les échantillons décodés, avec
+alignement du délai d'un bloc MPEG si nécessaire. Cela ne remplace pas l'écoute :
+le rôle de désactivation attribué au second effet de camouflage reste à confirmer
+auditivement. Aucun son de navigation au survol n'est ajouté.

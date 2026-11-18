@@ -1,0 +1,81 @@
+RADIAL_QA_SERVER_MODE ARMOR tick=1
+RADIAL_QA_SOUND crysismod:classic_maximum_armor
+RADIAL_QA PASS default-unbound
+RADIAL_QA PASS dead-zone
+RADIAL_QA PASS four-cardinals
+RADIAL_QA PASS ring-10s
+RADIAL_QA PASS single-flash-fades
+RADIAL_QA PASS configured-half-second
+RADIAL_QA PASS pointer-continuous
+RADIAL_QA PASS quadrant-boundaries
+RADIAL_QA_STEP gui-2
+RADIAL_QA_STEP neutral-2
+RADIAL_QA_INPUT hold focus=true
+RADIAL_QA PASS open-2
+RADIAL_QA_CAPTURE gui2-neutral size=1920x1080
+RADIAL_QA_STEP strength-hover-2
+RADIAL_QA PASS hover-no-change-2
+RADIAL_QA PASS hover-no-activation-flash-2
+RADIAL_QA PASS hover-silent-2
+RADIAL_QA_SOUND_LIST hover-silent-2 []
+RADIAL_QA_CAPTURE gui2-strength-hover-armor-active size=1920x1080
+RADIAL_QA_STEP speed-hover-2
+RADIAL_QA PASS old-panel-returned-2
+RADIAL_QA_CAPTURE gui2-speed-hover size=1920x1080
+RADIAL_QA_STEP neutral-release-2
+RADIAL_QA_STEP neutral-check-2
+RADIAL_QA PASS no-selection-keeps-armor-2
+RADIAL_QA PASS cursor-restored-2
+RADIAL_QA_STEP gui-3
+RADIAL_QA_STEP neutral-3
+RADIAL_QA_INPUT hold focus=true
+RADIAL_QA PASS open-3
+RADIAL_QA_CAPTURE gui3-neutral size=1920x1080
+RADIAL_QA_STEP strength-hover-3
+RADIAL_QA_CAPTURE gui3-strength-flash size=1920x1080
+RADIAL_QA_FLASH start=0.9990762 seconds=2.31E-4
+RADIAL_QA_CAPTURE gui3-strength-t80 size=1920x1080
+RADIAL_QA_PANEL seconds=0.0815193 offset=2.168925 flash=0.70050436
+RADIAL_QA_CAPTURE gui3-strength-t250 size=1920x1080
+RADIAL_QA_PANEL seconds=0.2559453 offset=2.5 flash=0.23825079
+RADIAL_QA_CAPTURE gui3-strength-t550 size=1920x1080
+RADIAL_QA_PANEL seconds=0.5535082 offset=2.5 flash=0.0
+RADIAL_QA_CAPTURE gui3-strength-after-flash size=1920x1080
+RADIAL_QA PASS hover-stationary-does-not-retrigger
+RADIAL_QA PASS selected-panel-outward
+RADIAL_QA_FLASH end=0.0 seconds=0.5535082
+RADIAL_QA PASS hover-no-change-3
+RADIAL_QA PASS hover-no-activation-flash-3
+RADIAL_QA PASS hover-silent-3
+RADIAL_QA_SOUND_LIST hover-silent-3 []
+RADIAL_QA_CAPTURE gui3-strength-hover-armor-active size=1920x1080
+RADIAL_QA_STEP speed-hover-3
+RADIAL_QA_CAPTURE gui3-speed-flash size=1920x1080
+RADIAL_QA_FLASH speed=0.97642815 seconds=0.0059281
+RADIAL_QA PASS old-panel-returned-3
+RADIAL_QA_CAPTURE gui3-speed-hover size=1920x1080
+RADIAL_QA_STEP neutral-release-3
+RADIAL_QA_STEP neutral-check-3
+RADIAL_QA PASS no-selection-keeps-armor-3
+RADIAL_QA PASS cursor-restored-3
+RADIAL_QA_STEP free-pointer-open
+RADIAL_QA_INPUT hold focus=true
+RADIAL_QA_STEP free-pointer-angle
+RADIAL_QA PASS free-63-degree-pointer
+RADIAL_QA_CAPTURE pointer-63deg size=1920x1080
+RADIAL_QA_STEP close-before-reopen
+RADIAL_QA_STEP pointer-reopen
+RADIAL_QA_INPUT hold focus=true
+RADIAL_QA PASS pointer-orientation-retained
+RADIAL_QA_CAPTURE pointer-retained-neutral size=1920x1080
+RADIAL_QA_STEP boundary-strength
+RADIAL_QA PASS boundary-right
+RADIAL_QA_CAPTURE boundary-strength size=1920x1080
+RADIAL_QA_STEP boundary-speed
+RADIAL_QA PASS boundary-top
+RADIAL_QA PASS boundary-old-panel-returned
+RADIAL_QA_CAPTURE boundary-speed size=1920x1080
+RADIAL_QA_STEP pointer-cancel
+RADIAL_QA_STEP visual-proof-complete
+RADIAL_QA PASS all-flash-captures
+RADIAL_QA_COMPLETE steps=20 pass=30 fail=0

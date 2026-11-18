@@ -49,6 +49,9 @@ public final class ModSounds {
    public static final DeferredHolder<SoundEvent, SoundEvent> CLASSIC_MAXIMUM_SPEED = register("classic_maximum_speed");
    public static final DeferredHolder<SoundEvent, SoundEvent> CLASSIC_CLOAK_ON = register("classic_cloak_on");
    public static final DeferredHolder<SoundEvent, SoundEvent> CLASSIC_CLOAK_OFF = register("classic_cloak_off");
+   public static final DeferredHolder<SoundEvent, SoundEvent> CLASSIC_SPEED_ACTIVATION = register("classic_speed_activation");
+   public static final DeferredHolder<SoundEvent, SoundEvent> CLASSIC_CLOAK_ACTIVATION = register("classic_cloak_activation");
+   public static final DeferredHolder<SoundEvent, SoundEvent> CLASSIC_CLOAK_DEACTIVATION = register("classic_cloak_deactivation");
    public static final DeferredHolder<SoundEvent, SoundEvent> CLASSIC_ENERGY_CRITICAL = register("classic_energy_critical");
    public static final DeferredHolder<SoundEvent, SoundEvent> CLASSIC_ENERGY_LOW = register("classic_energy_low");
    public static final DeferredHolder<SoundEvent, SoundEvent> CLASSIC_POWER_MELEE = register("classic_power_melee");
