@@ -3,6 +3,7 @@ package io.github.painworks.crysismod.nanosuit.client;
 import com.mojang.blaze3d.platform.InputConstants;
 import com.mojang.blaze3d.platform.InputConstants.Type;
 import io.github.painworks.crysismod.nanosuit.NanosuitMode;
+import io.github.painworks.crysismod.nanosuit.client.radial.Nanosuit1RadialScreen;
 import io.github.painworks.crysismod.nanosuit.NanosuitProfile;
 import io.github.painworks.crysismod.nanosuit.energy.NanosuitCapabilities;
 import io.github.painworks.crysismod.nanosuit.network.NanosuitNetwork;
@@ -35,6 +36,9 @@ public final class NanosuitKeyMappings {
       "key.crysismod.toggle_enhanced_jump_debug", Type.KEYSYM, 297, "key.categories.crysismod"
    );
    private static boolean enhancedJumpDebugEnabled;
+   public static final KeyMapping OPEN_NANOSUIT_1_RADIAL = new KeyMapping(
+      "key.crysismod.nanosuit1_radial", Type.KEYSYM, GLFW.GLFW_KEY_UNKNOWN, "key.categories.crysismod"
+   );
 
    private NanosuitKeyMappings() {
    }
@@ -43,6 +47,7 @@ public final class NanosuitKeyMappings {
       event.register(TOGGLE_ARMOR);
       event.register(TOGGLE_CLOAK);
       event.register(CYCLE_NANOSUIT_1_MODE);
+      event.register(OPEN_NANOSUIT_1_RADIAL);
       event.register(OPEN_PERSPECTIVE_DEBUG_SETTINGS);
       event.register(TOGGLE_ENHANCED_JUMP_DEBUG);
    }
@@ -50,15 +55,22 @@ public final class NanosuitKeyMappings {
    @SubscribeEvent
    public static void onClientTick(net.neoforged.neoforge.client.event.ClientTickEvent.Post event) {
       if (true) {
+         Minecraft minecraft = Minecraft.getInstance();
+         while (OPEN_NANOSUIT_1_RADIAL.consumeClick()) {
+            if (minecraft.screen == null && minecraft.getOverlay() == null && minecraft.player != null
+               && NanosuitArmorUtil.getEquippedProfile(minecraft.player) == NanosuitProfile.NANOSUIT_1)
+               minecraft.setScreen(new Nanosuit1RadialScreen(OPEN_NANOSUIT_1_RADIAL.getKey()));
+         }
          while (TOGGLE_ARMOR.consumeClick()) {
-            NanosuitNetwork.sendToServer(new ToggleNanosuitModePacket(NanosuitMode.ARMOR));
+            if (!(minecraft.screen instanceof Nanosuit1RadialScreen))
+               NanosuitNetwork.sendToServer(new ToggleNanosuitModePacket(NanosuitMode.ARMOR));
          }
 
          while (TOGGLE_CLOAK.consumeClick()) {
-            NanosuitNetwork.sendToServer(new ToggleNanosuitModePacket(NanosuitMode.CLOAK));
+            if (!(minecraft.screen instanceof Nanosuit1RadialScreen))
+               NanosuitNetwork.sendToServer(new ToggleNanosuitModePacket(NanosuitMode.CLOAK));
          }
 
-         Minecraft minecraft = Minecraft.getInstance();
          while (CYCLE_NANOSUIT_1_MODE.consumeClick()) {
             requestNextNanosuit1Mode(minecraft);
          }
@@ -95,6 +107,13 @@ public final class NanosuitKeyMappings {
          case CLOAK, NONE -> NanosuitMode.ARMOR;
       };
       NanosuitNetwork.sendToServer(new ToggleNanosuitModePacket(nextMode));
+   }
+
+   @SubscribeEvent
+   public static void onCrosshair(net.neoforged.neoforge.client.event.RenderGuiLayerEvent.Pre event) {
+      if (Minecraft.getInstance().screen instanceof Nanosuit1RadialScreen
+         && event.getName().equals(net.neoforged.neoforge.client.gui.VanillaGuiLayers.CROSSHAIR))
+         event.setCanceled(true);
    }
 
    @SubscribeEvent

@@ -7,6 +7,7 @@ import io.github.painworks.crysismod.client.nanovision.NanovisionConfig;
 import io.github.painworks.crysismod.nanosuit.config.NanosuitArmorIdentityConfig;
 import io.github.painworks.crysismod.nanosuit.config.NanosuitClientConfig;
 import io.github.painworks.crysismod.nanosuit.config.NanosuitServerConfig;
+import io.github.painworks.crysismod.nanosuit.config.NanosuitRadialConfig;
 import io.github.painworks.crysismod.nanosuit.energy.NanosuitCapabilities;
 import io.github.painworks.crysismod.nanosuit.handler.NanosuitCloak;
 import io.github.painworks.crysismod.nanosuit.handler.NanosuitPlayerHandler;
@@ -41,6 +42,7 @@ public class CrysisMod {
       context.registerConfig(Type.COMMON, NanoGeoClientConfig.SPEC, "nanogeo-client.toml");
       context.registerConfig(Type.COMMON, NanosuitArmorIdentityConfig.SPEC, "nanosuit-armor-identity.toml");
       context.registerConfig(Type.SERVER, NanosuitServerConfig.SPEC, "nanosuit-server.toml");
+      context.registerConfig(Type.CLIENT, NanosuitRadialConfig.SPEC, "nanosuit1-radial-client.toml");
       NeoForge.EVENT_BUS.register(new NanosuitPlayerHandler());
       NeoForge.EVENT_BUS.register(new NanosuitCloak());
    }

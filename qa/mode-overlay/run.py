@@ -15,6 +15,11 @@ parser.add_argument("--sodium", type=Path, required=True)
 parser.add_argument("--template-game", type=Path, default=Path("build/amd-visual-diagnostic/game"))
 parser.add_argument("--extra-mod", type=Path, action="append", default=[])
 parser.add_argument("--shader-pack", type=Path)
+parser.add_argument("--probe", type=Path, default=Path(__file__).with_name("ModeOverlayQa.java"))
+parser.add_argument("--probe-mod-id", default="crysismodeoverlayqa")
+parser.add_argument("--width", type=int)
+parser.add_argument("--height", type=int)
+parser.add_argument("--jvm-arg", action="append", default=[])
 args = parser.parse_args()
 if not args.run_name or any(c not in "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789-" for c in args.run_name):
     parser.error("--run-name must contain only letters, digits and hyphens")
@@ -39,7 +44,7 @@ if args.shader_pack:
         f"enableShaders=true\nshaderPack={args.shader_pack.name}\n", encoding="utf-8")
 (classes / "META-INF/neoforge.mods.toml").write_text(
     'modLoader="javafml"\nloaderVersion="[4,)"\nlicense="Local QA"\n'
-    '[[mods]]\nmodId="crysismodeoverlayqa"\nversion="1.0"\n'
+    f'[[mods]]\nmodId="{args.probe_mod_id}"\nversion="1.0"\n'
     'displayName="Crysis mode overlay visual QA"\n', encoding="utf-8")
 classpath = os.pathsep.join((project / "build/legacy-functional-qa/classpath.txt").read_text().splitlines())
 merged = project / "build/moddev/artifacts/neoforge-21.1.265-merged.jar"
@@ -47,13 +52,15 @@ suffix = ".exe" if os.name == "nt" else ""
 compiler_home = args.compiler_home or args.java_home
 subprocess.run([str(compiler_home / f"bin/javac{suffix}"), "-proc:none", "-encoding", "UTF-8",
     "-sourcepath", str(classes), "-cp", os.pathsep.join([str(args.mod_jar.resolve()), classpath, str(merged)]),
-    "-d", str(classes), str(Path(__file__).with_name("ModeOverlayQa.java"))], check=True)
+    "-d", str(classes), str(args.probe)], check=True)
 subprocess.run([str(compiler_home / f"bin/jar{suffix}"), "--create", "--file",
     str(game / "mods/mode-overlay-qa.jar"), "-C", str(classes), "."], check=True)
 vm = (project / "build/moddev/clientRunVmArgs.txt").read_text()
 program = (project / "build/legacy-functional-qa/program.txt").read_text()
+if args.width and args.height:
+    program += f'\n--width\n{args.width}\n--height\n{args.height}\n'
 arguments = run / "java.args"
-arguments.write_text('-Xmx3G\n-Dfile.encoding=UTF-8\n' + vm + '\n-cp\n"' +
+arguments.write_text('-Xmx3G\n-Dfile.encoding=UTF-8\n' + vm + '\n' + '\n'.join(args.jvm_arg) + '\n-cp\n"' +
     classpath.replace("\\", "/") + '"\nnet.neoforged.devlaunch.Main\n' + program, encoding="utf-8")
 (run / "input-sha256.txt").write_text(hashlib.sha256(args.mod_jar.read_bytes()).hexdigest(), encoding="ascii")
 java = args.java_home / ("bin/javaw.exe" if os.name == "nt" else "bin/java")

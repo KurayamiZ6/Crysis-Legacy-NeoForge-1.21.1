@@ -1,0 +1,20 @@
+RADIAL_QA_SERVER_MODE ARMOR tick=1
+RADIAL_QA PASS default-unbound
+RADIAL_QA PASS dead-zone
+RADIAL_QA PASS four-cardinals
+RADIAL_QA PASS ring-10s
+RADIAL_QA PASS single-flash-fades
+RADIAL_QA_STEP n2-with-armor-active
+RADIAL_QA_STEP n2-menu-blocked
+RADIAL_QA_INPUT hold focus=true
+RADIAL_QA PASS n2-radial-blocked
+RADIAL_QA_STEP n2-existing-key
+RADIAL_QA_SERVER_MODE NONE tick=99
+RADIAL_QA_STEP n2-existing-check
+RADIAL_QA PASS n2-armor-shortcut-NONE
+RADIAL_QA_STEP n2-cooldown-wait
+RADIAL_QA_STEP n2-existing-key
+RADIAL_QA_SERVER_MODE ARMOR tick=132
+RADIAL_QA_STEP n2-existing-check
+RADIAL_QA PASS n2-armor-shortcut-ARMOR
+RADIAL_QA_COMPLETE steps=7 pass=8 fail=0

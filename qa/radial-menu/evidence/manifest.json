@@ -1,0 +1,55 @@
+{
+  "source_parent": "a1ba810680445d5e16d2ab313000c9c618725ae6",
+  "jar_sha256": "ffb321f2ddc04961f3d128c02ea1fbb7268f3a3c2facb6965dd3c68b055446ee",
+  "reference_size": [
+    2559,
+    1596
+  ],
+  "captures": {
+    "gui2-neutral.png": [
+      1920,
+      1080
+    ],
+    "gui2-speed-hover.png": [
+      1920,
+      1080
+    ],
+    "gui2-strength-hover-armor-active.png": [
+      1920,
+      1080
+    ],
+    "gui3-neutral.png": [
+      1920,
+      1080
+    ],
+    "gui3-speed-flash.png": [
+      1920,
+      1080
+    ],
+    "gui3-speed-hover.png": [
+      1920,
+      1080
+    ],
+    "gui3-strength-after-flash.png": [
+      1920,
+      1080
+    ],
+    "gui3-strength-flash.png": [
+      1920,
+      1080
+    ],
+    "gui3-strength-hover-armor-active.png": [
+      1920,
+      1080
+    ],
+    "rotation-a.png": [
+      1920,
+      1080
+    ],
+    "rotation-b.png": [
+      1920,
+      1080
+    ]
+  },
+  "notes": "Captures originales non retouchees. reference-comparison.png juxtapose deux recadrages a la meme hauteur ecran normalisee."
+}

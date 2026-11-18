@@ -1054,6 +1054,7 @@
     "subtitle.crysismod.nanovision_activation": "Nanovision activating",
     "subtitle.crysismod.nanovision_deactivation": "Nanovision deactivating",
     "subtitle.crysismod.nanovision_enabled": "Nanovision enabled",
-    "subtitle.crysismod.power_jump": "Nanosuit power jump"
+    "subtitle.crysismod.power_jump": "Nanosuit power jump",
+    "key.crysismod.nanosuit1_radial": "Nanosuit 1 radial menu (hold)"
 }
 

@@ -1,0 +1,135 @@
+RADIAL_QA_SERVER_MODE ARMOR tick=1
+RADIAL_QA PASS default-unbound
+RADIAL_QA PASS dead-zone
+RADIAL_QA PASS four-cardinals
+RADIAL_QA PASS ring-10s
+RADIAL_QA PASS single-flash-fades
+RADIAL_QA_STEP gui-2
+RADIAL_QA_STEP neutral-2
+RADIAL_QA_INPUT hold focus=true
+RADIAL_QA PASS open-2
+RADIAL_QA_CAPTURE gui2-neutral size=1920x1080
+RADIAL_QA_STEP strength-hover-2
+RADIAL_QA PASS hover-no-change-2
+RADIAL_QA_CAPTURE gui2-strength-hover-armor-active size=1920x1080
+RADIAL_QA_STEP speed-hover-2
+RADIAL_QA_CAPTURE gui2-speed-hover size=1920x1080
+RADIAL_QA_STEP neutral-release-2
+RADIAL_QA_STEP neutral-check-2
+RADIAL_QA PASS no-selection-keeps-armor-2
+RADIAL_QA PASS cursor-restored-2
+RADIAL_QA_STEP gui-3
+RADIAL_QA_STEP neutral-3
+RADIAL_QA_INPUT hold focus=true
+RADIAL_QA PASS open-3
+RADIAL_QA_CAPTURE gui3-neutral size=1920x1080
+RADIAL_QA_STEP strength-hover-3
+RADIAL_QA_CAPTURE gui3-strength-flash size=1920x1080
+RADIAL_QA_FLASH start=0.99819946 seconds=2.702E-4
+RADIAL_QA_CAPTURE gui3-strength-after-flash size=1920x1080
+RADIAL_QA PASS hover-stationary-does-not-retrigger
+RADIAL_QA_FLASH end=0.0 seconds=0.3502956
+RADIAL_QA PASS hover-no-change-3
+RADIAL_QA_CAPTURE gui3-strength-hover-armor-active size=1920x1080
+RADIAL_QA_STEP speed-hover-3
+RADIAL_QA_CAPTURE gui3-speed-flash size=1920x1080
+RADIAL_QA_FLASH speed=0.9646782 seconds=0.0053459
+RADIAL_QA_CAPTURE gui3-speed-hover size=1920x1080
+RADIAL_QA_STEP neutral-release-3
+RADIAL_QA_STEP neutral-check-3
+RADIAL_QA PASS no-selection-keeps-armor-3
+RADIAL_QA PASS cursor-restored-3
+RADIAL_QA_STEP open-STRENGTH
+RADIAL_QA_INPUT hold focus=true
+RADIAL_QA_STEP hover-STRENGTH
+RADIAL_QA PASS no-commit-before-release-STRENGTH
+RADIAL_QA PASS camera-blocked-STRENGTH
+RADIAL_QA_SERVER_MODE STRENGTH tick=214
+RADIAL_QA_STEP commit-STRENGTH
+RADIAL_QA PASS release-STRENGTH
+RADIAL_QA PASS one-mode-transition-STRENGTH
+RADIAL_QA_STEP open-SPEED
+RADIAL_QA_INPUT hold focus=true
+RADIAL_QA_STEP hover-SPEED
+RADIAL_QA PASS no-commit-before-release-SPEED
+RADIAL_QA PASS camera-blocked-SPEED
+RADIAL_QA_SERVER_MODE SPEED tick=242
+RADIAL_QA_STEP commit-SPEED
+RADIAL_QA PASS release-SPEED
+RADIAL_QA PASS one-mode-transition-SPEED
+RADIAL_QA_STEP open-CLOAK
+RADIAL_QA_INPUT hold focus=true
+RADIAL_QA_STEP hover-CLOAK
+RADIAL_QA PASS no-commit-before-release-CLOAK
+RADIAL_QA PASS camera-blocked-CLOAK
+RADIAL_QA_SERVER_MODE CLOAK tick=270
+RADIAL_QA_STEP commit-CLOAK
+RADIAL_QA PASS release-CLOAK
+RADIAL_QA PASS one-mode-transition-CLOAK
+RADIAL_QA_STEP open-ARMOR
+RADIAL_QA_INPUT hold focus=true
+RADIAL_QA_STEP hover-ARMOR
+RADIAL_QA PASS no-commit-before-release-ARMOR
+RADIAL_QA PASS camera-blocked-ARMOR
+RADIAL_QA_SERVER_MODE ARMOR tick=298
+RADIAL_QA_STEP commit-ARMOR
+RADIAL_QA PASS release-ARMOR
+RADIAL_QA PASS one-mode-transition-ARMOR
+RADIAL_QA_STEP same-open
+RADIAL_QA_INPUT hold focus=true
+RADIAL_QA_STEP same-hover
+RADIAL_QA_STEP same-check
+RADIAL_QA PASS same-mode-no-change
+RADIAL_QA_STEP escape-open
+RADIAL_QA_INPUT hold focus=true
+RADIAL_QA_STEP escape-cancel
+RADIAL_QA_STEP escape-check
+RADIAL_QA PASS escape-keeps-mode
+RADIAL_QA PASS escape-closes
+RADIAL_QA_STEP equipment-open
+RADIAL_QA_INPUT hold focus=true
+RADIAL_QA_STEP equipment-remove
+RADIAL_QA_SERVER_MODE NONE tick=366
+RADIAL_QA_STEP equipment-check
+RADIAL_QA PASS equipment-removal-cancels
+RADIAL_QA_STEP repair-n1
+RADIAL_QA_SERVER_MODE ARMOR tick=386
+RADIAL_QA_STEP n1-before-generation-swap
+RADIAL_QA_INPUT hold focus=true
+RADIAL_QA_STEP n2-equip
+RADIAL_QA PASS n2-swap-cancels-open-menu
+RADIAL_QA_STEP n2-open-refused
+RADIAL_QA_INPUT hold focus=true
+RADIAL_QA PASS n2-radial-blocked
+RADIAL_QA_STEP n2-existing-key
+RADIAL_QA_SERVER_MODE NONE tick=431
+RADIAL_QA_STEP n2-existing-check
+RADIAL_QA FAIL n2-armor-shortcut
+RADIAL_QA_STEP restore-n1
+RADIAL_QA_SERVER_MODE ARMOR tick=446
+RADIAL_QA_STEP other-screen-open
+RADIAL_QA_INPUT hold focus=true
+RADIAL_QA_STEP other-screen-replace
+RADIAL_QA_STEP other-screen-check
+RADIAL_QA PASS other-screen-no-commit
+RADIAL_QA_STEP low-energy-prepare
+RADIAL_QA_STEP low-energy-open
+RADIAL_QA_INPUT hold focus=true
+RADIAL_QA_STEP low-energy-release
+RADIAL_QA_STEP low-energy-check
+RADIAL_QA PASS low-energy-radial-refused-no-optimistic-state
+RADIAL_QA_STEP server-constraints
+RADIAL_QA PASS server-refuses-low-energy-cloak
+RADIAL_QA PASS server-accepts-strength
+RADIAL_QA PASS server-refuses-same-tick-cooldown
+RADIAL_QA PASS server-refuses-incomplete
+RADIAL_QA_SERVER_MODE STRENGTH tick=502
+RADIAL_QA_STEP spin-open
+RADIAL_QA_INPUT hold focus=true
+RADIAL_QA_CAPTURE rotation-a size=1920x1080
+RADIAL_QA_STEP spin-later
+RADIAL_QA_CAPTURE rotation-b size=1920x1080
+RADIAL_QA_ROTATION elapsed=2.5094174
+RADIAL_QA_STEP flash-captures-check
+RADIAL_QA PASS flash-entry-and-end-captured
+RADIAL_QA_COMPLETE steps=51 pass=43 fail=1
