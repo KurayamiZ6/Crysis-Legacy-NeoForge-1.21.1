@@ -1,0 +1,9 @@
+{
+  "reference": "1975b60",
+  "jar_sha256": "ecb49e7a156a981e68e4fb05288316a8e391e01fa7e1ab8d0293d27323bf55b1",
+  "checks_pass": 26,
+  "checks_fail": 0,
+  "captures": 7,
+  "radial_and_mode_feedback_classes_unchanged": true,
+  "cloak_audio_unchanged": true
+}

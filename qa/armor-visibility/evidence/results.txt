@@ -1,0 +1,34 @@
+ARMOR_VISIBILITY_QA PASS n1-helmet-only-mask
+ARMOR_VISIBILITY_QA PASS n1-helmet-only-restoration
+ARMOR_VISIBILITY_QA PASS n1-chest-only-mask
+ARMOR_VISIBILITY_QA PASS n1-chest-only-restoration
+ARMOR_VISIBILITY_QA PASS n1-both-mask
+ARMOR_VISIBILITY_QA PASS n1-both-restoration
+ARMOR_VISIBILITY_QA PASS n1-helmet-vanilla-chest-mask
+ARMOR_VISIBILITY_QA PASS n1-helmet-vanilla-chest-restoration
+ARMOR_VISIBILITY_QA PASS n1-vanilla-helmet-chest-mask
+ARMOR_VISIBILITY_QA PASS n1-vanilla-helmet-chest-restoration
+ARMOR_VISIBILITY_QA PASS n2-helmet-only-mask
+ARMOR_VISIBILITY_QA PASS n2-helmet-only-restoration
+ARMOR_VISIBILITY_QA PASS n2-chest-only-mask
+ARMOR_VISIBILITY_QA PASS n2-chest-only-restoration
+ARMOR_VISIBILITY_QA PASS n2-both-mask
+ARMOR_VISIBILITY_QA PASS n2-both-restoration
+ARMOR_VISIBILITY_QA PASS n2-helmet-vanilla-chest-mask
+ARMOR_VISIBILITY_QA PASS n2-helmet-vanilla-chest-restoration
+ARMOR_VISIBILITY_QA PASS n2-vanilla-helmet-chest-mask
+ARMOR_VISIBILITY_QA PASS n2-vanilla-helmet-chest-restoration
+ARMOR_VISIBILITY_QA PASS no-armor-mask
+ARMOR_VISIBILITY_QA PASS no-armor-restoration
+ARMOR_VISIBILITY_QA PASS mixed-generations-mask
+ARMOR_VISIBILITY_QA PASS mixed-generations-restoration
+ARMOR_VISIBILITY_QA PASS prehidden-parts-preserved-mask
+ARMOR_VISIBILITY_QA PASS prehidden-parts-preserved-restoration
+ARMOR_VISIBILITY_QA_CAPTURE n1-helmet-only
+ARMOR_VISIBILITY_QA_CAPTURE n1-chest-only
+ARMOR_VISIBILITY_QA_CAPTURE n1-both
+ARMOR_VISIBILITY_QA_CAPTURE n2-helmet-only
+ARMOR_VISIBILITY_QA_CAPTURE n2-chest-only
+ARMOR_VISIBILITY_QA_CAPTURE n2-both
+ARMOR_VISIBILITY_QA_CAPTURE unequipped
+ARMOR_VISIBILITY_QA_COMPLETE pass=26 fail=0 captures=7

@@ -46,6 +46,9 @@ public final class PlayerHeadRenderHandler {
          if (NanosuitArmorUtil.isNanosuitHelmet(event.getEntity().getItemBySlot(EquipmentSlot.HEAD))) {
             ((PlayerModel)event.getRenderer().getModel()).head.visible = false;
             ((PlayerModel)event.getRenderer().getModel()).hat.visible = false;
+         }
+         // Hide skin only where the corresponding armor piece actually replaces it.
+         if (NanosuitArmorUtil.isNanosuitChestplate(event.getEntity().getItemBySlot(EquipmentSlot.CHEST))) {
             ((PlayerModel)event.getRenderer().getModel()).body.visible = false;
             ((PlayerModel)event.getRenderer().getModel()).jacket.visible = false;
             ((PlayerModel)event.getRenderer().getModel()).leftArm.visible = false;
