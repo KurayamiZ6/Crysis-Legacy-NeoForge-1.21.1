@@ -1,0 +1,167 @@
+{
+  "scope": "Actual RTX screenshots; isolated server battery fixture; screenshot elapsed time is not exact shader sample time",
+  "samples": [
+    {
+      "file": "baseline-0.png",
+      "ms": 0,
+      "intensity": 0.0,
+      "active": false,
+      "charge": 756
+    },
+    {
+      "file": "baseline-250.png",
+      "ms": 433,
+      "intensity": 0.0,
+      "active": false,
+      "charge": 836
+    },
+    {
+      "file": "entry-0.png",
+      "ms": 0,
+      "intensity": 0.0,
+      "active": true,
+      "charge": 600
+    },
+    {
+      "file": "entry-250.png",
+      "ms": 262,
+      "intensity": 0.3273692,
+      "active": true,
+      "charge": 598
+    },
+    {
+      "file": "entry-500.png",
+      "ms": 516,
+      "intensity": 0.70235646,
+      "active": true,
+      "charge": 588
+    },
+    {
+      "file": "entry-1050.png",
+      "ms": 1056,
+      "intensity": 1.0,
+      "active": true,
+      "charge": 578
+    },
+    {
+      "file": "exit-0.png",
+      "ms": 0,
+      "intensity": 1.0,
+      "active": false,
+      "charge": 600
+    },
+    {
+      "file": "exit-250.png",
+      "ms": 256,
+      "intensity": 0.8327487,
+      "active": false,
+      "charge": 620
+    },
+    {
+      "file": "exit-500.png",
+      "ms": 506,
+      "intensity": 0.48745263,
+      "active": false,
+      "charge": 620
+    },
+    {
+      "file": "exit-1050.png",
+      "ms": 1052,
+      "intensity": 0.0,
+      "active": false,
+      "charge": 660
+    },
+    {
+      "file": "rapid-on-0.png",
+      "ms": 0,
+      "intensity": 0.0,
+      "active": true,
+      "charge": 600
+    },
+    {
+      "file": "rapid-on-350.png",
+      "ms": 356,
+      "intensity": 0.29820544,
+      "active": true,
+      "charge": 598
+    },
+    {
+      "file": "rapid-off-0.png",
+      "ms": 0,
+      "intensity": 0.33907548,
+      "active": false,
+      "charge": 600
+    },
+    {
+      "file": "rapid-off-150.png",
+      "ms": 155,
+      "intensity": 0.31706098,
+      "active": false,
+      "charge": 600
+    },
+    {
+      "file": "rapid-on-again-0.png",
+      "ms": 0,
+      "intensity": 0.30648237,
+      "active": true,
+      "charge": 600
+    },
+    {
+      "file": "rapid-on-again-250.png",
+      "ms": 253,
+      "intensity": 0.41865456,
+      "active": true,
+      "charge": 600
+    },
+    {
+      "file": "rapid-on-again-1050.png",
+      "ms": 1050,
+      "intensity": 1.0,
+      "active": true,
+      "charge": 580
+    },
+    {
+      "file": "empty-0.png",
+      "ms": 0,
+      "intensity": 1.0,
+      "active": true,
+      "charge": 580
+    },
+    {
+      "file": "empty-200.png",
+      "ms": 205,
+      "intensity": 1.0,
+      "active": true,
+      "charge": 8
+    },
+    {
+      "file": "empty-600.png",
+      "ms": 602,
+      "intensity": 0.8967398,
+      "active": false,
+      "charge": 0
+    },
+    {
+      "file": "empty-1450.png",
+      "ms": 1455,
+      "intensity": 0.0,
+      "active": false,
+      "charge": 80
+    },
+    {
+      "file": "n2-0.png",
+      "ms": 0,
+      "intensity": 0.0,
+      "active": false,
+      "charge": 600
+    },
+    {
+      "file": "n2-300.png",
+      "ms": 306,
+      "intensity": 0.0,
+      "active": false,
+      "charge": 600
+    }
+  ],
+  "jarSha256": "03a8d8de423cd66b063c9b94e1824964cefb70a6471e2f9223afc6209f46383a"
+}

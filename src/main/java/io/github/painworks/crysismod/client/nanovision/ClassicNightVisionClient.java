@@ -28,6 +28,9 @@ public final class ClassicNightVisionClient {
    private static int width;
    private static int height;
    private static boolean loadFailed;
+   private static final ClassicVisionTransition TRANSITION=new ClassicVisionTransition();
+
+   public static float visualIntensity() { return TRANSITION.displayed(); }
 
    private ClassicNightVisionClient() {}
 
@@ -54,10 +57,13 @@ public final class ClassicNightVisionClient {
    }
 
    static void renderScene(Minecraft minecraft, float partialTick) {
-      if (!isActive() || minecraft.level == null) {
+      if (minecraft.level == null || !ClassicNightVision.canUse(minecraft.player)) {
+         TRANSITION.reset();
          closeChain();
          return;
       }
+      float intensity=TRANSITION.sample(System.nanoTime(),isActive());
+      if(intensity<=0 && !isActive()) { closeChain(); return; }
       if (loadFailed) {
          return;
       }
@@ -82,6 +88,7 @@ public final class ClassicNightVisionClient {
             height = main.height;
             chain.resize(width, height);
          }
+         chain.setUniform("Intensity",intensity);
          chain.process(partialTick);
          RenderTarget color = chain.getTempTarget(TARGET);
          GlStateManager._glBindFramebuffer(GL30.GL_READ_FRAMEBUFFER, color.frameBufferId);
@@ -108,6 +115,7 @@ public final class ClassicNightVisionClient {
    }
 
    static void reset() {
+      TRANSITION.reset();
       active = false;
       batteryCharge = ClassicNightVisionBattery.FULL_CHARGE;
       reload();
