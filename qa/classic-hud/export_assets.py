@@ -17,7 +17,10 @@ write('energy','<path d="M24 117L189 123V143L24 137Z" fill="#0076b0"/>')
 write('critical','<path d="M24 117L189 123V143L24 137Z" fill="#dd4133"/><path d="M196 123L237 125V145L196 143Z" fill="#dd4133"/><path d="M217 126L213 134H217L215 142L222 131H218Z" fill="#f1ddbc"/>')
 write('health','<path d="M24 145L189 151V172L33 165L24 156Z" fill="#7dca2b"/>')
 for mode in ['armor','strength','speed','cloak']:
-    write(mode,f'<use href="#{mode}" x="342" y="162" width="48" height="65" color="#719671"/>')
+    # Center the visible Speed/Strength artwork on the status hexagon (366, 183.5).
+    # Their symbol viewboxes contain different transparent margins. Armor/Cloak retain their approved positions.
+    x,y={'speed':(342.25,151.5),'strength':(340.75,152.25)}.get(mode,(342,162))
+    write(mode,f'<use href="#{mode}" x="{x}" y="{y}" width="48" height="65" color="#719671"/>')
 glyphs=''.join(f'<text x="{i*16+1}" y="31" fill="#c0efa6" font-family="Bahnschrift,Arial,sans-serif" font-weight="600" font-size="31" textLength="14" lengthAdjust="spacingAndGlyphs">{i}</text>' for i in range(10))
 write('digits',glyphs,160,40,'0 0 160 40')
 for name,color in [('battery-off','#565728'),('battery-on','#eef13b')]:
