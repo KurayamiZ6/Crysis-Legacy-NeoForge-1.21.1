@@ -1,0 +1,10 @@
+{
+  "source": "Crysis 2/Languages/English/dialog/suit_male/suit_voice_armor_mode.mp2",
+  "frames": 59904,
+  "rate": 44100,
+  "channels": 2,
+  "duration": 1.3583673469387756,
+  "source_payload_sha256": "34e9f8d0c618924c629b629e7ea0dbc49bec6894c8b0d77aa240c1ebf394b164",
+  "output_sha256": "fd3a40a46073fd31c3bef51245ec07cd66e6475465051214a67ffc2d6cf0e57a",
+  "decoded_and_roundtrip_metadata": "PASS"
+}
