@@ -22,4 +22,7 @@ glyphs=''.join(f'<text x="{i*16+1}" y="31" fill="#c0efa6" font-family="Bahnschri
 write('digits',glyphs,160,40,'0 0 160 40')
 for name,color in [('battery-off','#565728'),('battery-on','#eef13b')]:
     write(name,''.join(f'<rect x="{i*58}" y="0" width="54" height="14" fill="{color}"/>' for i in range(4)),232,14,'0 0 232 14')
+# Exact paths from generate-v3.py, translated locally without changing geometry or alpha.
+write('frame-left','<path d="M0 14L12 0H58" fill="none" stroke="#719671" stroke-width="1.8" opacity=".45"/>',62,18,'-2 -2 62 18')
+write('frame-right','<path d="M0 0H43L57 14" fill="none" stroke="#719671" stroke-width="1.8" opacity=".45"/>',62,18,'-2 -2 62 18')
 print('Exported V3 panel layers, aligned battery and raster font sources.')

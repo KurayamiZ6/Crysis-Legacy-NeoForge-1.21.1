@@ -24,11 +24,15 @@ import net.neoforged.neoforge.client.event.RenderGuiEvent;
 /** Isolated test mod only; controls the scene, never shipped. */
 @Mod("crysisclassichudqa")
 public final class ClassicHudQa {
-   private static final String[] NAMES={"n1-100","n1-25","n1-15","n1-zero","n1-recharge","nv-active","nv-recharge","n2","no-suit","n1-gui2","n1-strength","n1-speed","n1-cloak","health-half"};
+   private static final String[] NAMES=names();
+   private static String[] names(){
+      String[] original={"n1-100","n1-25","n1-15","n1-zero","n1-recharge","nv-active","nv-recharge","n2","no-suit","n1-gui2","n1-strength","n1-speed","n1-cloak","health-half"};
+      return Boolean.getBoolean("crysis.hud.qa.frame")?java.util.stream.Stream.concat(java.util.Arrays.stream(original),java.util.stream.Stream.of("n1-f1","n1-restored","n1-visor")).toArray(String[]::new):original;
+   }
    private volatile int phase,serverPhase=-1,readyTicks;
    private int timeout,settle=-1,finish=-1;
    private boolean themeApplied;
-   public ClassicHudQa(){NeoForge.EVENT_BUS.addListener(this::tick);NeoForge.EVENT_BUS.addListener(net.neoforged.bus.api.EventPriority.LOWEST,this::render);NeoForge.EVENT_BUS.addListener(this::client);}
+   public ClassicHudQa(){NeoForge.EVENT_BUS.addListener(this::tick);NeoForge.EVENT_BUS.addListener(net.neoforged.bus.api.EventPriority.LOWEST,this::render);NeoForge.EVENT_BUS.addListener(net.neoforged.bus.api.EventPriority.LOWEST,this::client);}
    private NanosuitMode mode(){return phase==10?NanosuitMode.STRENGTH:phase==11?NanosuitMode.SPEED:phase==12?NanosuitMode.CLOAK:NanosuitMode.ARMOR;}
    private void tick(ServerTickEvent.Post e){
       if(phase>=NAMES.length||e.getServer().getPlayerList().getPlayers().isEmpty())return;
@@ -63,6 +67,7 @@ public final class ClassicHudQa {
       NanosuitSyncManager.syncToClient(p);readyTicks++;
    }
    private void client(ClientTickEvent.Post e){
+      if(Boolean.getBoolean("crysis.hud.qa.frame"))io.github.painworks.crysismod.nanovisor.client.NanoVisorState.setVisorActive(phase==16);
       String color=System.getProperty("crysis.hud.qa.theme");
       if(color!=null&&!themeApplied&&Minecraft.getInstance().player!=null){
          try {
@@ -78,6 +83,7 @@ public final class ClassicHudQa {
       var mc=Minecraft.getInstance();if(mc.player==null||mc.screen!=null)return;
       if(phase>=NAMES.length){if(finish<0)finish=mc.player.tickCount;if(mc.player.tickCount-finish>25){System.out.println("CLASSIC_HUD_COMPLETE captures="+NAMES.length);mc.stop();}return;}
       int gui=phase==9?2:3;
+      if(mc.options.hideGui!=(phase==14)){mc.options.hideGui=phase==14;settle=-1;return;}
       if(mc.options.guiScale().get()!=gui){mc.options.guiScale().set(gui);mc.resizeDisplay();settle=-1;return;}
       mc.options.setCameraType(CameraType.FIRST_PERSON);mc.player.setYRot(0);mc.player.setXRot(0);
       if(serverPhase!=phase||readyTicks<35)return;

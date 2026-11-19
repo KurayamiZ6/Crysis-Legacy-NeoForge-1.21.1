@@ -28,7 +28,7 @@ check('Radial selected amber preserved',pixels('theme-radial',(1000,430,1190,650
 unchanged=[]
 for folder in ['classic_hud','nanosuit1_radial']:
     for f in (ROOT/'src/main/resources/assets/crysismod/textures/gui'/folder).glob('*.png'):
-        if f.name=='panel-fixed.png':continue
+        if f.name in ('panel-fixed.png','frame-left.png','frame-right.png'):continue
         rel=f.relative_to(ROOT).as_posix()
         original=subprocess.check_output(['git','show','87cb8d3:'+rel],cwd=ROOT)
         check('Default texture '+folder+'/'+f.name,original==f.read_bytes(),hashlib.sha256(original).hexdigest());unchanged.append(rel)

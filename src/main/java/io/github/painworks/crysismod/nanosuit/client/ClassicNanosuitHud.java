@@ -9,11 +9,13 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Player;
 
 /** N1 presentation using the approved SVG layers. Caller enforces complete N1 equipment. */
+@net.neoforged.fml.common.EventBusSubscriber(modid="crysismod", value=net.neoforged.api.distmarker.Dist.CLIENT)
 public final class ClassicNanosuitHud {
    private static final ResourceLocation PANEL=asset("panel"), ENERGY=asset("energy"), CRITICAL=asset("critical"), HEALTH=asset("health"), DIGITS=asset("digits");
    private static final ResourceLocation ARMOR=asset("armor"), STRENGTH=asset("strength"), SPEED=asset("speed"), CLOAK=asset("cloak");
    private static final ResourceLocation BATTERY_OFF=asset("battery-off"), BATTERY_ON=asset("battery-on");
    private static final ResourceLocation PANEL_FIXED=asset("panel-fixed");
+   private static final ResourceLocation FRAME_LEFT=asset("frame-left"), FRAME_RIGHT=asset("frame-right");
    private ClassicNanosuitHud() {}
    private static ResourceLocation asset(String name) {
       return ResourceLocation.fromNamespaceAndPath("crysismod","textures/gui/classic_hud/"+name+".png");
@@ -43,6 +45,35 @@ public final class ClassicNanosuitHud {
          };
          if(icon!=null)layer(g,icon);
       } finally {g.setColor(1,1,1,1);g.pose().popPose();RenderSystem.disableBlend();}
+   }
+   /** One permanent GUI pass, after conditional overlays so visor vignette cannot dim the chrome. */
+   @net.neoforged.bus.api.SubscribeEvent(priority=net.neoforged.bus.api.EventPriority.LOW)
+   public static void onPermanentFrame(net.neoforged.neoforge.client.event.RenderGuiEvent.Post event) {
+      var minecraft=net.minecraft.client.Minecraft.getInstance();
+      if(!minecraft.options.hideGui && NanosuitHudOverlay.isHudEnabled()
+         && minecraft.player!=null
+         && io.github.painworks.crysismod.nanosuit.util.NanosuitArmorUtil.getEquippedProfile(minecraft.player)
+            ==io.github.painworks.crysismod.nanosuit.NanosuitProfile.NANOSUIT_1) {
+         renderPermanentFrame(event.getGuiGraphics());
+      }
+   }
+   private static void renderPermanentFrame(GuiGraphics g) {
+      float base=g.guiHeight()/1080f, s=base*NanosuitClientConfig.classicHudScale();
+      int rgb=NanosuitClientConfig.classicInterfaceColor();
+      boolean custom=rgb!=ClassicHudPalette.DEFAULT;
+      RenderSystem.enableBlend();RenderSystem.defaultBlendFunc();
+      if(custom)g.setColor(ClassicHudPalette.red(rgb),ClassicHudPalette.green(rgb),ClassicHudPalette.blue(rgb),1);
+      else g.setColor(1,1,1,1);
+      for(int side=0;side<2;side++) {
+         ResourceLocation texture=side==0?FRAME_LEFT:FRAME_RIGHT;
+         float x=side==0?125*base:g.guiWidth()-128*base-57*s;
+         g.pose().pushPose();
+         try {
+            g.pose().translate(x-2*s,73*base-2*s,0);g.pose().scale(s,s,1);
+            g.blit(custom?neutral(texture):texture,0,0,62,18,0,0,124,36,124,36);
+         } finally {g.pose().popPose();}
+      }
+      g.setColor(1,1,1,1);RenderSystem.disableBlend();
    }
    private static void layer(GuiGraphics g,ResourceLocation texture) {
       int rgb=NanosuitClientConfig.classicInterfaceColor();

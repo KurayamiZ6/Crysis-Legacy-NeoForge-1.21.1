@@ -1,0 +1,142 @@
+{
+  "scope": "Real RTX Minecraft captures; visibility flags and visor state set by isolated QA probe",
+  "checks": [
+    {
+      "name": "n1-100 left/right",
+      "result": "PASS",
+      "detail": [
+        7.25,
+        19.63888888888889
+      ]
+    },
+    {
+      "name": "n1-strength left/right",
+      "result": "PASS",
+      "detail": [
+        50.65,
+        64.0
+      ]
+    },
+    {
+      "name": "n1-speed left/right",
+      "result": "PASS",
+      "detail": [
+        63.825,
+        63.986111111111114
+      ]
+    },
+    {
+      "name": "n1-cloak left/right",
+      "result": "PASS",
+      "detail": [
+        51.0,
+        64.0
+      ]
+    },
+    {
+      "name": "nv-active left/right",
+      "result": "PASS",
+      "detail": [
+        14.0,
+        16.0
+      ]
+    },
+    {
+      "name": "nv-recharge left/right",
+      "result": "PASS",
+      "detail": [
+        42.05,
+        61.19444444444444
+      ]
+    },
+    {
+      "name": "n1-gui2 left/right",
+      "result": "PASS",
+      "detail": [
+        44.0,
+        64.0
+      ]
+    },
+    {
+      "name": "n1-restored left/right",
+      "result": "PASS",
+      "detail": [
+        51.0,
+        64.0
+      ]
+    },
+    {
+      "name": "n1-visor left/right",
+      "result": "PASS",
+      "detail": [
+        31.55,
+        28.180555555555557
+      ]
+    },
+    {
+      "name": "n1-f1 left/right",
+      "result": "PASS",
+      "detail": [
+        0.0,
+        0.0
+      ]
+    },
+    {
+      "name": "no-suit left/right",
+      "result": "PASS",
+      "detail": [
+        0.0,
+        0.0
+      ]
+    },
+    {
+      "name": "frame-left original opacity",
+      "result": "PASS",
+      "detail": 115
+    },
+    {
+      "name": "frame-left theme preserves alpha",
+      "result": "PASS",
+      "detail": "RGBA alpha comparison"
+    },
+    {
+      "name": "frame-right original opacity",
+      "result": "PASS",
+      "detail": 115
+    },
+    {
+      "name": "frame-right theme preserves alpha",
+      "result": "PASS",
+      "detail": "RGBA alpha comparison"
+    },
+    {
+      "name": "One draw entry only",
+      "result": "PASS",
+      "detail": "one callback call plus one method declaration"
+    }
+  ],
+  "n2": "Inspected visually against previous N2 captures; no pixel absence assertion over its existing armor overlay",
+  "jarSha256": "6189c61fbcff009a14eccde38e0602eada0ce3abd705fd0fe305213c382ea661",
+  "telemetry": [
+    "CLASSIC_HUD_CAPTURE n1-100.png energy=100.0 health=20.0 mode=ARMOR nv=false battery=1200 gui=3",
+    "CLASSIC_HUD_CAPTURE n1-25.png energy=25.0 health=20.0 mode=ARMOR nv=false battery=1200 gui=3",
+    "CLASSIC_HUD_CAPTURE n1-15.png energy=15.0 health=20.0 mode=ARMOR nv=false battery=1200 gui=3",
+    "CLASSIC_HUD_CAPTURE n1-zero.png energy=0.0 health=20.0 mode=ARMOR nv=false battery=1200 gui=3",
+    "CLASSIC_HUD_CAPTURE n1-recharge.png energy=54.000023 health=20.0 mode=ARMOR nv=false battery=1200 gui=3",
+    "CLASSIC_HUD_CAPTURE nv-active.png energy=100.0 health=20.0 mode=ARMOR nv=true battery=554 gui=3",
+    "CLASSIC_HUD_CAPTURE nv-recharge.png energy=100.0 health=20.0 mode=ARMOR nv=false battery=756 gui=3",
+    "CLASSIC_HUD_CAPTURE n2.png energy=100.0 health=20.0 mode=ARMOR nv=false battery=956 gui=3",
+    "CLASSIC_HUD_CAPTURE no-suit.png energy=100.0 health=20.0 mode=ARMOR nv=false battery=1156 gui=3",
+    "CLASSIC_HUD_CAPTURE n1-gui2.png energy=100.0 health=20.0 mode=ARMOR nv=false battery=1200 gui=2",
+    "CLASSIC_HUD_CAPTURE n1-strength.png energy=100.0 health=20.0 mode=STRENGTH nv=false battery=1200 gui=3",
+    "CLASSIC_HUD_CAPTURE n1-speed.png energy=100.0 health=20.0 mode=SPEED nv=false battery=1200 gui=3",
+    "CLASSIC_HUD_CAPTURE n1-cloak.png energy=100.0 health=20.0 mode=CLOAK nv=false battery=1200 gui=3",
+    "CLASSIC_HUD_CAPTURE health-half.png energy=100.0 health=10.0 mode=ARMOR nv=false battery=1200 gui=3",
+    "CLASSIC_HUD_CAPTURE n1-f1.png energy=100.0 health=20.0 mode=ARMOR nv=false battery=1200 gui=3",
+    "CLASSIC_HUD_CAPTURE n1-restored.png energy=100.0 health=20.0 mode=ARMOR nv=false battery=1200 gui=3",
+    "CLASSIC_HUD_CAPTURE n1-visor.png energy=100.0 health=20.0 mode=ARMOR nv=false battery=1200 gui=3"
+  ],
+  "renderer": [
+    "[05:06:36] [Render thread/INFO] [mojang/Window]: OpenGL Renderer: NVIDIA GeForce RTX 3070 Laptop GPU/PCIe/SSE2"
+  ]
+}
