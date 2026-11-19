@@ -198,6 +198,11 @@ public final class NanosuitHudOverlay {
                         GuiGraphics guiGraphics = event.getGuiGraphics();
                         float targetEnergy = Mth.clamp(data.getEnergy(), 0.0F, 100.0F);
                         boolean classic = profile == NanosuitProfile.NANOSUIT_1;
+                        if (classic) {
+                           resetArmorOverlayIntroState();
+                           ClassicNanosuitHud.render(guiGraphics, player, data);
+                           return;
+                        }
                         boolean armorModeActive = data.getMode() == NanosuitMode.ARMOR && targetEnergy > 0.0F;
                         boolean forceModeActive = NanosuitPowerFeedback.isForceActive();
                         boolean cloakModeActive = data.getMode() == NanosuitMode.CLOAK && targetEnergy > 0.0F;

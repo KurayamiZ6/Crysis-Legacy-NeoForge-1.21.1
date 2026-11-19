@@ -1,0 +1,104 @@
+{
+  "scope": "Real Minecraft screenshots, scene controlled by isolated QA mod",
+  "referenceHead": "6f4dc9a",
+  "observedClientTelemetry": [
+    "CLASSIC_HUD_CAPTURE n1-100.png energy=100.0 health=20.0 mode=ARMOR nv=false battery=1200 gui=3",
+    "CLASSIC_HUD_CAPTURE n1-25.png energy=25.0 health=20.0 mode=ARMOR nv=false battery=1200 gui=3",
+    "CLASSIC_HUD_CAPTURE n1-15.png energy=15.0 health=20.0 mode=ARMOR nv=false battery=1200 gui=3",
+    "CLASSIC_HUD_CAPTURE n1-zero.png energy=0.0 health=20.0 mode=ARMOR nv=false battery=1200 gui=3",
+    "CLASSIC_HUD_CAPTURE n1-recharge.png energy=54.000023 health=20.0 mode=ARMOR nv=false battery=1200 gui=3",
+    "CLASSIC_HUD_CAPTURE nv-active.png energy=100.0 health=20.0 mode=ARMOR nv=true battery=557 gui=3",
+    "CLASSIC_HUD_CAPTURE nv-recharge.png energy=100.0 health=20.0 mode=ARMOR nv=false battery=744 gui=3",
+    "CLASSIC_HUD_CAPTURE n2.png energy=100.0 health=20.0 mode=ARMOR nv=false battery=944 gui=3",
+    "CLASSIC_HUD_CAPTURE no-suit.png energy=100.0 health=20.0 mode=ARMOR nv=false battery=1144 gui=3",
+    "CLASSIC_HUD_CAPTURE n1-gui2.png energy=100.0 health=20.0 mode=ARMOR nv=false battery=1200 gui=2",
+    "CLASSIC_HUD_CAPTURE n1-strength.png energy=100.0 health=20.0 mode=STRENGTH nv=false battery=1200 gui=3",
+    "CLASSIC_HUD_CAPTURE n1-speed.png energy=100.0 health=20.0 mode=SPEED nv=false battery=1200 gui=3",
+    "CLASSIC_HUD_CAPTURE n1-cloak.png energy=100.0 health=20.0 mode=CLOAK nv=false battery=1200 gui=3",
+    "CLASSIC_HUD_CAPTURE health-half.png energy=100.0 health=10.0 mode=ARMOR nv=false battery=1200 gui=3"
+  ],
+  "pixelChecks": [
+    {
+      "name": "Full energy fill",
+      "result": "PASS",
+      "detail": 1613
+    },
+    {
+      "name": "n1-25 fill",
+      "result": "PASS",
+      "detail": {
+        "observedRatio": 0.2610043397396156,
+        "expected": 0.25
+      }
+    },
+    {
+      "name": "n1-15 fill",
+      "result": "PASS",
+      "detail": {
+        "observedRatio": 0.15561066336019838,
+        "expected": 0.15
+      }
+    },
+    {
+      "name": "n1-zero fill",
+      "result": "PASS",
+      "detail": {
+        "observedRatio": 0.0,
+        "expected": 0
+      }
+    },
+    {
+      "name": "Actual recharge visible",
+      "result": "PASS",
+      "detail": 0.5474271543707377
+    },
+    {
+      "name": "Real health 50 percent",
+      "result": "PASS",
+      "detail": 0.5034310667498441
+    },
+    {
+      "name": "NV active battery visible",
+      "result": "PASS",
+      "detail": 1358
+    },
+    {
+      "name": "NV recharging battery visible",
+      "result": "PASS",
+      "detail": 1806
+    },
+    {
+      "name": "Battery hidden after full charge",
+      "result": "PASS",
+      "detail": 0
+    },
+    {
+      "name": "Battery hidden for N2",
+      "result": "PASS",
+      "detail": 0
+    },
+    {
+      "name": "Battery hidden without complete suit",
+      "result": "PASS",
+      "detail": 0
+    },
+    {
+      "name": "Energy size stable GUI 2 vs 3",
+      "result": "PASS",
+      "detail": {
+        "gui2": 1611,
+        "gui3": 1613
+      }
+    },
+    {
+      "name": "N1 panel absent without suit",
+      "result": "PASS",
+      "detail": 0
+    }
+  ],
+  "jarSha256": "8fae4712498f0aedebda08a9dd0b1043aa11a8a5a12093817ab67002f7b7a3ee",
+  "rendererEvidence": [
+    "[19nov.2026 04:43:30.036] [Render thread/INFO] [com.mojang.blaze3d.platform.Window/]: OpenGL Renderer: NVIDIA GeForce RTX 3070 Laptop GPU/PCIe/SSE2",
+    "[19nov.2026 04:43:30.036] [Render thread/INFO] [com.mojang.blaze3d.platform.Window/]: OpenGL Version: 4.6.0 NVIDIA 621.01"
+  ]
+}

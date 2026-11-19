@@ -1,0 +1,7 @@
+{
+  "scope": "Design previews only; no Minecraft runtime test",
+  "svgPreviews": 10,
+  "galleryStates": 10,
+  "threatDemo": "orange immediately, yellow after 500ms, red restart",
+  "missingLinksOrScriptErrors": []
+}

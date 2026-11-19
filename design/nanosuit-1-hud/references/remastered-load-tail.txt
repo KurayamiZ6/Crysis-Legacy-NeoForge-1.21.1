@@ -1,0 +1,4 @@
+[GameProfiles]: Successfully activated profile 'default' for user 'nicol'
+Initializing default materials...
+Binary file size for '%USER%/SaveGames/default_01_quicksave.CSF' is 297958
+Character remapping table generated. 0 chars mapped to 0

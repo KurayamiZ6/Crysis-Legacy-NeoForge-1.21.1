@@ -1,0 +1,92 @@
+[
+  {
+    "Path": "Profiles\\default\\actionmaps.xml",
+    "SHA256": "919C125B037C7A69E321A4B17AE2EA0925661B04299F8E5846DC22705A3A424E",
+    "Unchanged": true
+  },
+  {
+    "Path": "Profiles\\default\\attributes_pc.xml",
+    "SHA256": "D23F19ED7568934A5D844AE05CA3F59434CDB8C588EE0790D591E4B6B7E4A9F3",
+    "Unchanged": true
+  },
+  {
+    "Path": "Profiles\\default\\profile.xml",
+    "SHA256": "125BE3E36F365B9867BCE8BE73D73D08A16B71B437761327541C4412986995D9",
+    "Unchanged": true
+  },
+  {
+    "Path": "SaveGames\\default_00_quicksave.bmp",
+    "SHA256": "4D7E03A17A3E2AEC1EF6CEDA1F8C999B05AC363162B2C5E661C84A84F60B9E0A",
+    "Unchanged": true
+  },
+  {
+    "Path": "SaveGames\\default_00_quicksave.CSF",
+    "SHA256": "E2917926EE25E46395B5A817E97408991D57EF632281B43FA2FBD8EAD38A194D",
+    "Unchanged": true
+  },
+  {
+    "Path": "SaveGames\\default_00_quicksave.meta",
+    "SHA256": "43384B1053FB95DAFFB6B309942309F80EE1FDCBF9311F0FAB12A295499A1E63",
+    "Unchanged": true
+  },
+  {
+    "Path": "SaveGames\\default_01_quicksave.bmp",
+    "SHA256": "4D7E03A17A3E2AEC1EF6CEDA1F8C999B05AC363162B2C5E661C84A84F60B9E0A",
+    "Unchanged": true
+  },
+  {
+    "Path": "SaveGames\\default_01_quicksave.CSF",
+    "SHA256": "C39E51E0B8FE279B182EF8DD2EBD18532331A6BE4E0F69ADC6293AFF9B6C786D",
+    "Unchanged": true
+  },
+  {
+    "Path": "SaveGames\\default_01_quicksave.meta",
+    "SHA256": "190FEEB91D9B4CFAEF217827CC2ED4FAB17B5A8B324C5E7405B9A486C22E20A4",
+    "Unchanged": true
+  },
+  {
+    "Path": "SaveGames\\default_Contact_crysis.bmp",
+    "SHA256": "4D7E03A17A3E2AEC1EF6CEDA1F8C999B05AC363162B2C5E661C84A84F60B9E0A",
+    "Unchanged": true
+  },
+  {
+    "Path": "SaveGames\\default_Contact_crysis.CSF",
+    "SHA256": "9C9C6F37A7A7F3731A8BEAECDEB880C248948C14917ED63315FBBB185E5B6272",
+    "Unchanged": true
+  },
+  {
+    "Path": "SaveGames\\default_Contact_crysis.meta",
+    "SHA256": "03693FF30044BCC40C5F5DDACEA96196B650845B37978F4C7D3FABF2323EBF17",
+    "Unchanged": true
+  },
+  {
+    "Path": "shaders\\cache\\d3d10\\lookupdata.bin",
+    "SHA256": "E7EB778F3BE7AA045077F934FC7D9725D723FCF6A7AF0658D4EA418931F84A41",
+    "Unchanged": true
+  },
+  {
+    "Path": "shaders\\cache\\d3d10\\cgcshaders\\Total_Illumination@ComputeTracePass.fxcb",
+    "SHA256": "A2295529CC72CAC8CEB27B0300194ACBD10CE14CE770015DC6D6B6D3E7B20F64",
+    "Unchanged": true
+  },
+  {
+    "Path": "shaders\\cache\\d3d10\\cgcshaders\\pending\\total_illumination@computetracepass(d)_out(rt820000000040204)(cs)",
+    "SHA256": "B39313441F4FB9282B732A2EDB988ADD863EB4617D45CFA2A3DCFA2178C1BEC6",
+    "Unchanged": true
+  },
+  {
+    "Path": "shaders\\cache\\d3d10\\cgcshaders\\pending\\total_illumination@computetracepass(d)_out(rtb20000000080004)(cs)",
+    "SHA256": "8C62403768A4144F70DC3B09EE54311039065592B92590EC63F18603AF9DDA6A",
+    "Unchanged": true
+  },
+  {
+    "Path": "shaders\\cache\\d3d10\\cgcshaders\\pending\\total_illumination@computetracepass(d)(rt820000000040204)(cs)",
+    "SHA256": "E03029017F0F62AD99D0C8395B79B30E674D50019D4D7410D05E414502C0C051",
+    "Unchanged": true
+  },
+  {
+    "Path": "shaders\\cache\\d3d10\\cgcshaders\\pending\\total_illumination@computetracepass(d)(rtb20000000080004)(cs)",
+    "SHA256": "4E8FC33A9030533E513468E6ADEAF732453303EE15E18BEA4769BA9AEC789E4E",
+    "Unchanged": true
+  }
+]

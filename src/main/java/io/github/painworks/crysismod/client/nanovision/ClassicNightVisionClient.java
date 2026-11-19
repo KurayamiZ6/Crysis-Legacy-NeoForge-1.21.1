@@ -97,16 +97,14 @@ public final class ClassicNightVisionClient {
 
    static void renderBattery(Minecraft minecraft, GuiGraphics graphics) {
       if (minecraft.options.hideGui || !active && batteryCharge == ClassicNightVisionBattery.FULL_CHARGE
-         || !ClassicNightVision.canUse(minecraft.player)) {
+         || !ClassicNightVision.canUse(minecraft.player)
+         || io.github.painworks.crysismod.nanosuit.util.NanosuitArmorUtil.getEquippedProfile(minecraft.player)
+            != io.github.painworks.crysismod.nanosuit.NanosuitProfile.NANOSUIT_1) {
          return;
       }
-      int right = graphics.guiWidth() - 12;
-      int left = right - 62;
-      int top = 12;
-      graphics.fill(left - 1, top - 1, right + 1, top + 6, 0xBB191800);
-      graphics.fill(left, top, right, top + 5, 0xFF595018);
-      int filled = Math.round((right - left) * ((float)batteryCharge / ClassicNightVisionBattery.FULL_CHARGE));
-      graphics.fill(left, top, left + filled, top + 5, 0xFFFFDF45);
+      if (!io.github.painworks.crysismod.nanosuit.client.NanosuitHudOverlay.isHudEnabled()) return;
+      io.github.painworks.crysismod.nanosuit.client.ClassicNanosuitHud.renderBattery(
+         graphics, batteryCharge, ClassicNightVisionBattery.FULL_CHARGE);
    }
 
    static void reset() {

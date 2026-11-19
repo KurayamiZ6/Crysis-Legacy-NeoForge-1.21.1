@@ -1,0 +1,42 @@
+[
+  {
+    "name": "opening-middle",
+    "source": "C:\\Users\\nicol\\AppData\\Local\\Temp\\codex-clipboard-02170b77-2c37-4f94-979d-7bc57d2e320e.png",
+    "sha256": "49228ef91e8894667482be5303104f6be1113db35e752cff60d6658e690dbb1e",
+    "dimensions": [
+      2544,
+      1488
+    ],
+    "provenance": "User supplied; timing not measured"
+  },
+  {
+    "name": "opening-start",
+    "source": "C:\\Users\\nicol\\AppData\\Local\\Temp\\codex-clipboard-200de994-ede1-4a1c-8c8c-30ffab4f6c99.png",
+    "sha256": "7f416031e04d0fd09603b4b00696406f64a09844583cad58af3df1b0c9855338",
+    "dimensions": [
+      2551,
+      1491
+    ],
+    "provenance": "User supplied; timing not measured"
+  },
+  {
+    "name": "opening-later",
+    "source": "C:\\Users\\nicol\\AppData\\Local\\Temp\\codex-clipboard-77b5bc58-0069-44d4-9ab2-f22f084774f5.png",
+    "sha256": "cab52dcb4d2be8b8568af95c7681a86c6160931de185f86893748a75f11b96a6",
+    "dimensions": [
+      2542,
+      1486
+    ],
+    "provenance": "User supplied; timing not measured"
+  },
+  {
+    "name": "fully-open",
+    "source": "C:\\Users\\nicol\\AppData\\Local\\Temp\\codex-clipboard-ba9e943d-5e55-4a1d-83b2-7b79b556a373.png",
+    "sha256": "6c4a14f86dfaf0b7b11ba66e3db316e950b8c1f754594901e28c7336e4d1def9",
+    "dimensions": [
+      2545,
+      1495
+    ],
+    "provenance": "User supplied; timing not measured"
+  }
+]

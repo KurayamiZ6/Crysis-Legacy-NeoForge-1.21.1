@@ -72,6 +72,8 @@ public final class NanosuitPerspectiveDebugOverlay {
       if (event.getName().equals(VanillaGuiLayers.HOTBAR)) {
          Minecraft minecraft = Minecraft.getInstance();
          LocalPlayer player = minecraft.player;
+         if (player != null && NanosuitArmorUtil.getEquippedProfile(player)
+            == io.github.painworks.crysismod.nanosuit.NanosuitProfile.NANOSUIT_1) return;
          if (player != null && !minecraft.options.hideGui && NanosuitArmorUtil.hasFullSet(player)) {
             if (!configInitialized) {
                loadFromConfig();

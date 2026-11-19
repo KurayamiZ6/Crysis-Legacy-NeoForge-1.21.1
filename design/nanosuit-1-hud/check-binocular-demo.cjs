@@ -1,0 +1,44 @@
+// Browser prototype checks; not Minecraft or gameplay validation.
+const {chromium}=require(process.argv[2]);
+const fs=require('node:fs'),path=require('node:path');
+const {pathToFileURL}=require('node:url');
+(async()=>{
+ const browser=await chromium.launch({executablePath:process.argv[3],headless:true});
+ const page=await browser.newPage({viewport:{width:1440,height:1050}});
+ const errors=[];page.on('pageerror',e=>errors.push(String(e)));
+ await page.goto(pathToFileURL(path.join(__dirname,'binocular-animation.html')).href);
+ const svg=page.locator('main > svg');
+ await svg.screenshot({path:path.join(__dirname,'binocular-closed.png')});
+ await page.locator('#open').click();await page.waitForTimeout(160);
+ let progress=Number(await page.locator('html').getAttribute('data-progress'));
+ if(!(progress>0&&progress<1))errors.push('Opening progression');
+ await svg.screenshot({path:path.join(__dirname,'binocular-opening.png')});
+ await page.waitForTimeout(500);
+ if(await page.locator('html').getAttribute('data-progress')!=='1.000')errors.push('Fully open');
+ await svg.screenshot({path:path.join(__dirname,'binocular-open.png')});
+ await page.locator('#zoom').click();
+ if(await page.locator('#zoom-label').textContent()!=='X04')errors.push('Zoom label');
+ await page.locator('#pitch').fill('20');
+ await page.locator('#x').fill('320');
+ await page.locator('#distance').fill('18.25');
+ if(!(await page.locator('#coords').textContent()).includes('320'))errors.push('Coordinates');
+ if(await page.locator('#range').textContent()!=='18.25 M')errors.push('Range');
+ const tickText=await page.locator('#ticks').textContent();
+ if(!tickText.includes('-20'))errors.push('Pitch sign');
+ await page.locator('#close').click();await page.waitForTimeout(160);
+ progress=Number(await page.locator('html').getAttribute('data-progress'));
+ if(!(progress>0&&progress<1))errors.push('Closing progression');
+ await svg.screenshot({path:path.join(__dirname,'binocular-closing.png')});
+ await page.waitForTimeout(500);
+ if(await page.locator('html').getAttribute('data-progress')!=='0.000')errors.push('Fully closed');
+ // Reversing before completion preserves the same progression, no restart jump.
+ await page.locator('#open').click();await page.waitForTimeout(180);
+ const before=Number(await page.locator('html').getAttribute('data-progress'));
+ await page.locator('#close').click();await page.waitForTimeout(50);
+ const after=Number(await page.locator('html').getAttribute('data-progress'));
+ if(!(after<before&&after>0))errors.push('Mid-animation reversal');
+ await browser.close();
+ fs.writeFileSync(path.join(__dirname,'binocular-preview-check.json'),JSON.stringify({scope:'Browser design prototype only, simulated telemetry',checks:['opening','closing','mid-animation reversal','zoom label','coordinates','range','pitch sign'],errors},null,2));
+ if(errors.length)throw Error(errors.join('\n'));
+ console.log('PASS: binocular design animation and simulated telemetry.');
+})().catch(e=>{console.error(e);process.exit(1)});

@@ -1,0 +1,122 @@
+[
+  {
+    "name": "01-pistol",
+    "source": "C:\\Users\\nicol\\AppData\\Local\\Temp\\codex-clipboard-5e0ad4f9-53a9-44ae-b441-5753aadadf93.png",
+    "sha256": "6acfc8a116b64fd5e32539d6211826c6258a23334014833198c7a7445c32616a",
+    "size": [
+      2538,
+      1506
+    ],
+    "provenance": "capture fournie et expliquée par utilisateur"
+  },
+  {
+    "name": "02-fists-rest",
+    "source": "C:\\Users\\nicol\\AppData\\Local\\Temp\\codex-clipboard-c369c0bf-e55d-4316-8375-b123822a4eb5.png",
+    "sha256": "a79a67423e1485ecf85843eb0d2ae68c96491bb1a7be533e8738f614f5955103",
+    "size": [
+      2533,
+      1489
+    ],
+    "provenance": "capture fournie et expliquée par utilisateur"
+  },
+  {
+    "name": "03-weapon-switch",
+    "source": "C:\\Users\\nicol\\AppData\\Local\\Temp\\codex-clipboard-4ccc7d03-67ea-40a6-ab90-84d1320317af.png",
+    "sha256": "788e620cb2ce5c3affe072246105e692bc4c2c3383bcca756f1cbb9c4735c192",
+    "size": [
+      2527,
+      1489
+    ],
+    "provenance": "capture fournie et expliquée par utilisateur"
+  },
+  {
+    "name": "04-binoculars",
+    "source": "C:\\Users\\nicol\\AppData\\Local\\Temp\\codex-clipboard-463ae018-c046-4ba2-8694-921a6ebc4716.png",
+    "sha256": "a048ff3f93fc6e123b504da37635784f00847c081853230e833b3cf305d715c1",
+    "size": [
+      2539,
+      1498
+    ],
+    "provenance": "capture fournie et expliquée par utilisateur"
+  },
+  {
+    "name": "05-night-vision",
+    "source": "C:\\Users\\nicol\\AppData\\Local\\Temp\\codex-clipboard-41133d7f-4d46-4d08-beba-01dbecd6db22.png",
+    "sha256": "4b701ccc61a00589e8d88a56f0f3000ac9be5cde4c286e6a54a064d4b9775531",
+    "size": [
+      2553,
+      1495
+    ],
+    "provenance": "capture fournie et expliquée par utilisateur"
+  },
+  {
+    "name": "06-night-binoculars",
+    "source": "C:\\Users\\nicol\\AppData\\Local\\Temp\\codex-clipboard-336103dd-46cf-4b5e-8e31-14cbd118293d.png",
+    "sha256": "75f0fb5d3120ae66909a654a111c24e459f02a7eb6ca8e593784b4d4bb7bdd09",
+    "size": [
+      2529,
+      1497
+    ],
+    "provenance": "capture fournie et expliquée par utilisateur"
+  },
+  {
+    "name": "07-radar-yellow",
+    "source": "C:\\Users\\nicol\\AppData\\Local\\Temp\\codex-clipboard-fab99428-f4ac-4361-a00d-24a053e2161c.png",
+    "sha256": "1a9ecbfd3e7f9c62f09063731c9916b039f0ee559b86033e5ae27780d9d9fdeb",
+    "size": [
+      477,
+      348
+    ],
+    "provenance": "capture fournie et expliquée par utilisateur"
+  },
+  {
+    "name": "08-binocular-red",
+    "source": "C:\\Users\\nicol\\AppData\\Local\\Temp\\codex-clipboard-e0051547-3a00-4561-981e-4947de188795.png",
+    "sha256": "7d9e70ba821526df061ad30835f7a5fa9fc331852c3b9f1c2e4e1381b7415b9c",
+    "size": [
+      2016,
+      1267
+    ],
+    "provenance": "capture fournie et expliquée par utilisateur"
+  },
+  {
+    "name": "09-binocular-yellow",
+    "source": "C:\\Users\\nicol\\AppData\\Local\\Temp\\codex-clipboard-e57f1ef3-c9b2-4194-9a47-e2c03e2258f9.png",
+    "sha256": "cd41ac238003631e188659b40b8ec20bbb7b12ae94c67259d6c781256c3a755e",
+    "size": [
+      2418,
+      1453
+    ],
+    "provenance": "capture fournie et expliquée par utilisateur"
+  },
+  {
+    "name": "10-binocular-yellow-near",
+    "source": "C:\\Users\\nicol\\AppData\\Local\\Temp\\codex-clipboard-7e486c61-056e-47e8-bf6b-86e9c25d6ae4.png",
+    "sha256": "eb0d44ee4b1024be0c412ea174dce3d49d0959e35c6b03fd641185e77a3104be",
+    "size": [
+      2328,
+      1441
+    ],
+    "provenance": "capture fournie et expliquée par utilisateur"
+  },
+  {
+    "name": "11-detected-red",
+    "source": "C:\\Users\\nicol\\AppData\\Local\\Temp\\codex-clipboard-ca980c22-4a3d-428a-be9f-83164a6fa745.png",
+    "sha256": "6eada65b37768e4f0100f5da00bc832c8aa4bd225cd512b30531e6bc59997830",
+    "size": [
+      478,
+      334
+    ],
+    "provenance": "capture fournie et expliquée par utilisateur"
+  },
+  {
+    "name": "12-lost-orange",
+    "source": "C:\\Users\\nicol\\AppData\\Local\\Temp\\codex-clipboard-03374e91-1d37-40ef-994d-319bf877430d.png",
+    "sha256": "aac5ccb76f4ff19c57eebd4359cb9f9a39e656867e7cf0cae1f95cd960d6a4db",
+    "size": [
+      558,
+      432
+    ],
+    "provenance": "capture fournie et expliquée par utilisateur"
+  }
+]

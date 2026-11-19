@@ -1,0 +1,13 @@
+{
+  "scope": "Browser design prototype only, simulated telemetry",
+  "checks": [
+    "opening",
+    "closing",
+    "mid-animation reversal",
+    "zoom label",
+    "coordinates",
+    "range",
+    "pitch sign"
+  ],
+  "errors": []
+}

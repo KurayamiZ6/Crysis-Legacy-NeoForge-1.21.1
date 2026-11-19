@@ -123,6 +123,12 @@ public final class NanosuitClientConfig {
    private static final DoubleValue PERSPECTIVE_DEBUG_ENERGY_PERCENT_ALPHA = BUILDER.comment("Perspective debug percent text alpha.")
       .defineInRange("hud.perspectiveDebug.energyPercentAlpha", 1.0, 0.0, 1.0);
    private static final DoubleValue HUD_SCALE = BUILDER.comment("Nanosuit HUD scale.").defineInRange("hud.scale", 0.200000002980232, 0.05, 5.0);
+   private static final DoubleValue CLASSIC_HUD_SCALE = BUILDER.comment("Nanosuit 1 HUD size relative to screen height; independent of GUI scale and Nanosuit 2.")
+      .defineInRange("hud.classic.scale", 1.0, 0.5, 2.0);
+
+   public static float classicHudScale() {
+      return safeGetDouble(CLASSIC_HUD_SCALE, 1.0).floatValue();
+   }
    private static final DoubleValue ARMOR_MODE_OVERLAY_SCALE = BUILDER.comment("Fullscreen armor-mode overlay scale multiplier.")
       .defineInRange("hud.armorModeOverlayScale", 1.04F, 0.25, 2.0);
    private static final BooleanValue ARMOR_OVERLAY_INTRO_ENABLED = BUILDER.comment("Enable elastic intro animation when armor mode turns on.")

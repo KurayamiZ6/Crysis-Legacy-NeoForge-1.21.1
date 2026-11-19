@@ -1,0 +1,48 @@
+{
+  "version": 3,
+  "scope": "Design only, all telemetry simulated",
+  "states": {
+    "normal": {},
+    "fists-rest": {
+      "weapon": "fists"
+    },
+    "weapon-switch": {
+      "weapon": "fists",
+      "swap": true
+    },
+    "critical": {
+      "energy": 12,
+      "mode": "cloak"
+    },
+    "night-vision": {
+      "night": true,
+      "weapon": "fists"
+    },
+    "threat": {
+      "visibility": "detected",
+      "energy": 73
+    },
+    "lost-orange": {
+      "visibility": "lost-orange",
+      "energy": 73
+    },
+    "lost-yellow": {
+      "visibility": "lost-yellow",
+      "energy": 73
+    },
+    "binocular-study": {
+      "visor": true,
+      "target": "yellow",
+      "visibility": "lost-yellow"
+    },
+    "night-binoculars": {
+      "visor": true,
+      "night": true
+    }
+  },
+  "timing": {
+    "lossToYellowMs": 500,
+    "source": "User observation; not independently measured",
+    "pulseAndShrink": "Proposed design durations, not measured"
+  }
+}

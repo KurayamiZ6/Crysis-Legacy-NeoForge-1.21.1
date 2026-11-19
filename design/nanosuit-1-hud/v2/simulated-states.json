@@ -1,0 +1,34 @@
+{
+  "purpose": "Design only; not runtime observations or test results",
+  "canvas": [
+    1920,
+    1080
+  ],
+  "states": {
+    "normal": {
+      "energy": 100,
+      "health": 100,
+      "mode": "armor"
+    },
+    "critical": {
+      "energy": 12,
+      "health": 100,
+      "mode": "cloak"
+    },
+    "night-vision": {
+      "energy": 100,
+      "health": 100,
+      "mode": "strength",
+      "nvBattery": 0.63
+    },
+    "threat": {
+      "energy": 73,
+      "health": 100,
+      "mode": "speed",
+      "detectionRisk": "simulated-high",
+      "enemyAlert": "simulated-high"
+    }
+  },
+  "font": "Local Bahnschrift, approximate; original game font not extracted",
+  "reference": "references/user-remastered-full.png; see RAPPORT.md for measurement limits"
+}
