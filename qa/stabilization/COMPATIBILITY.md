@@ -1,5 +1,7 @@
 # Bilan graphique et compatibilités — 19 novembre 2026
 
+Mise à jour après livraison : à la demande de l'utilisateur, le déplacement extérieur de la colonne d'alerte est annulé. Position d'origine rétablie (x local 3 à 15), triangle inchangé. Les captures montrant la colonne extérieure restent des preuves historiques de la livraison précédente, pas du rendu courant.
+
 Complète RESULTS.md (défauts A/B) et MELEE-HUD.md. Toutes les exécutions ci-dessous utilisent des copies isolées du banc RTX 3070. Aucun profil personnel, réglage externe ou code d'IA n'est modifié.
 
 ## Résultats ciblés

@@ -45,9 +45,8 @@ public final class ClassicThreatIndicator {
       scale=Math.min(1.75f,scale);
       float alpha=detected?(float)(.68+.32*(.5+.5*Math.sin(now/1e9*Math.PI*5))):1;
       g.pose().pushPose();g.pose().translate(v.x(),v.y(),0);g.pose().scale(s,s,1);
-      // Keep the alert column outside the terrain, along its left edge; the triangle stays below-left.
-      // Residual alert remains red independently of the visibility triangle.
-      for(int i=0;i<4;i++)g.fill(-15,17+i*24,-3,38+i*24,(detected?0xe6:searching?0xc0:0x35)<<24|(detected||searching?0xe54c38:NanosuitClientConfig.classicInterfaceColor()));
+      // The global alert bar remains red during residual alert, independently of the visibility triangle.
+      for(int i=0;i<4;i++)g.fill(3,17+i*24,15,38+i*24,(detected?0xe6:searching?0xc0:0x35)<<24|(detected||searching?0xe54c38:NanosuitClientConfig.classicInterfaceColor()));
       g.flush();g.pose().translate(-1,150,0);g.pose().scale(scale,scale,1);
       g.setColor((rgb>>16&255)/255f,(rgb>>8&255)/255f,(rgb&255)/255f,alpha);
       RenderSystem.enableBlend();RenderSystem.defaultBlendFunc();RenderSystem.disableDepthTest();
