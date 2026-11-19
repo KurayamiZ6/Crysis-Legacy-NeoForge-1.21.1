@@ -56,6 +56,11 @@ public final class ClassicNightVisionClient {
       return batteryCharge;
    }
 
+   /** Equipment invalidation cancels the visual state without inventing a charged battery. */
+   public static void cancelVisuals() {
+      active=false;TRANSITION.reset();closeChain();
+   }
+
    static void renderScene(Minecraft minecraft, float partialTick) {
       if (minecraft.level == null || !ClassicNightVision.canUse(minecraft.player)) {
          TRANSITION.reset();

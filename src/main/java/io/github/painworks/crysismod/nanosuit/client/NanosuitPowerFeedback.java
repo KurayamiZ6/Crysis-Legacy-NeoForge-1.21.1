@@ -25,6 +25,10 @@ public final class NanosuitPowerFeedback {
    private NanosuitPowerFeedback() {
    }
 
+   public static void clearTransientEffects() {
+      sustainedForce=false;flashStart=0;forceStart=0;classicModeFlash=false;
+   }
+
    public static void flash() {
       refreshPlayer();
       if (player != null && NanosuitArmorUtil.getEquippedProfile(player) != NanosuitProfile.NANOSUIT_1) {

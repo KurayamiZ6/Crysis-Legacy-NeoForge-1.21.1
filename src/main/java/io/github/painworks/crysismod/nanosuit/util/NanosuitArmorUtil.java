@@ -24,6 +24,11 @@ public final class NanosuitArmorUtil {
       return getEquippedProfile(player) != null;
    }
 
+   /** Active abilities require a living player and a complete, homogeneous suit. */
+   public static NanosuitProfile getUsableProfile(Player player) {
+      return player == null || !player.isAlive() || player.isSpectator() ? null : getEquippedProfile(player);
+   }
+
    public static NanosuitProfile getEquippedProfile(Player player) {
       NanosuitArmorUtil.Evaluation evaluation = evaluate(player);
       maybeLogIdentity(player, evaluation);
@@ -35,11 +40,8 @@ public final class NanosuitArmorUtil {
    }
 
    public static NanosuitProfile getNanovisionProfile(Player player, boolean requiresFullSet, boolean requiresHelmet) {
-      if (requiresFullSet) {
-         return getEquippedProfile(player);
-      }
-      NanosuitProfile helmet = getPieceProfile(player.getItemBySlot(EquipmentSlot.HEAD), EquipmentSlot.HEAD);
-      return helmet == null && !requiresHelmet ? NanosuitProfile.LEGACY_CURRENT : helmet;
+      // Retain the old config signature, but neither legacy switch may bypass suit identity.
+      return getUsableProfile(player);
    }
 
    public static boolean hasFullSet(Player player, boolean ignoredAllowLegacy) {

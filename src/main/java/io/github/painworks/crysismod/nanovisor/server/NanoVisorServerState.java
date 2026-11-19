@@ -44,7 +44,7 @@ public final class NanoVisorServerState {
    }
 
    private static boolean canActivate(ServerPlayer player) {
-      NanosuitProfile profile = NanosuitArmorUtil.getEquippedProfile(player);
+      NanosuitProfile profile = NanosuitArmorUtil.getUsableProfile(player);
       if (profile == null || !profile.auxiliary().nanoVisorMarking()) {
          return false;
       }

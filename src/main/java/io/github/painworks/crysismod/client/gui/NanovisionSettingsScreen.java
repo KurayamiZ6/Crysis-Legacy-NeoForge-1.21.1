@@ -118,8 +118,7 @@ public final class NanovisionSettingsScreen extends Screen {
          case GENERAL:
             this.section("Availability and world filter");
             this.toggle(width, "Nanovision enabled", NanovisionConfig::nanovisionEnabled, NanovisionConfig::setNanovisionEnabled, true);
-            this.toggle(width, "Requires helmet", NanovisionConfig::nanovisionRequiresHelmet, NanovisionConfig::setNanovisionRequiresHelmet, true);
-            this.toggle(width, "Requires full set", NanovisionConfig::nanovisionRequiresFullSet, NanovisionConfig::setNanovisionRequiresFullSet, false);
+            // Suit identity is mandatory; old optional equipment switches cannot bypass it.
             this.toggle(width, "Use night vision", NanovisionConfig::nanovisionUseNightVision, NanovisionConfig::setNanovisionUseNightVision, true);
             this.toggle(width, "Post shader enabled", NanovisionConfig::postShaderEnabled, NanovisionConfig::setPostShaderEnabled, true);
             this.enumButton(

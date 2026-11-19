@@ -67,12 +67,12 @@ public final class NanosuitKeyMappings {
                minecraft.setScreen(new Nanosuit1RadialScreen(OPEN_NANOSUIT_1_RADIAL.getKey()));
          }
          while (TOGGLE_ARMOR.consumeClick()) {
-            if (!(minecraft.screen instanceof Nanosuit1RadialScreen))
+            if (canRequestMode(minecraft))
                NanosuitNetwork.sendToServer(new ToggleNanosuitModePacket(NanosuitMode.ARMOR));
          }
 
          while (TOGGLE_CLOAK.consumeClick()) {
-            if (!(minecraft.screen instanceof Nanosuit1RadialScreen))
+            if (canRequestMode(minecraft))
                NanosuitNetwork.sendToServer(new ToggleNanosuitModePacket(NanosuitMode.CLOAK));
          }
 
@@ -114,6 +114,10 @@ public final class NanosuitKeyMappings {
       NanosuitNetwork.sendToServer(new ToggleNanosuitModePacket(nextMode));
    }
 
+   private static boolean canRequestMode(Minecraft minecraft) {
+      return minecraft.screen==null && minecraft.getOverlay()==null && NanosuitArmorUtil.getUsableProfile(minecraft.player)!=null;
+   }
+
    @SubscribeEvent
    public static void onCrosshair(net.neoforged.neoforge.client.event.RenderGuiLayerEvent.Pre event) {
       if (Minecraft.getInstance().screen instanceof Nanosuit1RadialScreen
@@ -141,7 +145,7 @@ public final class NanosuitKeyMappings {
       if (minecraft.screen == null && minecraft.getOverlay() == null && minecraft.player != null
          && minecraft.player.isSprinting() && !minecraft.player.isInWaterOrBubble()
          && minecraft.options.keySprint.isActiveAndMatches(key)
-         && NanosuitArmorUtil.getEquippedProfile(minecraft.player) != NanosuitProfile.NANOSUIT_1) {
+         && NanosuitArmorUtil.getUsableProfile(minecraft.player) == NanosuitProfile.NANOSUIT_2) {
          NanosuitNetwork.sendToServer(new RequestSprintBoostPacket());
       }
    }

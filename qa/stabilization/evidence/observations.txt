@@ -1,0 +1,64 @@
+RUN stability-before
+JAR_SHA256 70ad526c1c0be8c63b0ca20019e6e5434a4171c102346248d69d1f522487b95f
+STABILITY_SERVER_FAIL thermal partial/mixed accepted=26
+STABILITY_SERVER_FAIL night partial/mixed accepted=26
+STABILITY_MATRIX combinations=81 valid=2 invalid=79 thermalLeaks=26 nightLeaks=26 failures=2
+STABILITY_CLIENT none-key expected=false active=true classicRunning=false animation=CLOSED progress=0.0 zoom=2 legacyFov=0.37286982 actualFov=28.631609082221985 profile=null
+STABILITY_CLIENT helmet-key expected=false active=true classicRunning=false animation=CLOSED progress=0.0 zoom=2 legacyFov=0.3611814 actualFov=27.45538890361786 profile=null
+STABILITY_CLIENT n1-open expected=true active=true classicRunning=true animation=OPEN progress=1.0 zoom=2 legacyFov=1.0 actualFov=42.15326669401504 profile=NANOSUIT_1
+STABILITY_CLIENT removed-chest expected=false active=false classicRunning=false animation=CLOSED progress=0.0 zoom=2 legacyFov=0.99880093 actualFov=75.12970685958862 profile=null
+STABILITY_CLIENT incomplete-key-again expected=false active=true classicRunning=false animation=CLOSED progress=0.0 zoom=2 legacyFov=0.4058346 actualFov=31.931609511375427 profile=null
+STABILITY_CLIENT n1-reopen expected=true active=true classicRunning=true animation=OPEN progress=1.0 zoom=2 legacyFov=1.0 actualFov=42.15327827615383 profile=NANOSUIT_1
+STABILITY_CLIENT n1-to-n2 expected=false active=false classicRunning=false animation=CLOSED progress=0.0 zoom=2 legacyFov=0.99880093 actualFov=75.12970685958862 profile=NANOSUIT_2
+STABILITY_CLIENT n2-open expected=true active=true classicRunning=false animation=CLOSED progress=0.0 zoom=2 legacyFov=0.4058346 actualFov=31.931609511375427 profile=NANOSUIT_2
+STABILITY_CLIENT n2-to-n1 expected=false active=false classicRunning=false animation=CLOSED progress=0.0 zoom=2 legacyFov=1.0 actualFov=75.25000333786011 profile=NANOSUIT_1
+STABILITY_CLIENT n1-before-dimension expected=true active=true classicRunning=true animation=OPEN progress=1.0 zoom=2 legacyFov=1.0 actualFov=42.15327827615383 profile=NANOSUIT_1
+STABILITY_CLIENT dimension expected=false active=false classicRunning=false animation=CLOSED progress=0.0 zoom=2 legacyFov=1.0 actualFov=75.25000333786011 profile=NANOSUIT_1
+STABILITY_CLIENT screen expected=false active=false classicRunning=false animation=CLOSED progress=0.0 zoom=2 legacyFov=1.0 actualFov=75.25000333786011 profile=NANOSUIT_1
+STABILITY_CLIENT n1-before-mixed expected=true active=true classicRunning=true animation=OPEN progress=1.0 zoom=2 legacyFov=1.0 actualFov=42.15327827615383 profile=NANOSUIT_1
+STABILITY_CLIENT mixed expected=false active=false classicRunning=false animation=CLOSED progress=0.0 zoom=2 legacyFov=0.9990407 actualFov=75.1537561416626 profile=null
+STABILITY_COMPLETE serverFailures=2 clientFailures=3
+RUN stability-after
+JAR_SHA256 86fed41c2fa5fc338e5128080b7083b3915057453b9c9e41d424c92b38b2b2e3
+STABILITY_MATRIX combinations=81 valid=2 invalid=79 thermalLeaks=0 nightLeaks=0 failures=0
+STABILITY_CLIENT none-key expected=false active=false classicRunning=false animation=CLOSED progress=0.0 zoom=2 legacyFov=1.0 actualFov=75.25000333786011 profile=null
+STABILITY_CLIENT helmet-key expected=false active=false classicRunning=false animation=CLOSED progress=0.0 zoom=2 legacyFov=1.0 actualFov=75.25000333786011 profile=null
+STABILITY_CLIENT n1-open expected=true active=true classicRunning=true animation=OPEN progress=1.0 zoom=2 legacyFov=1.0 actualFov=42.15327827615383 profile=NANOSUIT_1
+STABILITY_CLIENT removed-chest expected=false active=false classicRunning=false animation=CLOSED progress=0.0 zoom=2 legacyFov=1.0 actualFov=75.25000333786011 profile=null
+STABILITY_CLIENT incomplete-key-again expected=false active=false classicRunning=false animation=CLOSED progress=0.0 zoom=2 legacyFov=1.0 actualFov=75.25000333786011 profile=null
+STABILITY_CLIENT n1-reopen expected=true active=true classicRunning=true animation=OPEN progress=1.0 zoom=2 legacyFov=1.0 actualFov=42.15327827615383 profile=NANOSUIT_1
+STABILITY_CLIENT n1-to-n2 expected=false active=false classicRunning=false animation=CLOSED progress=0.0 zoom=2 legacyFov=1.0 actualFov=75.25000333786011 profile=NANOSUIT_2
+STABILITY_CLIENT n2-open expected=true active=true classicRunning=false animation=CLOSED progress=0.0 zoom=2 legacyFov=0.41979322 actualFov=33.32416474819183 profile=NANOSUIT_2
+STABILITY_CLIENT n2-to-n1 expected=false active=false classicRunning=false animation=CLOSED progress=0.0 zoom=2 legacyFov=1.0 actualFov=75.24999499320984 profile=NANOSUIT_1
+STABILITY_CLIENT n1-before-dimension expected=true active=true classicRunning=true animation=OPEN progress=1.0 zoom=2 legacyFov=1.0 actualFov=42.15327827615383 profile=NANOSUIT_1
+STABILITY_CLIENT dimension expected=false active=false classicRunning=false animation=CLOSED progress=0.0 zoom=2 legacyFov=1.0 actualFov=75.25000333786011 profile=NANOSUIT_1
+STABILITY_CLIENT screen expected=false active=false classicRunning=false animation=CLOSED progress=0.0 zoom=2 legacyFov=1.0 actualFov=75.25000333786011 profile=NANOSUIT_1
+STABILITY_CLIENT n1-before-mixed expected=true active=true classicRunning=true animation=OPEN progress=1.0 zoom=2 legacyFov=1.0 actualFov=42.15327827615383 profile=NANOSUIT_1
+STABILITY_CLIENT mixed expected=false active=false classicRunning=false animation=CLOSED progress=0.0 zoom=2 legacyFov=1.0 actualFov=75.25000333786011 profile=null
+STABILITY_COMPLETE serverFailures=0 clientFailures=0
+RUN stability-edges-valid
+JAR_SHA256 86fed41c2fa5fc338e5128080b7083b3915057453b9c9e41d424c92b38b2b2e3
+STABILITY_MATRIX combinations=81 valid=2 invalid=79 thermalLeaks=0 nightLeaks=0 failures=0
+STABILITY_CLIENT none-key expected=false active=false classicRunning=false animation=CLOSED progress=0.0 zoom=2 legacyFov=1.0 actualFov=75.24993658065796 profile=null night=false intensity=0.0 thermal=false
+STABILITY_CLIENT helmet-key expected=false active=false classicRunning=false animation=CLOSED progress=0.0 zoom=2 legacyFov=1.0 actualFov=75.25000333786011 profile=null night=false intensity=0.0 thermal=false
+STABILITY_CLIENT n1-open expected=true active=true classicRunning=true animation=OPENING progress=0.30992335 zoom=2 legacyFov=1.0 actualFov=60.95363946982281 profile=NANOSUIT_1 night=false intensity=0.0 thermal=false
+STABILITY_CLIENT removed-chest expected=false active=false classicRunning=false animation=CLOSED progress=0.0 zoom=2 legacyFov=1.0 actualFov=75.25000333786011 profile=null night=false intensity=0.0 thermal=false
+STABILITY_CLIENT incomplete-key-again expected=false active=false classicRunning=false animation=CLOSED progress=0.0 zoom=2 legacyFov=1.0 actualFov=75.25000333786011 profile=null night=false intensity=0.0 thermal=false
+STABILITY_CLIENT n1-reopen expected=true active=true classicRunning=true animation=OPENING progress=0.02246313 zoom=2 legacyFov=1.0 actualFov=74.0234887054034 profile=NANOSUIT_1 night=false intensity=0.0 thermal=false
+STABILITY_CLIENT n1-to-n2 expected=false active=false classicRunning=false animation=CLOSED progress=0.0 zoom=2 legacyFov=1.0 actualFov=75.25000333786011 profile=NANOSUIT_2 night=false intensity=0.0 thermal=false
+STABILITY_CLIENT n2-open expected=true active=true classicRunning=false animation=CLOSED progress=0.0 zoom=2 legacyFov=0.76600003 actualFov=64.00012969970703 profile=NANOSUIT_2 night=false intensity=0.0 thermal=false
+STABILITY_CLIENT n2-to-n1 expected=false active=false classicRunning=false animation=CLOSED progress=0.0 zoom=2 legacyFov=1.0 actualFov=73.24555993080139 profile=NANOSUIT_1 night=false intensity=0.0 thermal=false
+STABILITY_CLIENT n1-before-dimension expected=true active=true classicRunning=true animation=OPENING progress=0.033835895 zoom=2 legacyFov=1.0 actualFov=72.91842975923528 profile=NANOSUIT_1 night=false intensity=0.0 thermal=false
+STABILITY_CLIENT dimension expected=false active=false classicRunning=false animation=CLOSED progress=0.0 zoom=2 legacyFov=1.0 actualFov=75.2421760559082 profile=NANOSUIT_1 night=false intensity=0.0 thermal=false
+STABILITY_CLIENT screen expected=false active=false classicRunning=false animation=CLOSED progress=0.0 zoom=2 legacyFov=1.0 actualFov=75.25000333786011 profile=NANOSUIT_1 night=false intensity=0.0 thermal=false
+STABILITY_CLIENT n1-before-mixed expected=true active=true classicRunning=true animation=OPENING progress=0.025808105 zoom=2 legacyFov=1.0 actualFov=73.84390648043157 profile=NANOSUIT_1 night=false intensity=0.0 thermal=false
+STABILITY_CLIENT mixed expected=false active=false classicRunning=false animation=CLOSED progress=0.0 zoom=2 legacyFov=1.0 actualFov=75.25000333786011 profile=null night=false intensity=0.0 thermal=false
+STABILITY_CLIENT night-open expected=false active=false classicRunning=false animation=CLOSED progress=0.0 zoom=2 legacyFov=1.0 actualFov=75.25000333786011 profile=NANOSUIT_1 night=true intensity=0.99996984 thermal=false
+STABILITY_CLIENT night-removed expected=false active=false classicRunning=false animation=CLOSED progress=0.0 zoom=2 legacyFov=1.0 actualFov=75.25000333786011 profile=null night=false intensity=0.0 thermal=false
+STABILITY_CLIENT thermal-open expected=false active=false classicRunning=false animation=CLOSED progress=0.0 zoom=2 legacyFov=1.0 actualFov=75.25000333786011 profile=NANOSUIT_2 night=false intensity=0.0 thermal=true
+STABILITY_CLIENT thermal-removed expected=false active=false classicRunning=false animation=CLOSED progress=0.0 zoom=2 legacyFov=1.0 actualFov=75.25000333786011 profile=null night=false intensity=0.0 thermal=false
+STABILITY_RADIAL_INVALID closed=true
+STABILITY_CLIENT radial-invalid expected=false active=false classicRunning=false animation=CLOSED progress=0.0 zoom=2 legacyFov=1.0 actualFov=75.25000333786011 profile=null night=false intensity=0.0 thermal=false
+STABILITY_CLIENT closing-start expected=true active=true classicRunning=true animation=OPEN progress=1.0 zoom=2 legacyFov=1.0 actualFov=42.15327827615383 profile=NANOSUIT_1 night=false intensity=0.0 thermal=false
+STABILITY_CLIENT closing-removed expected=false active=false classicRunning=false animation=CLOSED progress=0.0 zoom=2 legacyFov=1.0 actualFov=75.25000333786011 profile=null night=false intensity=0.0 thermal=false
+STABILITY_COMPLETE serverFailures=0 clientFailures=0

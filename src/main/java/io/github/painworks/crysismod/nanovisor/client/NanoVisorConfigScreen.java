@@ -334,24 +334,7 @@ public final class NanoVisorConfigScreen {
          true,
          NanovisionConfig::setNanovisionEnabled
       );
-      addBoolean(
-         entries,
-         category,
-         "option.nanovision_requires_helmet",
-         "tooltip.nanovision_requires_helmet",
-         NanovisionConfig.nanovisionRequiresHelmet(),
-         true,
-         NanovisionConfig::setNanovisionRequiresHelmet
-      );
-      addBoolean(
-         entries,
-         category,
-         "option.nanovision_requires_full_set",
-         "tooltip.nanovision_requires_full_set",
-         NanovisionConfig.nanovisionRequiresFullSet(),
-         false,
-         NanovisionConfig::setNanovisionRequiresFullSet
-      );
+      // Full homogeneous equipment is now mandatory on both client and server.
       addBoolean(
          entries,
          category,

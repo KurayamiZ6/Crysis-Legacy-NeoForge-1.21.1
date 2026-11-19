@@ -48,6 +48,7 @@ public final class EnhancedJumpClientState {
 
    public static void activate(double verticalVelocity) {
       Minecraft minecraft = Minecraft.getInstance();
+      if(NanosuitArmorUtil.getUsableProfile(minecraft.player)==null){cancelTransientState();return;}
       activationClientTick = minecraft.player == null ? 0 : minecraft.player.tickCount;
       activeUntilClientTick = activationClientTick + 40;
       serverConfirmed = true;
@@ -71,7 +72,7 @@ public final class EnhancedJumpClientState {
 
    public static boolean shouldBypassSneakSlowdown() {
       Minecraft minecraft = Minecraft.getInstance();
-      if (minecraft.player == null) {
+      if (NanosuitArmorUtil.getUsableProfile(minecraft.player)==null) {
          return false;
       } else {
          int clientTick = minecraft.player.tickCount;
@@ -89,6 +90,14 @@ public final class EnhancedJumpClientState {
 
    public static boolean shouldSuppressCrouchInput() {
       return shouldBypassSneakSlowdown();
+   }
+
+   /** No cooldown/energy data is changed; held vanilla jump remains the vanilla input. */
+   public static void cancelTransientState() {
+      var mc=Minecraft.getInstance();
+      if(chargeTicks>0 && mc.player!=null && mc.getConnection()!=null)sendChargePhase(Phase.RELEASE);
+      requestUntilClientTick=-1;activeUntilClientTick=0;serverConfirmed=false;
+      chargePlayer=mc.player;chargeTicks=0;launchedWhileHeld=false;jumpHeldLastTick=mc.options.keyJump.isDown();
    }
 
    public static boolean handleJumpInput(boolean held) {

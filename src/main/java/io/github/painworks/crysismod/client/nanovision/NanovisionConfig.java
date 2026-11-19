@@ -93,8 +93,9 @@ public final class NanovisionConfig {
    public static final boolean DEFAULT_THERMAL_GEOMETRY_RELIEF_DEBUG_ONLY = false;
    public static final boolean DEFAULT_THERMAL_MARKER_DEBUG_LOG = false;
    private static final BooleanValue NANOVISION_ENABLED = BUILDER.define("nanovisionEnabled", true);
-   private static final BooleanValue NANOVISION_REQUIRES_HELMET = BUILDER.define("nanovisionRequiresHelmet", true);
-   private static final BooleanValue NANOVISION_REQUIRES_FULL_SET = BUILDER.define("nanovisionRequiresFullSet", false);
+   // Keys retained for config compatibility; no longer override mandatory homogeneous suit validation.
+   private static final BooleanValue NANOVISION_REQUIRES_HELMET = BUILDER.comment("Legacy setting, retained for compatibility. Full homogeneous equipment is always required.").define("nanovisionRequiresHelmet", true);
+   private static final BooleanValue NANOVISION_REQUIRES_FULL_SET = BUILDER.comment("Legacy setting, retained for compatibility. Full homogeneous equipment is always required.").define("nanovisionRequiresFullSet", true);
    private static final BooleanValue NANOVISION_USE_NIGHT_VISION = BUILDER.define("nanovisionUseNightVision", true);
    private static final BooleanValue NANOVISION_DEBUG = BUILDER.define("nanovisionDebug", false);
    private static final BooleanValue POST_SHADER_ENABLED = BUILDER.define("nanovisionPostShaderEnabled", true);

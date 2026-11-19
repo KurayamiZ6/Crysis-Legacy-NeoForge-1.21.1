@@ -8,11 +8,20 @@ import net.minecraft.client.Minecraft;
 
 public final class NanoVisorState {
    private static boolean visorActive;
+   private static boolean waitForRelease;
 
    private NanoVisorState() {
    }
 
    public static boolean updateFromInput(Minecraft minecraft, KeyMapping visorKey) {
+      boolean wasActive = visorActive;
+      if (!canUse(minecraft) || waitForRelease && visorKey.isDown()) {
+         invalidate();
+         while (visorKey.consumeClick()) {}
+         if (!visorKey.isDown()) waitForRelease = false;
+         return wasActive;
+      }
+      waitForRelease = false;
       if (ClassicBinoculars.isN1Context() || ClassicBinoculars.running()) return ClassicBinoculars.updateFromInput(visorKey);
       boolean previous = visorActive;
       if (minecraft.player != null && NanoVisorSettings.General.visorEnabled()
@@ -41,7 +50,7 @@ public final class NanoVisorState {
    }
 
    public static boolean isVisorActive() {
-      return visorActive && NanoVisorSettings.General.visorEnabled();
+      return visorActive && canUse(Minecraft.getInstance());
    }
 
    public static boolean shouldRenderOverlay() {
@@ -49,6 +58,20 @@ public final class NanoVisorState {
    }
 
    public static void setVisorActive(boolean active) {
-      visorActive = active && NanoVisorSettings.General.visorEnabled();
+      visorActive = active && canUse(Minecraft.getInstance());
+   }
+
+   public static boolean canUse(Minecraft minecraft) {
+      var profile=io.github.painworks.crysismod.nanosuit.util.NanosuitArmorUtil.getUsableProfile(minecraft.player);
+      if(profile==null || minecraft.screen!=null || minecraft.getOverlay()!=null || !NanoVisorSettings.General.visorEnabled())return false;
+      if(profile==io.github.painworks.crysismod.nanosuit.NanosuitProfile.NANOSUIT_1)return true;
+      var data=NanosuitCapabilities.get(minecraft.player);
+      return profile.auxiliary().nanoVisorMarking() && !data.isRecoveryLocked() && data.getEnergy()>0;
+   }
+
+   public static void invalidate() {
+      waitForRelease |= NanoVisorKeyMappings.TOGGLE_NANO_VISOR.isDown();
+      ClassicBinoculars.reset();
+      NanoVisorZoomHandler.reset();
    }
 }

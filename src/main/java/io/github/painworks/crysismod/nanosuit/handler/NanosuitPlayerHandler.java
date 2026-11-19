@@ -261,7 +261,7 @@ public class NanosuitPlayerHandler {
       float previousEnergy = data.getEnergy();
       NanosuitMode previousMode = data.getMode();
       boolean previousSprintBoostReady = data.isSprintBoostReady();
-      NanosuitProfile equippedProfile = NanosuitArmorUtil.getEquippedProfile(player);
+      NanosuitProfile equippedProfile = NanosuitArmorUtil.getUsableProfile(player);
       boolean hasFullSet = equippedProfile != null;
       // Recovery and the end of a boost still advance after unequipping the suit.
       NanosuitProfile rulesProfile = hasFullSet ? equippedProfile : NanosuitProfile.LEGACY_CURRENT;
@@ -642,7 +642,7 @@ public class NanosuitPlayerHandler {
 
    public static boolean canSpendSuitEnergy(ServerPlayer player, float amount) {
       INanosuitEnergy data = NanosuitCapabilities.get(player);
-      return Float.isFinite(amount) && amount > 0.0F && NanosuitArmorUtil.hasFullSet(player)
+      return Float.isFinite(amount) && amount > 0.0F && NanosuitArmorUtil.getUsableProfile(player)!=null
          && !data.isRecoveryLocked() && data.getEnergy() >= amount;
    }
 
@@ -700,7 +700,7 @@ public class NanosuitPlayerHandler {
    public static boolean tryToggleMode(ServerPlayer player, NanosuitMode requestedMode) {
       INanosuitEnergy data = NanosuitCapabilities.get(player);
       PlayerRuntimeState runtime = runtimeState(player.getUUID());
-      NanosuitProfile profile = NanosuitArmorUtil.getEquippedProfile(player);
+      NanosuitProfile profile = NanosuitArmorUtil.getUsableProfile(player);
       if (startEquippedRecoveryIfNeeded(data, profile)) {
          NanosuitSyncManager.syncToClient(player);
          return false;
