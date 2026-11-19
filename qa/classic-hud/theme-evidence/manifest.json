@@ -1,0 +1,153 @@
+{
+  "scope": "Actual RTX Minecraft captures; optional configuration injected only into isolated QA client",
+  "theme": "#8C64FF",
+  "originalTextureFilesChecked": 22,
+  "checks": [
+    {
+      "name": "N1 purple chrome and health",
+      "result": "PASS",
+      "detail": 4151
+    },
+    {
+      "name": "Energy remains blue",
+      "result": "PASS",
+      "detail": 1613
+    },
+    {
+      "name": "Critical energy remains red",
+      "result": "PASS",
+      "detail": 578
+    },
+    {
+      "name": "Battery remains yellow",
+      "result": "PASS",
+      "detail": 1358
+    },
+    {
+      "name": "N2 no purple interface",
+      "result": "PASS",
+      "detail": 0
+    },
+    {
+      "name": "Radial purple",
+      "result": "PASS",
+      "detail": 10896
+    },
+    {
+      "name": "Radial selected amber preserved",
+      "result": "PASS",
+      "detail": 10159
+    },
+    {
+      "name": "Default texture classic_hud/armor.png",
+      "result": "PASS",
+      "detail": "e02c95a8a8f03b3a7f183404a9cebf0234c3da23e836ba4196033d9a26a5b3b0"
+    },
+    {
+      "name": "Default texture classic_hud/battery-off.png",
+      "result": "PASS",
+      "detail": "8d3a2dddf350c3470b242f7b8aead1a56fa481eb4542df9eb4bdcf9485b6e71d"
+    },
+    {
+      "name": "Default texture classic_hud/battery-on.png",
+      "result": "PASS",
+      "detail": "a74b6245a1eb08a4085277a051c975b0f9f8f70d4bc56e1325cd9db3613ddbfd"
+    },
+    {
+      "name": "Default texture classic_hud/cloak.png",
+      "result": "PASS",
+      "detail": "d5acf857fe83d2e5574dc5efa2b2ab7a9d3db427cf77df8e4f7b6c7ed59f4d74"
+    },
+    {
+      "name": "Default texture classic_hud/critical.png",
+      "result": "PASS",
+      "detail": "02cb7876c354425056576a4b52a123100f0b1cb3e11811632a4405f3e06e4dfb"
+    },
+    {
+      "name": "Default texture classic_hud/digits.png",
+      "result": "PASS",
+      "detail": "78a639a28e062ca50996de2594d7fa93db833f1c62c4e591a0f323cdc9856aef"
+    },
+    {
+      "name": "Default texture classic_hud/energy.png",
+      "result": "PASS",
+      "detail": "de9897425120e8f905dbac2c05db8a931ac9f50e0734edfbb596c635c8ed6f8d"
+    },
+    {
+      "name": "Default texture classic_hud/health.png",
+      "result": "PASS",
+      "detail": "1f2b4feebfa14848d688817f854233f294dbcbfa31918d5a63ca135e54bbd372"
+    },
+    {
+      "name": "Default texture classic_hud/panel.png",
+      "result": "PASS",
+      "detail": "d1baed27d7fb67466f2ef7788a3c2266cdc69172951c37ab18d48a0fcdeaa8e3"
+    },
+    {
+      "name": "Default texture classic_hud/speed.png",
+      "result": "PASS",
+      "detail": "b13e1fe1d51dc09aa337d8a9c8a1031222f2069d9bb0449dea1e4cdbde96040f"
+    },
+    {
+      "name": "Default texture classic_hud/strength.png",
+      "result": "PASS",
+      "detail": "26e5d0623308e39d7a04650cd260f0a961fe38b57fef385131aa9a7a063cb6b6"
+    },
+    {
+      "name": "Default texture nanosuit1_radial/amber-fill.png",
+      "result": "PASS",
+      "detail": "84bee0af9546d9cf00e67ae7f1abb8d1afbe1b63c33f36ef0160b54cf26db426"
+    },
+    {
+      "name": "Default texture nanosuit1_radial/amber-frame.png",
+      "result": "PASS",
+      "detail": "830bed56a994c4aa18e273c38ce9326502dbb702d7d9b275e540eb609e0b5a36"
+    },
+    {
+      "name": "Default texture nanosuit1_radial/flash-fill.png",
+      "result": "PASS",
+      "detail": "201055866143e183028a7f015527b256c3f01641e589d816e78211ffbd946542"
+    },
+    {
+      "name": "Default texture nanosuit1_radial/flash-frame.png",
+      "result": "PASS",
+      "detail": "634247f166c4b1515482ad8f2923ba664a1a11ae10331d738c14d2b684afe2d3"
+    },
+    {
+      "name": "Default texture nanosuit1_radial/green-fill.png",
+      "result": "PASS",
+      "detail": "84ad648e4459c50fc2a7d1cdbf9a92216deb20a11c3871a7c89b3f22aa6dba7f"
+    },
+    {
+      "name": "Default texture nanosuit1_radial/green-frame.png",
+      "result": "PASS",
+      "detail": "012abcde758c6c01307849038ddfcb2e66c5ca144b16573184c020d4b0e4fa8a"
+    },
+    {
+      "name": "Default texture nanosuit1_radial/hex-glow.png",
+      "result": "PASS",
+      "detail": "57e83a4f071878e04b4d822a1967f96fe089978f997f65cf71d7faca73061eea"
+    },
+    {
+      "name": "Default texture nanosuit1_radial/hex.png",
+      "result": "PASS",
+      "detail": "9387bcc4d9ac83cec1a115ea46d53c2b6fb3df9d3ac08b271766bc2f16e69f87"
+    },
+    {
+      "name": "Default texture nanosuit1_radial/icons.png",
+      "result": "PASS",
+      "detail": "0e5eb25c09aada47432a5035dd140700021ddcde52d24df7b2062c174e8cd40f"
+    },
+    {
+      "name": "Default texture nanosuit1_radial/pointer.png",
+      "result": "PASS",
+      "detail": "acdd1f32fb9566a289a9825b30bad3a38e98e423ae522f6724e098b70044f41e"
+    },
+    {
+      "name": "Default texture nanosuit1_radial/ring.png",
+      "result": "PASS",
+      "detail": "d3806086b862a4afab5e23391be5da027c0393ab4507071d44779a9b508c7533"
+    }
+  ],
+  "jarSha256": "b157dc2f66efa2d1f018c7fbb4d4fb5e6f350f071466785b999e47fdc3d03df4"
+}

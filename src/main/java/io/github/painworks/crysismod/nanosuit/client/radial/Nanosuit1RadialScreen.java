@@ -205,6 +205,13 @@ public final class Nanosuit1RadialScreen extends Screen {
     }
 
     private void tile(GuiGraphics g, String layer, int index, float r, float green, float b, float alpha) {
+        int theme=io.github.painworks.crysismod.nanosuit.config.NanosuitClientConfig.classicInterfaceColor();
+        if (theme != io.github.painworks.crysismod.nanosuit.client.ClassicHudPalette.DEFAULT && layer.startsWith("green-")) {
+            layer="themed/"+layer;
+            r=io.github.painworks.crysismod.nanosuit.client.ClassicHudPalette.red(theme);
+            green=io.github.painworks.crysismod.nanosuit.client.ClassicHudPalette.green(theme);
+            b=io.github.painworks.crysismod.nanosuit.client.ClassicHudPalette.blue(theme);
+        }
         g.setColor(r, green, b, alpha);
         // Transparent sprite rectangles must not occlude subsequent UI layers.
         RenderSystem.disableDepthTest();
@@ -242,15 +249,22 @@ public final class Nanosuit1RadialScreen extends Screen {
                 tile(g, "amber-frame", i, 1, 1, 1, flash);
                 tile(g, "flash-frame", i, 1, 1, 1, flash);
             }
-            tile(g, "icons", i, amberIcon ? 1f : 118/255f, amberIcon ? 196/255f : 150/255f,
-                amberIcon ? 60/255f : 117/255f, 1);
+            int theme=io.github.painworks.crysismod.nanosuit.config.NanosuitClientConfig.classicInterfaceColor();
+            boolean custom=theme!=io.github.painworks.crysismod.nanosuit.client.ClassicHudPalette.DEFAULT;
+            tile(g, "icons", i, amberIcon ? 1f : custom?io.github.painworks.crysismod.nanosuit.client.ClassicHudPalette.red(theme):118/255f,
+                amberIcon ? 196/255f : custom?io.github.painworks.crysismod.nanosuit.client.ClassicHudPalette.green(theme):150/255f,
+                amberIcon ? 60/255f : custom?io.github.painworks.crysismod.nanosuit.client.ClassicHudPalette.blue(theme):117/255f, 1);
             g.pose().popPose();
         }
         g.pose().pushPose();
         g.pose().mulPose(Axis.ZP.rotationDegrees(RadialLayout.ringDegrees(seconds)));
         g.setColor(1, 1, 1, .76f);
+        int theme=io.github.painworks.crysismod.nanosuit.config.NanosuitClientConfig.classicInterfaceColor();
+        boolean custom=theme!=io.github.painworks.crysismod.nanosuit.client.ClassicHudPalette.DEFAULT;
+        if(custom)g.setColor(io.github.painworks.crysismod.nanosuit.client.ClassicHudPalette.red(theme),
+            io.github.painworks.crysismod.nanosuit.client.ClassicHudPalette.green(theme),io.github.painworks.crysismod.nanosuit.client.ClassicHudPalette.blue(theme),.76f);
         RenderSystem.disableDepthTest();
-        g.blit(texture("ring"), -48, -48, 0f, 0f, 96, 96, 96, 96);
+        g.blit(texture(custom?"themed/ring":"ring"), -48, -48, 0f, 0f, 96, 96, 96, 96);
         g.pose().popPose();
         g.pose().mulPose(Axis.ZP.rotationDegrees(lastPointerDegrees));
         g.setColor(1, 1, 1, 1);

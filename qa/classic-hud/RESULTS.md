@@ -1,3 +1,5 @@
+> Complément demandé ensuite : [couleur personnalisable N1](THEME.md), nouvelles captures et empreinte du JAR dans `theme-evidence/`. Les preuves ci-dessous portent sur le premier commit d’intégration.
+
 # PremiÃ¨re intÃ©gration du HUD N1 â€” 19 novembre 2026
 
 Branche `feature/nanosuit-1-classic`. RÃ©fÃ©rence avant modification : `6f4dc9a`.

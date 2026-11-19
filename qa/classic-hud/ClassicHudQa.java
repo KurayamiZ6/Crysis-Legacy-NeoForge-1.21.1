@@ -27,6 +27,7 @@ public final class ClassicHudQa {
    private static final String[] NAMES={"n1-100","n1-25","n1-15","n1-zero","n1-recharge","nv-active","nv-recharge","n2","no-suit","n1-gui2","n1-strength","n1-speed","n1-cloak","health-half"};
    private volatile int phase,serverPhase=-1,readyTicks;
    private int timeout,settle=-1,finish=-1;
+   private boolean themeApplied;
    public ClassicHudQa(){NeoForge.EVENT_BUS.addListener(this::tick);NeoForge.EVENT_BUS.addListener(net.neoforged.bus.api.EventPriority.LOWEST,this::render);NeoForge.EVENT_BUS.addListener(this::client);}
    private NanosuitMode mode(){return phase==10?NanosuitMode.STRENGTH:phase==11?NanosuitMode.SPEED:phase==12?NanosuitMode.CLOAK:NanosuitMode.ARMOR;}
    private void tick(ServerTickEvent.Post e){
@@ -61,7 +62,18 @@ public final class ClassicHudQa {
       p.setHealth(phase==13?p.getMaxHealth()/2:p.getMaxHealth());
       NanosuitSyncManager.syncToClient(p);readyTicks++;
    }
-   private void client(ClientTickEvent.Post e){if(++timeout>3000){System.out.println("CLASSIC_HUD_TIMEOUT");Minecraft.getInstance().stop();}}
+   private void client(ClientTickEvent.Post e){
+      String color=System.getProperty("crysis.hud.qa.theme");
+      if(color!=null&&!themeApplied&&Minecraft.getInstance().player!=null){
+         try {
+            var field=io.github.painworks.crysismod.nanosuit.config.NanosuitClientConfig.class.getDeclaredField("CLASSIC_INTERFACE_COLOR");field.setAccessible(true);
+            @SuppressWarnings("unchecked") var value=(net.neoforged.neoforge.common.ModConfigSpec.ConfigValue<String>)field.get(null);
+            value.set(color);themeApplied=true;
+            System.out.println("CLASSIC_HUD_THEME "+color);
+         }catch(Exception ex){throw new RuntimeException(ex);}
+      }
+      if(++timeout>3000){System.out.println("CLASSIC_HUD_TIMEOUT");Minecraft.getInstance().stop();}
+   }
    private void render(RenderGuiEvent.Post e){
       var mc=Minecraft.getInstance();if(mc.player==null||mc.screen!=null)return;
       if(phase>=NAMES.length){if(finish<0)finish=mc.player.tickCount;if(mc.player.tickCount-finish>25){System.out.println("CLASSIC_HUD_COMPLETE captures="+NAMES.length);mc.stop();}return;}
@@ -76,6 +88,15 @@ public final class ClassicHudQa {
       String name=NAMES[phase]+".png";
       e.getGuiGraphics().flush();
       Screenshot.grab(mc.gameDirectory,name,mc.getMainRenderTarget(),ignored->{});
+      if(phase==13&&System.getProperty("crysis.hud.qa.theme")!=null){
+         var radial=new io.github.painworks.crysismod.nanosuit.client.radial.Nanosuit1RadialScreen(
+            com.mojang.blaze3d.platform.InputConstants.Type.KEYSYM.getOrCreate(org.lwjgl.glfw.GLFW.GLFW_KEY_F7));
+         radial.init(mc,mc.getWindow().getGuiScaledWidth(),mc.getWindow().getGuiScaledHeight());
+         radial.render(e.getGuiGraphics(),mc.getWindow().getGuiScaledWidth()/2,mc.getWindow().getGuiScaledHeight()/2,0);
+         e.getGuiGraphics().flush();
+         Screenshot.grab(mc.gameDirectory,"theme-radial.png",mc.getMainRenderTarget(),ignored->{});
+         radial.removed();
+      }
       System.out.println("CLASSIC_HUD_CAPTURE "+name+" energy="+data.getEnergy()+" health="+mc.player.getHealth()+" mode="+data.getMode()+" nv="+io.github.painworks.crysismod.client.nanovision.ClassicNightVisionClient.isActive()+" battery="+io.github.painworks.crysismod.client.nanovision.ClassicNightVisionClient.batteryCharge()+" gui="+gui);
       phase++;settle=-1;
    }

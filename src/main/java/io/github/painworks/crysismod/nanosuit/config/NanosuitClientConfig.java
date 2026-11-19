@@ -125,6 +125,17 @@ public final class NanosuitClientConfig {
    private static final DoubleValue HUD_SCALE = BUILDER.comment("Nanosuit HUD scale.").defineInRange("hud.scale", 0.200000002980232, 0.05, 5.0);
    private static final DoubleValue CLASSIC_HUD_SCALE = BUILDER.comment("Nanosuit 1 HUD size relative to screen height; independent of GUI scale and Nanosuit 2.")
       .defineInRange("hud.classic.scale", 1.0, 0.5, 2.0);
+   private static final ModConfigSpec.ConfigValue<String> CLASSIC_INTERFACE_COLOR = BUILDER
+      .comment("Nanosuit 1 interface theme, #RRGGBB. Default preserves the original palette; backgrounds follow a darker shade. Does not change warnings, energy blue or selection amber.")
+      .define("hud.classic.color", "#719671", value -> value instanceof String s && s.matches("#[0-9a-fA-F]{6}"));
+
+   public static int classicInterfaceColor() {
+      try {
+         return io.github.painworks.crysismod.nanosuit.client.ClassicHudPalette.parse(CLASSIC_INTERFACE_COLOR.get());
+      } catch (IllegalStateException exception) {
+         return io.github.painworks.crysismod.nanosuit.client.ClassicHudPalette.DEFAULT;
+      }
+   }
 
    public static float classicHudScale() {
       return safeGetDouble(CLASSIC_HUD_SCALE, 1.0).floatValue();

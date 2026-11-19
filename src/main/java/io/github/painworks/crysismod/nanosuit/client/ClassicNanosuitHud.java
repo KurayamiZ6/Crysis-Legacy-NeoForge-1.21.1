@@ -13,6 +13,7 @@ public final class ClassicNanosuitHud {
    private static final ResourceLocation PANEL=asset("panel"), ENERGY=asset("energy"), CRITICAL=asset("critical"), HEALTH=asset("health"), DIGITS=asset("digits");
    private static final ResourceLocation ARMOR=asset("armor"), STRENGTH=asset("strength"), SPEED=asset("speed"), CLOAK=asset("cloak");
    private static final ResourceLocation BATTERY_OFF=asset("battery-off"), BATTERY_ON=asset("battery-on");
+   private static final ResourceLocation PANEL_FIXED=asset("panel-fixed");
    private ClassicNanosuitHud() {}
    private static ResourceLocation asset(String name) {
       return ResourceLocation.fromNamespaceAndPath("crysismod","textures/gui/classic_hud/"+name+".png");
@@ -41,10 +42,19 @@ public final class ClassicNanosuitHud {
             default -> null;
          };
          if(icon!=null)layer(g,icon);
-      } finally {g.pose().popPose();RenderSystem.disableBlend();}
+      } finally {g.setColor(1,1,1,1);g.pose().popPose();RenderSystem.disableBlend();}
    }
    private static void layer(GuiGraphics g,ResourceLocation texture) {
-      g.blit(texture,0,0,440,155,0,0,880,310,880,310);
+      int rgb=NanosuitClientConfig.classicInterfaceColor();
+      boolean themed=texture!=ENERGY&&texture!=CRITICAL&&rgb!=ClassicHudPalette.DEFAULT;
+      if(themed)g.setColor(ClassicHudPalette.red(rgb),ClassicHudPalette.green(rgb),ClassicHudPalette.blue(rgb),1);
+      else g.setColor(1,1,1,1);
+      g.blit(themed?neutral(texture):texture,0,0,440,155,0,0,880,310,880,310);
+      g.setColor(1,1,1,1);
+      if(themed&&texture==PANEL)g.blit(PANEL_FIXED,0,0,440,155,0,0,880,310,880,310);
+   }
+   private static ResourceLocation neutral(ResourceLocation texture) {
+      return texture.withPath(path->path.replace("/classic_hud/","/classic_hud/themed/"));
    }
    private static void clippedFill(GuiGraphics g,ResourceLocation texture,float x,float y,float s,float fraction) {
       if(fraction<=0)return;
@@ -52,12 +62,16 @@ public final class ClassicNanosuitHud {
       layer(g,texture);g.disableScissor();
    }
    private static void number(GuiGraphics g,int value,int x,int y) {
+      int rgb=NanosuitClientConfig.classicInterfaceColor();
+      boolean custom=rgb!=ClassicHudPalette.DEFAULT;
+      if(custom)g.setColor(ClassicHudPalette.red(rgb),ClassicHudPalette.green(rgb),ClassicHudPalette.blue(rgb),1);
       String digits=Integer.toString(value);
       x+=33-digits.length()*11;
       for(int i=0;i<digits.length();i++) {
          int digit=digits.charAt(i)-'0';
-         g.blit(DIGITS,x+i*11,y,11,40,digit*32,0,32,80,320,80);
+         g.blit(custom?neutral(DIGITS):DIGITS,x+i*11,y,11,40,digit*32,0,32,80,320,80);
       }
+      g.setColor(1,1,1,1);
    }
    public static void renderBattery(GuiGraphics g,int charge,int maximum) {
       float base=g.guiHeight()/1080f, s=base*NanosuitClientConfig.classicHudScale();
