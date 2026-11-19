@@ -25,9 +25,9 @@ import net.neoforged.neoforge.client.event.*;
 @Mod("crysisstabilityqa")
 public final class EquipmentStateQa {
  private static final EquipmentSlot[] SLOTS={EquipmentSlot.HEAD,EquipmentSlot.CHEST,EquipmentSlot.LEGS,EquipmentSlot.FEET};
- private final String[] names={"none-key","helmet-key","n1-open","removed-chest","incomplete-key-again","n1-reopen","n1-to-n2","n2-open","n2-to-n1","n1-before-dimension","dimension","screen","n1-before-mixed","mixed","night-open","night-removed","thermal-open","thermal-removed","radial-invalid","closing-start","closing-removed"};
+ private final String[] names={"none-key","helmet-key","n1-open","removed-chest","incomplete-key-again","n1-reopen","n1-to-n2","n2-open","n2-to-n1","n1-before-dimension","dimension","screen","n1-before-mixed","mixed","night-open","night-removed","thermal-open","thermal-removed","radial-invalid","closing-start","closing-removed","n2-visor-before-screen","n2-screen","n2-screen-removal"};
  private volatile int phase,serverPhase=-1,settled;private int timeout,serverFailures,clientFailures;private boolean matrix,action,done;private long start;
- public EquipmentStateQa(){NeoForge.EVENT_BUS.addListener(this::server);NeoForge.EVENT_BUS.addListener(EventPriority.LOWEST,this::client);NeoForge.EVENT_BUS.addListener(EventPriority.LOWEST,this::render);}
+ public EquipmentStateQa(){if(Boolean.getBoolean("crysis.stability.n2screen"))phase=21;NeoForge.EVENT_BUS.addListener(this::server);NeoForge.EVENT_BUS.addListener(EventPriority.LOWEST,this::client);NeoForge.EVENT_BUS.addListener(EventPriority.LOWEST,this::render);}
  private void equip(ServerPlayer p,int...types){for(int i=0;i<4;i++){Item item=switch(i){case 0->types[i]==1?ModItems.NANOGEO_NANOSUIT_HELMET.get():ModItems.NANOSUIT_2_HELMET.get();case 1->types[i]==1?ModItems.NANOGEO_NANOSUIT_CHESTPLATE.get():ModItems.NANOSUIT_2_CHESTPLATE.get();case 2->types[i]==1?ModItems.NANOGEO_NANOSUIT_LEGGINGS.get():ModItems.NANOSUIT_2_LEGGINGS.get();default->types[i]==1?ModItems.NANOGEO_NANOSUIT_BOOTS.get():ModItems.NANOSUIT_2_BOOTS.get();};p.setItemSlot(SLOTS[i],types[i]==0?ItemStack.EMPTY:new ItemStack(item));}}
  private void check(boolean pass,String name){if(!pass){serverFailures++;System.out.println("STABILITY_SERVER_FAIL "+name);}}
  private void matrix(ServerPlayer p){
@@ -63,23 +63,23 @@ public final class EquipmentStateQa {
    equip(p,2,0,2,2);check(!NanosuitPlayerHandler.tryToggleMode(p,NanosuitMode.CLOAK),"cooldown partial rejected");equip(p,2,2,2,2);check(!NanosuitPlayerHandler.tryToggleMode(p,NanosuitMode.CLOAK)&&cd.getInt(runtime)==future,"cooldown preserved across equipment");cd.setInt(runtime,before);
   }catch(Exception ex){throw new RuntimeException(ex);}
  }
- private void server(ServerTickEvent.Post e){var ps=e.getServer().getPlayerList().getPlayers();if(ps.isEmpty()||phase>=names.length)return;var p=ps.getFirst();if(!matrix){matrix=true;matrix(p);}
+ private void server(ServerTickEvent.Post e){var ps=e.getServer().getPlayerList().getPlayers();if(ps.isEmpty()||phase>=names.length)return;var p=ps.getFirst();if(!matrix){matrix=true;if(!Boolean.getBoolean("crysis.stability.n2screen"))matrix(p);}
   if(serverPhase!=phase){serverPhase=phase;settled=0;
-   switch(phase){case 0->equip(p,0,0,0,0);case 1->equip(p,1,0,0,0);case 3,4,15,18,20->equip(p,1,0,1,1);case 6,7,16->equip(p,2,2,2,2);case 13,17->equip(p,1,2,1,2);default->equip(p,1,1,1,1);}
+   switch(phase){case 0->equip(p,0,0,0,0);case 1->equip(p,1,0,0,0);case 3,4,15,18,20->equip(p,1,0,1,1);case 6,7,16,21,22->equip(p,2,2,2,2);case 23->equip(p,2,0,2,2);case 13,17->equip(p,1,2,1,2);default->equip(p,1,1,1,1);}
    if(phase==14)ClassicNightVisionServerState.toggle(p);
    if(phase==10)p.teleportTo(e.getServer().getLevel(Level.NETHER),.5,150,.5,0,0);else p.connection.teleport(.5,150,.5,0,0);
    p.setNoGravity(true);p.getInventory().setItem(p.getInventory().selected,ItemStack.EMPTY);
   }var d=NanosuitCapabilities.get(p);d.setEnergyWithoutStartingRecovery(100);d.setMode(NanosuitMode.ARMOR);NanosuitSyncManager.syncToClient(p);p.serverLevel().setDayTime(6000);settled++;
  }
  private void client(ClientTickEvent.Post e){var mc=Minecraft.getInstance();if(++timeout>2600){System.out.println("STABILITY_TIMEOUT "+phase);mc.stop();}if(phase>=names.length||mc.player==null||serverPhase!=phase||settled<(phase==0?60:Boolean.getBoolean("crysis.stability.edges")?1:12))return;
-  var expected=(phase==0||phase==1||phase==3||phase==4||phase==13||phase==15||phase==17||phase==18||phase==20)?null:(phase==6||phase==7||phase==16)?NanosuitProfile.NANOSUIT_2:NanosuitProfile.NANOSUIT_1;
+  var expected=(phase==0||phase==1||phase==3||phase==4||phase==13||phase==15||phase==17||phase==18||phase==20||phase==23)?null:(phase==6||phase==7||phase==16||phase==21||phase==22)?NanosuitProfile.NANOSUIT_2:NanosuitProfile.NANOSUIT_1;
   if(NanosuitArmorUtil.getEquippedProfile(mc.player)!=expected)return;
   mc.player.setNoGravity(true);mc.player.setDeltaMovement(net.minecraft.world.phys.Vec3.ZERO);mc.player.setYRot(0);mc.player.setXRot(0);
   for(var key:new KeyMapping[]{mc.options.keyAttack,mc.options.keyUse,mc.options.keyUp,mc.options.keyDown,mc.options.keyLeft,mc.options.keyRight,mc.options.keyJump})key.setDown(false);
   if(!action){action=true;start=System.nanoTime();
    if(phase==0||phase==1||phase==4){NanoVisorState.setVisorActive(false);KeyMapping.click(NanoVisorKeyMappings.TOGGLE_NANO_VISOR.getKey());}
-   if(phase==2||phase==5||phase==7||phase==9||phase==12||phase==19)KeyMapping.click(NanoVisorKeyMappings.TOGGLE_NANO_VISOR.getKey());
-   if(phase==11)mc.setScreen(new net.minecraft.client.gui.screens.inventory.InventoryScreen(mc.player));
+   if(phase==2||phase==5||phase==7||phase==9||phase==12||phase==19||phase==21)KeyMapping.click(NanoVisorKeyMappings.TOGGLE_NANO_VISOR.getKey());
+   if(phase==11||phase==22)mc.setScreen(new net.minecraft.client.gui.screens.inventory.InventoryScreen(mc.player));
    if(phase==12)mc.setScreen(null);
    if(phase==16)KeyMapping.click(NanovisionKeybinds.TOGGLE_NANOVISION.getKey());
    if(phase==18){var original=mc.options.keyUp.getKeyConflictContext();mc.setScreen(new io.github.painworks.crysismod.nanosuit.client.radial.Nanosuit1RadialScreen(NanoVisorKeyMappings.TOGGLE_NANO_VISOR.getKey()));io.github.painworks.crysismod.nanosuit.client.NanosuitClientContext.tick(new ClientTickEvent.Pre());
@@ -88,7 +88,7 @@ public final class EquipmentStateQa {
   }
  }
  private void render(RenderGuiEvent.Post e){var mc=Minecraft.getInstance();if(done||mc.player==null)return;if(phase>=names.length){done=true;System.out.println("STABILITY_COMPLETE serverFailures="+serverFailures+" clientFailures="+clientFailures);mc.stop();return;}if(!action||System.nanoTime()-start<(phase==14?1_200_000_000L:Boolean.getBoolean("crysis.stability.edges")&&phase!=19&&phase!=16?80_000_000L:600_000_000L))return;
-  boolean expectedActive=phase==2||phase==5||phase==7||phase==9||phase==12||phase==19;
+  boolean expectedActive=phase==2||phase==5||phase==7||phase==9||phase==12||phase==19||phase==21||phase==22;
   boolean active=NanoVisorState.isVisorActive();if(active!=expectedActive)clientFailures++;
   if(phase==14&&!ClassicNightVisionClient.isActive()||phase==15&&(ClassicNightVisionClient.isActive()||ClassicNightVisionClient.visualIntensity()!=0)||phase==16&&!NanovisionController.isActive()||phase==17&&NanovisionController.isActive())clientFailures++;
   double fov=0;try{var method=net.minecraft.client.renderer.GameRenderer.class.getDeclaredMethod("getFov",net.minecraft.client.Camera.class,float.class,boolean.class);method.setAccessible(true);fov=((Number)method.invoke(mc.gameRenderer,mc.gameRenderer.getMainCamera(),1f,true)).doubleValue();}catch(Exception ex){throw new RuntimeException(ex);}

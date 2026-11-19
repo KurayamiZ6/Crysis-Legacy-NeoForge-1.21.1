@@ -63,8 +63,8 @@ public final class NanoVisorState {
 
    public static boolean canUse(Minecraft minecraft) {
       var profile=io.github.painworks.crysismod.nanosuit.util.NanosuitArmorUtil.getUsableProfile(minecraft.player);
-      if(profile==null || minecraft.screen!=null || minecraft.getOverlay()!=null || !NanoVisorSettings.General.visorEnabled())return false;
-      if(profile==io.github.painworks.crysismod.nanosuit.NanosuitProfile.NANOSUIT_1)return true;
+      if(profile==null || !NanoVisorSettings.General.visorEnabled())return false;
+      if(profile==io.github.painworks.crysismod.nanosuit.NanosuitProfile.NANOSUIT_1)return minecraft.screen==null&&minecraft.getOverlay()==null;
       var data=NanosuitCapabilities.get(minecraft.player);
       return profile.auxiliary().nanoVisorMarking() && !data.isRecoveryLocked() && data.getEnergy()>0;
    }

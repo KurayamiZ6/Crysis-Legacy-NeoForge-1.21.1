@@ -22,13 +22,15 @@ public final class NanosuitClientContext {
       var mc=Minecraft.getInstance();var current=NanosuitArmorUtil.getUsableProfile(mc.player);
       boolean ownerChanged=player.get()!=mc.player || profile!=current;
       boolean worldChanged=level.get()!=mc.level;
-      if(ownerChanged || worldChanged || current==null || mc.screen!=null){
+      if(ownerChanged || worldChanged || current==null || current==NanosuitProfile.NANOSUIT_1&&mc.screen!=null){
          NanoVisorState.invalidate();EnhancedJumpClientState.cancelTransientState();
          if(ownerChanged || worldChanged){
             while(NanoVisorKeyMappings.TOGGLE_NANO_VISOR.consumeClick()){}
             while(NanoVisorKeyMappings.CLASSIC_BINOCULAR_ZOOM.consumeClick()){}
          }
       }
+      // N2's existing visor may stay enabled behind an inventory; charging jump still cannot.
+      if(mc.screen!=null)EnhancedJumpClientState.cancelTransientState();
       if(ownerChanged || current==null){
          ClassicNightVisionClient.cancelVisuals();NanovisionController.reset();NanovisionState.clearClientEffects(mc.player);
          NanosuitPowerFeedback.clearTransientEffects();
