@@ -45,6 +45,11 @@ public final class NanosuitTaczHudOverlay {
 
    @SubscribeEvent
    public static void onPreOverlay(Pre event) {
+      if (io.github.painworks.crysismod.client.minimap.ClassicMinimapRenderer.isClassic()) {
+         if (event.getName().toString().equals("tacz:tac_gun_hud_overlay")
+               && ClassicWeaponHud.canReplace() && ClassicTaczData.read(Minecraft.getInstance().player) != null) event.setCanceled(true);
+         return;
+      }
       ensureInitialized();
       if (taczPresent && NanosuitClientConfig.taczHudOverrideEnabled() && NanosuitClientConfig.taczHideOriginalHud()) {
          Minecraft minecraft = Minecraft.getInstance();
@@ -69,6 +74,7 @@ public final class NanosuitTaczHudOverlay {
    }
 
    private static void renderHotbarOverlay(Post event) {
+      if (io.github.painworks.crysismod.client.minimap.ClassicMinimapRenderer.isClassic()) return;
       if (event.getName().equals(VanillaGuiLayers.HOTBAR)) {
          ensureInitialized();
          if (taczPresent && NanosuitClientConfig.taczHudOverrideEnabled()) {

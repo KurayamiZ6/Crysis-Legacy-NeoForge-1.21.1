@@ -14,7 +14,7 @@ public final class ClassicMapVisualQa {
  private final String[] names={"south-no-goal","west-goal","north-moved","east-cleared","gui3","f1","removed","n2"};
  private volatile int phase,serverPhase=-1,settled;private int timeout;private long start;private boolean action,done;
  private boolean dioCanceled;private int dioFrames;
- public ClassicMapVisualQa(){NeoForge.EVENT_BUS.addListener(this::server);NeoForge.EVENT_BUS.addListener(EventPriority.LOWEST,this::client);NeoForge.EVENT_BUS.addListener(EventPriority.LOWEST,this::render);NeoForge.EVENT_BUS.addListener(EventPriority.LOWEST,true,RenderGuiLayerEvent.Pre.class,e->{if(e.getName().toString().equals("diorama:minimap")){dioCanceled=e.isCanceled();dioFrames++;}});}
+ public ClassicMapVisualQa(){if(Boolean.getBoolean("crysis.map.qa.smoke"))phase=4;NeoForge.EVENT_BUS.addListener(this::server);NeoForge.EVENT_BUS.addListener(EventPriority.LOWEST,this::client);NeoForge.EVENT_BUS.addListener(EventPriority.LOWEST,this::render);NeoForge.EVENT_BUS.addListener(EventPriority.LOWEST,true,RenderGuiLayerEvent.Pre.class,e->{if(e.getName().toString().equals("diorama:minimap")){dioCanceled=e.isCanceled();dioFrames++;}});}
  private void server(ServerTickEvent.Post e){var ps=e.getServer().getPlayerList().getPlayers();if(ps.isEmpty()||phase>=names.length)return;var p=ps.getFirst();
   if(serverPhase!=phase){serverPhase=phase;settled=0;boolean n2=phase==7;
    p.setItemSlot(EquipmentSlot.HEAD,new ItemStack(n2?ModItems.NANOSUIT_2_HELMET.get():ModItems.NANOGEO_NANOSUIT_HELMET.get()));

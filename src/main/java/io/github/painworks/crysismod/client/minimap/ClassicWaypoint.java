@@ -19,6 +19,7 @@ public final class ClassicWaypoint {
    private ClassicWaypoint(){}
    public static void follow(double x,double z){var mc=Minecraft.getInstance();if(mc.level!=null){session=mc.getConnection();followed=new Goal(mc.level.dimension(),x,z);}}
    public static void clear(){followed=null;session=null;}
+   @SubscribeEvent public static void disconnected(net.neoforged.neoforge.client.event.ClientPlayerNetworkEvent.LoggingOut event){clear();}
    public static Goal current(){var mc=Minecraft.getInstance();if(mc.getConnection()!=session){clear();return null;}return followed!=null&&mc.level!=null&&followed.dimension().equals(mc.level.dimension())?followed:null;}
    @SubscribeEvent public static void commands(RegisterClientCommandsEvent event){
       event.getDispatcher().register(Commands.literal("crysiswaypoint")

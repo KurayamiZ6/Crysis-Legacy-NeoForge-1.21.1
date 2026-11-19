@@ -1,0 +1,141 @@
+[
+  {
+    "run": "classic-map-base",
+    "jar_sha256": "29681db7c836f29b956403a941249e9c6caf777353b238ca1d2e3b0ab6b3980e",
+    "completed": true,
+    "observations": [
+      "MAP_CAPTURE south-no-goal pos=(0.5, 110.0, 1.3) yaw=0.0 goal=null classic=true gui=480x270",
+      "MAP_CAPTURE west-goal pos=(0.5, 110.0, 2.2802560476718456) yaw=90.0 goal=Goal[dimension=ResourceKey[minecraft:dimension / minecraft:overworld], x=35.0, z=25.0] classic=true gui=480x270",
+      "MAP_CAPTURE north-moved pos=(20.5, 110.0, 0.5) yaw=180.0 goal=Goal[dimension=ResourceKey[minecraft:dimension / minecraft:overworld], x=35.0, z=25.0] classic=true gui=480x270",
+      "MAP_CAPTURE east-cleared pos=(20.5, 110.0, 0.5) yaw=270.0 goal=null classic=true gui=480x270",
+      "MAP_CAPTURE gui3 pos=(20.5, 110.0, 0.5) yaw=0.0 goal=null classic=true gui=640x360",
+      "MAP_CAPTURE f1 pos=(20.5, 110.0, 0.5) yaw=90.0 goal=null classic=true gui=640x360",
+      "MAP_CAPTURE removed pos=(20.5, 110.0, 0.5) yaw=180.0 goal=null classic=false gui=640x360",
+      "MAP_CAPTURE n2 pos=(20.5, 110.0, 0.5) yaw=270.0 goal=null classic=false gui=640x360",
+      "MAP_QA_COMPLETE"
+    ]
+  },
+  {
+    "run": "classic-map-diorama",
+    "jar_sha256": "d3f9a88eba1d7deac42bd6b8b3499312035051e102a8cb227636007deff2c061",
+    "completed": true,
+    "observations": [
+      "MAP_CAPTURE south-no-goal pos=(0.5, 110.0, 1.3) yaw=0.0 goal=null classic=true gui=480x270 ready=true dioCanceled=true dioFrames=4",
+      "MAP_CAPTURE west-goal pos=(0.5, 110.0, 2.2802560476718456) yaw=90.0 goal=Goal[dimension=ResourceKey[minecraft:dimension / minecraft:overworld], x=35.0, z=25.0] classic=true gui=480x270 ready=true dioCanceled=true dioFrames=255",
+      "MAP_CAPTURE north-moved pos=(20.5, 110.0, 0.5) yaw=180.0 goal=Goal[dimension=ResourceKey[minecraft:dimension / minecraft:overworld], x=35.0, z=25.0] classic=true gui=480x270 ready=true dioCanceled=true dioFrames=639",
+      "MAP_CAPTURE east-cleared pos=(20.5, 110.0, 0.5) yaw=270.0 goal=null classic=true gui=480x270 ready=true dioCanceled=true dioFrames=1108",
+      "MAP_CAPTURE gui3 pos=(20.5, 110.0, 0.5) yaw=0.0 goal=null classic=true gui=640x360 ready=false dioCanceled=false dioFrames=1547",
+      "MAP_CAPTURE f1 pos=(20.5, 110.0, 0.5) yaw=90.0 goal=null classic=true gui=640x360 ready=false dioCanceled=false dioFrames=2018",
+      "MAP_CAPTURE removed pos=(20.5, 110.0, 0.5) yaw=180.0 goal=null classic=false gui=640x360 ready=false dioCanceled=false dioFrames=2482",
+      "MAP_CAPTURE n2 pos=(20.5, 110.0, 0.5) yaw=270.0 goal=null classic=false gui=640x360 ready=false dioCanceled=false dioFrames=2895",
+      "MAP_QA_COMPLETE"
+    ]
+  },
+  {
+    "run": "classic-threat-vanilla",
+    "jar_sha256": "6adb9937d1ccfd370efe256d1a97b50fae50c827f4358220e718b34ab78e3e99",
+    "completed": true,
+    "observations": [
+      "THREAT_CAPTURE calm client=CALM target=none dim=minecraft:overworld goal=Goal[dimension=ResourceKey[minecraft:dimension / minecraft:overworld], x=5.0, z=20.0] ZA=false",
+      "THREAT_CAPTURE near-idle client=CALM target=null dim=minecraft:overworld goal=Goal[dimension=ResourceKey[minecraft:dimension / minecraft:overworld], x=5.0, z=20.0] ZA=false",
+      "THREAT_CAPTURE targeted client=DETECTED target=ServerPlayer['Dev'/13, l='ServerLevel[Cloak Integration Test]', x=0.50, y=150.00, z=0.50] dim=minecraft:overworld goal=Goal[dimension=ResourceKey[minecraft:dimension / minecraft:overworld], x=5.0, z=20.0] ZA=false",
+      "THREAT_CAPTURE cloak client=SEARCHING target=null dim=minecraft:overworld goal=Goal[dimension=ResourceKey[minecraft:dimension / minecraft:overworld], x=5.0, z=20.0] ZA=false",
+      "THREAT_CAPTURE reacquired client=DETECTED target=ServerPlayer['Dev'/13, l='ServerLevel[Cloak Integration Test]', x=0.50, y=150.00, z=0.50] dim=minecraft:overworld goal=Goal[dimension=ResourceKey[minecraft:dimension / minecraft:overworld], x=5.0, z=20.0] ZA=false",
+      "THREAT_CAPTURE lost-orange client=SEARCHING target=null dim=minecraft:overworld goal=Goal[dimension=ResourceKey[minecraft:dimension / minecraft:overworld], x=5.0, z=20.0] ZA=false",
+      "THREAT_CAPTURE lost-yellow client=SEARCHING target=null dim=minecraft:overworld goal=Goal[dimension=ResourceKey[minecraft:dimension / minecraft:overworld], x=5.0, z=20.0] ZA=false",
+      "THREAT_CAPTURE cleared client=CALM target=null dim=minecraft:overworld goal=Goal[dimension=ResourceKey[minecraft:dimension / minecraft:overworld], x=5.0, z=20.0] ZA=false",
+      "THREAT_CAPTURE multiple client=DETECTED target=ServerPlayer['Dev'/13, l='ServerLevel[Cloak Integration Test]', x=0.50, y=150.00, z=0.50] dim=minecraft:overworld goal=Goal[dimension=ResourceKey[minecraft:dimension / minecraft:overworld], x=5.0, z=20.0] ZA=false",
+      "THREAT_CAPTURE dimension client=CALM target=ServerPlayer['Dev'/13, l='ServerLevel[Cloak Integration Test]', x=0.50, y=150.00, z=0.50] dim=minecraft:the_nether goal=null ZA=false",
+      "THREAT_CAPTURE removed client=CALM target=ServerPlayer['Dev'/13, l='ServerLevel[Cloak Integration Test]', x=0.50, y=150.00, z=0.50] dim=minecraft:the_nether goal=null ZA=false",
+      "THREAT_CAPTURE n2 client=CALM target=ServerPlayer['Dev'/13, l='ServerLevel[Cloak Integration Test]', x=0.50, y=150.00, z=0.50] dim=minecraft:the_nether goal=null ZA=false",
+      "THREAT_QA_COMPLETE"
+    ]
+  },
+  {
+    "run": "classic-threat-za",
+    "jar_sha256": "236b24a2e1d21254bdba7f3490ed62c72ee268a2120441b9c484bd54496852f2",
+    "completed": true,
+    "observations": [
+      "THREAT_CAPTURE calm client=CALM target=none dim=minecraft:overworld goal=Goal[dimension=ResourceKey[minecraft:dimension / minecraft:overworld], x=5.0, z=20.0] ZA=true",
+      "THREAT_CAPTURE near-idle client=DETECTED target=ServerPlayer['Dev'/13, l='ServerLevel[Cloak Integration Test]', x=0.50, y=150.00, z=0.50] dim=minecraft:overworld goal=Goal[dimension=ResourceKey[minecraft:dimension / minecraft:overworld], x=5.0, z=20.0] ZA=true",
+      "THREAT_CAPTURE targeted client=DETECTED target=ServerPlayer['Dev'/13, l='ServerLevel[Cloak Integration Test]', x=0.50, y=150.00, z=0.50] dim=minecraft:overworld goal=Goal[dimension=ResourceKey[minecraft:dimension / minecraft:overworld], x=5.0, z=20.0] ZA=true",
+      "THREAT_CAPTURE cloak client=SEARCHING target=null dim=minecraft:overworld goal=Goal[dimension=ResourceKey[minecraft:dimension / minecraft:overworld], x=5.0, z=20.0] ZA=true",
+      "THREAT_CAPTURE reacquired client=DETECTED target=ServerPlayer['Dev'/13, l='ServerLevel[Cloak Integration Test]', x=0.50, y=150.00, z=0.50] dim=minecraft:overworld goal=Goal[dimension=ResourceKey[minecraft:dimension / minecraft:overworld], x=5.0, z=20.0] ZA=true",
+      "THREAT_CAPTURE lost-orange client=SEARCHING target=null dim=minecraft:overworld goal=Goal[dimension=ResourceKey[minecraft:dimension / minecraft:overworld], x=5.0, z=20.0] ZA=true",
+      "THREAT_CAPTURE lost-yellow client=SEARCHING target=null dim=minecraft:overworld goal=Goal[dimension=ResourceKey[minecraft:dimension / minecraft:overworld], x=5.0, z=20.0] ZA=true",
+      "THREAT_CAPTURE cleared client=CALM target=null dim=minecraft:overworld goal=Goal[dimension=ResourceKey[minecraft:dimension / minecraft:overworld], x=5.0, z=20.0] ZA=true",
+      "THREAT_CAPTURE multiple client=DETECTED target=ServerPlayer['Dev'/13, l='ServerLevel[Cloak Integration Test]', x=0.50, y=150.00, z=0.50] dim=minecraft:overworld goal=Goal[dimension=ResourceKey[minecraft:dimension / minecraft:overworld], x=5.0, z=20.0] ZA=true",
+      "THREAT_CAPTURE dimension client=CALM target=ServerPlayer['Dev'/13, l='ServerLevel[Cloak Integration Test]', x=0.50, y=150.00, z=0.50] dim=minecraft:the_nether goal=null ZA=true",
+      "THREAT_CAPTURE removed client=CALM target=ServerPlayer['Dev'/13, l='ServerLevel[Cloak Integration Test]', x=0.50, y=150.00, z=0.50] dim=minecraft:the_nether goal=null ZA=true",
+      "THREAT_CAPTURE n2 client=CALM target=ServerPlayer['Dev'/13, l='ServerLevel[Cloak Integration Test]', x=0.50, y=150.00, z=0.50] dim=minecraft:the_nether goal=null ZA=true",
+      "THREAT_QA_COMPLETE"
+    ]
+  },
+  {
+    "run": "classic-final-tacz",
+    "jar_sha256": "dc39ddb2dfc15faf0a111064f805a5209549a2c4143bdd7d4bc9e38812e13812",
+    "completed": true,
+    "observations": [
+      "FINAL_CAPTURE exploration state=State[loaded=21, reserve=78, unlimited=false, gunId=tacz:glock_17, icon=tacz:textures/gun/hud/glock_17.png] gunCanceled=true heatCanceled=false optic=0.0 goal=null",
+      "FINAL_CAPTURE combat state=State[loaded=12, reserve=78, unlimited=false, gunId=tacz:glock_17, icon=tacz:textures/gun/hud/glock_17.png] gunCanceled=true heatCanceled=false optic=0.0 goal=null",
+      "FINAL_CAPTURE cloak state=State[loaded=21, reserve=78, unlimited=false, gunId=tacz:glock_17, icon=tacz:textures/gun/hud/glock_17.png] gunCanceled=true heatCanceled=false optic=0.0 goal=null",
+      "FINAL_CAPTURE nightvision state=State[loaded=21, reserve=78, unlimited=false, gunId=tacz:glock_17, icon=tacz:textures/gun/hud/glock_17.png] gunCanceled=true heatCanceled=false optic=0.0 goal=null",
+      "FINAL_CAPTURE binoculars state=null gunCanceled=false heatCanceled=false optic=1.0 goal=null",
+      "FINAL_CAPTURE speed state=State[loaded=21, reserve=78, unlimited=false, gunId=tacz:glock_17, icon=tacz:textures/gun/hud/glock_17.png] gunCanceled=true heatCanceled=false optic=0.0 goal=null",
+      "FINAL_CAPTURE waypoint-rifle state=State[loaded=21, reserve=78, unlimited=false, gunId=tacz:m4a1, icon=tacz:textures/gun/hud/m4a1.png] gunCanceled=true heatCanceled=false optic=0.0 goal=Goal[dimension=ResourceKey[minecraft:dimension / minecraft:overworld], x=30.0, z=30.0]",
+      "FINAL_CAPTURE theme-blue state=State[loaded=21, reserve=78, unlimited=false, gunId=tacz:m4a1, icon=tacz:textures/gun/hud/m4a1.png] gunCanceled=true heatCanceled=false optic=0.0 goal=Goal[dimension=ResourceKey[minecraft:dimension / minecraft:overworld], x=30.0, z=30.0]",
+      "FINAL_CAPTURE theme-purple-gui3 state=State[loaded=21, reserve=78, unlimited=false, gunId=tacz:m4a1, icon=tacz:textures/gun/hud/m4a1.png] gunCanceled=true heatCanceled=false optic=0.0 goal=Goal[dimension=ResourceKey[minecraft:dimension / minecraft:overworld], x=30.0, z=30.0]",
+      "FINAL_CAPTURE vanilla-fallback state=null gunCanceled=false heatCanceled=false optic=0.0 goal=Goal[dimension=ResourceKey[minecraft:dimension / minecraft:overworld], x=30.0, z=30.0]",
+      "FINAL_CAPTURE tacz-native state=State[loaded=21, reserve=78, unlimited=false, gunId=tacz:m4a1, icon=tacz:textures/gun/hud/m4a1.png] gunCanceled=false heatCanceled=false optic=0.0 goal=Goal[dimension=ResourceKey[minecraft:dimension / minecraft:overworld], x=30.0, z=30.0]",
+      "FINAL_CAPTURE n2 state=State[loaded=21, reserve=78, unlimited=false, gunId=tacz:m4a1, icon=tacz:textures/gun/hud/m4a1.png] gunCanceled=true heatCanceled=true optic=0.0 goal=Goal[dimension=ResourceKey[minecraft:dimension / minecraft:overworld], x=30.0, z=30.0]",
+      "FINAL_QA_COMPLETE"
+    ]
+  },
+  {
+    "run": "classic-final-contrast",
+    "jar_sha256": "9c04978b63e17655dd07d2c27e891eab0071f72b0dd71839e4d1c7907e32c7a2",
+    "completed": true,
+    "observations": [
+      "FINAL_CAPTURE speed state=State[loaded=21, reserve=78, unlimited=false, gunId=tacz:glock_17, icon=tacz:textures/gun/hud/glock_17.png] gunCanceled=true heatCanceled=false optic=0.0 goal=null",
+      "FINAL_CAPTURE waypoint-rifle state=State[loaded=21, reserve=78, unlimited=false, gunId=tacz:m4a1, icon=tacz:textures/gun/hud/m4a1.png] gunCanceled=true heatCanceled=false optic=0.0 goal=Goal[dimension=ResourceKey[minecraft:dimension / minecraft:overworld], x=30.0, z=30.0]",
+      "FINAL_CAPTURE theme-blue state=State[loaded=21, reserve=78, unlimited=false, gunId=tacz:m4a1, icon=tacz:textures/gun/hud/m4a1.png] gunCanceled=true heatCanceled=false optic=0.0 goal=Goal[dimension=ResourceKey[minecraft:dimension / minecraft:overworld], x=30.0, z=30.0]",
+      "FINAL_CAPTURE theme-purple-gui3 state=State[loaded=21, reserve=78, unlimited=false, gunId=tacz:m4a1, icon=tacz:textures/gun/hud/m4a1.png] gunCanceled=true heatCanceled=false optic=0.0 goal=Goal[dimension=ResourceKey[minecraft:dimension / minecraft:overworld], x=30.0, z=30.0]",
+      "FINAL_QA_COMPLETE"
+    ]
+  },
+  {
+    "run": "classic-final-clean",
+    "jar_sha256": "ec26ed1210d1e0905b02f1743cdac0d7abc297fdadb01ae79f6c08988879a966",
+    "completed": true,
+    "observations": [
+      "FINAL_CAPTURE speed state=State[loaded=21, reserve=78, unlimited=false, gunId=tacz:glock_17, icon=tacz:textures/gun/hud/glock_17.png] gunCanceled=true heatCanceled=false optic=0.0 goal=null",
+      "FINAL_CAPTURE waypoint-rifle state=State[loaded=21, reserve=78, unlimited=false, gunId=tacz:m4a1, icon=tacz:textures/gun/hud/m4a1.png] gunCanceled=true heatCanceled=false optic=0.0 goal=Goal[dimension=ResourceKey[minecraft:dimension / minecraft:overworld], x=30.0, z=30.0]",
+      "FINAL_CAPTURE theme-blue state=State[loaded=21, reserve=78, unlimited=false, gunId=tacz:m4a1, icon=tacz:textures/gun/hud/m4a1.png] gunCanceled=true heatCanceled=false optic=0.0 goal=Goal[dimension=ResourceKey[minecraft:dimension / minecraft:overworld], x=30.0, z=30.0]",
+      "FINAL_CAPTURE theme-purple-gui3 state=State[loaded=21, reserve=78, unlimited=false, gunId=tacz:m4a1, icon=tacz:textures/gun/hud/m4a1.png] gunCanceled=true heatCanceled=false optic=0.0 goal=Goal[dimension=ResourceKey[minecraft:dimension / minecraft:overworld], x=30.0, z=30.0]",
+      "FINAL_QA_COMPLETE"
+    ]
+  },
+  {
+    "run": "classic-final-no-tacz",
+    "jar_sha256": "ec26ed1210d1e0905b02f1743cdac0d7abc297fdadb01ae79f6c08988879a966",
+    "completed": true,
+    "observations": [
+      "MAP_CAPTURE gui3 pos=(20.5, 110.0, 0.5) yaw=0.0 goal=null classic=true gui=640x360 ready=true dioCanceled=false dioFrames=0",
+      "MAP_CAPTURE f1 pos=(20.5, 110.0, 0.5) yaw=90.0 goal=null classic=true gui=640x360 ready=false dioCanceled=false dioFrames=0",
+      "MAP_CAPTURE removed pos=(20.5, 110.0, 0.5) yaw=180.0 goal=null classic=false gui=640x360 ready=false dioCanceled=false dioFrames=0",
+      "MAP_CAPTURE n2 pos=(20.5, 110.0, 0.5) yaw=270.0 goal=null classic=false gui=640x360 ready=false dioCanceled=false dioFrames=0",
+      "MAP_QA_COMPLETE"
+    ]
+  },
+  {
+    "run": "classic-final-fireselector-valid",
+    "jar_sha256": "af3ffd94b1f142fa21811938da33f7b8ded450c793cafc8f7468aed84bf7e4a0",
+    "completed": true,
+    "observations": [
+      "FINAL_CAPTURE waypoint-rifle state=State[loaded=21, reserve=78, unlimited=false, fireMode=AUTO, gunId=tacz:hk_mp5a5, icon=tacz:textures/gun/hud/hk_mp5a5.png] gunCanceled=true heatCanceled=false optic=0.0 goal=null",
+      "FINAL_CAPTURE theme-blue state=State[loaded=21, reserve=78, unlimited=false, fireMode=BURST, gunId=tacz:hk_mp5a5, icon=tacz:textures/gun/hud/hk_mp5a5.png] gunCanceled=true heatCanceled=false optic=0.0 goal=null",
+      "FINAL_CAPTURE theme-purple-gui3 state=State[loaded=21, reserve=78, unlimited=false, fireMode=SEMI, gunId=tacz:hk_mp5a5, icon=tacz:textures/gun/hud/hk_mp5a5.png] gunCanceled=true heatCanceled=false optic=0.0 goal=null",
+      "FINAL_QA_COMPLETE"
+    ]
+  }
+]
