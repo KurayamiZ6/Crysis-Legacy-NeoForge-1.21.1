@@ -12,6 +12,10 @@ public final class NanoMinimapTerrainTexture {
    private NativeImage pixels;
    private int resolution;
    private boolean hasTexture;
+   private boolean classicPalette;
+   private int[] sourcePixels;
+
+   public void setClassicPalette(boolean enabled){if(classicPalette!=enabled){classicPalette=enabled;if(sourcePixels!=null)upload(sourcePixels);}}
 
    public boolean ensureCapacity(int targetResolution) {
       int clampedResolution = Math.max(16, targetResolution);
@@ -34,11 +38,15 @@ public final class NanoMinimapTerrainTexture {
       if (this.pixels != null && this.dynamicTexture != null && argbPixels != null) {
          int side = this.resolution;
          if (argbPixels.length >= side * side) {
+            sourcePixels=argbPixels.clone();
             for (int y = 0; y < side; y++) {
                int row = y * side;
 
                for (int x = 0; x < side; x++) {
-                  this.pixels.setPixelRGBA(x, y, argbToAbgr(argbPixels[row + x]));
+                  int color=argbPixels[row+x];
+                  if(classicPalette){int gray=((color>>16&255)*54+(color>>8&255)*183+(color&255)*19)/256;
+                     color=(color&0xff000000)|((int)(gray*.88)<<16)|((int)(gray*.96)<<8)|(int)(gray*.83);}
+                  this.pixels.setPixelRGBA(x, y, argbToAbgr(color));
                }
             }
 
@@ -61,6 +69,7 @@ public final class NanoMinimapTerrainTexture {
    }
 
    public void close() {
+      sourcePixels=null;
       this.hasTexture = false;
       this.resolution = 0;
       if (this.dynamicTexture != null) {

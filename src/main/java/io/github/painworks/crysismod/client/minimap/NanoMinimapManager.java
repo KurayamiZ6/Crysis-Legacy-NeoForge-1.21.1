@@ -16,6 +16,10 @@ import net.minecraft.util.Mth;
 import net.minecraft.world.level.Level;
 
 public final class NanoMinimapManager {
+   public boolean classicTerrainReady() {
+      return ClassicMinimapRenderer.isClassic() && NanoMinimapVisibility.shouldRender(Minecraft.getInstance())
+         && NanoMinimapClientConfig.terrainEnabled() && terrainTexture.hasTexture() && tileCache.hasValidFrontTexture();
+   }
    private static final int ANCHOR_PADDING = 12;
    private static final double PLAYER_MOVE_FORCE_REBUILD_BLOCKS = 1.0;
    private static final NanoMinimapManager INSTANCE = new NanoMinimapManager();
@@ -169,12 +173,12 @@ public final class NanoMinimapManager {
                NanoMinimapCoordinateMapper tickMapper = new NanoMinimapCoordinateMapper(
                   tickCenterWorldX, tickCenterWorldZ, activeBlocksPerPixel, Math.max(8, tickViewport.width()), Math.max(8, tickViewport.height())
                );
-               this.markerLayer.update(minecraft, player, true, tickMapper, NanoMinimapClientConfig.rotateWithPlayer(), player.getYRot());
+               if(!ClassicMinimapRenderer.isClassic())this.markerLayer.update(minecraft, player, true, tickMapper, NanoMinimapClientConfig.rotateWithPlayer(), player.getYRot());
                if (terrainEnabled) {
                   int rangeBlocks = Math.max(32, NanoMinimapClientConfig.minimapRangeBlocks());
                   int intervalTicks = Math.max(1, NanoMinimapClientConfig.terrainUpdateIntervalTicks());
                   int rowsPerTick = Math.max(1, NanoMinimapClientConfig.terrainRowsPerTick());
-                  boolean loadedChunksOnly = NanoMinimapClientConfig.terrainUseLoadedChunksOnly();
+                  boolean loadedChunksOnly = ClassicMinimapRenderer.isClassic() || NanoMinimapClientConfig.terrainUseLoadedChunksOnly();
                   boolean useRegionCache = NanoMinimapClientConfig.minimapUseRegionCache() && !NanoMinimapClientConfig.debugDisableRegionCache();
                   int tileSize = Math.max(4, NanoMinimapClientConfig.minimapTileSize());
                   int maxCachedRegions = Math.max(1, NanoMinimapClientConfig.minimapMaxCachedRegions());
@@ -185,7 +189,7 @@ public final class NanoMinimapManager {
                   int maxSamplesPerTick = Math.max(256, NanoMinimapClientConfig.minimapMaxSamplesPerTick());
                   int overscanPadding = Math.max(0, NanoMinimapClientConfig.minimapRotationOverscanPadding());
                   NanoMinimapRenderCoverage coverage = NanoMinimapRenderCoverage.of(
-                     tickViewport.width(), tickViewport.height(), NanoMinimapClientConfig.rotateWithPlayer(), overscanPadding
+                     tickViewport.width(), tickViewport.height(), ClassicMinimapRenderer.isClassic() || NanoMinimapClientConfig.rotateWithPlayer(), overscanPadding
                   );
                   int resolution = coverage.coverageSizePixels();
                   int dynamicRangeBlocks = Math.max(16, (int)Math.ceil(resolution * logicalBlocksPerPixel / 2.0));
@@ -349,6 +353,19 @@ public final class NanoMinimapManager {
       if (NanoMinimapVisibility.shouldRender(minecraft)) {
          LocalPlayer player = minecraft.player;
          if (player != null) {
+            boolean classic=ClassicMinimapRenderer.isClassic();
+            this.terrainTexture.setClassicPalette(classic);
+            if(classic){
+               var view=createViewport(screenWidth,screenHeight);
+               double bpp=this.tileCache.hasFrontData()?this.tileCache.activeBlocksPerPixel():logicalBlocksPerPixel();
+               double cx=this.tileCache.hasFrontData()?this.tileCache.centerWorldX():player.getX();
+               double cz=this.tileCache.hasFrontData()?this.tileCache.centerWorldZ():player.getZ();
+               ClassicMinimapRenderer.render(guiGraphics,view,this.terrainTexture.textureId(),
+                  NanoMinimapClientConfig.terrainEnabled()&&this.terrainTexture.hasTexture()&&this.tileCache.hasValidFrontTexture(),
+                  Math.max(16,this.terrainTexture.resolution()),
+                  (cx-Mth.lerp(partialTick,player.xo,player.getX()))/bpp,(cz-Mth.lerp(partialTick,player.zo,player.getZ()))/bpp,player.getYRot(),bpp);
+               return;
+            }
             NanoMinimapViewport viewport = createViewport(screenWidth, screenHeight);
             if (viewport.width() > 0 && viewport.height() > 0) {
                boolean debugPerformance = NanoMinimapClientConfig.debugMinimapPerformance();
@@ -834,12 +851,14 @@ public final class NanoMinimapManager {
    }
 
    private static double logicalBlocksPerPixel() {
+      if(ClassicMinimapRenderer.isClassic())return ClassicMinimapRenderer.blocksPerPixel();
       int baseRangeBlocks = Math.max(16, NanoMinimapClientConfig.minimapRangeBlocks());
       int baseResolution = Math.max(16, NanoMinimapClientConfig.terrainInternalResolution());
       return baseRangeBlocks * 2.0 / baseResolution;
    }
 
    private static NanoMinimapViewport createViewport(int screenWidth, int screenHeight) {
+      if(ClassicMinimapRenderer.isClassic())return ClassicMinimapRenderer.viewport(screenWidth,screenHeight);
       float scale = (float)Mth.clamp(NanoMinimapClientConfig.minimapScale(), 0.25, 4.0);
       int width = Math.max(8, Math.round(NanoMinimapClientConfig.minimapWidth() * scale));
       int height = Math.max(8, Math.round(NanoMinimapClientConfig.minimapHeight() * scale));

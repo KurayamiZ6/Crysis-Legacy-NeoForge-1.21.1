@@ -128,6 +128,12 @@ public final class NanosuitClientConfig {
    private static final ModConfigSpec.ConfigValue<String> CLASSIC_INTERFACE_COLOR = BUILDER
       .comment("Nanosuit 1 interface theme, #RRGGBB. Default preserves the original palette; backgrounds follow a darker shade. Does not change warnings, energy blue or selection amber.")
       .define("hud.classic.color", "#719671", value -> value instanceof String s && s.matches("#[0-9a-fA-F]{6}"));
+   private static final BooleanValue CLASSIC_MINIMAP_ENABLED = BUILDER.comment("Show Crysis N1 minimap. Disable to choose an external minimap; external configs are never changed.")
+      .define("hud.classic.minimapEnabled",true);
+   public static boolean classicMinimapEnabled(){return safeGetBoolean(CLASSIC_MINIMAP_ENABLED,true);}
+    private static final BooleanValue CLASSIC_HIDE_DIORAMA = BUILDER.comment("Temporarily hide only Diorama 0.10.2 minimap layer when the N1 terrain is ready. Waypoints and full map are preserved.")
+       .define("hud.classic.hideDioramaMinimap",true);
+    public static boolean classicHideDiorama(){return safeGetBoolean(CLASSIC_HIDE_DIORAMA,true);}
 
    public static int classicInterfaceColor() {
       try {

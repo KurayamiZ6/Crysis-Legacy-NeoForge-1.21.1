@@ -16,6 +16,9 @@ public final class NanoMinimapVisibility {
          return false;
       } else {
          LocalPlayer player = minecraft.player;
+         if(player!=null&&ClassicMinimapRenderer.isClassic()
+            &&(!io.github.painworks.crysismod.nanosuit.config.NanosuitClientConfig.classicMinimapEnabled()
+               || !io.github.painworks.crysismod.nanosuit.client.NanosuitHudOverlay.isHudEnabled()))return false;
          return player != null && minecraft.level != null ? NanosuitArmorUtil.hasFullSet(player) : false;
       }
    }
