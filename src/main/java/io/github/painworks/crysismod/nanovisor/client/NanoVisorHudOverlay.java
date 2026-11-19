@@ -85,7 +85,7 @@ public final class NanoVisorHudOverlay {
    @SubscribeEvent
    public static void onPreRenderGuiOverlay(Pre event) {
       if (event.getName().equals(VanillaGuiLayers.CROSSHAIR)) {
-         if (NanoVisorState.isVisorActive()) {
+         if (NanoVisorState.isVisorActive() || ClassicBinoculars.running()) {
             event.setCanceled(true);
          }
       }
@@ -111,6 +111,10 @@ public final class NanoVisorHudOverlay {
          GnetumHudCompat.disableCachingForCurrentHudElement();
          Minecraft minecraft = Minecraft.getInstance();
          LocalPlayer player = minecraft.player;
+         if (ClassicBinoculars.isN1Context()) {
+            if(!minecraft.options.hideGui)ClassicBinoculars.render(event.getGuiGraphics(),event.getPartialTick().getGameTimeDeltaPartialTick(false));
+            return;
+         }
          if (player != null && !minecraft.options.hideGui && NanoVisorState.shouldRenderOverlay()) {
             float opacity = (float)Mth.clamp(NanoVisorSettings.Hud.opacity(), 0.0, 1.0);
             if (!(opacity <= 0.0F)) {
@@ -316,6 +320,12 @@ public final class NanoVisorHudOverlay {
 
    private static String formatDistance(double distance) {
       return String.format(Locale.ROOT, "%.1f", distance);
+   }
+
+   static double classicDistance(LocalPlayer player,float partial) {
+      var target=resolveAimTarget(player,player.getEyePosition(partial),player.getViewVector(partial),
+         Mth.clamp(NanoVisorSettings.Hud.maxDistanceToTarget(),1,512),Mth.clamp(NanoVisorSettings.Hud.maxDistanceToBlock(),1,512));
+      return target.entityTarget()!=null?target.entityDistance():target.blockDistance();
    }
 
    private static int resolveEnergyPercent(LocalPlayer player) {

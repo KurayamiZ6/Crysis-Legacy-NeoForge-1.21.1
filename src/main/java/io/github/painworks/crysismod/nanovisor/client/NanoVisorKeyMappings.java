@@ -27,6 +27,7 @@ public final class NanoVisorKeyMappings {
       "key.crysismod.open_nano_visor_settings", Type.KEYSYM, 78, "key.categories.crysismod"
    );
    public static final KeyMapping USE_NANO_VISOR_ZOOM = new KeyMapping("key.crysismod.use_nano_visor_zoom", Type.KEYSYM, 67, "key.categories.crysismod");
+   public static final KeyMapping CLASSIC_BINOCULAR_ZOOM = new KeyMapping("key.crysismod.classic_binocular_zoom", Type.KEYSYM, -1, CATEGORY);
    private static int visorStateHeartbeatTicks = 20;
 
    private NanoVisorKeyMappings() {
@@ -37,6 +38,7 @@ public final class NanoVisorKeyMappings {
       event.register(MARK_NANO_VISOR_TARGET);
       event.register(OPEN_NANO_VISOR_SETTINGS);
       event.register(USE_NANO_VISOR_ZOOM);
+      event.register(CLASSIC_BINOCULAR_ZOOM);
    }
 
    @SubscribeEvent

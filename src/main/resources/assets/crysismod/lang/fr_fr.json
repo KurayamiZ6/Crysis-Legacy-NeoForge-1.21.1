@@ -7,5 +7,6 @@
   "hud.crysismod.nanosuit1.mode.speed": "Vitesse",
   "hud.crysismod.nanosuit1.mode.locked": "Verrouillé",
   "hud.crysismod.nanosuit1.energy_critical": "Énergie critique",
-  "key.crysismod.nanosuit1_radial": "Menu radial Nanosuit 1 (maintenir)"
+  "key.crysismod.nanosuit1_radial": "Menu radial Nanosuit 1 (maintenir)",
+  "key.crysismod.classic_binocular_zoom": "Grossissement des jumelles Nanosuit 1 (ou molette)"
 }

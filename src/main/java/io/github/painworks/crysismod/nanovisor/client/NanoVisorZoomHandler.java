@@ -27,6 +27,7 @@ public final class NanoVisorZoomHandler {
    @SubscribeEvent
    public static void onComputeFovModifier(ComputeFovModifierEvent event) {
       Minecraft minecraft = Minecraft.getInstance();
+      if (ClassicBinoculars.isN1Context()) { currentZoomMultiplier=1; return; }
       if (minecraft.player == null) {
          currentZoomMultiplier = 1.0F;
          zoomInputActive = false;
@@ -44,7 +45,14 @@ public final class NanoVisorZoomHandler {
    }
 
    public static void updateZoomInput(KeyMapping zoomKey) {
+      if (ClassicBinoculars.isN1Context()) {
+         while(zoomKey.consumeClick()){} // Clear our legacy queue without changing TACZ's separate C binding.
+         ClassicBinoculars.updateZoomInput(NanoVisorKeyMappings.CLASSIC_BINOCULAR_ZOOM);
+         zoomInputActive=ClassicBinoculars.zoom()==4;
+         return;
+      }
       boolean holdToUse = NanoVisorSettings.Zoom.holdToUse();
+      while(NanoVisorKeyMappings.CLASSIC_BINOCULAR_ZOOM.consumeClick()){}
       if (lastHoldMode == null || lastHoldMode != holdToUse) {
          while (zoomKey.consumeClick()) {
          }

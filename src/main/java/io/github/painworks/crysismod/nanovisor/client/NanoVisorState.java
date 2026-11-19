@@ -13,6 +13,7 @@ public final class NanoVisorState {
    }
 
    public static boolean updateFromInput(Minecraft minecraft, KeyMapping visorKey) {
+      if (ClassicBinoculars.isN1Context() || ClassicBinoculars.running()) return ClassicBinoculars.updateFromInput(visorKey);
       boolean previous = visorActive;
       if (minecraft.player != null && NanoVisorSettings.General.visorEnabled()
          && !NanosuitCapabilities.get(minecraft.player).isRecoveryLocked()) {
