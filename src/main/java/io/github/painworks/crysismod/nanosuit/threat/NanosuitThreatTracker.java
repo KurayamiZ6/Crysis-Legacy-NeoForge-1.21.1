@@ -1,6 +1,7 @@
 package io.github.painworks.crysismod.nanosuit.threat;
 
 import io.github.painworks.crysismod.nanosuit.handler.NanosuitCloak;
+import io.github.painworks.crysismod.nanosuit.NanosuitProfile;
 import io.github.painworks.crysismod.nanosuit.network.NanosuitNetwork;
 import io.github.painworks.crysismod.nanosuit.network.SyncThreatLevelPacket;
 import io.github.painworks.crysismod.nanosuit.util.NanosuitArmorUtil;
@@ -48,12 +49,14 @@ public final class NanosuitThreatTracker {
       ServerLevel level = player.serverLevel();
       long now = level.getGameTime();
       State state = TRACKED.computeIfAbsent(player, key -> new State());
-      if (state.level != level) {
+      NanosuitProfile profile = NanosuitArmorUtil.getEquippedProfile(player);
+      if (state.level != level || state.profile != profile) {
+         state.profile = profile;
          state.level = level;
          state.lastSent = null;
          state.searchUntil = now;
       }
-      ThreatLevel threat = assess(player, level, now);
+      ThreatLevel threat = profile == NanosuitProfile.NANOSUIT_1 ? assessClassic(player, level) : assess(player, level, now);
       if (threat.ordinal() >= ThreatLevel.SEARCHING.ordinal()) {
          state.searchUntil = now + SEARCH_LINGER;
       } else if (now < state.searchUntil) {
@@ -71,6 +74,24 @@ public final class NanosuitThreatTracker {
       if (event.getEntity() instanceof ServerPlayer player) {
          TRACKED.remove(player);
       }
+   }
+
+   private static ThreatLevel assessClassic(ServerPlayer player, ServerLevel level) {
+      ThreatLevel threat = ThreatLevel.CALM;
+      for (Mob mob : level.getEntitiesOfClass(Mob.class, player.getBoundingBox().inflate(RANGE, 16.0, RANGE))) {
+         if (!mob.isAlive() || mob.isAlliedTo(player) || mob.distanceToSqr(player) > RANGE * RANGE) continue;
+         var brain = mob.getBrain();
+         boolean tracksPlayer = mob.getTarget() == player || brain.isMemoryValue(MemoryModuleType.ATTACK_TARGET, player);
+         if (tracksPlayer) {
+            if (!NanosuitCloak.hidesFrom(mob, player) && mob.hasLineOfSight(player)) return ThreatLevel.DETECTED;
+            threat = ThreatLevel.SEARCHING;
+         } else if (brain.isMemoryValue(MemoryModuleType.ANGRY_AT, player.getUUID())
+               || mob.getLastHurtByMob() == player && mob.tickCount - mob.getLastHurtByMobTimestamp() <= SEARCH_LINGER) {
+            threat = ThreatLevel.SEARCHING;
+         }
+         // A nearby idle enemy or unattributed ZA investigation is not proof of detecting this player.
+      }
+      return threat;
    }
 
    private static ThreatLevel assess(ServerPlayer player, ServerLevel level, long now) {
@@ -108,6 +129,7 @@ public final class NanosuitThreatTracker {
    }
 
    private static final class State {
+      private NanosuitProfile profile;
       private ServerLevel level;
       private ThreatLevel lastSent;
       private long lastSentAt;

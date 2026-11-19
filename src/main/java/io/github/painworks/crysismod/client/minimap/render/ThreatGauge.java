@@ -20,11 +20,13 @@ public final class ThreatGauge {
    private static WeakReference<Level> receivedLevel = new WeakReference<>(null);
    private static ThreatLevel receivedThreat = ThreatLevel.CALM;
    private static int lastUpdateTick;
+   private static io.github.painworks.crysismod.nanosuit.NanosuitProfile receivedProfile;
 
    private ThreatGauge() {
    }
 
    public static void update(Player player, ThreatLevel threat) {
+      receivedProfile=io.github.painworks.crysismod.nanosuit.util.NanosuitArmorUtil.getEquippedProfile(player);
       receiver = new WeakReference<>(player);
       receivedLevel = new WeakReference<>(player.level());
       receivedThreat = threat;
@@ -34,6 +36,10 @@ public final class ThreatGauge {
    public static ThreatLevel current(Player player) {
       return receiver.get() == player && receivedLevel.get() == player.level()
          && player.tickCount - lastUpdateTick <= 60 ? receivedThreat : ThreatLevel.CALM;
+   }
+
+   public static ThreatLevel currentClassic(Player player) {
+      return receivedProfile == io.github.painworks.crysismod.nanosuit.NanosuitProfile.NANOSUIT_1 ? current(player) : ThreatLevel.CALM;
    }
 
    static void render(GuiGraphics graphics, NanoMinimapViewport viewport, Minecraft minecraft) {
