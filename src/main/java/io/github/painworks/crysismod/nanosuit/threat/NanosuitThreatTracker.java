@@ -4,6 +4,7 @@ import io.github.painworks.crysismod.nanosuit.handler.NanosuitCloak;
 import io.github.painworks.crysismod.nanosuit.NanosuitProfile;
 import io.github.painworks.crysismod.nanosuit.network.NanosuitNetwork;
 import io.github.painworks.crysismod.nanosuit.network.SyncThreatLevelPacket;
+import io.github.painworks.crysismod.nanosuit.network.SyncClassicThreatsPacket;
 import io.github.painworks.crysismod.nanosuit.util.NanosuitArmorUtil;
 import java.util.Map;
 import java.util.WeakHashMap;
@@ -55,11 +56,13 @@ public final class NanosuitThreatTracker {
          state.level = level;
          state.lastSent = null;
          state.searchUntil = now;
+         state.contactSearchUntil.clear();
       }
-      ThreatLevel threat = profile == NanosuitProfile.NANOSUIT_1 ? assessClassic(player, level) : assess(player, level, now);
-      if (threat.ordinal() >= ThreatLevel.SEARCHING.ordinal()) {
+      ThreatLevel threat = profile == NanosuitProfile.NANOSUIT_1 ? assessClassic(player, level, state, now) : assess(player, level, now);
+      // N1 already retains evidence per contact; do not add a second aggregate linger afterward.
+      if (profile != NanosuitProfile.NANOSUIT_1 && threat.ordinal() >= ThreatLevel.SEARCHING.ordinal()) {
          state.searchUntil = now + SEARCH_LINGER;
-      } else if (now < state.searchUntil) {
+      } else if (profile != NanosuitProfile.NANOSUIT_1 && now < state.searchUntil) {
          threat = ThreatLevel.SEARCHING;
       }
       if (state.lastSent != threat || now - state.lastSentAt >= RESEND_INTERVAL) {
@@ -76,21 +79,31 @@ public final class NanosuitThreatTracker {
       }
    }
 
-   private static ThreatLevel assessClassic(ServerPlayer player, ServerLevel level) {
+   private static ThreatLevel assessClassic(ServerPlayer player, ServerLevel level, State state, long now) {
       ThreatLevel threat = ThreatLevel.CALM;
-      for (Mob mob : level.getEntitiesOfClass(Mob.class, player.getBoundingBox().inflate(RANGE, 16.0, RANGE))) {
+      var contacts = new java.util.ArrayList<SyncClassicThreatsPacket.Contact>();
+      var mobs = level.getEntitiesOfClass(Mob.class, player.getBoundingBox().inflate(RANGE, 16.0, RANGE));
+      mobs.sort(java.util.Comparator.comparingDouble(player::distanceToSqr));
+      for (Mob mob : mobs) {
          if (!mob.isAlive() || mob.isAlliedTo(player) || mob.distanceToSqr(player) > RANGE * RANGE) continue;
+         ThreatLevel contact = ThreatLevel.CALM;
          var brain = mob.getBrain();
          boolean tracksPlayer = mob.getTarget() == player || brain.isMemoryValue(MemoryModuleType.ATTACK_TARGET, player);
          if (tracksPlayer) {
-            if (!NanosuitCloak.hidesFrom(mob, player) && mob.hasLineOfSight(player)) return ThreatLevel.DETECTED;
-            threat = ThreatLevel.SEARCHING;
+            contact = !NanosuitCloak.hidesFrom(mob, player) && mob.hasLineOfSight(player) ? ThreatLevel.DETECTED : ThreatLevel.SEARCHING;
          } else if (brain.isMemoryValue(MemoryModuleType.ANGRY_AT, player.getUUID())
                || mob.getLastHurtByMob() == player && mob.tickCount - mob.getLastHurtByMobTimestamp() <= SEARCH_LINGER) {
-            threat = ThreatLevel.SEARCHING;
+            contact = ThreatLevel.SEARCHING;
          }
+         if(contact!=ThreatLevel.CALM) state.contactSearchUntil.put(mob.getUUID(),now+SEARCH_LINGER);
+         else if(state.contactSearchUntil.getOrDefault(mob.getUUID(),0L)>now) contact=ThreatLevel.SEARCHING;
+         if(contact.ordinal()>threat.ordinal())threat=contact;
+         if((mob instanceof Enemy || contact!=ThreatLevel.CALM) && contacts.size()<SyncClassicThreatsPacket.MAX_CONTACTS)
+            contacts.add(new SyncClassicThreatsPacket.Contact(mob.getId(),mob.getUUID(),contact));
          // A nearby idle enemy or unattributed ZA investigation is not proof of detecting this player.
       }
+      state.contactSearchUntil.values().removeIf(until->until<=now);
+      NanosuitNetwork.sendToPlayer(player,new SyncClassicThreatsPacket(java.util.List.copyOf(contacts)));
       return threat;
    }
 
@@ -134,5 +147,6 @@ public final class NanosuitThreatTracker {
       private ThreatLevel lastSent;
       private long lastSentAt;
       private long searchUntil;
+      private final Map<java.util.UUID,Long> contactSearchUntil = new java.util.HashMap<>();
    }
 }

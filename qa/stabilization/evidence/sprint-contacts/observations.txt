@@ -1,0 +1,119 @@
+
+## classic-sprint-final
+Input JAR: 478e64a1c54b32031233a34c679887e5be50ba7bf062daf1b00c62cc74020498
+Depth format errors: 0
+CLASSIC_SPRINT phase=0 pass=true prepared=100.0 energy=86.5 sprinting=true boost=true locked=false
+CLASSIC_SPRINT phase=1 pass=true prepared=20.0 energy=6.5 sprinting=true boost=false locked=false
+CLASSIC_SPRINT phase=2 pass=true prepared=19.0 energy=5.5 sprinting=true boost=false locked=false
+CLASSIC_SPRINT_EMPTY_SOUND count=1
+CLASSIC_SPRINT phase=3 pass=true prepared=1.0 energy=0.0 sprinting=true boost=false locked=false
+CLASSIC_SPRINT phase=4 pass=true prepared=1.0 energy=0.0 sprinting=true boost=false locked=false
+CLASSIC_SPRINT_EMPTY_SOUND count=2
+CLASSIC_SPRINT phase=5 pass=true prepared=50.0 energy=36.5 sprinting=true boost=true locked=false
+CLASSIC_SPRINT phase=6 pass=true prepared=25.0 energy=32.200005 sprinting=false boost=false locked=false
+CLASSIC_SPRINT phase=7 pass=true prepared=0.0 energy=7.2 sprinting=false boost=false locked=false
+CLASSIC_SPRINT phase=8 pass=true prepared=50.0 energy=36.5 sprinting=true boost=true locked=false
+CLASSIC_SPRINT phase=9 pass=true prepared=100.0 energy=99.499985 sprinting=true boost=false locked=false
+CLASSIC_SPRINT phase=10 pass=true prepared=100.0 energy=98.666664 sprinting=true boost=true locked=false
+CLASSIC_SPRINT_COMPLETE failures=0 emptySounds=2
+
+## classic-sprint-walk-recharge
+Input JAR: 478e64a1c54b32031233a34c679887e5be50ba7bf062daf1b00c62cc74020498
+Depth format errors: 0
+CLASSIC_SPRINT phase=0 pass=true prepared=100.0 energy=86.5 sprinting=true boost=true locked=false
+CLASSIC_SPRINT phase=1 pass=true prepared=20.0 energy=6.5 sprinting=true boost=false locked=false
+CLASSIC_SPRINT phase=2 pass=true prepared=19.0 energy=5.5 sprinting=true boost=false locked=false
+CLASSIC_SPRINT phase=3 pass=true prepared=1.0 energy=0.0 sprinting=true boost=false locked=false
+CLASSIC_SPRINT_EMPTY_SOUND count=1
+CLASSIC_SPRINT_EMPTY_SOUND count=2
+CLASSIC_SPRINT phase=4 pass=true prepared=1.0 energy=0.0 sprinting=true boost=false locked=false
+CLASSIC_SPRINT phase=5 pass=true prepared=50.0 energy=36.5 sprinting=true boost=true locked=false
+CLASSIC_SPRINT phase=6 pass=true prepared=25.0 energy=32.200005 sprinting=false boost=false locked=false
+CLASSIC_SPRINT phase=7 pass=true prepared=0.0 energy=36.00001 sprinting=false boost=false locked=false
+CLASSIC_SPRINT phase=8 pass=true prepared=50.0 energy=22.500011 sprinting=true boost=true locked=false
+CLASSIC_SPRINT phase=9 pass=true prepared=100.0 energy=99.499985 sprinting=true boost=false locked=false
+CLASSIC_SPRINT phase=10 pass=true prepared=100.0 energy=98.666664 sprinting=true boost=true locked=false
+CLASSIC_SPRINT_COMPLETE failures=0 emptySounds=2
+
+## classic-contacts-visual
+Input JAR: 7781009d51f2e2ccd9614fc0da3f8d5559b88b8e5497957169dcfed193aa9e81
+Depth format errors: 0
+CLASSIC_CONTACTS phase=0 pass=true contacts=[entity.minecraft.husk=83c66d/outline=false, entity.minecraft.skeleton=83c66d/outline=false, entity.minecraft.zombie=83c66d/outline=false] optic=false
+CLASSIC_CONTACTS phase=1 pass=true contacts=[entity.minecraft.husk=e8d653/outline=true, entity.minecraft.skeleton=ed3029/outline=true, entity.minecraft.zombie=83c66d/outline=true] optic=true
+CLASSIC_CONTACTS phase=2 pass=true contacts=[entity.minecraft.husk=e8d653/outline=true, entity.minecraft.skeleton=ed3029/outline=true, entity.minecraft.zombie=83c66d/outline=true] optic=true
+CLASSIC_CONTACTS phase=3 pass=true contacts=[entity.minecraft.husk=e8d653/outline=true, entity.minecraft.skeleton=e8d653/outline=false, entity.minecraft.zombie=83c66d/outline=true] optic=true
+CLASSIC_CONTACTS phase=4 pass=true contacts=[] optic=false
+CLASSIC_CONTACTS_COMPLETE failures=0
+
+## classic-contacts-complementary
+Input JAR: 478e64a1c54b32031233a34c679887e5be50ba7bf062daf1b00c62cc74020498
+Depth format errors: 37
+CLASSIC_CONTACTS phase=0 pass=true contacts=[entity.minecraft.husk=83c66d/outline=false, entity.minecraft.skeleton=83c66d/outline=false, entity.minecraft.zombie=83c66d/outline=false] optic=false
+CLASSIC_CONTACTS phase=1 pass=true contacts=[entity.minecraft.husk=e8d653/outline=true, entity.minecraft.skeleton=ed3029/outline=true, entity.minecraft.zombie=83c66d/outline=true] optic=true
+CLASSIC_CONTACTS phase=2 pass=true contacts=[entity.minecraft.husk=e8d653/outline=false, entity.minecraft.skeleton=ed3029/outline=false, entity.minecraft.zombie=83c66d/outline=false] optic=true
+CLASSIC_CONTACTS phase=3 pass=true contacts=[entity.minecraft.husk=e8d653/outline=true, entity.minecraft.skeleton=e8d653/outline=false, entity.minecraft.zombie=83c66d/outline=true] optic=true
+CLASSIC_CONTACTS phase=4 pass=true contacts=[] optic=false
+CLASSIC_CONTACTS phase=5 pass=true contacts=[] optic=false
+CLASSIC_CONTACTS_COMPLETE failures=0
+
+## classic-contacts-natural-za
+Input JAR: 478e64a1c54b32031233a34c679887e5be50ba7bf062daf1b00c62cc74020498
+Depth format errors: 0
+ZA_SERVER hidden-wall pass=true targets=0 invisible=false mode=ARMOR energy=100.0 health=20.0 distances=[16.0] navigating=[false] ZA=true
+ZA_CLIENT hidden-wall threat=CALM targets=0
+ZA_SERVER pursuit pass=true targets=1 invisible=false mode=ARMOR energy=100.0 health=20.0 distances=[15.1] navigating=[true] ZA=true
+ZA_CLIENT pursuit threat=CALM targets=1
+ZA_SERVER n1-cloak pass=true targets=0 invisible=true mode=CLOAK energy=99.52497 health=20.0 distances=[12.0] navigating=[true] ZA=true
+ZA_CLIENT n1-cloak threat=DETECTED targets=0
+ZA_SERVER n1-search-observation pass=false targets=1 invisible=true mode=CLOAK energy=97.02482 health=20.0 distances=[1.4] navigating=[false] ZA=true
+ZA_CLIENT n1-search-observation threat=CALM targets=1
+ZA_SERVER n1-revealed pass=true targets=1 invisible=false mode=ARMOR energy=93.99982 health=20.0 distances=[1.0] navigating=[false] ZA=true
+ZA_CLIENT n1-revealed threat=DETECTED targets=1
+ZA_SERVER multiple pass=true targets=3 invisible=false mode=ARMOR energy=90.99982 health=20.0 distances=[1.1, 14.0, 14.1] navigating=[false, true, true] ZA=true
+ZA_CLIENT multiple threat=DETECTED targets=3
+ZA_SERVER n1-cloak-retreat pass=true targets=0 invisible=true mode=CLOAK energy=84.224815 health=20.0 distances=[9.8, 22.3, 23.0] navigating=[false, false, true] ZA=true
+ZA_CLIENT n1-cloak-retreat threat=SEARCHING targets=0
+ZA_SERVER n1-removed pass=true targets=3 invisible=false mode=NONE energy=94.99979 health=20.0 distances=[6.1, 20.8, 20.0] navigating=[true, true, true] ZA=true
+ZA_CLIENT n1-removed threat=CALM targets=3
+ZA_SERVER n2-cloak-retreat pass=true targets=0 invisible=true mode=CLOAK energy=98.0625 health=20.0 distances=[15.5, 30.0, 28.5] navigating=[false, false, true] ZA=true
+ZA_CLIENT n2-cloak-retreat threat=CALM targets=0
+ZA_SERVER n2-search-observation pass=true targets=0 invisible=true mode=CLOAK energy=91.8125 health=20.0 distances=[10.3, 30.0, 20.8] navigating=[true, false, false] ZA=true
+ZA_CLIENT n2-search-observation threat=SEARCHING targets=0
+ZA_SERVER n2-revealed pass=true targets=3 invisible=false mode=ARMOR energy=89.3125 health=20.0 distances=[5.7, 26.3, 19.3] navigating=[true, true, true] ZA=true
+ZA_CLIENT n2-revealed threat=DETECTED targets=3
+ZA_SERVER n2-recloak pass=true targets=0 invisible=true mode=CLOAK energy=87.3125 health=20.0 distances=[15.1, 36.6, 28.6] navigating=[false, true, false] ZA=true
+ZA_CLIENT n2-recloak threat=SEARCHING targets=0
+ZA_SERVER n2-removed pass=true targets=2 invisible=false mode=NONE energy=98.04997 health=20.0 distances=[13.4, 41.1, 27.0] navigating=[true, true, true] ZA=true
+ZA_CLIENT n2-removed threat=CALM targets=2
+ZA_COMPLETE failures=1
+
+## classic-contacts-natural-valid
+Input JAR: 478e64a1c54b32031233a34c679887e5be50ba7bf062daf1b00c62cc74020498
+Depth format errors: 0
+ZA_SERVER hidden-wall pass=true targets=0 hiddenLeaks=0 invisible=false mode=ARMOR energy=100.0 health=20.0 distances=[16.0] navigating=[false] ZA=true
+ZA_CLIENT hidden-wall threat=CALM targets=0
+ZA_SERVER pursuit pass=true targets=1 hiddenLeaks=0 invisible=false mode=ARMOR energy=100.0 health=20.0 distances=[16.0] navigating=[false] ZA=true
+ZA_CLIENT pursuit threat=CALM targets=1
+ZA_SERVER n1-cloak pass=true targets=0 hiddenLeaks=0 invisible=true mode=CLOAK energy=99.52497 health=20.0 distances=[14.5] navigating=[true] ZA=true
+ZA_CLIENT n1-cloak threat=CALM targets=0
+ZA_SERVER n1-search-observation pass=true targets=0 hiddenLeaks=0 invisible=true mode=CLOAK energy=96.99982 health=20.0 distances=[3.0] navigating=[true] ZA=true
+ZA_CLIENT n1-search-observation threat=CALM targets=0
+ZA_SERVER n1-revealed pass=true targets=1 hiddenLeaks=0 invisible=false mode=ARMOR energy=95.474815 health=20.0 distances=[1.0] navigating=[false] ZA=true
+ZA_CLIENT n1-revealed threat=DETECTED targets=1
+ZA_SERVER multiple pass=true targets=3 hiddenLeaks=0 invisible=false mode=ARMOR energy=92.474815 health=20.0 distances=[0.7, 13.9, 12.8] navigating=[false, true, true] ZA=true
+ZA_CLIENT multiple threat=DETECTED targets=3
+ZA_SERVER n1-cloak-retreat pass=true targets=0 hiddenLeaks=0 invisible=true mode=CLOAK energy=85.349815 health=20.0 distances=[9.6, 22.3, 21.1] navigating=[false, false, false] ZA=true
+ZA_CLIENT n1-cloak-retreat threat=SEARCHING targets=0
+ZA_SERVER n1-removed pass=true targets=3 hiddenLeaks=0 invisible=false mode=NONE energy=95.77479 health=20.0 distances=[9.6, 20.8, 19.6] navigating=[false, true, true] ZA=true
+ZA_CLIENT n1-removed threat=CALM targets=3
+ZA_SERVER n2-cloak-retreat pass=true targets=0 hiddenLeaks=0 invisible=true mode=CLOAK energy=98.0625 health=20.0 distances=[19.2, 30.0, 28.8] navigating=[false, false, false] ZA=true
+ZA_CLIENT n2-cloak-retreat threat=CALM targets=0
+ZA_SERVER n2-search-observation pass=true targets=0 hiddenLeaks=0 invisible=true mode=CLOAK energy=91.8125 health=20.0 distances=[22.7, 30.0, 28.8] navigating=[false, false, false] ZA=true
+ZA_CLIENT n2-search-observation threat=CALM targets=0
+ZA_SERVER n2-revealed pass=true targets=3 hiddenLeaks=0 invisible=false mode=ARMOR energy=89.3125 health=20.0 distances=[18.7, 26.3, 27.2] navigating=[true, true, true] ZA=true
+ZA_CLIENT n2-revealed threat=DETECTED targets=3
+ZA_SERVER n2-recloak pass=true targets=0 hiddenLeaks=0 invisible=true mode=CLOAK energy=87.3125 health=20.0 distances=[27.9, 35.9, 36.9] navigating=[false, false, false] ZA=true
+ZA_CLIENT n2-recloak threat=SEARCHING targets=0
+ZA_SERVER n2-removed pass=true targets=1 hiddenLeaks=0 invisible=false mode=NONE energy=98.04997 health=20.0 distances=[24.1, 35.9, 36.9] navigating=[true, false, false] ZA=true
+ZA_CLIENT n2-removed threat=CALM targets=1
+ZA_COMPLETE failures=0

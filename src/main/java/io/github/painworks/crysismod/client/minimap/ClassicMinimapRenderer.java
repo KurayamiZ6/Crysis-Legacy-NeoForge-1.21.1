@@ -49,6 +49,7 @@ public final class ClassicMinimapRenderer {
       // Player looks up in this rotating map. The pale wedge and chevron are not a goal.
       RenderSystem.enableBlend();RenderSystem.defaultBlendFunc();RenderSystem.disableDepthTest();
       g.setColor(1,1,1,1);g.blit(PLAYER,92,35,48,65,0,0,96,130,96,130);
+      renderContacts(g,yaw,activeBpp*s);
       var goal=ClassicWaypoint.current();
       if(goal!=null){
          double dx=goal.x()-Minecraft.getInstance().player.getX(),dz=goal.z()-Minecraft.getInstance().player.getZ();
@@ -59,6 +60,26 @@ public final class ClassicMinimapRenderer {
       g.pose().popPose();g.setColor(1,1,1,1);RenderSystem.disableBlend();
    }
    private static double cosFor(float yaw){return Math.cos(Math.toRadians(180-yaw));}
+   private static void renderContacts(GuiGraphics g,float yaw,double blocksPerPixel){
+      var p=Minecraft.getInstance().player;
+      for(var entity:io.github.painworks.crysismod.nanosuit.client.ClassicEnemyContacts.entities()){
+         double dx=entity.getX()-p.getX(),dz=entity.getZ()-p.getZ();
+         float x=(float)(116+(dx*cosFor(yaw)-dz*sinFor(yaw))/blocksPerPixel);
+         float y=(float)(81.5+(dx*sinFor(yaw)+dz*cosFor(yaw))/blocksPerPixel);
+         if(y<18 || y>155 || x<left(y)+6 || x>right(y)-6)continue;
+         int rgb=io.github.painworks.crysismod.nanosuit.client.ClassicEnemyContacts.color(entity);
+         g.flush();g.pose().pushPose();g.pose().translate(x,y,0);
+         g.pose().mulPose(com.mojang.math.Axis.ZP.rotationDegrees(entity.getYRot()-yaw));
+         RenderSystem.setShader(GameRenderer::getPositionColorShader);
+         var b=Tesselator.getInstance().begin(VertexFormat.Mode.TRIANGLES,DefaultVertexFormat.POSITION_COLOR);
+         contactVertex(b,g,0,-5,rgb);contactVertex(b,g,-4,3,rgb);contactVertex(b,g,0,1,rgb);
+         contactVertex(b,g,0,-5,rgb);contactVertex(b,g,0,1,rgb);contactVertex(b,g,4,3,rgb);
+         BufferUploader.drawWithShader(b.buildOrThrow());g.pose().popPose();
+      }
+   }
+   private static void contactVertex(BufferBuilder b,GuiGraphics g,float x,float y,int rgb){
+      b.addVertex(g.pose().last().pose(),x,y,0).setColor(0xff000000|rgb);
+   }
    private static double sinFor(float yaw){return Math.sin(Math.toRadians(180-yaw));}
    private static double left(double y){return y<13?232*(1-y/13):0;}
    private static double right(double y){return y>155?(163-y)*207/8:y>133?232-(y-133)*25/22:232;}

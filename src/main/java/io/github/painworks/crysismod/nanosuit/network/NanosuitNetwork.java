@@ -14,8 +14,8 @@ import net.neoforged.neoforge.network.event.RegisterPayloadHandlersEvent;
 import net.neoforged.neoforge.network.registration.PayloadRegistrar;
 
 public final class NanosuitNetwork {
-   // Protocol 6 adds the standalone classic night vision control and battery.
-   private static final String PROTOCOL_VERSION = "6";
+   // Protocol 7 adds observer-specific classic enemy contacts (6 introduced the night vision battery).
+   private static final String PROTOCOL_VERSION = "7";
 
    private NanosuitNetwork() {
    }
@@ -31,6 +31,7 @@ public final class NanosuitNetwork {
       registrar.playToClient(SyncNanosuitDataPacket.TYPE, SyncNanosuitDataPacket.STREAM_CODEC, SyncNanosuitDataPacket::handle);
       registrar.playToClient(SyncSuitEnergySoundPacket.TYPE, SyncSuitEnergySoundPacket.STREAM_CODEC, SyncSuitEnergySoundPacket::handle);
       registrar.playToClient(SyncThreatLevelPacket.TYPE, SyncThreatLevelPacket.STREAM_CODEC, SyncThreatLevelPacket::handle);
+      registrar.playToClient(SyncClassicThreatsPacket.TYPE, SyncClassicThreatsPacket.STREAM_CODEC, SyncClassicThreatsPacket::handle);
       registrar.playToClient(SyncPowerFeedbackPacket.TYPE, SyncPowerFeedbackPacket.STREAM_CODEC, SyncPowerFeedbackPacket::handle);
       registrar.playToServer(RequestSprintBoostPacket.TYPE, RequestSprintBoostPacket.STREAM_CODEC, RequestSprintBoostPacket::handle);
       registrar.playToServer(RequestEnhancedJumpPacket.TYPE, RequestEnhancedJumpPacket.STREAM_CODEC, RequestEnhancedJumpPacket::handle);

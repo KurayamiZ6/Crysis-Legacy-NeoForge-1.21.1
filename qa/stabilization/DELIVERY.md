@@ -1,5 +1,7 @@
 # Livraison de stabilisation — 19 novembre 2026
 
+Nouvelle livraison du 20 novembre : [sprint N1, contacts ennemis et contours des jumelles](SPRINT-CONTACTS.md). JAR courant : build/deliverables/crysis-legacy-n1-sprint-contacts.jar. Les livraisons ci-dessous sont conservées comme historique.
+
 Mise à jour : déplacement du Threat Indicator annulé à la demande de l'utilisateur. La colonne retrouve exactement sa position antérieure ; aucune autre correction n'est annulée. Nouveau JAR : build/deliverables/crysis-legacy-n1-stabilized-threat-restored.jar, avec son fichier .sha256. Les empreintes et captures ci-dessous décrivent la livraison précédente.
 
 Branche : feature/nanosuit-1-classic. Base : e769ad6. Aucune fusion dans main, aucune installation dans un profil personnel.
