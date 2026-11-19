@@ -1,0 +1,212 @@
+
+### night-light-vanilla
+input JAR SHA256: 130a1dc2a8154001a4fe1b3c61a2046305e1ee914068dee73ae6e2ab10183787
+depth format errors: 0
+NIGHT_LIGHT dark intensity=0.0 potion=false iris=false uniform=-1.0 thermal=false blockLight=0 sky=0 fresh=[vanilla, mod_resources]
+NIGHT_LIGHT entry intensity=0.8313136 potion=false iris=false uniform=-1.0 thermal=false blockLight=0 sky=0 fresh=[vanilla, mod_resources]
+NIGHT_LIGHT lit intensity=1.0 potion=false iris=false uniform=-1.0 thermal=false blockLight=0 sky=0 fresh=[vanilla, mod_resources]
+NIGHT_LIGHT milk-active intensity=1.0 potion=false iris=false uniform=-1.0 thermal=false blockLight=0 sky=0 fresh=[vanilla, mod_resources]
+NIGHT_LIGHT real-potion intensity=1.0 potion=true iris=false uniform=-1.0 thermal=false blockLight=0 sky=0 fresh=[vanilla, mod_resources]
+NIGHT_LIGHT off-with-potion intensity=0.0 potion=true iris=false uniform=-1.0 thermal=false blockLight=0 sky=0 fresh=[vanilla, mod_resources]
+NIGHT_LIGHT milk-off intensity=0.0 potion=false iris=false uniform=-1.0 thermal=false blockLight=0 sky=0 fresh=[vanilla, mod_resources]
+NIGHT_LIGHT entry-again intensity=0.8587854 potion=false iris=false uniform=-1.0 thermal=false blockLight=0 sky=0 fresh=[vanilla, mod_resources]
+NIGHT_LIGHT removed intensity=0.0 potion=false iris=false uniform=-1.0 thermal=false blockLight=0 sky=0 fresh=[vanilla, mod_resources]
+NIGHT_LIGHT n2-control intensity=0.0 potion=false iris=false uniform=-1.0 thermal=false blockLight=0 sky=0 fresh=[vanilla, mod_resources]
+NIGHT_LIGHT n2-thermal intensity=0.0 potion=true iris=false uniform=-1.0 thermal=true blockLight=0 sky=0 fresh=[vanilla, mod_resources]
+NIGHT_LIGHT n2-removed intensity=0.0 potion=false iris=false uniform=-1.0 thermal=false blockLight=0 sky=0 fresh=[vanilla, mod_resources]
+NIGHT_LIGHT n1-armor intensity=0.0 potion=false iris=false uniform=-1.0 thermal=false blockLight=0 sky=0 fresh=[vanilla, mod_resources]
+NIGHT_LIGHT n1-strength intensity=0.0 potion=false iris=false uniform=-1.0 thermal=false blockLight=0 sky=0 fresh=[vanilla, mod_resources]
+NIGHT_LIGHT n1-speed intensity=0.0 potion=false iris=false uniform=-1.0 thermal=false blockLight=0 sky=0 fresh=[vanilla, mod_resources]
+NIGHT_LIGHT n1-cloak intensity=0.0 potion=false iris=false uniform=-1.0 thermal=false blockLight=0 sky=0 fresh=[vanilla, mod_resources]
+NIGHT_LIGHT n2-armor intensity=0.0 potion=false iris=false uniform=-1.0 thermal=false blockLight=0 sky=0 fresh=[vanilla, mod_resources]
+NIGHT_LIGHT n2-cloak intensity=0.0 potion=false iris=false uniform=-1.0 thermal=false blockLight=0 sky=0 fresh=[vanilla, mod_resources]
+NIGHT_LIGHT_COMPLETE failures=0
+
+### night-light-complementary
+input JAR SHA256: 130a1dc2a8154001a4fe1b3c61a2046305e1ee914068dee73ae6e2ab10183787
+depth format errors: 491
+NIGHT_LIGHT dark intensity=0.0 potion=false iris=true uniform=0.0 thermal=false blockLight=0 sky=0 fresh=[vanilla, mod_resources]
+NIGHT_LIGHT entry intensity=0.2684849 potion=false iris=true uniform=0.2686127 thermal=false blockLight=0 sky=0 fresh=[vanilla, mod_resources]
+NIGHT_LIGHT lit intensity=1.0 potion=false iris=true uniform=1.0 thermal=false blockLight=0 sky=0 fresh=[vanilla, mod_resources]
+NIGHT_LIGHT milk-active intensity=1.0 potion=false iris=true uniform=1.0 thermal=false blockLight=0 sky=0 fresh=[vanilla, mod_resources]
+NIGHT_LIGHT real-potion intensity=1.0 potion=true iris=true uniform=1.0 thermal=false blockLight=0 sky=0 fresh=[vanilla, mod_resources]
+NIGHT_LIGHT off-with-potion intensity=0.0 potion=true iris=true uniform=1.0 thermal=false blockLight=0 sky=0 fresh=[vanilla, mod_resources]
+NIGHT_LIGHT milk-off intensity=0.0 potion=false iris=true uniform=0.0 thermal=false blockLight=0 sky=0 fresh=[vanilla, mod_resources]
+NIGHT_LIGHT entry-again intensity=0.87183785 potion=false iris=true uniform=0.8718863 thermal=false blockLight=0 sky=0 fresh=[vanilla, mod_resources]
+NIGHT_LIGHT removed intensity=0.0 potion=false iris=true uniform=0.0 thermal=false blockLight=0 sky=0 fresh=[vanilla, mod_resources]
+NIGHT_LIGHT n2-control intensity=0.0 potion=false iris=true uniform=0.0 thermal=false blockLight=0 sky=0 fresh=[vanilla, mod_resources]
+NIGHT_LIGHT n2-thermal intensity=0.0 potion=true iris=true uniform=1.0 thermal=true blockLight=0 sky=0 fresh=[vanilla, mod_resources]
+NIGHT_LIGHT n2-removed intensity=0.0 potion=false iris=true uniform=0.0 thermal=false blockLight=0 sky=0 fresh=[vanilla, mod_resources]
+NIGHT_LIGHT n1-armor intensity=0.0 potion=false iris=true uniform=0.0 thermal=false blockLight=0 sky=0 fresh=[vanilla, mod_resources]
+NIGHT_LIGHT n1-strength intensity=0.0 potion=false iris=true uniform=0.0 thermal=false blockLight=0 sky=0 fresh=[vanilla, mod_resources]
+NIGHT_LIGHT n1-speed intensity=0.0 potion=false iris=true uniform=0.0 thermal=false blockLight=0 sky=0 fresh=[vanilla, mod_resources]
+NIGHT_LIGHT n1-cloak intensity=0.0 potion=false iris=true uniform=0.0 thermal=false blockLight=0 sky=0 fresh=[vanilla, mod_resources]
+NIGHT_LIGHT n2-armor intensity=0.0 potion=false iris=true uniform=0.0 thermal=false blockLight=0 sky=0 fresh=[vanilla, mod_resources]
+NIGHT_LIGHT n2-cloak intensity=0.0 potion=false iris=true uniform=0.0 thermal=false blockLight=0 sky=0 fresh=[vanilla, mod_resources]
+NIGHT_LIGHT_COMPLETE failures=0
+
+### night-light-fresh
+input JAR SHA256: 130a1dc2a8154001a4fe1b3c61a2046305e1ee914068dee73ae6e2ab10183787
+depth format errors: 0
+NIGHT_LIGHT dark intensity=0.0 potion=false iris=false uniform=-1.0 thermal=false blockLight=0 sky=0 fresh=[vanilla, mod_resources, file/FreshAnimations_v1.11.2_1.20+.zip]
+NIGHT_LIGHT entry intensity=0.876723 potion=false iris=false uniform=-1.0 thermal=false blockLight=0 sky=0 fresh=[vanilla, mod_resources, file/FreshAnimations_v1.11.2_1.20+.zip]
+NIGHT_LIGHT lit intensity=1.0 potion=false iris=false uniform=-1.0 thermal=false blockLight=0 sky=0 fresh=[vanilla, mod_resources, file/FreshAnimations_v1.11.2_1.20+.zip]
+NIGHT_LIGHT n2-control intensity=0.0 potion=false iris=false uniform=-1.0 thermal=false blockLight=0 sky=0 fresh=[vanilla, mod_resources, file/FreshAnimations_v1.11.2_1.20+.zip]
+NIGHT_LIGHT n2-thermal intensity=0.0 potion=true iris=false uniform=-1.0 thermal=true blockLight=0 sky=0 fresh=[vanilla, mod_resources, file/FreshAnimations_v1.11.2_1.20+.zip]
+NIGHT_LIGHT_COMPLETE failures=0
+
+### stability-combined-final
+input JAR SHA256: 41f6ffae54cfebaf3b2d31b8abc9312bb325ca309c453dbd76f4f2e9633ef0b8
+depth format errors: 933
+NIGHT_LIGHT dark intensity=0.0 potion=false iris=true uniform=0.0 thermal=false blockLight=0 sky=0 fresh=[tacz_resources, vanilla, mod_resources, file/FreshAnimations_v1.11.2_1.20+.zip]
+NIGHT_LIGHT entry intensity=0.25134137 potion=false iris=true uniform=0.25142223 thermal=false blockLight=0 sky=0 fresh=[tacz_resources, vanilla, mod_resources, file/FreshAnimations_v1.11.2_1.20+.zip]
+NIGHT_LIGHT_EMF {entity.minecraft.cow=true, entity.minecraft.skeleton=true, entity.minecraft.zombie=true}
+NIGHT_LIGHT lit intensity=1.0 potion=false iris=true uniform=1.0 thermal=false blockLight=0 sky=0 fresh=[tacz_resources, vanilla, mod_resources, file/FreshAnimations_v1.11.2_1.20+.zip]
+NIGHT_LIGHT milk-active intensity=1.0 potion=false iris=true uniform=1.0 thermal=false blockLight=0 sky=0 fresh=[tacz_resources, vanilla, mod_resources, file/FreshAnimations_v1.11.2_1.20+.zip]
+NIGHT_LIGHT real-potion intensity=1.0 potion=true iris=true uniform=1.0 thermal=false blockLight=0 sky=0 fresh=[tacz_resources, vanilla, mod_resources, file/FreshAnimations_v1.11.2_1.20+.zip]
+NIGHT_LIGHT off-with-potion intensity=0.0 potion=true iris=true uniform=1.0 thermal=false blockLight=0 sky=0 fresh=[tacz_resources, vanilla, mod_resources, file/FreshAnimations_v1.11.2_1.20+.zip]
+NIGHT_LIGHT milk-off intensity=0.0 potion=false iris=true uniform=0.0 thermal=false blockLight=0 sky=0 fresh=[tacz_resources, vanilla, mod_resources, file/FreshAnimations_v1.11.2_1.20+.zip]
+NIGHT_LIGHT entry-again intensity=0.84341437 potion=false iris=true uniform=0.84349227 thermal=false blockLight=0 sky=0 fresh=[tacz_resources, vanilla, mod_resources, file/FreshAnimations_v1.11.2_1.20+.zip]
+NIGHT_LIGHT removed intensity=0.0 potion=false iris=true uniform=0.0 thermal=false blockLight=0 sky=0 fresh=[tacz_resources, vanilla, mod_resources, file/FreshAnimations_v1.11.2_1.20+.zip]
+NIGHT_LIGHT n2-control intensity=0.0 potion=false iris=true uniform=0.0 thermal=false blockLight=0 sky=0 fresh=[tacz_resources, vanilla, mod_resources, file/FreshAnimations_v1.11.2_1.20+.zip]
+NIGHT_LIGHT_EMF {entity.minecraft.cow=true, entity.minecraft.skeleton=true, entity.minecraft.zombie=true}
+NIGHT_LIGHT n2-thermal intensity=0.0 potion=true iris=true uniform=1.0 thermal=true blockLight=0 sky=0 fresh=[tacz_resources, vanilla, mod_resources, file/FreshAnimations_v1.11.2_1.20+.zip]
+NIGHT_LIGHT n2-removed intensity=0.0 potion=false iris=true uniform=0.0 thermal=false blockLight=0 sky=0 fresh=[tacz_resources, vanilla, mod_resources, file/FreshAnimations_v1.11.2_1.20+.zip]
+NIGHT_LIGHT n1-armor intensity=0.0 potion=false iris=true uniform=0.0 thermal=false blockLight=0 sky=0 fresh=[tacz_resources, vanilla, mod_resources, file/FreshAnimations_v1.11.2_1.20+.zip]
+NIGHT_LIGHT n1-strength intensity=0.0 potion=false iris=true uniform=0.0 thermal=false blockLight=0 sky=0 fresh=[tacz_resources, vanilla, mod_resources, file/FreshAnimations_v1.11.2_1.20+.zip]
+NIGHT_LIGHT n1-speed intensity=0.0 potion=false iris=true uniform=0.0 thermal=false blockLight=0 sky=0 fresh=[tacz_resources, vanilla, mod_resources, file/FreshAnimations_v1.11.2_1.20+.zip]
+NIGHT_LIGHT n1-cloak intensity=0.0 potion=false iris=true uniform=0.0 thermal=false blockLight=0 sky=0 fresh=[tacz_resources, vanilla, mod_resources, file/FreshAnimations_v1.11.2_1.20+.zip]
+NIGHT_LIGHT n2-armor intensity=0.0 potion=false iris=true uniform=0.0 thermal=false blockLight=0 sky=0 fresh=[tacz_resources, vanilla, mod_resources, file/FreshAnimations_v1.11.2_1.20+.zip]
+NIGHT_LIGHT n2-cloak intensity=0.0 potion=false iris=true uniform=0.0 thermal=false blockLight=0 sky=0 fresh=[tacz_resources, vanilla, mod_resources, file/FreshAnimations_v1.11.2_1.20+.zip]
+NIGHT_LIGHT tacz-binoculars intensity=0.0 potion=false iris=true uniform=0.0 thermal=false blockLight=0 sky=0 fresh=[tacz_resources, vanilla, mod_resources, file/FreshAnimations_v1.11.2_1.20+.zip]
+NIGHT_LIGHT tacz-zoom4 intensity=1.0 potion=false iris=true uniform=1.0 thermal=false blockLight=0 sky=0 fresh=[tacz_resources, vanilla, mod_resources, file/FreshAnimations_v1.11.2_1.20+.zip]
+NIGHT_LIGHT tacz-removed intensity=0.0 potion=false iris=true uniform=0.0 thermal=false blockLight=0 sky=0 fresh=[tacz_resources, vanilla, mod_resources, file/FreshAnimations_v1.11.2_1.20+.zip]
+NIGHT_LIGHT_COMPLETE failures=0
+
+### stability-zombie-awareness
+input JAR SHA256: 130a1dc2a8154001a4fe1b3c61a2046305e1ee914068dee73ae6e2ab10183787
+depth format errors: 0
+ZA_SERVER hidden-wall pass=true targets=0 invisible=false mode=ARMOR energy=100.0 health=20.0 distances=[15.6] navigating=[true] ZA=true
+ZA_CLIENT hidden-wall threat=CALM targets=0
+ZA_SERVER pursuit pass=true targets=1 invisible=false mode=ARMOR energy=100.0 health=20.0 distances=[13.6] navigating=[true] ZA=true
+ZA_CLIENT pursuit threat=CALM targets=1
+ZA_SERVER n1-cloak pass=true targets=0 invisible=true mode=CLOAK energy=99.52497 health=20.0 distances=[11.4] navigating=[false] ZA=true
+ZA_CLIENT n1-cloak threat=SEARCHING targets=0
+ZA_SERVER n1-search-observation pass=true targets=0 invisible=true mode=CLOAK energy=97.02482 health=20.0 distances=[11.4] navigating=[false] ZA=true
+ZA_CLIENT n1-search-observation threat=CALM targets=0
+ZA_SERVER n1-revealed pass=true targets=1 invisible=false mode=ARMOR energy=100.0 health=20.0 distances=[8.2] navigating=[true] ZA=true
+ZA_CLIENT n1-revealed threat=DETECTED targets=1
+ZA_SERVER multiple pass=true targets=3 invisible=false mode=ARMOR energy=100.0 health=20.0 distances=[3.6, 12.5, 12.4] navigating=[true, true, true] ZA=true
+ZA_CLIENT multiple threat=DETECTED targets=3
+ZA_SERVER n1-cloak-retreat pass=true targets=0 invisible=true mode=CLOAK energy=99.17497 health=20.0 distances=[13.6, 22.1, 22.1] navigating=[false, false, false] ZA=true
+ZA_CLIENT n1-cloak-retreat threat=SEARCHING targets=0
+ZA_SERVER n1-removed pass=true targets=3 invisible=false mode=NONE energy=100.0 health=20.0 distances=[11.9, 20.6, 18.4] navigating=[true, true, true] ZA=true
+ZA_CLIENT n1-removed threat=CALM targets=3
+ZA_SERVER n2-cloak-retreat pass=true targets=0 invisible=true mode=CLOAK energy=98.0625 health=20.0 distances=[21.4, 29.8, 27.6] navigating=[false, false, false] ZA=true
+ZA_CLIENT n2-cloak-retreat threat=SEARCHING targets=0
+ZA_SERVER n2-search-observation pass=true targets=0 invisible=true mode=CLOAK energy=91.8125 health=20.0 distances=[21.4, 29.8, 35.4] navigating=[false, false, true] ZA=true
+ZA_CLIENT n2-search-observation threat=CALM targets=0
+ZA_SERVER n2-revealed pass=true targets=2 invisible=false mode=ARMOR energy=89.3125 health=20.0 distances=[19.8, 28.2, 35.5] navigating=[true, true, false] ZA=true
+ZA_CLIENT n2-revealed threat=DETECTED targets=2
+ZA_SERVER n2-recloak pass=true targets=0 invisible=true mode=CLOAK energy=87.3125 health=20.0 distances=[29.3, 38.0, 45.4] navigating=[false, false, false] ZA=true
+ZA_CLIENT n2-recloak threat=SEARCHING targets=0
+ZA_SERVER n2-removed pass=true targets=1 invisible=false mode=NONE energy=98.04997 health=20.0 distances=[25.3, 38.0, 45.4] navigating=[true, false, false] ZA=true
+ZA_CLIENT n2-removed threat=CALM targets=1
+ZA_COMPLETE failures=0
+
+### stability-za-combined
+input JAR SHA256: d39ca56c20a41de45693a34306bc5d5cd110c46168f6dae5390780ef7c9424e6
+depth format errors: 905
+ZA_SERVER hidden-wall pass=true targets=0 invisible=false mode=ARMOR energy=100.0 health=20.0 distances=[16.0] navigating=[false] ZA=true
+ZA_CLIENT hidden-wall threat=CALM targets=0
+ZA_SERVER pursuit pass=true targets=1 invisible=false mode=ARMOR energy=100.0 health=20.0 distances=[15.9] navigating=[true] ZA=true
+ZA_CLIENT pursuit threat=CALM targets=1
+ZA_SERVER n1-cloak pass=true targets=0 invisible=true mode=CLOAK energy=99.52497 health=20.0 distances=[14.0] navigating=[false] ZA=true
+ZA_CLIENT n1-cloak threat=SEARCHING targets=0
+ZA_SERVER n1-search-observation pass=true targets=0 invisible=true mode=CLOAK energy=96.92481 health=20.0 distances=[14.0] navigating=[false] ZA=true
+ZA_CLIENT n1-search-observation threat=CALM targets=0
+ZA_SERVER n1-revealed pass=true targets=1 invisible=false mode=ARMOR energy=100.0 health=20.0 distances=[10.5] navigating=[true] ZA=true
+ZA_CLIENT n1-revealed threat=DETECTED targets=1
+ZA_SERVER multiple pass=true targets=3 invisible=false mode=ARMOR energy=100.0 health=20.0 distances=[6.0, 12.5, 10.6] navigating=[true, true, true] ZA=true
+ZA_CLIENT multiple threat=DETECTED targets=3
+ZA_SERVER n1-cloak-retreat pass=true targets=0 invisible=true mode=CLOAK energy=99.17497 health=20.0 distances=[16.1, 22.1, 20.3] navigating=[false, false, false] ZA=true
+ZA_CLIENT n1-cloak-retreat threat=SEARCHING targets=0
+ZA_SERVER n1-removed pass=true targets=3 invisible=false mode=NONE energy=100.0 health=20.0 distances=[14.3, 18.3, 16.6] navigating=[true, true, true] ZA=true
+ZA_CLIENT n1-removed threat=CALM targets=3
+ZA_SERVER n2-cloak-retreat pass=true targets=0 invisible=true mode=CLOAK energy=98.0625 health=20.0 distances=[24.0, 27.5, 25.9] navigating=[false, false, false] ZA=true
+ZA_CLIENT n2-cloak-retreat threat=SEARCHING targets=0
+ZA_SERVER n2-search-observation pass=true targets=0 invisible=true mode=CLOAK energy=91.8125 health=20.0 distances=[22.0, 27.5, 25.2] navigating=[true, false, false] ZA=true
+ZA_CLIENT n2-search-observation threat=CALM targets=0
+ZA_SERVER n2-revealed pass=true targets=3 invisible=false mode=ARMOR energy=89.3125 health=20.0 distances=[17.7, 26.0, 21.7] navigating=[true, true, true] ZA=true
+ZA_CLIENT n2-revealed threat=DETECTED targets=3
+ZA_SERVER n2-recloak pass=true targets=0 invisible=true mode=CLOAK energy=87.3125 health=20.0 distances=[27.1, 35.7, 30.8] navigating=[false, false, false] ZA=true
+ZA_CLIENT n2-recloak threat=SEARCHING targets=0
+ZA_SERVER n2-removed pass=true targets=2 invisible=false mode=NONE energy=98.04997 health=20.0 distances=[25.4, 35.7, 29.3] navigating=[true, false, true] ZA=true
+ZA_CLIENT n2-removed threat=CALM targets=2
+ZA_COMPLETE failures=0
+
+### stability-euphoria
+input JAR SHA256: d39ca56c20a41de45693a34306bc5d5cd110c46168f6dae5390780ef7c9424e6
+depth format errors: 161
+NIGHT_LIGHT dark intensity=0.0 potion=false iris=true uniform=0.0 thermal=false blockLight=0 sky=0 fresh=[vanilla, mod_resources, file/FreshAnimations_v1.11.2_1.20+.zip]
+NIGHT_LIGHT entry intensity=0.27320716 potion=false iris=true uniform=0.27331287 thermal=false blockLight=0 sky=0 fresh=[vanilla, mod_resources, file/FreshAnimations_v1.11.2_1.20+.zip]
+NIGHT_LIGHT_EMF {entity.minecraft.cow=true, entity.minecraft.skeleton=true, entity.minecraft.zombie=true}
+NIGHT_LIGHT lit intensity=1.0 potion=false iris=true uniform=1.0 thermal=false blockLight=0 sky=0 fresh=[vanilla, mod_resources, file/FreshAnimations_v1.11.2_1.20+.zip]
+NIGHT_LIGHT n2-control intensity=0.0 potion=false iris=true uniform=0.0 thermal=false blockLight=0 sky=0 fresh=[vanilla, mod_resources, file/FreshAnimations_v1.11.2_1.20+.zip]
+NIGHT_LIGHT_EMF {entity.minecraft.cow=true, entity.minecraft.skeleton=true, entity.minecraft.zombie=true}
+NIGHT_LIGHT n2-thermal intensity=0.0 potion=true iris=true uniform=1.0 thermal=true blockLight=0 sky=0 fresh=[vanilla, mod_resources, file/FreshAnimations_v1.11.2_1.20+.zip]
+NIGHT_LIGHT_COMPLETE failures=0
+
+### stability-final-placement
+input JAR SHA256: 8afdd0464d5f8ffee037ff379109818f0e7029f967f3f7c1dc82c00b5aefd1e5
+depth format errors: 0
+NIGHT_LIGHT dark intensity=0.0 potion=false iris=false uniform=-1.0 thermal=false blockLight=0 sky=0 fresh=[vanilla, mod_resources]
+NIGHT_LIGHT entry intensity=0.88071924 potion=false iris=false uniform=-1.0 thermal=false blockLight=0 sky=0 fresh=[vanilla, mod_resources]
+NIGHT_LIGHT lit intensity=1.0 potion=false iris=false uniform=-1.0 thermal=false blockLight=0 sky=0 fresh=[vanilla, mod_resources]
+NIGHT_LIGHT n2-control intensity=0.0 potion=false iris=false uniform=-1.0 thermal=false blockLight=0 sky=0 fresh=[vanilla, mod_resources]
+NIGHT_LIGHT n2-thermal intensity=0.0 potion=true iris=false uniform=-1.0 thermal=true blockLight=0 sky=0 fresh=[vanilla, mod_resources]
+NIGHT_LIGHT_COMPLETE failures=0
+
+### stability-threat-placement
+input JAR SHA256: 8afdd0464d5f8ffee037ff379109818f0e7029f967f3f7c1dc82c00b5aefd1e5
+depth format errors: 0
+ZA_SERVER hidden-wall pass=true targets=0 invisible=false mode=ARMOR energy=100.0 health=20.0 distances=[16.0] navigating=[false] ZA=true
+ZA_CLIENT hidden-wall threat=CALM targets=0
+ZA_SERVER pursuit pass=true targets=1 invisible=false mode=ARMOR energy=100.0 health=20.0 distances=[15.9] navigating=[true] ZA=true
+ZA_CLIENT pursuit threat=CALM targets=1
+ZA_SERVER n1-cloak pass=true targets=0 invisible=true mode=CLOAK energy=99.52497 health=20.0 distances=[14.1] navigating=[false] ZA=true
+ZA_CLIENT n1-cloak threat=SEARCHING targets=0
+ZA_SERVER n1-search-observation pass=true targets=0 invisible=true mode=CLOAK energy=97.02482 health=20.0 distances=[14.1] navigating=[false] ZA=true
+ZA_CLIENT n1-search-observation threat=CALM targets=0
+ZA_SERVER n1-revealed pass=true targets=1 invisible=false mode=ARMOR energy=100.0 health=20.0 distances=[12.9] navigating=[true] ZA=true
+ZA_CLIENT n1-revealed threat=DETECTED targets=1
+ZA_SERVER multiple pass=true targets=3 invisible=false mode=ARMOR energy=100.0 health=20.0 distances=[8.4, 12.5, 12.6] navigating=[true, true, true] ZA=true
+ZA_CLIENT multiple threat=DETECTED targets=3
+ZA_SERVER n1-cloak-retreat pass=true targets=0 invisible=true mode=CLOAK energy=99.17497 health=20.0 distances=[18.5, 22.1, 22.3] navigating=[false, false, false] ZA=true
+ZA_CLIENT n1-cloak-retreat threat=SEARCHING targets=0
+ZA_SERVER n1-removed pass=true targets=3 invisible=false mode=NONE energy=100.0 health=20.0 distances=[16.7, 20.6, 20.8] navigating=[true, true, true] ZA=true
+ZA_CLIENT n1-removed threat=CALM targets=3
+ZA_SERVER n2-cloak-retreat pass=true targets=0 invisible=true mode=CLOAK energy=98.0625 health=20.0 distances=[26.4, 29.8, 30.0] navigating=[false, false, false] ZA=true
+ZA_CLIENT n2-cloak-retreat threat=SEARCHING targets=0
+ZA_SERVER n2-search-observation pass=true targets=0 invisible=true mode=CLOAK energy=91.8125 health=20.0 distances=[26.4, 29.8, 35.2] navigating=[false, false, false] ZA=true
+ZA_CLIENT n2-search-observation threat=CALM targets=0
+ZA_SERVER n2-revealed pass=true targets=2 invisible=false mode=ARMOR energy=89.3125 health=20.0 distances=[24.5, 28.2, 35.2] navigating=[true, true, false] ZA=true
+ZA_CLIENT n2-revealed threat=DETECTED targets=2
+ZA_SERVER n2-recloak pass=true targets=0 invisible=true mode=CLOAK energy=87.3125 health=20.0 distances=[34.2, 38.0, 45.2] navigating=[false, false, false] ZA=true
+ZA_CLIENT n2-recloak threat=SEARCHING targets=0
+ZA_SERVER n2-removed pass=true targets=1 invisible=false mode=NONE energy=98.04997 health=20.0 distances=[32.4, 38.0, 45.2] navigating=[true, false, false] ZA=true
+ZA_CLIENT n2-removed threat=CALM targets=1
+ZA_COMPLETE failures=0
+
+### stability-n2-screen
+input JAR SHA256: 41f6ffae54cfebaf3b2d31b8abc9312bb325ca309c453dbd76f4f2e9633ef0b8
+depth format errors: 0
+STABILITY_CLIENT n2-visor-before-screen expected=true active=true classicRunning=false animation=CLOSED progress=0.0 zoom=2 legacyFov=0.4590519 actualFov=37.14186728000641 profile=NANOSUIT_2 night=false intensity=0.0 thermal=false
+STABILITY_CLIENT n2-screen expected=true active=true classicRunning=false animation=CLOSED progress=0.0 zoom=2 legacyFov=0.35125726 actualFov=26.463648080825806 profile=NANOSUIT_2 night=false intensity=0.0 thermal=false
+STABILITY_CLIENT n2-screen-removal expected=false active=false classicRunning=false animation=CLOSED progress=0.0 zoom=2 legacyFov=1.0 actualFov=75.25000333786011 profile=null night=false intensity=0.0 thermal=false
+STABILITY_COMPLETE serverFailures=0 clientFailures=0
+
+### Prior reference bench — existing error
+[11nov.2026 10:52:03.894] [Render thread/INFO] [com.mojang.blaze3d.platform.GlDebug/]: OpenGL debug message: id=1282, source=API, type=ERROR, severity=HIGH, message='GL_INVALID_OPERATION error generated. Depth formats do not match.'
+
+Final JAR SHA256: 8afdd0464d5f8ffee037ff379109818f0e7029f967f3f7c1dc82c00b5aefd1e5

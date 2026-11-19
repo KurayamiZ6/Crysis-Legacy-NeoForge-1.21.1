@@ -39,8 +39,6 @@ Mort/réapparition et reconnexion disque complète : nettoyage existant examiné
 
 Compilation offline réussie : build/stability-build.log. Preuves brutes : build/mode-overlay-qa/stability-before/, stability-after/, stability-edges-valid/. Captures choisies et observations conservées dans evidence/.
 
-## Compatibilités (état de cette phase)
+## Compatibilités — bilan final
 
-Versions ciblées réellement trouvées : Iris 1.8.14-beta.1, Complementary Reimagined r5.10, Euphoria Patcher 1.11.1-r5.10, EMF 3.3.12, ETF 7.2.7, Fresh Animations 1.11.2, Zombie Awareness 1.13.2 et CoroUtil 1.3.8. TACZ 1.2.0 disponible dans libs.
-
-À ce point : Complementary/Iris, Fresh Animations/EMF/ETF, IA spontanée Zombie Awareness et session combinée = NOT TESTED dans cette campagne. Les validations antérieures ne sont pas transformées en PASS sur ce nouveau JAR. Les rapports de phases suivantes complèteront cette section seulement après des essais réels.
+Les phases suivantes sont maintenant exécutées. Voir [COMPATIBILITY.md](COMPATIBILITY.md) pour les résultats N1/N2 séparés, les versions, les preuves et les limites explicites. Ce bilan remplace le statut provisoire NOT TESTED de la première phase.
