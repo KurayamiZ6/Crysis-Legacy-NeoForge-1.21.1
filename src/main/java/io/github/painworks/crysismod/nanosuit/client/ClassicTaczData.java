@@ -18,12 +18,19 @@ public final class ClassicTaczData {
    private static State cached;
    private static long readAt;
    private ClassicTaczData(){}
-   public static State read(LocalPlayer player) {
+   private static void init() {
       if(!initialized){initialized=true;if(ModList.get().isLoaded("tacz"))try{
          gunApi=Class.forName("com.tacz.guns.api.item.IGun");ammoApi=Class.forName("com.tacz.guns.api.item.IAmmo");
          boxApi=Class.forName("com.tacz.guns.api.item.IAmmoBox");timelessApi=Class.forName("com.tacz.guns.api.TimelessAPI");available=true;
       }catch(ReflectiveOperationException|LinkageError ignored){}}
-      if(!available)return null;
+   }
+   public static boolean isGun(ItemStack stack) {
+      init();if(!available || stack.isEmpty())return false;
+      try{return call(gunApi,"getIGunOrNull",null,new Class<?>[]{ItemStack.class},stack)!=null;}
+      catch(ReflectiveOperationException|LinkageError|RuntimeException unavailable){return false;}
+   }
+   public static State read(LocalPlayer player) {
+      init();if(!available)return null;
       ItemStack stack=player.getMainHandItem();long now=System.nanoTime();
       if(player==cachedPlayer.get() && stack==cachedStack && now-readAt<50_000_000L)return cached;
       cachedPlayer=new java.lang.ref.WeakReference<>(player);cachedStack=stack;readAt=now;cached=null;

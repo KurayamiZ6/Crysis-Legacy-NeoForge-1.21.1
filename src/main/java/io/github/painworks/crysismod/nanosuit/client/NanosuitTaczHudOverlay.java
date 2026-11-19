@@ -47,7 +47,7 @@ public final class NanosuitTaczHudOverlay {
    public static void onPreOverlay(Pre event) {
       if (io.github.painworks.crysismod.client.minimap.ClassicMinimapRenderer.isClassic()) {
          if (event.getName().toString().equals("tacz:tac_gun_hud_overlay")
-               && ClassicWeaponHud.canReplace() && ClassicTaczData.read(Minecraft.getInstance().player) != null) event.setCanceled(true);
+               && ClassicWeaponHud.canReplace() && (ClassicWeaponHud.optic() || ClassicTaczData.read(Minecraft.getInstance().player) != null)) event.setCanceled(true);
          return;
       }
       ensureInitialized();
