@@ -5,6 +5,8 @@ from pathlib import Path
 import shutil
 import subprocess
 import hashlib
+import json
+import re
 
 parser = argparse.ArgumentParser(description=__doc__)
 parser.add_argument("--run-name", required=True)
@@ -15,6 +17,7 @@ parser.add_argument("--sodium", type=Path, required=True)
 parser.add_argument("--template-game", type=Path, default=Path("build/amd-visual-diagnostic/game"))
 parser.add_argument("--extra-mod", type=Path, action="append", default=[])
 parser.add_argument("--shader-pack", type=Path)
+parser.add_argument("--resource-pack", type=Path, action="append", default=[])
 parser.add_argument("--probe", type=Path, default=Path(__file__).with_name("ModeOverlayQa.java"))
 parser.add_argument("--probe-mod-id", default="crysismodeoverlayqa")
 parser.add_argument("--width", type=int)
@@ -37,9 +40,23 @@ shutil.copy2(args.template_game / "options.txt", game)
 shutil.copy2(args.mod_jar, game / "mods/crysis-legacy-port.jar")
 for mod in [args.sodium, *args.extra_mod]:
     shutil.copy2(mod, game / "mods")
+if args.resource_pack:
+    (game / "resourcepacks").mkdir()
+    for pack in args.resource_pack:
+        shutil.copy2(pack, game / "resourcepacks")
+    options = (game / "options.txt").read_text(encoding="utf-8-sig")
+    selected = json.dumps(["vanilla", "mod_resources", *["file/" + pack.name for pack in args.resource_pack]])
+    if re.search(r"(?m)^resourcePacks:.*$", options):
+        options = re.sub(r"(?m)^resourcePacks:.*$", "resourcePacks:" + selected, options)
+    else:
+        options += "\nresourcePacks:" + selected + "\n"
+    (game / "options.txt").write_text(options, encoding="utf-8")
 if args.shader_pack:
     (game / "shaderpacks").mkdir()
-    shutil.copy2(args.shader_pack, game / "shaderpacks")
+    if args.shader_pack.is_dir():
+        shutil.copytree(args.shader_pack, game / "shaderpacks" / args.shader_pack.name)
+    else:
+        shutil.copy2(args.shader_pack, game / "shaderpacks")
     (game / "config/iris.properties").write_text(
         f"enableShaders=true\nshaderPack={args.shader_pack.name}\n", encoding="utf-8")
 (classes / "META-INF/neoforge.mods.toml").write_text(

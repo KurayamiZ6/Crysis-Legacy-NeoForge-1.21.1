@@ -13,6 +13,8 @@
     "client.nanosuit.CloakTaczScopeMixin",
     "client.nanosuit.CloakTaczStaticGunMixin",
     "client.nanovision.EmfThermalBufferMixin",
+    "client.nanovision.ClassicNightVisionLightmapMixin",
+    "client.nanovision.ClassicNightVisionStrengthMixin",
     "client.nanovision.ItemInHandRendererTransitionStateMixin",
     "client.nanovision.ItemInHandRendererItemMaskMixin",
     "client.nanovision.TaczBedrockHeldItemCaptureMixin",

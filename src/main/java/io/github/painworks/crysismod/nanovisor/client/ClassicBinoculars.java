@@ -23,6 +23,7 @@ public final class ClassicBinoculars {
    private static final ResourceLocation FRAME=ResourceLocation.fromNamespaceAndPath("crysismod","textures/gui/classic_binoculars/frame.png");
    private static final ResourceLocation GLYPHS=ResourceLocation.fromNamespaceAndPath("crysismod","textures/gui/classic_binoculars/glyphs.png");
    private static final ResourceLocation BRACKETS=ResourceLocation.fromNamespaceAndPath("crysismod","textures/gui/classic_binoculars/brackets.png");
+   private static final ResourceLocation VIGNETTE=ResourceLocation.fromNamespaceAndPath("crysismod","textures/gui/classic_binoculars/vignette.png");
    private static int zoom=2;
    private static boolean hadContext;
    private static java.lang.reflect.Method clientOperator,isAim,aimProgress;
@@ -91,13 +92,10 @@ public final class ClassicBinoculars {
          RenderSystem.disableDepthTest();
          RenderSystem.enableBlend();RenderSystem.defaultBlendFunc();
          g.pose().scale(sx,sy,1);
-         // Only a light optical vignette in the corners. It does not cover the permanent HUD layer.
-         for(int i=0;i<16;i++){
-            float a=(16-i)/16f*.012f*p;
-            int alpha=(int)(a*255);
-            g.fill(i*10,i*7,1920-i*10,i*7+7,alpha<<24);
-            g.fill(i*10,1080-i*7-7,1920-i*10,1080-i*7,alpha<<24);
-         }
+         // Night vision supplies its own scene vignette: blend ownership instead of doubling it.
+         float vignetteAlpha=p*(1-io.github.painworks.crysismod.client.nanovision.ClassicNightVisionClient.visualIntensity());
+         g.setColor(1,1,1,vignetteAlpha);
+         g.blit(VIGNETTE,0,0,1920,1080,0,0,1920,1080,1920,1080);g.setColor(1,1,1,1);
          g.flush();RenderSystem.enableBlend();RenderSystem.defaultBlendFunc();RenderSystem.disableDepthTest();
          g.setColor((rgb>>16&255)/255f,(rgb>>8&255)/255f,(rgb&255)/255f,p);
          g.blit(FRAME,0,0,1920,1080,0,0,1920,1080,1920,1080);

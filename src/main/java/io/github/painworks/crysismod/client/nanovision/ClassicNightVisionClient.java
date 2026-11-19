@@ -32,6 +32,12 @@ public final class ClassicNightVisionClient {
 
    public static float visualIntensity() { return TRANSITION.displayed(); }
 
+   /** Rendering-only night vision strength, shared by the lightmap and shaderpack uniform. */
+   public static float lightIntensity() {
+      return ClassicNightVision.canUse(Minecraft.getInstance().player)
+         ? TRANSITION.sample(System.nanoTime(),isActive()) : 0;
+   }
+
    private ClassicNightVisionClient() {}
 
    public static void sync(boolean enabled, int charge) {
