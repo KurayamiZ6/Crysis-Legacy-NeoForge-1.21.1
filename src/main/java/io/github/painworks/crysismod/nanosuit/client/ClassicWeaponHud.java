@@ -45,8 +45,11 @@ public final class ClassicWeaponHud {
       var mc=Minecraft.getInstance();if(!ClassicMinimapRenderer.isClassic()){level.clear();lastGun=null;previousIcon=null;return;}
       if(mc.options.hideGui||!NanosuitHudOverlay.isHudEnabled())return;
       var state=canReplace()?ClassicTaczData.read(mc.player):null;
-      boolean melee=state==null&&isMeleeItem(mc.player.getMainHandItem());
-      if(state==null&&!melee&&!optic())return;
+      var throwable=canReplace()?ClassicThrowableHud.read(mc.player):null;
+      // An unreadable TACZ gun must retain its native frame, even when grenades are present.
+      if(state==null&&ClassicTaczData.isGun(mc.player.getMainHandItem())&&!optic())return;
+      boolean melee=state==null&&ClassicThrowableHud.classify(mc.player.getMainHandItem())==null&&isMeleeItem(mc.player.getMainHandItem());
+      if(state==null&&throwable==null&&!melee&&!optic())return;
       GuiGraphics g=event.getGuiGraphics();float base=g.guiHeight()/1080f,s=base*.7f*NanosuitClientConfig.classicHudScale();
       float x=g.guiWidth()-129*base-440*s,y=g.guiHeight()-24*base-255*s;
       int rgb=NanosuitClientConfig.classicInterfaceColor();long now=System.nanoTime();
@@ -69,7 +72,9 @@ public final class ClassicWeaponHud {
          if(state.unlimited())layer(g,INFINITY,224,8,45,34,rgb,1);
          else ClassicHudText.draw(g,Integer.toString(state.reserve()),234,30,27,textColor,1,false);
          g.pose().popPose();
-         switch(state.fireMode()){
+         if(state.ammoKind()!=ClassicAmmoIcons.Kind.BULLET && java.util.Set.of("SEMI","AUTO","BURST").contains(state.fireMode())){
+            layer(g,asset(state.ammoKind().name().toLowerCase(java.util.Locale.ROOT)+"-"+state.fireMode().toLowerCase(java.util.Locale.ROOT)),294,7,60,48,rgb,1);
+         }else switch(state.fireMode()){
             case "SEMI" -> layer(g,BULLET,307,7,18,48,rgb,1);
             case "AUTO" -> layer(g,AUTO,294,7,60,48,rgb,1);
             case "BURST" -> layer(g,BURST,294,7,60,48,rgb,1);
@@ -81,6 +86,11 @@ public final class ClassicWeaponHud {
             if(state.icon()!=null)layer(g,state.icon(),245,-106,90,30,rgb,alpha);
             if(previousIcon!=null)layer(g,previousIcon,245,-39,90,30,rgb,alpha);
          }else previousIcon=state.icon();
+      }
+      if(throwable!=null&&!optic()){
+         int textColor=rgb==ClassicHudPalette.DEFAULT?0xc0efa6:rgb;
+         ClassicHudText.draw(g,Integer.toString(throwable.count()),234,88,27,textColor,1,false);
+         layer(g,asset("throwable-"+throwable.kind().name().toLowerCase(java.util.Locale.ROOT)),298,65,40,40,rgb,1);
       }
       g.pose().popPose();g.setColor(1,1,1,1);
    }

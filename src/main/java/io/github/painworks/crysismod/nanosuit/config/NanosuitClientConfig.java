@@ -126,7 +126,7 @@ public final class NanosuitClientConfig {
    private static final DoubleValue CLASSIC_HUD_SCALE = BUILDER.comment("Nanosuit 1 HUD size relative to screen height; independent of GUI scale and Nanosuit 2.")
       .defineInRange("hud.classic.scale", 1.0, 0.5, 2.0);
    private static final ModConfigSpec.ConfigValue<String> CLASSIC_INTERFACE_COLOR = BUILDER
-      .comment("Nanosuit 1 interface theme, #RRGGBB. Default preserves the original palette; backgrounds follow a darker shade. Does not change warnings, energy blue or selection amber.")
+      .comment("Nanosuit 1 interface theme, #RRGGBB. Default preserves the original palette; backgrounds follow a darker shade. Does not change health green, energy blue, warnings or selection amber.")
       .define("hud.classic.color", "#719671", value -> value instanceof String s && s.matches("#[0-9a-fA-F]{6}"));
    private static final ModConfigSpec.ConfigValue<java.util.List<? extends String>> CLASSIC_COLOR_PRESETS = BUILDER
       .comment("Named N1 theme presets, saved by the in-game color editor. Format: name|#RRGGBB.")
@@ -145,6 +145,16 @@ public final class NanosuitClientConfig {
    }
    private static final BooleanValue CLASSIC_MINIMAP_ENABLED = BUILDER.comment("Show Crysis N1 minimap. Disable to choose an external minimap; external configs are never changed.")
       .define("hud.classic.minimapEnabled",true);
+   private static final ModConfigSpec.ConfigValue<java.util.List<? extends String>> CLASSIC_AMMO_ICONS = BUILDER
+      .comment("Exact ammo IDs and HUD icon families: id|shell, id|rocket or id|grenade_round. Unknown ammo keeps the generic bullet icon.")
+      .defineListAllowEmpty("hud.classic.ammoIcons",java.util.List.of("tacz:12g|shell","tacz:rpg_rocket|rocket","tacz:40mm|grenade_round"),
+         value->value instanceof String s&&s.matches("[a-z0-9_.-]+:[a-z0-9_./-]+\\|(shell|rocket|grenade_round|bullet)"));
+   private static final ModConfigSpec.ConfigValue<java.util.List<? extends String>> CLASSIC_THROWABLE_ITEMS = BUILDER
+      .comment("Optional exact item IDs for the N1 throwable row: id|frag, id|smoke, id|flash or id|incendiary. Empty by default; item tags are also supported.")
+      .defineListAllowEmpty("hud.classic.throwableItems",java.util.List.of(),
+         value->value instanceof String s&&s.matches("[a-z0-9_.-]+:[a-z0-9_./-]+\\|(frag|smoke|flash|incendiary)"));
+   public static java.util.List<? extends String> classicAmmoIcons(){try{return CLASSIC_AMMO_ICONS.get();}catch(IllegalStateException e){return java.util.List.of();}}
+   public static java.util.List<? extends String> classicThrowableItems(){try{return CLASSIC_THROWABLE_ITEMS.get();}catch(IllegalStateException e){return java.util.List.of();}}
    public static boolean classicMinimapEnabled(){return safeGetBoolean(CLASSIC_MINIMAP_ENABLED,true);}
     private static final BooleanValue CLASSIC_HIDE_DIORAMA = BUILDER.comment("Temporarily hide only Diorama 0.10.2 minimap layer when the N1 terrain is ready. Waypoints and full map are preserved.")
        .define("hud.classic.hideDioramaMinimap",true);

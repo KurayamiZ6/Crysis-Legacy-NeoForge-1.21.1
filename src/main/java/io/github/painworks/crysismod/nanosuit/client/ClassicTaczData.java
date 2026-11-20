@@ -9,7 +9,7 @@ import net.neoforged.fml.ModList;
 
 /** Optional public API adapter. Unknown or unsupported weapons keep their native HUD. */
 public final class ClassicTaczData {
-   public record State(int loaded, int reserve, boolean unlimited, String fireMode, ResourceLocation gunId, ResourceLocation icon) {}
+   public record State(int loaded, int reserve, boolean unlimited, String fireMode, ResourceLocation gunId, ResourceLocation icon,ClassicAmmoIcons.Kind ammoKind) {}
    private static Class<?> gunApi,ammoApi,boxApi,timelessApi;
    private static boolean initialized,available;
    private static final java.util.Map<String,Method> METHODS=new java.util.HashMap<>();
@@ -63,7 +63,11 @@ public final class ClassicTaczData {
          var display=(Optional<?>)call(timelessApi,"getGunDisplay",null,new Class<?>[]{ItemStack.class},stack);
          if(display.isPresent())icon=(ResourceLocation)call(Class.forName("com.tacz.guns.client.resource.GunDisplayInstance"),"getHUDTexture",display.get(),new Class<?>[0]);
          String fireMode=((Enum<?>)call(gunApi,"getFireMode",gun,new Class<?>[]{ItemStack.class},stack)).name();
-         cached=new State(Math.max(0,loaded),Math.max(0,reserve),unlimited,fireMode,id,icon);
+         ClassicAmmoIcons.Kind kind=ClassicAmmoIcons.Kind.BULLET;
+         try{kind=ClassicAmmoIcons.classify((String)call(indexApi,"getType",index.get(),new Class<?>[0]),
+            (ResourceLocation)call(data.getClass(),"getAmmoId",data,new Class<?>[0]));}
+         catch(ReflectiveOperationException|LinkageError unsupportedMetadata){} // Counters remain available if icon metadata is absent.
+         cached=new State(Math.max(0,loaded),Math.max(0,reserve),unlimited,fireMode,id,icon,kind);
       }catch(ReflectiveOperationException|LinkageError|RuntimeException unsupported){cached=null;}
       return cached;
    }
