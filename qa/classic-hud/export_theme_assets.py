@@ -7,9 +7,11 @@ for folder,names in [('classic_hud',['panel','health','digits','armor','strength
     for name in names:
         im=Image.open(ROOT/folder/f'{name}.png').convert('RGBA')
         themed=[];fixed=[]
-        for r,g,b,a in im.getdata():
-            # Blue panels are functional energy information, not interface chrome.
-            preserve=name=='panel' and b>g and max(r,g,b)>40
+        for index,(r,g,b,a) in enumerate(im.getdata()):
+            # Health and energy panels are functional information, not interface chrome.
+            x,y=index%im.width,index//im.width
+            health_region=32<=x<=476 and 88<=y<=150
+            preserve=name=='panel' and (b>g and max(r,g,b)>40 or health_region)
             if preserve:
                 themed.append((0,0,0,0));fixed.append((r,g,b,a))
             else:

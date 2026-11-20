@@ -77,7 +77,7 @@ public final class ClassicNanosuitHud {
    }
    private static void layer(GuiGraphics g,ResourceLocation texture) {
       int rgb=NanosuitClientConfig.classicInterfaceColor();
-      boolean themed=texture!=ENERGY&&texture!=CRITICAL&&rgb!=ClassicHudPalette.DEFAULT;
+      boolean themed=texture!=ENERGY&&texture!=HEALTH&&texture!=CRITICAL&&rgb!=ClassicHudPalette.DEFAULT;
       if(themed)g.setColor(ClassicHudPalette.red(rgb),ClassicHudPalette.green(rgb),ClassicHudPalette.blue(rgb),1);
       else g.setColor(1,1,1,1);
       g.blit(themed?neutral(texture):texture,0,0,440,155,0,0,880,310,880,310);
@@ -89,7 +89,8 @@ public final class ClassicNanosuitHud {
    }
    private static void clippedFill(GuiGraphics g,ResourceLocation texture,float x,float y,float s,float fraction) {
       if(fraction<=0)return;
-      g.enableScissor((int)(x+24*s),(int)y,(int)Math.ceil(x+(24+165*fraction)*s),(int)Math.ceil(y+155*s));
+      // Zero is next to the right-hand symbols; increasing charge extends the fill to the left.
+      g.enableScissor((int)Math.floor(x+(189-173*fraction)*s),(int)y,(int)Math.ceil(x+189*s),(int)Math.ceil(y+155*s));
       layer(g,texture);g.disableScissor();
    }
    private static void number(GuiGraphics g,int value,int x,int y) {

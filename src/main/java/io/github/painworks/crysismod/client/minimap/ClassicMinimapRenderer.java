@@ -48,7 +48,9 @@ public final class ClassicMinimapRenderer {
       }
       // Player looks up in this rotating map. The pale wedge and chevron are not a goal.
       RenderSystem.enableBlend();RenderSystem.defaultBlendFunc();RenderSystem.disableDepthTest();
-      g.setColor(1,1,1,1);g.blit(PLAYER,92,35,48,65,0,0,96,130,96,130);
+      g.fill(116,7,117,75,0x55000000|rgb);g.fill(116,91,117,158,0x55000000|rgb);
+      g.flush();RenderSystem.enableBlend();RenderSystem.defaultBlendFunc();RenderSystem.disableDepthTest();
+      g.setColor(1,1,1,1);g.blit(PLAYER,0,0,232,163,0,0,464,326,464,326);
       renderContacts(g,yaw,activeBpp*s);
       var goal=ClassicWaypoint.current();
       if(goal!=null){
@@ -70,15 +72,22 @@ public final class ClassicMinimapRenderer {
          int rgb=io.github.painworks.crysismod.nanosuit.client.ClassicEnemyContacts.color(entity);
          g.flush();g.pose().pushPose();g.pose().translate(x,y,0);
          g.pose().mulPose(com.mojang.math.Axis.ZP.rotationDegrees(entity.getYRot()-yaw));
+         RenderSystem.enableBlend();RenderSystem.defaultBlendFunc();RenderSystem.disableDepthTest();
          RenderSystem.setShader(GameRenderer::getPositionColorShader);
          var b=Tesselator.getInstance().begin(VertexFormat.Mode.TRIANGLES,DefaultVertexFormat.POSITION_COLOR);
-         contactVertex(b,g,0,-5,rgb);contactVertex(b,g,-4,3,rgb);contactVertex(b,g,0,1,rgb);
-         contactVertex(b,g,0,-5,rgb);contactVertex(b,g,0,1,rgb);contactVertex(b,g,4,3,rgb);
+         contactArrow(b,g,1.55f,0x08000000|rgb);contactArrow(b,g,1.25f,0x14000000|rgb);
+         int bright=brighten(rgb>>16&255)<<16|brighten(rgb>>8&255)<<8|brighten(rgb&255);
+         contactArrow(b,g,1,0x55000000|bright);
          BufferUploader.drawWithShader(b.buildOrThrow());g.pose().popPose();
       }
    }
-   private static void contactVertex(BufferBuilder b,GuiGraphics g,float x,float y,int rgb){
-      b.addVertex(g.pose().last().pose(),x,y,0).setColor(0xff000000|rgb);
+   private static int brighten(int channel){return channel+(255-channel)/9;}
+   private static void contactArrow(BufferBuilder b,GuiGraphics g,float s,int color){
+      contactVertex(b,g,0,-6*s,color);contactVertex(b,g,-5.5f*s,4*s,color);contactVertex(b,g,0,s,color);
+      contactVertex(b,g,0,-6*s,color);contactVertex(b,g,0,s,color);contactVertex(b,g,5.5f*s,4*s,color);
+   }
+   private static void contactVertex(BufferBuilder b,GuiGraphics g,float x,float y,int color){
+      b.addVertex(g.pose().last().pose(),x,y,0).setColor(color);
    }
    private static double sinFor(float yaw){return Math.sin(Math.toRadians(180-yaw));}
    private static double left(double y){return y<13?232*(1-y/13):0;}

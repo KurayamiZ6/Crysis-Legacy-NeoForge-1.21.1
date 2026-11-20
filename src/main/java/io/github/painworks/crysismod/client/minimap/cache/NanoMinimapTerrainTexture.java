@@ -13,9 +13,13 @@ public final class NanoMinimapTerrainTexture {
    private int resolution;
    private boolean hasTexture;
    private boolean classicPalette;
+   private int classicColor=io.github.painworks.crysismod.nanosuit.client.ClassicHudPalette.DEFAULT;
    private int[] sourcePixels;
 
-   public void setClassicPalette(boolean enabled){if(classicPalette!=enabled){classicPalette=enabled;if(sourcePixels!=null)upload(sourcePixels);}}
+   public void setClassicPalette(boolean enabled){
+      int theme=enabled?io.github.painworks.crysismod.nanosuit.config.NanosuitClientConfig.classicInterfaceColor():classicColor;
+      if(classicPalette!=enabled || enabled&&classicColor!=theme){classicPalette=enabled;classicColor=theme;if(sourcePixels!=null)upload(sourcePixels);}
+   }
 
    public boolean ensureCapacity(int targetResolution) {
       int clampedResolution = Math.max(16, targetResolution);
@@ -44,8 +48,7 @@ public final class NanoMinimapTerrainTexture {
 
                for (int x = 0; x < side; x++) {
                   int color=argbPixels[row+x];
-                  if(classicPalette){int gray=((color>>16&255)*54+(color>>8&255)*183+(color&255)*19)/256;
-                     color=(color&0xff000000)|((int)(gray*.88)<<16)|((int)(gray*.96)<<8)|(int)(gray*.83);}
+                  if(classicPalette)color=io.github.painworks.crysismod.nanosuit.client.ClassicHudPalette.terrainColor(color,classicColor);
                   this.pixels.setPixelRGBA(x, y, argbToAbgr(color));
                }
             }
