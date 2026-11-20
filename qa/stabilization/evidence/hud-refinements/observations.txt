@@ -1,0 +1,35 @@
+
+## hud-details-final
+Input JAR SHA256: 27082b2f150c22bd606167769d9b1606d9bfe5ae27fd20d357eeb28959cd37c0
+HUD_DETAILS default-full pass=true state=State[loaded=7, reserve=29, unlimited=false, fireMode=SEMI, gunId=tacz:spas_12, icon=tacz:textures/gun/hud/spas_12.png, ammoKind=SHELL] throwable=null color=719671
+HUD_DETAILS blue-full pass=true state=State[loaded=7, reserve=29, unlimited=false, fireMode=SEMI, gunId=tacz:spas_12, icon=tacz:textures/gun/hud/spas_12.png, ammoKind=SHELL] throwable=null color=3388cc
+HUD_DETAILS amber-half pass=true state=State[loaded=7, reserve=29, unlimited=false, fireMode=SEMI, gunId=tacz:spas_12, icon=tacz:textures/gun/hud/spas_12.png, ammoKind=SHELL] throwable=null color=c59a64
+HUD_DETAILS amber-quarter pass=true state=State[loaded=7, reserve=29, unlimited=false, fireMode=SEMI, gunId=tacz:spas_12, icon=tacz:textures/gun/hud/spas_12.png, ammoKind=SHELL] throwable=null color=c59a64
+HUD_DETAILS amber-empty pass=true state=State[loaded=7, reserve=29, unlimited=false, fireMode=SEMI, gunId=tacz:spas_12, icon=tacz:textures/gun/hud/spas_12.png, ammoKind=SHELL] throwable=null color=c59a64
+HUD_DETAILS rocket pass=true state=State[loaded=1, reserve=7, unlimited=false, fireMode=SEMI, gunId=tacz:rpg7, icon=tacz:textures/gun/hud/rpg7.png, ammoKind=ROCKET] throwable=null color=c59a64
+HUD_DETAILS grenade-launcher pass=true state=State[loaded=1, reserve=7, unlimited=false, fireMode=SEMI, gunId=tacz:m320, icon=tacz:textures/gun/hud/m320.png, ammoKind=GRENADE_ROUND] throwable=null color=c59a64
+HUD_DETAILS smoke-adapter pass=true state=State[loaded=1, reserve=7, unlimited=false, fireMode=SEMI, gunId=tacz:m320, icon=tacz:textures/gun/hud/m320.png, ammoKind=GRENADE_ROUND] throwable=State[kind=SMOKE, count=10] color=c59a64
+HUD_DETAILS frag-adapter pass=true state=State[loaded=1, reserve=7, unlimited=false, fireMode=SEMI, gunId=tacz:m320, icon=tacz:textures/gun/hud/m320.png, ammoKind=GRENADE_ROUND] throwable=State[kind=FRAG, count=19] color=c59a64
+HUD_DETAILS shotgun-auto pass=true state=State[loaded=7, reserve=29, unlimited=false, fireMode=AUTO, gunId=tacz:aa12, icon=tacz:textures/gun/hud/aa12.png, ammoKind=SHELL] throwable=State[kind=FRAG, count=16] color=c59a64
+HUD_DETAILS gui3-half pass=true state=State[loaded=7, reserve=29, unlimited=false, fireMode=SEMI, gunId=tacz:spas_12, icon=tacz:textures/gun/hud/spas_12.png, ammoKind=SHELL] throwable=State[kind=FRAG, count=16] color=c59a64
+HUD_DETAILS n2-control pass=true state=State[loaded=7, reserve=29, unlimited=false, fireMode=SEMI, gunId=tacz:spas_12, icon=tacz:textures/gun/hud/spas_12.png, ammoKind=SHELL] throwable=State[kind=FRAG, count=16] color=c59a64
+HUD_DETAILS_COMPLETE failures=0
+
+## hud-map-alpha-final
+Input JAR SHA256: 3184b573a514dff82a8dea9a550a17d41e87fe4204a6c5d0266a7733f0b43098
+HUD_DETAILS default-full pass=true state=State[loaded=7, reserve=29, unlimited=false, fireMode=SEMI, gunId=tacz:spas_12, icon=tacz:textures/gun/hud/spas_12.png, ammoKind=SHELL] throwable=null color=719671
+HUD_DETAILS blue-full pass=true state=State[loaded=7, reserve=29, unlimited=false, fireMode=SEMI, gunId=tacz:spas_12, icon=tacz:textures/gun/hud/spas_12.png, ammoKind=SHELL] throwable=null color=3388cc
+HUD_DETAILS amber-half pass=true state=State[loaded=7, reserve=29, unlimited=false, fireMode=SEMI, gunId=tacz:spas_12, icon=tacz:textures/gun/hud/spas_12.png, ammoKind=SHELL] throwable=null color=c59a64
+HUD_DETAILS gui3-half pass=true state=State[loaded=7, reserve=29, unlimited=false, fireMode=SEMI, gunId=tacz:spas_12, icon=tacz:textures/gun/hud/spas_12.png, ammoKind=SHELL] throwable=null color=c59a64
+HUD_DETAILS n2-control pass=true state=State[loaded=7, reserve=29, unlimited=false, fireMode=SEMI, gunId=tacz:spas_12, icon=tacz:textures/gun/hud/spas_12.png, ammoKind=SHELL] throwable=null color=c59a64
+HUD_DETAILS_COMPLETE failures=0
+
+## hud-map-cone-final
+Input JAR SHA256: f09fcfab832587a36831f9a9fce3d0a90360724ccd6e0828fdd4e26ea971905a
+HUD_DETAILS default-full pass=true state=State[loaded=7, reserve=29, unlimited=false, fireMode=SEMI, gunId=tacz:spas_12, icon=tacz:textures/gun/hud/spas_12.png, ammoKind=SHELL] throwable=null color=719671
+HUD_DETAILS amber-half pass=true state=State[loaded=7, reserve=29, unlimited=false, fireMode=SEMI, gunId=tacz:spas_12, icon=tacz:textures/gun/hud/spas_12.png, ammoKind=SHELL] throwable=null color=c59a64
+HUD_DETAILS_COMPLETE failures=0
+
+CLASSIC_PALETTE_PASS samples=8192
+Pixel checks: 24/24 PASS
+Final JAR SHA256: f09fcfab832587a36831f9a9fce3d0a90360724ccd6e0828fdd4e26ea971905a

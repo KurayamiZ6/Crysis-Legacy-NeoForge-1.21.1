@@ -1,0 +1,270 @@
+[
+  {
+    "name": "default-full fixed health green",
+    "passed": true,
+    "evidence": [
+      125,
+      202,
+      43
+    ]
+  },
+  {
+    "name": "default-full fixed energy blue",
+    "passed": true,
+    "evidence": [
+      0,
+      118,
+      176
+    ]
+  },
+  {
+    "name": "blue-full fixed health green",
+    "passed": true,
+    "evidence": [
+      125,
+      202,
+      43
+    ]
+  },
+  {
+    "name": "blue-full fixed energy blue",
+    "passed": true,
+    "evidence": [
+      0,
+      118,
+      176
+    ]
+  },
+  {
+    "name": "amber-half fixed health green",
+    "passed": true,
+    "evidence": [
+      125,
+      202,
+      43
+    ]
+  },
+  {
+    "name": "amber-half fixed energy blue",
+    "passed": true,
+    "evidence": [
+      0,
+      118,
+      176
+    ]
+  },
+  {
+    "name": "amber-quarter fixed health green",
+    "passed": true,
+    "evidence": [
+      125,
+      202,
+      43
+    ]
+  },
+  {
+    "name": "amber-quarter fixed energy blue",
+    "passed": true,
+    "evidence": [
+      0,
+      118,
+      176
+    ]
+  },
+  {
+    "name": "amber-empty fixed health green",
+    "passed": true,
+    "evidence": [
+      125,
+      202,
+      43
+    ]
+  },
+  {
+    "name": "energy fixed right edge",
+    "passed": true,
+    "evidence": [
+      [
+        1494,
+        1614
+      ],
+      [
+        1552,
+        1614
+      ],
+      [
+        1584,
+        1614
+      ]
+    ]
+  },
+  {
+    "name": "energy grows from right toward left",
+    "passed": true,
+    "evidence": [
+      [
+        1494,
+        1614
+      ],
+      [
+        1552,
+        1614
+      ],
+      [
+        1584,
+        1614
+      ]
+    ]
+  },
+  {
+    "name": "energy fractions within one GUI pixel",
+    "passed": true,
+    "evidence": [
+      [
+        1494,
+        1614
+      ],
+      [
+        1552,
+        1614
+      ],
+      [
+        1584,
+        1614
+      ]
+    ]
+  },
+  {
+    "name": "health fixed right edge",
+    "passed": true,
+    "evidence": [
+      [
+        1497,
+        1614
+      ],
+      [
+        1552,
+        1614
+      ],
+      [
+        1584,
+        1614
+      ]
+    ]
+  },
+  {
+    "name": "health grows from right toward left",
+    "passed": true,
+    "evidence": [
+      [
+        1497,
+        1614
+      ],
+      [
+        1552,
+        1614
+      ],
+      [
+        1584,
+        1614
+      ]
+    ]
+  },
+  {
+    "name": "health fractions within one GUI pixel",
+    "passed": true,
+    "evidence": [
+      [
+        1497,
+        1614
+      ],
+      [
+        1552,
+        1614
+      ],
+      [
+        1584,
+        1614
+      ]
+    ]
+  },
+  {
+    "name": "zero energy has no blue fill",
+    "passed": true,
+    "evidence": []
+  },
+  {
+    "name": "terrain green",
+    "passed": true,
+    "evidence": [
+      109.27,
+      119.21,
+      103.38
+    ]
+  },
+  {
+    "name": "default-full final health remains green",
+    "passed": true,
+    "evidence": [
+      125,
+      202,
+      43
+    ]
+  },
+  {
+    "name": "terrain blue",
+    "passed": true,
+    "evidence": [
+      25.66,
+      67.23,
+      100.79
+    ]
+  },
+  {
+    "name": "blue-full final health remains green",
+    "passed": true,
+    "evidence": [
+      125,
+      202,
+      43
+    ]
+  },
+  {
+    "name": "terrain amber",
+    "passed": true,
+    "evidence": [
+      119.21,
+      93.32,
+      61.0
+    ]
+  },
+  {
+    "name": "amber-half final health remains green",
+    "passed": true,
+    "evidence": [
+      125,
+      202,
+      43
+    ]
+  },
+  {
+    "name": "player cone asset stays translucent",
+    "passed": true,
+    "evidence": [
+      222,
+      238,
+      216,
+      46
+    ]
+  },
+  {
+    "name": "player cone reaches upper terrain edge",
+    "passed": true,
+    "evidence": [
+      222,
+      238,
+      216,
+      46
+    ]
+  }
+]

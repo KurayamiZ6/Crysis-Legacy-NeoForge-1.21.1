@@ -1,5 +1,7 @@
 # Livraison de stabilisation — 19 novembre 2026
 
+Dernières finitions du 20 novembre : [carte, transparences, jauges et icônes de munitions](HUD-REFINEMENTS.md). JAR courant : build/deliverables/crysis-legacy-hud-refinements.jar. Les livraisons ci-dessous sont historiques.
+
 Dernière correction du 20 novembre : [sprint maintenu, commandes N2 et éditeur de thèmes N1](CONTROLS-THEMES.md). JAR courant : build/deliverables/crysis-legacy-controls-themes.jar. Les livraisons suivantes sont historiques.
 
 Nouvelle livraison du 20 novembre : [sprint N1, contacts ennemis et contours des jumelles](SPRINT-CONTACTS.md). JAR courant : build/deliverables/crysis-legacy-n1-sprint-contacts.jar. Les livraisons ci-dessous sont conservées comme historique.
