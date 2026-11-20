@@ -19,13 +19,24 @@ public final class NanoVisorZoomHandler {
    private static final float EPSILON = 1.0E-4F;
    private static float currentZoomMultiplier = 1.0F;
    private static boolean zoomInputActive;
-   private static Boolean lastHoldMode;
+   private static Boolean scrollTarget;
 
    private NanoVisorZoomHandler() {
    }
 
    public static void reset() {
-      currentZoomMultiplier=1;zoomInputActive=false;lastHoldMode=null;
+      currentZoomMultiplier=1;zoomInputActive=false;scrollTarget=null;
+   }
+
+   @SubscribeEvent(priority=net.neoforged.bus.api.EventPriority.HIGHEST)
+   public static void scroll(net.neoforged.neoforge.client.event.InputEvent.MouseScrollingEvent event) {
+      var mc=Minecraft.getInstance();
+      if(mc.screen==null && mc.getOverlay()==null && !ClassicBinoculars.isN1Context()
+         && NanoVisorState.canUse(mc) && NanoVisorState.isVisorActive() && NanoVisorSettings.Zoom.enabled()
+         && event.getScrollDeltaY()!=0) {
+         scrollTarget=event.getScrollDeltaY()>0;
+         event.setCanceled(true); // Includes scrolling farther at a zoom limit: never select a hotbar slot.
+      }
    }
 
    @SubscribeEvent
@@ -59,33 +70,17 @@ public final class NanoVisorZoomHandler {
          zoomInputActive=ClassicBinoculars.zoom()==4;
          return;
       }
-      boolean holdToUse = NanoVisorSettings.Zoom.holdToUse();
       while(NanoVisorKeyMappings.CLASSIC_BINOCULAR_ZOOM.consumeClick()){}
-      if (lastHoldMode == null || lastHoldMode != holdToUse) {
-         while (zoomKey.consumeClick()) {
-         }
-
-         zoomInputActive = holdToUse && zoomKey.isDown();
-         lastHoldMode = holdToUse;
-      }
-
       if (NanoVisorState.isVisorActive() && NanoVisorSettings.Zoom.enabled()) {
-         if (!holdToUse) {
-            while (zoomKey.consumeClick()) {
-               zoomInputActive = !zoomInputActive;
-            }
-         } else {
-            while (zoomKey.consumeClick()) {
-            }
-
-            zoomInputActive = zoomKey.isDown();
-         }
+         while(zoomKey.consumeClick())zoomInputActive=!zoomInputActive; // Optional user-bound fallback.
+         if(scrollTarget!=null)zoomInputActive=scrollTarget;
       } else {
          while (zoomKey.consumeClick()) {
          }
 
          zoomInputActive = false;
       }
+      scrollTarget=null;
    }
 
    public static float getNormalizedZoom() {

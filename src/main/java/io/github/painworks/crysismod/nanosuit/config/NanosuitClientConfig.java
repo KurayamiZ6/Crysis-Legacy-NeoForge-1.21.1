@@ -128,6 +128,21 @@ public final class NanosuitClientConfig {
    private static final ModConfigSpec.ConfigValue<String> CLASSIC_INTERFACE_COLOR = BUILDER
       .comment("Nanosuit 1 interface theme, #RRGGBB. Default preserves the original palette; backgrounds follow a darker shade. Does not change warnings, energy blue or selection amber.")
       .define("hud.classic.color", "#719671", value -> value instanceof String s && s.matches("#[0-9a-fA-F]{6}"));
+   private static final ModConfigSpec.ConfigValue<java.util.List<? extends String>> CLASSIC_COLOR_PRESETS = BUILDER
+      .comment("Named N1 theme presets, saved by the in-game color editor. Format: name|#RRGGBB.")
+      .defineListAllowEmpty("hud.classic.presets", java.util.List.of(), value -> value instanceof String s && s.matches("[^|]{1,24}\\|#[0-9a-fA-F]{6}"));
+   public static java.util.List<String> classicColorPresets() {
+      try { return java.util.List.copyOf(CLASSIC_COLOR_PRESETS.get()); }
+      catch(IllegalStateException exception) { return java.util.List.of(); }
+   }
+   public static void setClassicColorPresets(java.util.List<String> presets) {
+      if(presets.size()>16 || presets.stream().anyMatch(s->!s.matches("[^|]{1,24}\\|#[0-9a-fA-F]{6}")))
+         throw new IllegalArgumentException("Invalid N1 color presets");
+      CLASSIC_COLOR_PRESETS.set(java.util.List.copyOf(presets));CLASSIC_COLOR_PRESETS.save();
+   }
+   public static void setClassicInterfaceColor(int rgb) {
+      CLASSIC_INTERFACE_COLOR.set(String.format(java.util.Locale.ROOT,"#%06X",rgb&0xffffff));CLASSIC_INTERFACE_COLOR.save();
+   }
    private static final BooleanValue CLASSIC_MINIMAP_ENABLED = BUILDER.comment("Show Crysis N1 minimap. Disable to choose an external minimap; external configs are never changed.")
       .define("hud.classic.minimapEnabled",true);
    public static boolean classicMinimapEnabled(){return safeGetBoolean(CLASSIC_MINIMAP_ENABLED,true);}

@@ -26,7 +26,7 @@ public final class NanoVisorKeyMappings {
    public static final KeyMapping OPEN_NANO_VISOR_SETTINGS = new KeyMapping(
       "key.crysismod.open_nano_visor_settings", Type.KEYSYM, 78, "key.categories.crysismod"
    );
-   public static final KeyMapping USE_NANO_VISOR_ZOOM = new KeyMapping("key.crysismod.use_nano_visor_zoom", Type.KEYSYM, 67, "key.categories.crysismod");
+   public static final KeyMapping USE_NANO_VISOR_ZOOM = new KeyMapping("key.crysismod.use_nano_visor_zoom", Type.KEYSYM, -1, "key.categories.crysismod");
    public static final KeyMapping CLASSIC_BINOCULAR_ZOOM = new KeyMapping("key.crysismod.classic_binocular_zoom", Type.KEYSYM, -1, CATEGORY);
    private static int visorStateHeartbeatTicks = 20;
 

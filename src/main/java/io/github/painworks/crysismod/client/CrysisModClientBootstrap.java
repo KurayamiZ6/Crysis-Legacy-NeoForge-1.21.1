@@ -20,7 +20,7 @@ public final class CrysisModClientBootstrap {
 
    public static void init(IEventBus modEventBus, ModContainer context) {
       if (!initialized) {
-         context.registerExtensionPoint(IConfigScreenFactory.class, (container, parent) -> LegacySpectrumConfigScreen.create(parent));
+         context.registerExtensionPoint(IConfigScreenFactory.class, (container, parent) -> new io.github.painworks.crysismod.nanosuit.client.CrysisSettingsScreen(parent));
          modEventBus.addListener(NanosuitKeyMappings::register);
          modEventBus.addListener(NanoVisorKeyMappings::register);
          modEventBus.addListener(NanovisionKeybinds::register);

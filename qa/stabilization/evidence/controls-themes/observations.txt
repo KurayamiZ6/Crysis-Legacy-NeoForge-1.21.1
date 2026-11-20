@@ -1,0 +1,39 @@
+
+## held-sprint-jump
+Input JAR SHA256: d5a833582788c50a2e1eb5647774c84062e49a8493dd0a3436ccc4b820cb8870
+HOLD_JUMP phase=0 pass=true energy=0.0 sounds=1 sprint=true
+HOLD_JUMP phase=1 pass=true energy=48.00002 sounds=1 sprint=false
+HOLD_JUMP phase=2 pass=true energy=41.25002 sounds=1 sprint=true
+HOLD_JUMP boundary at5=100.0 at6=90.0 N1hold=0
+HOLD_JUMP phase=3 pass=true energy=90.0 sounds=1 sprint=false
+HOLD_JUMP_COMPLETE failures=0
+
+## zoom-theme-ui
+Input JAR SHA256: b8430dcd5f8f9a30b3464ea3328de61255d90cff6fa71b0c4137870ffc27d771
+ZOOM_THEME phase=0 pass=true zoom=0.36463668942451477 canceled=false slot=3 color=719671 presets=[]
+ZOOM_THEME phase=1 pass=true zoom=0.10360591858625412 canceled=true slot=3 color=719671 presets=[]
+ZOOM_THEME phase=2 pass=true zoom=0.10000000149011612 canceled=true slot=3 color=719671 presets=[]
+ZOOM_THEME phase=3 pass=true zoom=0.34639713168144226 canceled=true slot=3 color=719671 presets=[]
+ZOOM_THEME phase=4 pass=true zoom=0.9906325340270996 canceled=true slot=3 color=719671 presets=[]
+ZOOM_THEME phase=5 pass=true zoom=1.0 canceled=false slot=2 color=719671 presets=[]
+ZOOM_THEME phase=6 pass=true zoom=1.0 canceled=false slot=2 color=719671 presets=[]
+
+## zoom-theme-final
+Input JAR SHA256: b8430dcd5f8f9a30b3464ea3328de61255d90cff6fa71b0c4137870ffc27d771
+ZOOM_THEME phase=0 pass=true zoom=0.3593674898147583 canceled=false slot=3 color=719671 presets=[]
+ZOOM_THEME phase=1 pass=true zoom=0.10288473218679428 canceled=true slot=3 color=719671 presets=[]
+ZOOM_THEME phase=2 pass=true zoom=0.10000000149011612 canceled=true slot=3 color=719671 presets=[]
+ZOOM_THEME phase=3 pass=true zoom=0.34639713168144226 canceled=true slot=3 color=719671 presets=[]
+ZOOM_THEME phase=4 pass=true zoom=0.9906325340270996 canceled=true slot=3 color=719671 presets=[]
+ZOOM_THEME phase=5 pass=true zoom=1.0 canceled=false slot=2 color=719671 presets=[]
+ZOOM_THEME phase=6 pass=true zoom=1.0 canceled=false slot=2 color=719671 presets=[]
+ZOOM_THEME phase=7 pass=true zoom=1.0 canceled=false slot=2 color=719671 presets=[]
+ZOOM_THEME phase=8 pass=true zoom=1.0 canceled=false slot=2 color=3388cc presets=[Océan|#3388CC]
+ZOOM_THEME phase=9 pass=true zoom=1.0 canceled=false slot=2 color=719671 presets=[Océan|#3388CC]
+ZOOM_THEME phase=10 pass=true zoom=1.0 canceled=false slot=2 color=719671 presets=[Océan|#3388CC]
+ZOOM_THEME phase=11 pass=true zoom=1.0 canceled=false slot=2 color=719671 presets=[Océan|#3388CC]
+ZOOM_THEME phase=12 pass=true zoom=1.0 canceled=false slot=2 color=719671 presets=[]
+ZOOM_THEME_COMPLETE failures=0
+
+Final JAR SHA256: b8430dcd5f8f9a30b3464ea3328de61255d90cff6fa71b0c4137870ffc27d771
+All 627 class files identical to held-sprint-jump input; English translation line endings were the only subsequent resource formatting change.

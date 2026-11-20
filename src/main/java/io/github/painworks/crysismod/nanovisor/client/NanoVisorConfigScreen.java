@@ -49,6 +49,12 @@ public final class NanoVisorConfigScreen {
       enableTransparentBackgroundIfSupported(builder);
       ConfigEntryBuilder entries = builder.entryBuilder();
       buildGeneral(entries, builder.getOrCreateCategory(tr("category.general")));
+      ConfigCategory classic=builder.getOrCreateCategory(Component.translatable("screen.crysismod.n1theme.category"));
+      classic.addEntry(entries.startColorField(Component.translatable("screen.crysismod.n1theme.color"),NanosuitClientConfig.classicInterfaceColor())
+         .setDefaultValue(io.github.painworks.crysismod.nanosuit.client.ClassicHudPalette.DEFAULT)
+         .setTooltip(Component.translatable("screen.crysismod.n1theme.config_help"))
+         .setSaveConsumer(NanosuitClientConfig::setClassicInterfaceColor).build());
+      classic.addEntry(entries.startTextDescription(Component.translatable("screen.crysismod.n1theme.config_help")).build());
       buildZoom(entries, builder.getOrCreateCategory(tr("category.zoom")));
       buildTargeting(entries, builder.getOrCreateCategory(tr("category.targeting")));
       buildNanovision(entries, builder.getOrCreateCategory(tr("category.nanovision")));
@@ -152,15 +158,7 @@ public final class NanoVisorConfigScreen {
          1.0,
          NanoVisorClientConfig::setZoomLookSensitivityMultiplier
       );
-      addBoolean(
-         entries,
-         category,
-         "option.zoom_hold_to_use",
-         "tooltip.zoom_hold_to_use",
-         NanoVisorClientConfig.zoomHoldToUse(),
-         false,
-         NanoVisorClientConfig::setZoomHoldToUse
-      );
+      category.addEntry(entries.startTextDescription(Component.translatable("screen.crysismod.n1theme.zoom_help")).build());
    }
 
    private static void buildTargeting(ConfigEntryBuilder entries, ConfigCategory category) {
