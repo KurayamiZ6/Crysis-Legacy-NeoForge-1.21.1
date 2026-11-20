@@ -345,7 +345,8 @@ public class NanosuitPlayerHandler {
          int energySyncInterval = NanosuitServerConfig.energySyncIntervalTicks();
          NanosuitMode mode = data.getMode();
          boolean swimmingSprint = NanosuitSwimBoost.isSwimmingSprint(player);
-         boolean sprintDrainRequested = data.getEnergy() > 0.0F && player.isAlive() && !player.isSpectator()
+         // A held N1 sprint remains a drain request at zero, preventing recharge/sound oscillation.
+         boolean sprintDrainRequested = (data.getEnergy() > 0.0F || nanosuit1 && landSprinting) && player.isAlive() && !player.isSpectator()
             && (nanosuit1 || player.tickCount >= runtime.powerSprintCooldownUntilTick)
             && (landSprinting && (nanosuit1 || data.isSprintBoostReady()) && rulesProfile.controls().supports(Ability.POWER_SPRINT, mode)
                || swimmingSprint && rulesProfile.controls().supports(Ability.POWER_SWIM, mode));
