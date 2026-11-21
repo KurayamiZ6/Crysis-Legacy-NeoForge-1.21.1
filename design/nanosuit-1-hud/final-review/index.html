@@ -1,107 +1,78 @@
 <!doctype html>
 <html lang="fr">
+<head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Revue visuelle du HUD Nanosuit 1</title>
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Nanosuit 1 · Revue graphique détaillée</title>
 <style>
-  :root{color-scheme:dark;background:#111719;color:#e5eee7;font:16px/1.55 system-ui,sans-serif}
-  body{max-width:1420px;margin:auto;padding:28px clamp(16px,4vw,60px)}
-  h1,h2,h3{line-height:1.18;margin:0 0 .65em} h1{font-size:clamp(2rem,5vw,3.55rem)}
-  h2{font-size:1.55rem} p{max-width:92ch} a{color:#a5dfa8}
-  header,section{margin-bottom:36px} section{border-top:1px solid #3a4842;padding-top:24px}
-  .grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}
-  figure{margin:0;min-width:0;padding:12px;background:#1a2324;border:1px solid #34433e;border-radius:8px}
-  figcaption{margin-top:8px;color:#b7c7bd;font-size:.9rem}
-  .frame{width:100%;height:auto;display:block;aspect-ratio:2.6;background:#10171e}
-  .image-link{display:block} .capture svg{width:100%;height:auto}
-  table{width:100%;border-collapse:collapse} th,td{text-align:left;padding:9px 10px;border-bottom:1px solid #34433e;vertical-align:top}
-  td:nth-child(2){white-space:nowrap} small,.note{color:#b7c7bd}
-  label{display:inline-block;margin:0 18px 10px 0} select,input,button{font:inherit}
-  .decision{min-width:11ch} textarea{width:100%;min-height:4.5em;box-sizing:border-box;font:inherit}
-  .evidence{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:8px}
-  @media(max-width:770px){.grid{grid-template-columns:1fr}.frame{max-height:220px}td,th{padding:7px}td:nth-child(2){white-space:normal}.review-table{overflow:auto}label{max-width:100%}select{max-width:100%}}
+:root{color-scheme:dark;background:#111719;color:#e5eee7;font:16px/1.55 system-ui,sans-serif}
+body{max-width:1360px;margin:auto;padding:28px clamp(14px,4vw,55px)}
+h1,h2,h3{line-height:1.18}h1{font-size:clamp(2rem,4vw,3.3rem)}
+p{max-width:95ch}a{color:#a5dfa8}section{margin:36px 0;border-top:1px solid #3a4842}
+.grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}
+figure{min-width:0;margin:0;padding:10px;background:#1a2324;border:1px solid #34433e;border-radius:6px}
+img,svg{display:block;width:100%;height:auto}figcaption,.note,small{color:#b7c7bd}
+.shot{display:block;background:#121b20}.shot svg,.mock{aspect-ratio:var(--ratio,2);background:#141c23}
+.table{overflow:auto}table{width:100%;border-collapse:collapse}th,td{text-align:left;vertical-align:top;padding:10px;border-bottom:1px solid #35443f}td:first-child{min-width:8ch}
+details{margin:.65rem 0}summary{cursor:pointer;color:#a5dfa8}
+select,textarea{font:inherit;max-width:100%}textarea{width:100%;box-sizing:border-box;min-height:5em}
+@media(max-width:750px){.grid{grid-template-columns:1fr}}
 </style>
-<svg width="0" height="0" aria-hidden="true" style="position:absolute">
-  <defs>
-    <filter id="glyph-green" color-interpolation-filters="sRGB"><feColorMatrix type="matrix" values="0 .753 0 0 0  0 .937 0 0 0  0 .651 0 0 0  0 0 0 1 0"/></filter>
-    <filter id="frame-green" color-interpolation-filters="sRGB"><feColorMatrix type="matrix" values=".443 0 0 0 0  0 .588 0 0 0  0 0 .443 0 0  0 0 0 1 0"/></filter>
-  </defs>
-</svg>
+</head>
+<body>
 <header>
-  <h1>Revue visuelle du HUD Nanosuit 1</h1>
-  <p>Crysis Remastered en mode classique et Crysis Legacy sur Minecraft NeoForge 1.21.1. Revue du commit <code>6c921c6</code>. Les propositions sont des maquettes indépendantes à valider.</p>
-  <nav><a href="#inventory">Inventaire</a> · <a href="#HUD-01">HUD-01</a> · <a href="#OPTIC-01">OPTIC-01</a> · <a href="#validation">Validation</a></nav>
+<h1>Revue graphique détaillée du HUD Nanosuit 1</h1>
+<p>Révision du lot de conception sur le rendu Minecraft <code>6c921c6</code>. <a href="lot-1-refuse.html">HUD-01 et OPTIC-01 sont archivées comme refusées.</a></p>
+<nav><a href="#audit">Relevé des écarts</a> · <a href="#HUD-02">Cadres</a> · <a href="#TYPE-01">Chiffres</a> · <a href="#FIRE-01">Modes de tir</a> · <a href="#decisions">Validation</a></nav>
 </header>
-<section id="inventory">
-  <h2>Inventaire</h2>
-  <p class="note">A · satisfaisant &nbsp; B · perfectible &nbsp; C · à revoir. Le classement tient compte du gain attendu et du risque d'une modification.</p>
-  <div class="review-table"><table>
-    <thead><tr><th>Composant</th><th>Classe</th><th>Écart observé et décision</th></tr></thead>
-    <tbody>
-      <tr><td>Santé, énergie, mode actif et coins supérieurs</td><td>A</td><td>Disposition basse à droite, deux pistes biseautées, médaillon et traits supérieurs. Les contours Minecraft sont plus fins et le vert est légèrement différent selon la scène. Les jauges gardent leurs couleurs et leur zéro à droite. Le gain d'une retouche isolée paraît faible.</td></tr>
-      <tr><td>Alertes et batterie de vision nocturne</td><td>A</td><td>Alerte énergétique et quatre segments indépendants en haut à droite. Les références fixes ne suffisent pas à comparer la cadence exacte des alertes. Les états connus restent lisibles.</td></tr>
-      <tr><td>Menu radial</td><td>A</td><td>Disposition en croix, silhouettes hexagonales, fonds translucides, anneau et chevron. Les archives montrent que le fond clair réduit le contraste, sans justifier un changement des fonds déjà validés. Le tour de 10 s, le flash de 0,5 s, le maintien, les quadrants et le déplacement des panneaux restent les paramètres de référence.</td></tr>
-      <tr><td>Minicarte et navigation</td><td>A</td><td>Cadre inférieur gauche, cap, terrain tournant, chevron, deux traits et cône jusqu'au bord. La texture Minecraft est plus pixellisée que l'imagerie de Crysis. Elle représente le terrain du monde. Les captures de waypoint vérifient l'objectif suivi séparément des contacts ennemis.</td></tr>
-      <tr><td>Threat Indicator</td><td>A</td><td>Colonne d'alerte au bord gauche de la carte et triangle en bas à gauche. Leur placement concorde avec les références rapprochées et la dernière validation. Les flèches et contours partagent les états de menace, avec des silhouettes liées aux modèles Minecraft. La cadence exacte du flash original reste inconnue.</td></tr>
-      <tr><td>Jumelles</td><td>B</td><td>Cadre, graduations bilatérales, zoom, réticule et coordonnées sont en place. La scène archivée montre un chevauchement de la distance avec le nom de l'objet Minecraft. La correction OPTIC-01 cible cette collision. Les différences de coordonnées et de densité de scène sont inhérentes à l'adaptation.</td></tr>
-      <tr><td>Vision nocturne N1</td><td>A</td><td>Teinte jaune-verte, éclairage réel et coins atténués. Le contraste varie selon les matériaux et shaders. Les captures confirment la coexistence avec les jumelles. Les transitions ne peuvent pas être calibrées à partir d'images non horodatées.</td></tr>
-      <tr><td>Armes et munitions</td><td>B</td><td>Le chargeur est moins dominant dans Minecraft et la réserve de longueur variable part d'un même bord gauche. HUD-01 ajuste leur hiérarchie. Les compteurs TACZ, les trois modes de tir et les icônes restent disponibles. La ligne de grenades dépend des objets reconnus.</td></tr>
-      <tr><td>Cohérence d'ensemble</td><td>B</td><td>Les textes condensés, couleurs et angles fonctionnent ensemble. L'écart le plus tangible est la concurrence entre le texte central des jumelles et le HUD Minecraft. Les deux retouches proposées sont localisées. Aucun composant ne nécessite une refonte de classe C à ce stade.</td></tr>
-    </tbody>
-  </table></div>
+<section id="audit">
+<h2>Relevé des écarts</h2>
+<p>A · satisfaisant dans le périmètre revu. B · correction locale à étudier. C · écart visible qui mérite une proposition prioritaire. Les états historiques sont signalés dans les légendes.</p>
+<div class="table"><table>
+<thead><tr><th>Zone</th><th>Niveau</th><th>Forme et alignement</th><th>Texte, état et vérification à prévoir</th></tr></thead>
+<tbody>
+<tr><td>Santé et énergie</td><td>C</td><td>Le chanfrein gauche des deux pistes est visible. Les raccords à droite restent hétérogènes. Le bord du bloc de munitions et la garniture du médaillon dessinent deux amorces sur des axes différents.</td><td>Les valeurs ont une colonne commune, mais leurs lignes de base ne sont pas construites sur le milieu des pistes inclinées. Bleu d’énergie, vert de santé, zéro à droite et biseaux validés servent de repères. <a href="#HUD-02">HUD-02</a>, <a href="#TYPE-01">TYPE-01</a>.</td></tr>
+<tr><td>Badge du mode actif</td><td>B</td><td>Le décroché supérieur est proche du cadre d’armes, mais il ne prolonge pas clairement son bord oblique. La silhouette et le centrage doivent être examinés séparément pour Force, Vitesse, Armure et Camouflage.</td><td>Les icônes Force/Vitesse récentes sont centrées avec leurs propres marges. Une preuve identique par mode manque pour mesurer un nouveau décalage. HUD-02 examine le raccord et conserve les icônes actuelles.</td></tr>
+<tr><td>Alertes, batterie et coins</td><td>B</td><td>Les segments jaunes et les deux traits supérieurs existent. La référence montre une jauge légèrement inclinée sous un trait d’habillage. Le banc montre une barrette horizontale distincte. La différence se voit davantage lorsque la vision nocturne est active.</td><td>Comparer aussi les états à 25, 15 et 0 %, ainsi que la recharge. Les images fixes ne suffisent pas à mesurer la cadence de flash. Ce point reste hors du lot courant.</td></tr>
+<tr><td>Menu radial</td><td>B</td><td>La croix, les encoches, les détails hexagonaux et les fonds sont visibles. Les contours clairs se détachent moins du ciel Minecraft. La vue Remastered et les captures QA n’ont ni le même fond, ni exactement le même quadrant sélectionné.</td><td>Comparer à hauteur égale le diamètre de l’anneau, le jeu entre anneau et panneaux, puis la bascule de l’icône et du flash. Les comportements validés à 10 s et 0,5 s servent de contrôle.</td></tr>
+<tr><td>Carte, cap et repères</td><td>B</td><td>Le quadrilatère de terrain, la boussole, le cône transparent, le chevron et ses deux traits sont visibles dans le dernier rendu. L’encoche près de l’alerte et l’épaisseur de la bande du cap méritent un relevé dédié.</td><td>La lettre du cap paraît petite et isolée par rapport à la bande. Une seule direction dans une capture ne démontre aucun défaut de placement quand plusieurs lettres apparaissent. Le terrain Minecraft est plus pixellisé par nature.</td></tr>
+<tr><td>Threat Indicator et contacts</td><td>B</td><td>La colonne est au bord gauche validé. L’écart porte surtout sur le poids des séparations de segments et le raccord visuel au triangle, pas sur le côté où placer la colonne.</td><td>Le rouge et la recherche jaune/orange s’examinent séparément. Comparer aussi sur terrain teinté. Les contours d’ennemis Minecraft suivent la géométrie des mobs. La recherche et la détection restent des états distincts.</td></tr>
+<tr><td>Jumelles</td><td>B</td><td>Les montants, traverses et le réticule ont la bonne organisation. Les graduations longues et courtes du mod présentent moins de contraste d’épaisseur. Les libellés ZOOM et MODE sont à examiner par rapport à leurs cartouches respectifs, avec un cadrage commun.</td><td>Pitch, zoom, distance et coordonnées sont des données distinctes. La typographie de l’optique est à étudier dans un lot dédié. Les coordonnées Minecraft gardent leur format. Le déplacement proposé de la distance a été refusé.</td></tr>
+<tr><td>Vision nocturne</td><td>A</td><td>La scène est effectivement éclaircie et le vert est jaune-vert. Les coins s’assombrissent sans masquer la composition. Le matériau et le shader changent beaucoup le résultat.</td><td>Le mode simultané avec jumelles est documenté. Une comparaison d’intensité uniforme entre jeux demanderait des scènes et des expositions comparables. L’orientation de la batterie est traitée séparément.</td></tr>
+<tr><td>Munitions et objets à lancer</td><td>C</td><td>Le haut du panneau, l’arête droite et la grille interne ne lisent pas comme un ensemble cohérent avec le badge. Le repère semi, la silhouette de munition et l’information de cadence utilisent la même cellule.</td><td>AUTO et BURST partagent trois projectiles puis se distinguent par un filet fin. La réserve et le compteur inférieur ne suivent pas la ligne de base inclinée avec la même méthode. Compteurs TACZ réels et objets reconnus uniquement. <a href="#FIRE-01">FIRE-01</a>.</td></tr>
+<tr><td>Typographie et superpositions</td><td>C</td><td>Les alignements sont posés élément par élément et les angles de lecture varient d’un panneau à l’autre. Le rapprochement du bloc droit est prioritaire avant un changement global d’échelle.</td><td>Les chiffres de santé et ceux des munitions emploient deux atlas distincts. La référence privilégie des chiffres étroits, aux traits réguliers et aux contreformes plus rectangulaires. Les lettres du cap et des jumelles, et les superpositions avec la hotbar, doivent être contrôlées séparément.</td></tr>
+</tbody></table></div>
+<details><summary>Voir les paires de captures utilisées pour chaque zone</summary><div id="evidence"></div></details>
+<p class="note">Les recadrages conservent les proportions de chaque capture. Les dimensions apparentes varient avec le ratio de l’écran, l’échelle GUI, le fond et l’état représenté. Les mesures de cadence et les variantes de tir originales qu’aucune capture ne documente restent ouvertes.</p>
 </section>
-<section id="HUD-01">
-  <h2>HUD-01 · Hiérarchie des munitions</h2>
-  <p>Dans la capture Remastered, le nombre chargé domine la réserve. La maquette donne plus de hauteur aux chiffres chargés, de 35 à 42 unités, et aligne le bord droit de la réserve sur une position fixe. Le réglage se limite à la ligne supérieure du panneau.</p>
-  <div class="grid">
-    <figure class="capture" data-image="../references/user-2026-11-19/01-pistol.jpg" data-size="2538 1506" data-crop="2077 1228 273 105"><figcaption>Crysis Remastered · pistolet · 2538 × 1506</figcaption></figure>
-    <figure class="capture" data-image="../../../qa/stabilization/evidence/hud-refinements/map-default-final.png" data-size="1920 1080" data-crop="1561 867 195 75"><figcaption>Minecraft actuel · SPAS-12 · 1920 × 1080</figcaption></figure>
-    <figure><svg class="frame" id="ammo" viewBox="112 -20 278.6 107.2" aria-label="Maquette du compteur de munitions"></svg><figcaption>Proposition isolée · données de démonstration</figcaption></figure>
-  </div>
-  <p><label>Comparaison dans la maquette <select id="ammo-layout"><option value="proposal">Hiérarchie proposée</option><option value="current">Disposition actuelle</option></select></label>
-  <label>Réserve de démonstration <select id="ammo-count"><option>29</option><option>7</option><option>128</option></select></label></p>
-  <p class="note">Le pistolet sert de référence typographique et le SPAS-12 de référence Minecraft. Le pictogramme de cartouche de la maquette vient du mod. Les valeurs à trois chiffres et le texte avec thème personnalisé seraient les principaux cas à vérifier en jeu après validation. Risque limité au placement des glyphes.</p>
+<section id="HUD-02">
+<h2>HUD-02 · Raccord du panneau droit</h2>
+<p>Raccorder l’arête du compteur d’armes au décroché supérieur du médaillon avec un seul segment. Dessiner les deux lignes du cadre de munitions sur une même pente douce. Le résultat se juge sur le bloc complet, avec la réserve, les jauges et le badge visibles.</p>
+<div class="grid" id="geometry-grid"></div>
+<p class="note">La proposition repose sur la géométrie du mod et des raccords redessinés. Une intégration validée modifierait les contours de deux couches voisines. À contrôler ensuite avec le compteur masqué, les objets à lancer et les deux échelles GUI.</p>
 </section>
-<section id="OPTIC-01">
-  <h2>OPTIC-01 · Distance dégagée dans les jumelles</h2>
-  <p>Le télémètre est sous la traverse basse dans Remastered et dans le mod. En jeu, le nom de l'objet tenu peut occuper ce même espace. Je propose de déplacer uniquement la distance de 859 à 797 sur le repère vertical 1080. Elle se place juste au-dessus de la traverse basse, toujours centrée.</p>
-  <div class="grid">
-    <figure class="capture" data-image="../references/user-2026-11-19/04-binoculars.jpg" data-size="2539 1498" data-crop="1065 974 440 169.23"><figcaption>Crysis Remastered · distance sous la traverse · 2539 × 1498</figcaption></figure>
-    <figure class="capture" data-image="../../../qa/stabilization/evidence/stability-combined-final-tacz-binoculars.png" data-size="1920 1080" data-crop="755 730 410 157.7"><figcaption>Minecraft · archive avec le nom « Glock 17 » au même endroit · 1920 × 1080</figcaption></figure>
-    <figure><svg class="frame" id="optic" viewBox="755 730 410 157.7" aria-label="Maquette du télémètre dans les jumelles"></svg><figcaption>Proposition isolée · 11.00 M et nom d'objet de démonstration</figcaption></figure>
-  </div>
-  <p><label>Comparaison dans la maquette <select id="optic-layout"><option value="proposal">Distance proposée</option><option value="current">Disposition actuelle</option></select></label>
-  <label><input id="item-label" type="checkbox" checked> Simuler le nom de l'objet</label></p>
-  <p class="note">C'est un écart assumé à la position d'origine pour que les deux textes restent visibles dans Minecraft. Le cadre de la maquette reprend l'actif du mod. Sur un fond clair, il restera à vérifier le contraste et la séparation du texte avec la traverse aux échelles GUI 2 et 3. Risque limité au placement à l'écran. La mesure, le zoom et les règles d'ouverture et de fermeture gardent leurs paramètres validés.</p>
+<section id="TYPE-01">
+<h2>TYPE-01 · Chiffres et lignes de base</h2>
+<p>Adopter une même famille de chiffres polygonaux, étroits et à chasse fixe pour le bloc droit. Ancrer chaque nombre sur le centre de sa propre cellule. Les deux valeurs de santé et d’énergie partagent une colonne. Les munitions en réserve et les objets à lancer partagent un axe. La taille relative chargeur/réserve reste celle du code actuel.</p>
+<div class="grid" id="type-grid"></div>
+<label>Valeurs de démonstration <select id="sample"><option value="normal">007 · 29 · 100 / 100</option><option value="wide">123 · 128 · 25 / 50</option></select></label>
+<p class="note">Le dessin des glyphes est une proposition originale. Le lot couvre uniquement les nombres du bloc droit. Les lettres des jumelles et de la boussole ont des contraintes différentes. Vérifier les chiffres fins, les réserves à trois chiffres et la lisibilité avec un thème personnalisé.</p>
 </section>
-<section id="sources">
-  <h2>Captures complètes et limites</h2>
-  <p>Les vignettes cadrent les détails en conservant leurs proportions. L'échelle d'affichage des recadrages est comparable pour lire les détails, mais leur taille à l'écran se juge à partir des captures complètes. Les scènes, l'arme, l'éclairage et parfois l'état de l'interface diffèrent.</p>
-  <p class="note">Repères approximatifs relevés sur les captures complètes, du bord gauche au bord droit du groupe visible. Le panneau santé/énergie et son médaillon occupent environ 15 % de la largeur dans Minecraft et 17 % dans Remastered. La carte, triangle compris, occupe environ 14 % et 16 % respectivement. Les deux groupes gardent des ancrages comparables par rapport aux coins. Ces écarts englobent des rapports d'écran différents, 16:9 et environ 1,69:1, ainsi que les réglages d'échelle du mod. Ils ne justifient pas à eux seuls un redimensionnement.</p>
-  <div class="evidence">
-    <a href="../references/user-2026-11-19/01-pistol.jpg">Remastered · HUD normal</a>
-    <a href="../references/user-2026-11-19/11-detected-red.jpg">Remastered · menace rouge</a>
-    <a href="../references/user-2026-11-19/04-binoculars.jpg">Remastered · jumelles seules</a>
-    <a href="../references/user-2026-11-19/06-night-binoculars.jpg">Remastered · vision nocturne et jumelles</a>
-    <a href="../../nanosuit-1-radial/assets/reference-menu.png">Référence du menu radial</a>
-    <a href="../../../qa/radial-menu/FEEDBACK_RESULTS.md">Minecraft · séquence et mesures du radial</a>
-    <a href="../../../qa/stabilization/evidence/hud-refinements/index.html">Minecraft · jauges, carte et armes récentes</a>
-    <a href="../../../qa/classic-hud/evidence-map/west-goal.png">Minecraft · waypoint suivi</a>
-    <a href="../../../qa/stabilization/evidence/stability-combined-final-tacz-zoom4.png">Minecraft · jumelles + vision nocturne + TACZ</a>
-    <a href="../../../qa/classic-hud/binocular-evidence/index.html">Minecraft · séquences des jumelles</a>
-    <a href="../../../qa/stabilization/evidence/sprint-contacts/classic-contacts-complementary-contacts-1.png">Minecraft · contours et contacts de menace</a>
-    <a href="../../../qa/stabilization/evidence/stability-combined-final-lit.png">Minecraft · vision nocturne avec Complementary</a>
-  </div>
-  <p class="note">Revue sur captures réelles déjà collectées. Les captures anciennes sont utilisées pour les éléments dont le code examiné confirme la disposition actuelle. La superposition du télémètre a été observée dans une archive, et sa fréquence selon les tailles GUI n'a pas été remesurée. Les PDF servent à identifier les composants, les captures Remastered servent aux comparaisons graphiques. Les animations d'origine ne sont pas déduites des seules images fixes.</p>
+<section id="FIRE-01">
+<h2>FIRE-01 · Symboles de tir</h2>
+<p>Conserver un projectile vertical en SEMI. Donner à BURST une silhouette groupée et à AUTO une silhouette étalée, lisibles par leur forme même quand le trait inférieur actuel disparaît à petite échelle. Les trois modes sont affichés ensemble dans la maquette.</p>
+<div class="grid" id="fire-grid"></div>
+<p class="note">La capture Remastered documente ici le coup par coup. Les formes BURST et AUTO sont des propositions de lisibilité, sans équivalence originale vérifiée. La maquette couvre les munitions ordinaires. Cartouches, roquettes, grenades et l’infini de la mêlée nécessitent leurs propres comparaisons avant une retouche.</p>
 </section>
-<section id="validation">
-  <h2>Validation par proposition</h2>
-  <p>Choisis un avis par ligne et renvoie-le dans le chat. Les choix de cette page préparent le texte à copier.</p>
-  <table><thead><tr><th>ID</th><th>Modification</th><th>Avis</th></tr></thead><tbody>
-    <tr><td>HUD-01</td><td>Hiérarchie et alignement des compteurs de munitions</td><td><select class="decision" aria-label="Avis HUD-01" data-id="HUD-01"></select></td></tr>
-    <tr><td>OPTIC-01</td><td>Déplacement du télémètre au-dessus de la traverse</td><td><select class="decision" aria-label="Avis OPTIC-01" data-id="OPTIC-01"></select></td></tr>
-  </tbody></table>
-  <p><textarea id="reply" readonly aria-label="Avis à copier" placeholder="Les avis choisis s’affichent ici."></textarea></p>
+<section id="decisions">
+<h2>Validation indépendante</h2>
+<div class="table"><table><thead><tr><th>ID</th><th>Retouche</th><th>Avis</th></tr></thead><tbody>
+<tr><td>HUD-02</td><td>Raccord et géométrie du bloc droit</td><td><select data-decision="HUD-02" aria-label="Avis HUD-02"></select></td></tr>
+<tr><td>TYPE-01</td><td>Chiffres et alignement dans les cellules</td><td><select data-decision="TYPE-01" aria-label="Avis TYPE-01"></select></td></tr>
+<tr><td>FIRE-01</td><td>Trois silhouettes de tir distinctes</td><td><select data-decision="FIRE-01" aria-label="Avis FIRE-01"></select></td></tr>
+</tbody></table></div>
+<p><textarea id="reply" readonly aria-label="Avis à copier" placeholder="Les avis choisis pourront être copiés dans le chat."></textarea></p>
 </section>
-<script src="previews.js"></script>
+<script src="review-detail.js"></script>
+</body>
 </html>
