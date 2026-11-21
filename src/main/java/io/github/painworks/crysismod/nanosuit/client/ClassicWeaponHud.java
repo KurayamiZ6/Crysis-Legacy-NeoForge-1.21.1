@@ -75,7 +75,7 @@ public final class ClassicWeaponHud {
          if(state.ammoKind()!=ClassicAmmoIcons.Kind.BULLET && java.util.Set.of("SEMI","AUTO","BURST").contains(state.fireMode())){
             layer(g,asset(state.ammoKind().name().toLowerCase(java.util.Locale.ROOT)+"-"+state.fireMode().toLowerCase(java.util.Locale.ROOT)),294,7,60,48,rgb,1);
          }else switch(state.fireMode()){
-            case "SEMI" -> layer(g,BULLET,307,7,18,48,rgb,1);
+            case "SEMI" -> layer(g,BULLET,294,7,60,48,rgb,1);
             case "AUTO" -> layer(g,AUTO,294,7,60,48,rgb,1);
             case "BURST" -> layer(g,BURST,294,7,60,48,rgb,1);
             default -> {} // Unknown fire selector data is not presented as semi-automatic.
