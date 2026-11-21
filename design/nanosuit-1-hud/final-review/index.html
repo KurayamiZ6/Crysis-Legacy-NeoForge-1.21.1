@@ -84,10 +84,10 @@ select,textarea{font:inherit;max-width:100%}textarea{width:100%;box-sizing:borde
 </section>
 <section id="MALF-01">
 <h2>MALF-01 · État « MALFUNCTION »</h2>
-<p>Étude visuelle d’une exposition à une impulsion EMP ou à une arme électrique. La couleur rouge de panne prend temporairement le relais du thème sélectionné. Le terrain de la minicarte N1 reste lisible sous les lignes de balayage et les bandes décalées du brouillage CRT. Les marqueurs ennemis et celui du point suivi disparaissent pendant la panne. La démonstration utilise un terrain schématique. Le texte condensé MALFUNCTION passe du blanc au rouge avec la même interpolation douce.</p>
+<p>Étude visuelle d’une exposition à une impulsion EMP ou à une arme électrique. La couleur rouge de panne prend temporairement le relais du thème sélectionné. Le terrain, les lettres de la boussole et le point d’exclamation passent au rouge. Les fonds du bandeau et du médaillon restent gris. Le terrain de la minicarte N1 reste lisible sous les lignes de balayage et les bandes décalées du brouillage CRT. Les marqueurs ennemis et celui du point suivi disparaissent pendant la panne. La démonstration utilise un terrain schématique. Le texte condensé MALFUNCTION passe du blanc au rouge avec la même interpolation douce.</p>
 <div class="grid" id="malfunction-grid"></div>
 <p><button id="replay-malfunction" type="button">Rejouer le brouillage</button></p>
-<p class="note">Le rouge proposé est <code>#eb6670</code>. En jeu, l’effet visuel utiliserait temporairement la couleur du thème sans écrire dans le préréglage enregistré. La durée de 2,8 s sert à la démonstration. Le déclenchement et la durée en jeu restent à définir.</p>
+<p class="note">Le rouge proposé est <code>#eb6670</code>. En jeu, les dégâts électriques déclenchent cet affichage pour 56 ticks. La foudre vanilla est incluse et les dégâts de mods peuvent être ajoutés au tag <code>crysismod:classic_malfunction</code>. Le thème choisi reprend automatiquement à la fin de la panne.</p>
 </section>
 <section id="decisions">
 <h2>Validation indépendante</h2>

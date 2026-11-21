@@ -1,5 +1,9 @@
 package io.github.painworks.crysismod.nanosuit.handler;
 
+import io.github.painworks.crysismod.nanosuit.network.ClassicMalfunctionPacket;
+import net.minecraft.core.registries.Registries;
+import net.minecraft.tags.TagKey;
+import net.minecraft.world.damagesource.DamageType;
 import io.github.painworks.crysismod.nanosuit.network.SyncPowerFeedbackPacket;
 
 import com.mojang.logging.LogUtils;
@@ -79,6 +83,18 @@ public class NanosuitPlayerHandler {
    private static long profilingMovingTrueCalls = 0L;
    private static long profilingMovingTotalNanos = 0L;
    private static long profilingMovingMaxNanos = 0L;
+
+   private static final TagKey<DamageType> CLASSIC_MALFUNCTION_DAMAGE =
+      TagKey.create(Registries.DAMAGE_TYPE, net.minecraft.resources.ResourceLocation.fromNamespaceAndPath("crysismod", "classic_malfunction"));
+
+   @SubscribeEvent(priority = net.neoforged.bus.api.EventPriority.HIGH)
+   public void onElectricalImpact(LivingIncomingDamageEvent event) {
+      if (event.getEntity() instanceof ServerPlayer player && !player.isSpectator() && event.getAmount() > 0
+         && event.getSource().is(CLASSIC_MALFUNCTION_DAMAGE)
+         && NanosuitArmorUtil.getEquippedProfile(player) == NanosuitProfile.NANOSUIT_1) {
+         NanosuitNetwork.sendToPlayer(player, new ClassicMalfunctionPacket());
+      }
+   }
 
    @SubscribeEvent
    public void onPlayerClone(Clone event) {

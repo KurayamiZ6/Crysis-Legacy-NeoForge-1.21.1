@@ -85,7 +85,7 @@ public final class ClassicBinoculars {
    public static void render(GuiGraphics g,float partial){
       float p=progress();if(p<=0||!NanoVisorSettings.General.visorOverlayEnabled())return;
       var mc=Minecraft.getInstance();float sx=g.guiWidth()/1920f,sy=g.guiHeight()/1080f;
-      int rgb=NanosuitClientConfig.classicInterfaceColor();
+      int rgb=io.github.painworks.crysismod.nanosuit.client.ClassicMalfunction.hudColor();
       int textRgb=rgb==io.github.painworks.crysismod.nanosuit.client.ClassicHudPalette.DEFAULT?0xc0efa6:rgb;
       boolean depth=org.lwjgl.opengl.GL11.glIsEnabled(org.lwjgl.opengl.GL11.GL_DEPTH_TEST);
       g.pose().pushPose();

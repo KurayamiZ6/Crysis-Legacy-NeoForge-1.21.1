@@ -5,6 +5,9 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.texture.DynamicTexture;
 import net.minecraft.client.renderer.texture.TextureManager;
 import net.minecraft.resources.ResourceLocation;
+import io.github.painworks.crysismod.nanosuit.client.ClassicHudPalette;
+import io.github.painworks.crysismod.nanosuit.client.ClassicMalfunction;
+import io.github.painworks.crysismod.nanosuit.config.NanosuitClientConfig;
 
 public final class NanoMinimapTerrainTexture {
    private static final ResourceLocation TEXTURE_ID = ResourceLocation.fromNamespaceAndPath("crysismod", "dynamic/nano_minimap_terrain");
@@ -13,11 +16,12 @@ public final class NanoMinimapTerrainTexture {
    private int resolution;
    private boolean hasTexture;
    private boolean classicPalette;
-   private int classicColor=io.github.painworks.crysismod.nanosuit.client.ClassicHudPalette.DEFAULT;
+   private int classicColor=ClassicHudPalette.DEFAULT;
    private int[] sourcePixels;
 
    public void setClassicPalette(boolean enabled){
-      int theme=enabled?io.github.painworks.crysismod.nanosuit.config.NanosuitClientConfig.classicInterfaceColor():classicColor;
+      int theme=classicColor;
+      if(enabled) theme=ClassicMalfunction.active()?0xeb9c9e:NanosuitClientConfig.classicInterfaceColor();
       if(classicPalette!=enabled || enabled&&classicColor!=theme){classicPalette=enabled;classicColor=theme;if(sourcePixels!=null)upload(sourcePixels);}
    }
 
@@ -48,7 +52,7 @@ public final class NanoMinimapTerrainTexture {
 
                for (int x = 0; x < side; x++) {
                   int color=argbPixels[row+x];
-                  if(classicPalette)color=io.github.painworks.crysismod.nanosuit.client.ClassicHudPalette.terrainColor(color,classicColor);
+                  if(classicPalette)color=ClassicHudPalette.terrainColor(color,classicColor);
                   this.pixels.setPixelRGBA(x, y, argbToAbgr(color));
                }
             }

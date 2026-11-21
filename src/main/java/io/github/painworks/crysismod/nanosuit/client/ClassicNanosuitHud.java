@@ -11,6 +11,7 @@ import net.minecraft.world.entity.player.Player;
 @net.neoforged.fml.common.EventBusSubscriber(modid="crysismod", value=net.neoforged.api.distmarker.Dist.CLIENT)
 public final class ClassicNanosuitHud {
    private static final ResourceLocation PANEL=asset("panel"), ENERGY=asset("energy"), CRITICAL=asset("critical"), HEALTH=asset("health"), OUTLINE=asset("panel-outline");
+   private static final ResourceLocation MALFUNCTION=asset("panel-malfunction");
    private static final ResourceLocation ARMOR=asset("armor"), STRENGTH=asset("strength"), SPEED=asset("speed"), CLOAK=asset("cloak");
    private static final ResourceLocation BATTERY_OFF=asset("battery-off"), BATTERY_ON=asset("battery-on");
    private static final ResourceLocation FRAME_LEFT=asset("frame-left"), FRAME_RIGHT=asset("frame-right");
@@ -26,26 +27,29 @@ public final class ClassicNanosuitHud {
       try {
          RenderSystem.enableBlend(); RenderSystem.defaultBlendFunc();
          g.pose().translate(x,y,0);g.pose().scale(scale,scale,1);
-         int rgb=NanosuitClientConfig.classicInterfaceColor();
-         layer(g,PANEL);
+         int rgb=ClassicMalfunction.hudColor();
+         boolean malfunction=ClassicMalfunction.active();
+         layer(g,malfunction?MALFUNCTION:PANEL);
          int outline=rgb==ClassicHudPalette.DEFAULT?0x62815b:rgb;
          g.setColor(ClassicHudPalette.red(outline),ClassicHudPalette.green(outline),ClassicHudPalette.blue(outline),1);
          blit(g,OUTLINE);
          g.setColor(1,1,1,1);
-         clippedFill(g,ENERGY,x,y,scale,ClassicHudValues.fraction(data.getEnergy(),100));
-         if (ClassicHudValues.alert(data.getEnergy())==2) {
-            // Red icon remains visible even at zero; the fill always follows actual energy.
-            g.enableScissor((int)(x+195*scale),(int)y,(int)Math.ceil(x+239*scale),(int)Math.ceil(y+155*scale));
-            layer(g,CRITICAL);g.disableScissor();
-            clippedFill(g,CRITICAL,x,y,scale,ClassicHudValues.fraction(data.getEnergy(),100));
+         if(!malfunction){
+            clippedFill(g,ENERGY,x,y,scale,ClassicHudValues.fraction(data.getEnergy(),100));
+            if (ClassicHudValues.alert(data.getEnergy())==2) {
+               // Red icon remains visible even at zero; the fill always follows actual energy.
+               g.enableScissor((int)(x+195*scale),(int)y,(int)Math.ceil(x+239*scale),(int)Math.ceil(y+155*scale));
+               layer(g,CRITICAL);g.disableScissor();
+               clippedFill(g,CRITICAL,x,y,scale,ClassicHudValues.fraction(data.getEnergy(),100));
+            }
+            clippedFill(g,HEALTH,x,y,scale,ClassicHudValues.fraction(player.getHealth(),player.getMaxHealth()));
+            g.pose().pushPose();
+            ClassicHudText.alignWithPanel(g,-100);
+            int textColor=ClassicHudPalette.textColor(rgb);
+            ClassicHudText.digits(g,ClassicHudValues.percent(data.getEnergy(),100),292,113,28,49,textColor,0);
+            ClassicHudText.digits(g,ClassicHudValues.percent(player.getHealth(),player.getMaxHealth()),292,142,28,49,textColor,0);
+            g.pose().popPose();
          }
-         clippedFill(g,HEALTH,x,y,scale,ClassicHudValues.fraction(player.getHealth(),player.getMaxHealth()));
-         g.pose().pushPose();
-         ClassicHudText.alignWithPanel(g,-100);
-         int textColor=ClassicHudPalette.textColor(rgb);
-         ClassicHudText.digits(g,ClassicHudValues.percent(data.getEnergy(),100),292,113,28,49,textColor,0);
-         ClassicHudText.digits(g,ClassicHudValues.percent(player.getHealth(),player.getMaxHealth()),292,142,28,49,textColor,0);
-         g.pose().popPose();
          ResourceLocation icon=switch(data.getMode()) {
             case ARMOR -> ARMOR; case STRENGTH -> STRENGTH; case SPEED -> SPEED; case CLOAK -> CLOAK;
             default -> null;
@@ -66,7 +70,7 @@ public final class ClassicNanosuitHud {
    }
    private static void renderPermanentFrame(GuiGraphics g) {
       float base=g.guiHeight()/1080f, s=base*NanosuitClientConfig.classicHudScale();
-      int rgb=NanosuitClientConfig.classicInterfaceColor();
+      int rgb=ClassicMalfunction.hudColor();
       boolean custom=rgb!=ClassicHudPalette.DEFAULT;
       RenderSystem.enableBlend();RenderSystem.defaultBlendFunc();
       if(custom)g.setColor(ClassicHudPalette.red(rgb),ClassicHudPalette.green(rgb),ClassicHudPalette.blue(rgb),1);
@@ -83,8 +87,8 @@ public final class ClassicNanosuitHud {
       g.setColor(1,1,1,1);RenderSystem.disableBlend();
    }
    private static void layer(GuiGraphics g,ResourceLocation texture) {
-      int rgb=NanosuitClientConfig.classicInterfaceColor();
-      boolean themed=texture!=PANEL&&texture!=ENERGY&&texture!=HEALTH&&texture!=CRITICAL&&rgb!=ClassicHudPalette.DEFAULT;
+      int rgb=ClassicMalfunction.hudColor();
+      boolean themed=texture!=PANEL&&texture!=MALFUNCTION&&texture!=ENERGY&&texture!=HEALTH&&texture!=CRITICAL&&rgb!=ClassicHudPalette.DEFAULT;
       if(themed)g.setColor(ClassicHudPalette.red(rgb),ClassicHudPalette.green(rgb),ClassicHudPalette.blue(rgb),1);
       else g.setColor(1,1,1,1);
       blit(g,themed?neutral(texture):texture);

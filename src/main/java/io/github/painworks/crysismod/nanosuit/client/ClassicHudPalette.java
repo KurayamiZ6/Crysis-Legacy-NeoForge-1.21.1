@@ -12,7 +12,7 @@ public final class ClassicHudPalette {
    public static float green(int rgb){return (rgb>>8&255)/255f;}
    public static float blue(int rgb){return (rgb&255)/255f;}
    static int textColor(int theme){return theme==DEFAULT?0xc0efa6:theme;}
-   static int loadedAmmoColor(int theme){
+   public static int loadedAmmoColor(int theme){
       int text=textColor(theme);
       return (lift(text>>16&255)<<16)|(lift(text>>8&255)<<8)|lift(text&255);
    }

@@ -6,20 +6,25 @@ OUT=ROOT/'src/main/resources/assets/crysismod/textures/gui/classic_hud'
 OUT.mkdir(parents=True,exist_ok=True)
 symbols=''.join(re.findall(r'<symbol\b.*?</symbol>',(ROOT/'src/main/resources/assets/crysismod/textures/gui/nanosuit1_radial/icons.svg').read_text(),re.S))
 def write(name,body,w=440,h=155,view='0 100 440 155'):
-    glass = '#202020' if name == 'panel' else '#030b12'
+    glass = '#202020' if name in ('panel', 'panel-malfunction') else '#030b12'
     (OUT/f'{name}.svg').write_text(f'<svg xmlns="http://www.w3.org/2000/svg" width="{w*2}" height="{h*2}" viewBox="{view}"><defs>{symbols}<linearGradient id="glass" x2="0" y2="1"><stop stop-color="{glass}" stop-opacity=".88"/><stop offset="1" stop-color="{glass}" stop-opacity=".68"/></linearGradient></defs>{body}</svg>',encoding='utf-8')
 # The vitality tray uses the same slope as the ammunition rows, under a separate hexagon.
 slope = 'matrix(1 .045 0 1 0 -6.75)'
 energy = 'M16 124L25 116H189V138H16Z'
 health = 'M16 145H189V167H26L16 157Z'
 hexagon = 'M366 126L416 156V211L366 242L315 211V156Z'
-write('panel',f'''<g transform="{slope}">
+panel = f'''<g transform="{slope}">
 <path d="M8 122L25 110H355L305 143.3V182H20L8 170Z" fill="url(#glass)"/>
 <path d="{energy}" fill="#003549"/><path d="{health}" fill="#294416"/>
 <path d="M196 116H237V138H196Z" fill="#0076b0"/><path d="M196 145H237V167H196Z" fill="#7dca2b"/>
 <path d="M217 119L213 127H217L215 135L222 124H218Z" fill="#d4eee0"/>
 <path d="M217 150V162M211 156H223" stroke="#d4eead" stroke-width="3"/>
-</g><path d="{hexagon}" fill="url(#glass)"/>''')
+</g><path d="{hexagon}" fill="url(#glass)"/>'''
+write('panel', panel)
+inactive = panel.replace('#003549', '#171717').replace('#294416', '#171717')
+inactive = inactive.replace('#0076b0', '#262626').replace('#7dca2b', '#262626')
+inactive = inactive.replace('#d4eee0', '#4d2e32').replace('#d4eead', '#4d2e32')
+write('panel-malfunction', inactive)
 write('panel-outline',f'''<g fill="none" stroke="white">
 <g transform="{slope}"><path d="M8 170L20 182H305" stroke-width="1.8"/>
 <path d="M12 124V137M12 145V158M42 137V145M191 137V145M191 166V173" stroke-width="1.5"/></g>

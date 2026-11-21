@@ -45,6 +45,10 @@ public final class ClassicWeaponHud {
    @SubscribeEvent(priority=EventPriority.LOW) public static void render(RenderGuiEvent.Post event){
       var mc=Minecraft.getInstance();if(!ClassicMinimapRenderer.isClassic()){level.clear();lastGun=null;previousIcon=null;return;}
       if(mc.options.hideGui||!NanosuitHudOverlay.isHudEnabled())return;
+      if(ClassicMalfunction.active()){
+         renderMalfunction(event.getGuiGraphics());
+         return;
+      }
       var state=canReplace()?ClassicTaczData.read(mc.player):null;
       var throwable=canReplace()?ClassicThrowableHud.read(mc.player):null;
       // An unreadable TACZ gun must retain its native frame, even when grenades are present.
@@ -87,6 +91,26 @@ public final class ClassicWeaponHud {
       }
       g.pose().popPose();g.setColor(1,1,1,1);
    }
+   private static void renderMalfunction(GuiGraphics g){
+      float base=g.guiHeight()/1080f,s=base*.7f*NanosuitClientConfig.classicHudScale();
+      g.pose().pushPose();
+      try {
+         g.pose().translate(g.guiWidth()-129*base-440*s,g.guiHeight()-24*base-255*s,0);
+         g.pose().scale(s,s,1);
+         layer(g,FRAME,0,0,440,125,0xffffff,1);
+         layer(g,FRAME_OUTLINE,0,0,440,125,ClassicMalfunction.RED,1);
+         ClassicHudText.alignWithPanel(g,0);
+         ClassicHudText.draw(g,"MALFUNCTION",152,32,20,ClassicMalfunction.labelColor(0),1,false);
+         ClassicHudText.draw(g,"MALFUNCTION",152,88,20,ClassicMalfunction.labelColor(420),1,false);
+      } finally {g.pose().popPose();}
+      var mc=Minecraft.getInstance();
+      var message=net.minecraft.network.chat.Component.translatable("hud.crysismod.n1.malfunction");
+      int x=g.guiWidth()/2,y=Math.round(g.guiHeight()*.89f);
+      int half=mc.font.width(message)/2;
+      g.fill(x-half-5,y-3,x+half+5,y+11,0x80202020);
+      g.drawCenteredString(mc.font,message,x,y,0xfff2f3);
+   }
+
    private static void renderFireMode(GuiGraphics g,ClassicTaczData.State state,int rgb){
       ResourceLocation bulletSymbol=switch(state.fireMode()){
          case "SEMI" -> BULLET;

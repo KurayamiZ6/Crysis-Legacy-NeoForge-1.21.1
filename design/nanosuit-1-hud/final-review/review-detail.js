@@ -161,7 +161,7 @@ const malfunction = mountComparison('malfunction',
 malfunction.classList.add('malfunction-preview');
 malfunction.innerHTML = `
   <defs>
-    <clipPath id="jammed-map"><path d="M52 56L218 46V171L200 187H52Z"/></clipPath>
+    <clipPath id="jammed-map"><path d="M52 56L218 46V171L200 187L76 193V152L52 139Z"/></clipPath>
     <filter id="terrain-grain"><feTurbulence type="fractalNoise" baseFrequency=".071 .22" numOctaves="2" seed="7"/>
       <feColorMatrix type="matrix" values="0 .63 0 0 .18  0 .29 0 0 .16  0 .31 0 0 .16  0 0 0 1 0"/>
     </filter>
@@ -173,26 +173,27 @@ malfunction.innerHTML = `
     </pattern>
   </defs>
   <path d="M0 179L156 132L317 147L540 88L740 135L913 115L1100 175V225H0Z" fill="#33414b"/>
+  <path d="M52 56V48L65 35L199 27L218 46Z" fill="#202020" opacity=".88"/>
   <g fill="none" stroke="var(--hud-theme)">
     <path d="M47 31L57 23H86M1009 23H1038L1053 31" opacity=".65"/>
-    <path d="M52 137V48L65 35L218 29M218 46V171L200 187H77" stroke-width="1.4"/>
-    <path d="M15 155L40 142L67 156V182L40 199L15 184Z" fill="#20262d"/>
+    <path d="M52 139V48L65 35M218 171L200 187L76 193V152" stroke-width="1.4"/>
+    <path d="M15 155L40 142L67 156V182L40 199L15 184Z" fill="#202020" fill-opacity=".8"/>
   </g>
   <g fill="var(--hud-theme)" font-family="system-ui" font-weight="700" font-size="12">
     <text x="70" y="46">E</text><text x="126" y="42">SE</text><text x="189" y="38">S</text>
   </g>
   <g clip-path="url(#jammed-map)">
     <g class="malfunction-terrain">
-      <rect x="52" y="46" width="166" height="141" fill="#4e3c40"/>
+      <rect x="52" y="46" width="166" height="147" fill="#4e3c40"/>
       <path d="M52 46H218V74L166 88L139 66L108 79L89 119L52 136ZM52 169L98 140L133 145L166 124L218 119V187H52Z" fill="#87615e"/>
       <path d="M52 156L88 138L109 103L136 90L166 99L218 74" fill="none" stroke="#26292d" stroke-width="17"/>
       <path d="M52 156L88 138L109 103L136 90L166 99L218 74" fill="none" stroke="#b59891" stroke-width="2" opacity=".6"/>
-      <rect x="52" y="46" width="166" height="141" filter="url(#terrain-grain)" opacity=".3"/>
-      <rect x="52" y="46" width="166" height="141" fill="var(--hud-theme)" opacity=".15"/>
+      <rect x="52" y="46" width="166" height="147" filter="url(#terrain-grain)" opacity=".3"/>
+      <rect x="52" y="46" width="166" height="147" fill="var(--hud-theme)" opacity=".15"/>
     </g>
 
-    <rect class="interference" x="52" y="46" width="166" height="141" fill="url(#jammed-lines)" opacity=".38"/>
-    <rect x="52" y="46" width="166" height="141" fill="url(#crt-scanlines)" opacity=".55"/>
+    <rect class="interference" x="52" y="46" width="166" height="147" fill="url(#jammed-lines)" opacity=".38"/>
+    <rect x="52" y="46" width="166" height="147" fill="url(#crt-scanlines)" opacity=".55"/>
     <path class="scan-beam" d="M52 49H218V54H52Z" fill="var(--hud-theme)" opacity=".22"/>
     <path class="player-marker" d="M135 123L142 116L149 123M142 61V104M142 132V181" stroke="#f4a4aa" opacity=".68" fill="none"/>
     <path d="M56 59V154" stroke="var(--hud-theme)" stroke-width="5" stroke-dasharray="19 4"/>
@@ -200,10 +201,8 @@ malfunction.innerHTML = `
   <path d="M40 155V175M40 180V186" stroke="var(--hud-theme)" stroke-width="3.5"/>
   <g transform="translate(815 60) scale(.64)">
     <defs>${tint('fault-accent', 'var(--hud-theme)')}${tint('fault-outline', 'var(--hud-theme)')}</defs>
-    ${chrome('fault', 'armor', 'panel')}
+    ${chrome('fault', 'armor', 'panel-malfunction')}
     <g transform="${slope}">
-      <path d="M16 124L25 116H189V138H16Z M16 145H189V167H26L16 157Z
-        M196 116H237V138H196Z M196 145H237V167H196Z" fill="#262626"/>
       <g class="pulse" fill="var(--hud-theme)" font-family="Bahnschrift, Arial, sans-serif" font-size="25" font-weight="700">
         <text x="150" y="34" textLength="110" lengthAdjust="spacingAndGlyphs">MALFUNCTION</text>
         <text x="150" y="89" textLength="110" lengthAdjust="spacingAndGlyphs">MALFUNCTION</text>
