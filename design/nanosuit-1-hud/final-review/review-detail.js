@@ -73,24 +73,22 @@ const digitPaths = {
   9: 'M9 10H2L1 9V2L2 1H8L9 2V17L7 19H1'
 };
 
-function number(value, x, y, height, polygonal, dimLeading = false) {
+function number(value, x, y, height, polygonal, color = '#c0efa6') {
   const advance = height * .49;
   if (!polygonal) {
     return [...value].map((digit, i) => {
       const offset = (digit.charCodeAt(0) - 32) * 32;
-      const alpha = dimLeading && digit === '0' && i < value.search(/[^0]/) ? .32 : 1;
       const left = x + (i - value.length / 2) * advance;
       return `<svg x="${left}" y="${y - height / 2}" width="${advance}" height="${height * 1.25}"
-        viewBox="${offset} 0 32 80" preserveAspectRatio="none" opacity="${alpha}">
+        viewBox="${offset} 0 32 80" preserveAspectRatio="none">
         <image href="${assets}/classic_binoculars/glyphs.png" width="1888" height="80"/>
       </svg>`;
     }).join('');
   }
   return [...value].map((digit, i) => {
     const left = x + (i - value.length / 2) * advance;
-    const alpha = dimLeading && digit === '0' && i < value.search(/[^0]/) ? .32 : 1;
     return `<path d="${digitPaths[digit]}" transform="translate(${left} ${y - height / 2}) scale(${advance / 12} ${height / 20})"
-      opacity="${alpha}" fill="none" stroke="#c0efa6" stroke-width="2.9" stroke-linejoin="round"/>`;
+      fill="none" stroke="${color}" stroke-width="2.9" stroke-linejoin="round"/>`;
   }).join('');
 }
 
@@ -106,16 +104,20 @@ function fireRounds(mode, x, y) {
   return offsets.map(offset => `<path d="${projectile}" fill="#95b193"
     transform="translate(${x + offset} ${y})"/>`).join('');
 }
-function block({ join, polygonal, wide, shotgun }) {
+function mixWithWhite(rgb, amount) {
+  const channels = [1, 3, 5].map(offset => parseInt(rgb.slice(offset, offset + 2), 16));
+  return '#' + channels.map(value => Math.round(value + (255 - value) * amount).toString(16).padStart(2, '0')).join('');
+}
+function block({ join, polygonal, wide, shotgun, theme = '#719671' }) {
   const plate = join
     ? `<g transform="${slope}">
          <path d="M132 13L150 0H349L366 17V51H132Z M132 56H366V107H145L132 94Z" fill="#0b1116" opacity=".72"/>
-         <path d="M278 1V51M278 56V106M349 0L366 17V107L418 139" fill="none" stroke="#719671" stroke-width="1.8" opacity=".83"/>
-         <path d="M8 122L25 107H354L306 140V182H20L8 170Z" fill="#090f15" opacity=".81"/>
-         <path d="M8 170L20 182H306" fill="none" stroke="#62815b" stroke-width="1.8"/>
+         <path d="M278 1V51M278 56V106M349 0L366 17V107" fill="none" stroke="#719671" stroke-width="1.8" opacity=".83"/>
+         <path d="M8 122L25 110H355L305 143.3V182H20L8 170Z" fill="#090f15" opacity=".81"/>
+         <path d="M8 170L20 182H305" fill="none" stroke="#62815b" stroke-width="1.8"/>
        </g>
        <path d="M366 126L416 156V211L366 242L315 211V156Z" fill="#090f15" stroke="#62815b" stroke-width="2"/>
-       <path d="M419 201V220L366 251" fill="none" stroke="#62815b" stroke-width="1.7"/>`
+       <path d="M366 116.7L419 148.5M426 192V216L376 247" fill="none" stroke="#62815b" stroke-width="1.7"/>`
     : `<image href="${assets}/classic_weapon/frame.svg" width="440" height="125" opacity=".65"/>
        <image href="${assets}/classic_hud/panel.png" y="100" width="440" height="155"/>`;
   const energy = wide ? '25' : '100';
@@ -125,7 +127,9 @@ function block({ join, polygonal, wide, shotgun }) {
   const reserve = wide ? '128' : shotgun ? '40' : '43';
   const throwable = wide ? '12' : shotgun ? '4' : '5';
   // The atlas stays in HUD-02. TYPE-01 separately proposes the heavier glyphs.
-  const endNumber = (value, y) => number(value, 266 - value.length * 27 * .49 / 2, y, 27, polygonal);
+  const otherText = theme === '#719671' ? '#c0efa6' : theme;
+  const loadedText = mixWithWhite(otherText, .23);
+  const endNumber = (value, y) => number(value, 266 - value.length * 27 * .49 / 2, y, 27, polygonal, otherText);
   return `<rect x="-10" y="-11" width="450" height="263" fill="#172026"/>
     ${plate}
     <defs>
@@ -144,18 +148,21 @@ function block({ join, polygonal, wide, shotgun }) {
     <g transform="${slope}">
       ${join ? `<image href="${assets}/classic_weapon/shell-semi.svg" x="292" y="4" width="60" height="48" opacity=".6"/>`
         : shotgun ? shell(322, 26) : fireRounds('AUTO', 322, 26)}
-      ${number(load, 155 + load.length * 35 * .49 / 2, 25, 35, polygonal)}
+      ${number(load, 155 + load.length * 35 * .49 / 2, 25, 35, polygonal, loadedText)}
       ${endNumber(reserve, 21)}${endNumber(throwable, 73)}
       <image href="${assets}/classic_weapon/throwable-frag.svg" x="302" y="55" width="40" height="40" opacity=".6"/>
-      ${number(energy, 272, 132, 25, polygonal)}${number(health, 272, 160, 25, polygonal)}
+      ${number(energy, 272, 132, 25, polygonal, otherText)}${number(health, 272, 160, 25, polygonal, otherText)}
     </g>`;
 }
 geometry.innerHTML = block({ join: true, polygonal: false, wide: false, shotgun: true });
 const sample = document.getElementById('sample');
+const themeSample = document.getElementById('type-theme');
 function updateType() {
-  type.innerHTML = block({ join: false, polygonal: true, wide: sample.value === 'wide', shotgun: sample.value === 'shotgun' });
+  type.innerHTML = block({ join: false, polygonal: true, wide: sample.value === 'wide', shotgun: sample.value === 'shotgun',
+    theme: themeSample.value });
 }
 sample.addEventListener('change', updateType);
+themeSample.addEventListener('input', updateType);
 updateType();
 
 fire.innerHTML = ['SEMI', 'BURST', 'AUTO', 'CARTOUCHE'].map((label, index) => {
@@ -179,39 +186,52 @@ malfunction.innerHTML = `
     <filter id="terrain-grain"><feTurbulence type="fractalNoise" baseFrequency=".071 .22" numOctaves="2" seed="7"/>
       <feColorMatrix type="matrix" values="0 .63 0 0 .18  0 .29 0 0 .16  0 .31 0 0 .16  0 0 0 1 0"/>
     </filter>
-    <pattern id="jammed-lines" width="168" height="19" patternUnits="userSpaceOnUse">
-      <path d="M0 2H168M17 10H124M76 13H167" stroke="#f58f95" stroke-width="2" opacity=".65"/>
+    <pattern id="crt-scanlines" width="2" height="3" patternUnits="userSpaceOnUse">
+      <path d="M0 1H2" stroke="#201319" opacity=".65"/>
+    </pattern>
+    <pattern id="jammed-lines" width="168" height="23" patternUnits="userSpaceOnUse">
+      <path d="M0 2H168M17 10H124M76 16H167" stroke="var(--hud-theme)" stroke-width="2" opacity=".65"/>
     </pattern>
   </defs>
   <path d="M0 179L156 132L317 147L540 88L740 135L913 115L1100 175V225H0Z" fill="#33414b"/>
-  <g fill="none" stroke="#eb727a">
+  <g fill="none" stroke="var(--hud-theme)">
     <path d="M47 31L57 23H86M1009 23H1038L1053 31" opacity=".65"/>
     <path d="M52 137V48L65 35L218 29M218 46V171L200 187H77" stroke-width="1.4"/>
     <path d="M15 155L40 142L67 156V182L40 199L15 184Z" fill="#20262d"/>
   </g>
-  <g fill="#f2767e" font-family="system-ui" font-weight="700" font-size="12">
+  <g fill="var(--hud-theme)" font-family="system-ui" font-weight="700" font-size="12">
     <text x="70" y="46">E</text><text x="126" y="42">SE</text><text x="189" y="38">S</text>
   </g>
   <g clip-path="url(#jammed-map)">
-    <rect x="52" y="46" width="166" height="141" filter="url(#terrain-grain)" opacity=".63"/>
-    <path d="M55 162L108 122L128 132L157 89L219 67" stroke="#e27982" stroke-width="5" opacity=".33" fill="none"/>
+    <g class="malfunction-terrain">
+      <rect x="52" y="46" width="166" height="141" fill="#4e3c40"/>
+      <path d="M52 46H218V74L166 88L139 66L108 79L89 119L52 136ZM52 169L98 140L133 145L166 124L218 119V187H52Z" fill="#87615e"/>
+      <path d="M52 156L88 138L109 103L136 90L166 99L218 74" fill="none" stroke="#26292d" stroke-width="17"/>
+      <path d="M52 156L88 138L109 103L136 90L166 99L218 74" fill="none" stroke="#b59891" stroke-width="2" opacity=".6"/>
+      <rect x="52" y="46" width="166" height="141" filter="url(#terrain-grain)" opacity=".3"/>
+      <rect x="52" y="46" width="166" height="141" fill="var(--hud-theme)" opacity=".15"/>
+    </g>
+
     <rect class="interference" x="52" y="46" width="166" height="141" fill="url(#jammed-lines)" opacity=".38"/>
-    <path d="M135 123L142 116L149 123M142 61V104M142 132V181" stroke="#f4a4aa" opacity=".68" fill="none"/>
-    <path d="M56 59V154" stroke="#ed5965" stroke-width="5" stroke-dasharray="19 4"/>
+    <rect x="52" y="46" width="166" height="141" fill="url(#crt-scanlines)" opacity=".55"/>
+    <path class="scan-beam" d="M52 49H218V54H52Z" fill="var(--hud-theme)" opacity=".22"/>
+    <path class="player-marker" d="M135 123L142 116L149 123M142 61V104M142 132V181" stroke="#f4a4aa" opacity=".68" fill="none"/>
+    <path d="M56 59V154" stroke="var(--hud-theme)" stroke-width="5" stroke-dasharray="19 4"/>
   </g>
-  <path d="M40 155V175M40 180V186" stroke="#f15c65" stroke-width="3.5"/>
+  <path d="M40 155V175M40 180V186" stroke="var(--hud-theme)" stroke-width="3.5"/>
   <g transform="translate(810 55) skewY(2.575)">
     <path d="M61 0H207L221 12V38H61ZM61 43H221V81H61Z" fill="#1e242a" opacity=".82"/>
-    <path d="M159 2V38M159 43V81M207 0L221 12V81L246 100" fill="none" stroke="#eb727a"/>
-    <g class="pulse" fill="#f15c65" font-family="system-ui" font-size="10.5" font-weight="800">
-      <text x="69" y="24">MALFUNCTION</text><text x="69" y="66">MALFUNCTION</text>
+    <path d="M159 2V38M159 43V81M207 0L221 12V81L246 100" fill="none" stroke="var(--hud-theme)"/>
+    <g class="pulse" fill="var(--hud-theme)" font-family="Bahnschrift, Arial, sans-serif" font-size="15" font-weight="700">
+      <text x="69" y="24" textLength="77" lengthAdjust="spacingAndGlyphs">MALFUNCTION</text>
+      <text x="69" y="66" textLength="77" lengthAdjust="spacingAndGlyphs">MALFUNCTION</text>
     </g>
     <path d="M0 86H191V142H8L0 134Z" fill="#1b2328" opacity=".88"/>
-    <path d="M0 134L8 142H191" fill="none" stroke="#eb727a"/>
+    <path d="M0 134L8 142H191" fill="none" stroke="var(--hud-theme)"/>
     <path d="M9 96H155V110H9ZM9 119H155V133H9Z" fill="#812f37" opacity=".2"/>
-    <path d="M207 106L230 92L254 106V131L230 147L207 132Z" fill="#1b2328" stroke="#eb727a"/>
-    <path d="M254 136V143L231 157" fill="none" stroke="#eb727a"/>
-    <path d="M221 108H239L236 124L230 130L224 124Z" fill="#eb727a"/>
+    <path d="M207 106L230 92L254 106V131L230 147L207 132Z" fill="#1b2328" stroke="var(--hud-theme)"/>
+    <path d="M254 136V143L231 157" fill="none" stroke="var(--hud-theme)"/>
+    <path d="M221 108H239L236 124L230 130L224 124Z" fill="var(--hud-theme)"/>
   </g>`;
 const replay = document.getElementById('replay-malfunction');
 function playMalfunction() {
