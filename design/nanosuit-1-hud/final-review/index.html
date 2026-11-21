@@ -16,14 +16,26 @@ img,svg{display:block;width:100%;height:auto}figcaption,.note,small{color:#b7c7b
 .table{overflow:auto}table{width:100%;border-collapse:collapse}th,td{text-align:left;vertical-align:top;padding:10px;border-bottom:1px solid #35443f}td:first-child{min-width:8ch}
 details{margin:.65rem 0}summary{cursor:pointer;color:#a5dfa8}
 select,textarea{font:inherit;max-width:100%}textarea{width:100%;box-sizing:border-box;min-height:5em}
-@media(max-width:750px){.grid{grid-template-columns:1fr}}
+.malfunction-preview{background:#28343b}
+#malfunction-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+#malfunction-grid > figure:last-child{grid-column:1/-1}
+.malfunction-preview.play .pulse{animation:status-pulse 2.8s ease-in-out both}
+.malfunction-preview.play .interference{animation:map-interference 2.8s ease-in-out both}
+@keyframes status-pulse{0%,42%{fill:#fff2f3} 23%,72%,100%{fill:#f15c65}}
+@keyframes map-interference{
+  0%,45%,100%{opacity:.24;transform:translateX(0)}
+  17%,62%{opacity:.77;transform:translateX(4px)}
+  31%,79%{opacity:.44;transform:translateX(-3px)}
+}
+@media(prefers-reduced-motion:reduce){.malfunction-preview.play .pulse,.malfunction-preview.play .interference{animation:none}}
+@media(max-width:750px){.grid,#malfunction-grid{grid-template-columns:1fr}}
 </style>
 </head>
 <body>
 <header>
 <h1>Revue graphique détaillée du HUD Nanosuit 1</h1>
 <p>Révision du lot de conception sur le rendu Minecraft <code>6c921c6</code>. <a href="lot-1-refuse.html">HUD-01 et OPTIC-01 sont archivées comme refusées.</a></p>
-<nav><a href="#audit">Relevé des écarts</a> · <a href="#HUD-02">Cadres</a> · <a href="#TYPE-01">Chiffres</a> · <a href="#FIRE-01">Modes de tir</a> · <a href="#decisions">Validation</a></nav>
+<nav><a href="#audit">Relevé des écarts</a> · <a href="#HUD-02">Cadres</a> · <a href="#TYPE-01">Chiffres</a> · <a href="#FIRE-01">Modes de tir</a> · <a href="#MALF-01">Malfunction</a> · <a href="#decisions">Validation</a></nav>
 </header>
 <section id="audit">
 <h2>Relevé des écarts</h2>
@@ -47,29 +59,38 @@ select,textarea{font:inherit;max-width:100%}textarea{width:100%;box-sizing:borde
 </section>
 <section id="HUD-02">
 <h2>HUD-02 · Raccord du panneau droit</h2>
-<p>Raccorder l’arête du compteur d’armes au décroché supérieur du médaillon avec un seul segment. Dessiner les deux lignes du cadre de munitions sur une même pente douce. Le résultat se juge sur le bloc complet, avec la réserve, les jauges et le badge visibles.</p>
+<p>Le panneau des munitions garde deux segments verts à la séparation des chiffres et des pictogrammes, puis une arête externe à droite. Le dessus, le milieu et le dessous restent des espaces de verre, avec une séparation par transparence. Sous les jauges, un seul filet vert souligne le cadre. La garniture basse à droite du médaillon et les petits repères verts des jauges sont rétablis.</p>
+<p>Les arêtes horizontales voisines suivent la même pente de référence. Les compteurs, les symboles des jauges et les pictogrammes de munitions suivent aussi cet axe. Le médaillon garde sa géométrie propre.</p>
 <div class="grid" id="geometry-grid"></div>
 <p class="note">La proposition repose sur la géométrie du mod et des raccords redessinés. Une intégration validée modifierait les contours de deux couches voisines. À contrôler ensuite avec le compteur masqué, les objets à lancer et les deux échelles GUI.</p>
 </section>
 <section id="TYPE-01">
 <h2>TYPE-01 · Chiffres et lignes de base</h2>
-<p>Adopter une même famille de chiffres polygonaux, étroits et à chasse fixe pour le bloc droit. Ancrer chaque nombre sur le centre de sa propre cellule. Les deux valeurs de santé et d’énergie partagent une colonne. Les munitions en réserve et les objets à lancer partagent un axe. La taille relative chargeur/réserve reste celle du code actuel.</p>
+<p>Épaissir les chiffres polygonaux tout en gardant leur dessin étroit. Le chargeur est placé vers le bord gauche de sa zone. La réserve et le nombre d’objets à lancer terminent sur le même axe, juste avant le séparateur vert. Chaque ligne de base suit la pente de sa cellule. Les valeurs de santé et d’énergie partagent une colonne à droite des symboles.</p>
 <div class="grid" id="type-grid"></div>
-<label>Valeurs de démonstration <select id="sample"><option value="normal">007 · 29 · 100 / 100</option><option value="wide">123 · 128 · 25 / 50</option></select></label>
+<label>Valeurs de démonstration <select id="sample"><option value="normal">31 · 43 · 5 · 100 / 100</option><option value="shotgun">7 · 40 · 4 · 100 / 100</option><option value="wide">123 · 128 · 12 · 25 / 50</option></select></label>
 <p class="note">Le dessin des glyphes est une proposition originale. Le lot couvre uniquement les nombres du bloc droit. Les lettres des jumelles et de la boussole ont des contraintes différentes. Vérifier les chiffres fins, les réserves à trois chiffres et la lisibilité avec un thème personnalisé.</p>
 </section>
 <section id="FIRE-01">
 <h2>FIRE-01 · Symboles de tir</h2>
-<p>Conserver un projectile vertical en SEMI. Donner à BURST une silhouette groupée et à AUTO une silhouette étalée, lisibles par leur forme même quand le trait inférieur actuel disparaît à petite échelle. Les trois modes sont affichés ensemble dans la maquette.</p>
+<p>SEMI présente une balle. BURST reprend trois exemplaires du même dessin sur une ligne. AUTO reprend cinq exemplaires, comme sur la nouvelle capture. La cartouche de fusil à pompe est horizontale, avec un culot séparé. Les quatre symboles sont présentés à une échelle commune.</p>
 <div class="grid" id="fire-grid"></div>
-<p class="note">La capture Remastered documente ici le coup par coup. Les formes BURST et AUTO sont des propositions de lisibilité, sans équivalence originale vérifiée. La maquette couvre les munitions ordinaires. Cartouches, roquettes, grenades et l’infini de la mêlée nécessitent leurs propres comparaisons avant une retouche.</p>
+<p class="note">AUTO et la cartouche sont documentés par les nouvelles captures. BURST reste une convention à trois balles, faute de référence. La capture du pistolet, accessible dans le relevé, sert à comparer le projectile unique.</p>
+</section>
+<section id="MALF-01">
+<h2>MALF-01 · État « MALFUNCTION »</h2>
+<p>Étude visuelle d’une exposition à une impulsion EMP ou à une arme électrique. L’habillage passe au rouge, la carte se brouille par bandes et les textes MALFUNCTION passent du blanc au rouge avec une interpolation douce. Les compteurs et jauges s’effacent dans la maquette pendant la perturbation.</p>
+<div class="grid" id="malfunction-grid"></div>
+<p><button id="replay-malfunction" type="button">Rejouer le brouillage</button></p>
+<p class="note">La capture documente l’état rouge. La durée de 2,8 s et l’interpolation sont des valeurs de démonstration. Aucune durée de panne ou règle de déclenchement n’est définie par cette étude.</p>
 </section>
 <section id="decisions">
 <h2>Validation indépendante</h2>
 <div class="table"><table><thead><tr><th>ID</th><th>Retouche</th><th>Avis</th></tr></thead><tbody>
 <tr><td>HUD-02</td><td>Raccord et géométrie du bloc droit</td><td><select data-decision="HUD-02" aria-label="Avis HUD-02"></select></td></tr>
 <tr><td>TYPE-01</td><td>Chiffres et alignement dans les cellules</td><td><select data-decision="TYPE-01" aria-label="Avis TYPE-01"></select></td></tr>
-<tr><td>FIRE-01</td><td>Trois silhouettes de tir distinctes</td><td><select data-decision="FIRE-01" aria-label="Avis FIRE-01"></select></td></tr>
+<tr><td>FIRE-01</td><td>SEMI, BURST, AUTO et cartouche</td><td><select data-decision="FIRE-01" aria-label="Avis FIRE-01"></select></td></tr>
+<tr><td>MALF-01</td><td>Étude visuelle de la perturbation EMP</td><td><select data-decision="MALF-01" aria-label="Avis MALF-01"></select></td></tr>
 </tbody></table></div>
 <p><textarea id="reply" readonly aria-label="Avis à copier" placeholder="Les avis choisis pourront être copiés dans le chat."></textarea></p>
 </section>
