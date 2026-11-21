@@ -15,6 +15,7 @@ import io.github.painworks.crysismod.nanosuit.client.ClassicHudText;
 /** Presentation only: samples the existing uploaded terrain, never accesses a chunk. */
 public final class ClassicMinimapRenderer {
    private static final ResourceLocation FRAME=ResourceLocation.fromNamespaceAndPath("crysismod","textures/gui/classic_map/frame.png");
+   private static final ResourceLocation BACKGROUND=ResourceLocation.fromNamespaceAndPath("crysismod","textures/gui/classic_map/background.png");
    private static final ResourceLocation PLAYER=ResourceLocation.fromNamespaceAndPath("crysismod","textures/gui/classic_map/player.png");
    private ClassicMinimapRenderer(){}
    public static boolean isClassic(){var p=Minecraft.getInstance().player;return p!=null&&NanosuitArmorUtil.getEquippedProfile(p)==NanosuitProfile.NANOSUIT_1;}
@@ -37,8 +38,10 @@ public final class ClassicMinimapRenderer {
          BufferUploader.drawWithShader(b.buildOrThrow());RenderSystem.setShaderColor(1,1,1,1);
       }
       g.pose().pushPose();g.pose().translate(v.x(),v.y(),0);g.pose().scale(s,s,1);
-      g.setColor((rgb>>16&255)/255f,(rgb>>8&255)/255f,(rgb&255)/255f,1);
       RenderSystem.enableBlend();RenderSystem.defaultBlendFunc();RenderSystem.disableDepthTest();
+      g.setColor(1,1,1,1);
+      g.blit(BACKGROUND,-46,-22,300,250,0,0,600,500,600,500);
+      g.setColor((rgb>>16&255)/255f,(rgb>>8&255)/255f,(rgb&255)/255f,1);
       g.blit(FRAME,-46,-22,300,250,0,0,600,500,600,500);g.setColor(1,1,1,1);
       for(int i=0;i<4;i++){
          float delta=Mth.wrapDegrees(i*90-yaw);if(Math.abs(delta)>70)continue;

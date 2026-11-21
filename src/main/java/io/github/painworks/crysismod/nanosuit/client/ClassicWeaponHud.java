@@ -17,6 +17,7 @@ import net.neoforged.neoforge.client.event.RenderGuiEvent;
 @EventBusSubscriber(modid="crysismod",value=Dist.CLIENT)
 public final class ClassicWeaponHud {
    private static final ResourceLocation FRAME=asset("frame"),BULLET=asset("bullet"),INFINITY=asset("infinity"),STRIP=asset("strip");
+   private static final ResourceLocation FRAME_OUTLINE=asset("frame-outline"),STRIP_OUTLINE=asset("strip-outline");
    private static final ResourceLocation AUTO=asset("auto"),BURST=asset("burst");
    private static java.lang.ref.WeakReference<Object> level=new java.lang.ref.WeakReference<>(null);
    private static ResourceLocation lastGun,previousIcon;private static long switchedAt;
@@ -56,47 +57,53 @@ public final class ClassicWeaponHud {
       if(level.get()!=mc.level){level=new java.lang.ref.WeakReference<>(mc.level);lastGun=state==null?null:state.gunId();previousIcon=state==null?null:state.icon();switchedAt=0;}
       if(state!=null&&!state.gunId().equals(lastGun)){lastGun=state.gunId();switchedAt=now;}
       g.pose().pushPose();g.pose().translate(x,y,0);g.pose().scale(s,s,1);
-      layer(g,FRAME,0,0,440,125,rgb,1);
-      if(melee&&!optic()){
-         int textColor=rgb==ClassicHudPalette.DEFAULT?0xc0efa6:rgb;
-         g.pose().pushPose();g.pose().mulPose(new org.joml.Matrix4f().m01(.045f));
-         for(int i=0;i<3;i++)ClassicHudText.draw(g,"0",149+i*17,39,35,textColor,i<2?.3f:1,false);
-         ClassicHudText.draw(g,"0",234,30,27,textColor,1,false);
-         g.pose().popPose();layer(g,INFINITY,286,14,68,34,rgb,1);
+      layer(g,FRAME,0,0,440,125,0xffffff,1);
+      layer(g,FRAME_OUTLINE,0,0,440,125,rgb,1);
+      if(!optic()){
+         g.pose().pushPose();
+         ClassicHudText.alignWithPanel(g,0);
+         int textColor=ClassicHudPalette.textColor(rgb);
+         if(melee||state!=null){
+            ClassicHudText.digits(g,melee?0:state.loaded(),211,4,39,73,ClassicHudPalette.loadedAmmoColor(rgb),3);
+            if(!melee&&state.unlimited())layer(g,INFINITY,230,3,45,26,rgb,1);
+            else ClassicHudText.digits(g,melee?0:state.reserve(),274,2,29,59,textColor,0);
+            if(melee)layer(g,INFINITY,288,8,68,34,rgb,1);
+            else renderFireMode(g,state,rgb);
+         }
+         if(throwable!=null){
+            ClassicHudText.digits(g,throwable.count(),274,62,39,125,textColor,0);
+            layer(g,asset("throwable-"+throwable.kind().name().toLowerCase(java.util.Locale.ROOT)),302,61,40,40,rgb,1);
+         }
+         g.pose().popPose();
       }
       if(state!=null&&!optic()){
-         int textColor=rgb==ClassicHudPalette.DEFAULT?0xc0efa6:rgb;
-         g.pose().pushPose();g.pose().mulPose(new org.joml.Matrix4f().m01(.045f));
-         String loaded=String.format(java.util.Locale.ROOT,"%03d",state.loaded());
-         for(int i=0;i<loaded.length();i++)ClassicHudText.draw(g,loaded.substring(i,i+1),149+i*17,39,35,textColor,leading(loaded,i)?.3f:1,false);
-         if(state.unlimited())layer(g,INFINITY,224,8,45,34,rgb,1);
-         else ClassicHudText.draw(g,Integer.toString(state.reserve()),234,30,27,textColor,1,false);
-         g.pose().popPose();
-         if(state.ammoKind()!=ClassicAmmoIcons.Kind.BULLET && java.util.Set.of("SEMI","AUTO","BURST").contains(state.fireMode())){
-            layer(g,asset(state.ammoKind().name().toLowerCase(java.util.Locale.ROOT)+"-"+state.fireMode().toLowerCase(java.util.Locale.ROOT)),294,7,60,48,rgb,1);
-         }else switch(state.fireMode()){
-            case "SEMI" -> layer(g,BULLET,294,7,60,48,rgb,1);
-            case "AUTO" -> layer(g,AUTO,294,7,60,48,rgb,1);
-            case "BURST" -> layer(g,BURST,294,7,60,48,rgb,1);
-            default -> {} // Unknown fire selector data is not presented as semi-automatic.
-         }
          if(switchedAt!=0&&now-switchedAt<1_000_000_000L){
             float alpha=Math.min(1,(1_000_000_000L-(now-switchedAt))/200_000_000f);
-            layer(g,STRIP,130,-121,230,125,rgb,alpha);
+            layer(g,STRIP,130,-121,230,125,0xffffff,alpha);
+            layer(g,STRIP_OUTLINE,130,-121,230,125,rgb,alpha);
             if(state.icon()!=null)layer(g,state.icon(),245,-106,90,30,rgb,alpha);
             if(previousIcon!=null)layer(g,previousIcon,245,-39,90,30,rgb,alpha);
          }else previousIcon=state.icon();
       }
-      if(throwable!=null&&!optic()){
-         int textColor=rgb==ClassicHudPalette.DEFAULT?0xc0efa6:rgb;
-         ClassicHudText.draw(g,Integer.toString(throwable.count()),234,88,27,textColor,1,false);
-         layer(g,asset("throwable-"+throwable.kind().name().toLowerCase(java.util.Locale.ROOT)),298,65,40,40,rgb,1);
-      }
       g.pose().popPose();g.setColor(1,1,1,1);
    }
-   private static boolean leading(String value,int index){for(int i=0;i<=index;i++)if(value.charAt(i)!='0')return false;return index<value.length()-1;}
+   private static void renderFireMode(GuiGraphics g,ClassicTaczData.State state,int rgb){
+      ResourceLocation bulletSymbol=switch(state.fireMode()){
+         case "SEMI" -> BULLET;
+         case "AUTO" -> AUTO;
+         case "BURST" -> BURST;
+         default -> null;
+      };
+      if(bulletSymbol==null)return;
+      ResourceLocation symbol=state.ammoKind()==ClassicAmmoIcons.Kind.BULLET?bulletSymbol:
+         asset(state.ammoKind().name().toLowerCase(java.util.Locale.ROOT)+"-"+state.fireMode().toLowerCase(java.util.Locale.ROOT));
+      layer(g,symbol,292,1,60,48,rgb,1);
+   }
    private static void layer(GuiGraphics g,ResourceLocation texture,int x,int y,int w,int h,int rgb,float a){
       g.setColor((rgb>>16&255)/255f,(rgb>>8&255)/255f,(rgb&255)/255f,a);RenderSystem.enableBlend();RenderSystem.defaultBlendFunc();RenderSystem.disableDepthTest();
-      g.blit(texture,x,y,w,h,0,0,w*2,h*2,w*2,h*2);g.setColor(1,1,1,1);
+      int sourceWidth=texture==INFINITY?90:w*2;
+      int sourceHeight=texture==INFINITY?68:h*2;
+      g.blit(texture,x,y,w,h,0,0,sourceWidth,sourceHeight,sourceWidth,sourceHeight);
+      g.setColor(1,1,1,1);
    }
 }

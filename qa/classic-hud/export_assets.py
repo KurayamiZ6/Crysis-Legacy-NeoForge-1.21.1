@@ -6,23 +6,54 @@ OUT=ROOT/'src/main/resources/assets/crysismod/textures/gui/classic_hud'
 OUT.mkdir(parents=True,exist_ok=True)
 symbols=''.join(re.findall(r'<symbol\b.*?</symbol>',(ROOT/'src/main/resources/assets/crysismod/textures/gui/nanosuit1_radial/icons.svg').read_text(),re.S))
 def write(name,body,w=440,h=155,view='0 100 440 155'):
-    (OUT/f'{name}.svg').write_text(f'<svg xmlns="http://www.w3.org/2000/svg" width="{w*2}" height="{h*2}" viewBox="{view}"><defs>{symbols}<linearGradient id="glass" x2="0" y2="1"><stop stop-color="#030b12" stop-opacity=".88"/><stop offset="1" stop-color="#030b12" stop-opacity=".68"/></linearGradient></defs>{body}</svg>',encoding='utf-8')
-write('panel','''<path d="M12 121L31 105L366 120L305 154V197L19 183L7 171Z" fill="url(#glass)" stroke="#58704d" stroke-width="1.6"/>
-<path d="M16 124L25 116L189 123V143L16 136Z" fill="#003549"/><path d="M16 145L189 151V172L26 165L16 155Z" fill="#294416"/>
-<path d="M196 123L237 125V145L196 143Z" fill="#0076b0"/><path d="M196 151L237 153V174L196 172Z" fill="#7dca2b"/>
-<path d="M217 126L213 134H217L215 142L222 131H218Z" fill="#d4eee0"/><path d="M217 156V167M212 161H222" stroke="#d4eead" stroke-width="3"/>
-<path d="M20 124V138M20 146V158M49 140V147" stroke="#77935d" stroke-width="1.5"/>
-<path d="M366 125L416 155V211L366 242L315 211V155Z" fill="url(#glass)" stroke="#62815b" stroke-width="2"/><path d="M316 148L366 118L419 148M419 201V220L366 251" fill="none" stroke="#62815b" stroke-width="1.7"/>''')
-write('energy','<path d="M16 124L25 116L189 123V143L16 136Z" fill="#0076b0"/>')
-write('critical','<path d="M16 124L25 116L189 123V143L16 136Z" fill="#dd4133"/><path d="M196 123L237 125V145L196 143Z" fill="#dd4133"/><path d="M217 126L213 134H217L215 142L222 131H218Z" fill="#f1ddbc"/>')
-write('health','<path d="M16 145L189 151V172L26 165L16 155Z" fill="#7dca2b"/>')
-for mode in ['armor','strength','speed','cloak']:
-    # Center the visible Speed/Strength artwork on the status hexagon (366, 183.5).
-    # Their symbol viewboxes contain different transparent margins. Armor/Cloak retain their approved positions.
-    x,y={'speed':(342.25,151.5),'strength':(340.75,152.25)}.get(mode,(342,162))
-    write(mode,f'<use href="#{mode}" x="{x}" y="{y}" width="48" height="65" color="#719671"/>')
-glyphs=''.join(f'<text x="{i*16+1}" y="31" fill="#c0efa6" font-family="Bahnschrift,Arial,sans-serif" font-weight="600" font-size="31" textLength="14" lengthAdjust="spacingAndGlyphs">{i}</text>' for i in range(10))
-write('digits',glyphs,160,40,'0 0 160 40')
+    glass = '#202020' if name == 'panel' else '#030b12'
+    (OUT/f'{name}.svg').write_text(f'<svg xmlns="http://www.w3.org/2000/svg" width="{w*2}" height="{h*2}" viewBox="{view}"><defs>{symbols}<linearGradient id="glass" x2="0" y2="1"><stop stop-color="{glass}" stop-opacity=".88"/><stop offset="1" stop-color="{glass}" stop-opacity=".68"/></linearGradient></defs>{body}</svg>',encoding='utf-8')
+# The vitality tray uses the same slope as the ammunition rows, under a separate hexagon.
+slope = 'matrix(1 .045 0 1 0 -6.75)'
+energy = 'M16 124L25 116H189V138H16Z'
+health = 'M16 145H189V167H26L16 157Z'
+hexagon = 'M366 126L416 156V211L366 242L315 211V156Z'
+write('panel',f'''<g transform="{slope}">
+<path d="M8 122L25 110H355L305 143.3V182H20L8 170Z" fill="url(#glass)"/>
+<path d="{energy}" fill="#003549"/><path d="{health}" fill="#294416"/>
+<path d="M196 116H237V138H196Z" fill="#0076b0"/><path d="M196 145H237V167H196Z" fill="#7dca2b"/>
+<path d="M217 119L213 127H217L215 135L222 124H218Z" fill="#d4eee0"/>
+<path d="M217 150V162M211 156H223" stroke="#d4eead" stroke-width="3"/>
+</g><path d="{hexagon}" fill="url(#glass)"/>''')
+write('panel-outline',f'''<g fill="none" stroke="white">
+<g transform="{slope}"><path d="M8 170L20 182H305" stroke-width="1.8"/>
+<path d="M12 124V137M12 145V158M42 137V145M191 137V145M191 166V173" stroke-width="1.5"/></g>
+<path d="{hexagon}" stroke-width="2"/>
+<path d="M366 116.7L419 148.5M426 192V216L376 247" stroke-width="1.7"/>
+</g>''')
+write('energy',f'<path transform="{slope}" d="{energy}" fill="#0076b0"/>')
+write('critical',f'''<g transform="{slope}"><path d="{energy}M196 116H237V138H196Z" fill="#dd4133"/>
+<path d="M217 119L213 127H217L215 135L222 124H218Z" fill="#f1ddbc"/></g>''')
+write('health',f'<path transform="{slope}" d="{health}" fill="#7dca2b"/>')
+
+# Align each visible silhouette to the hexagon, compensating for margins in its source symbol.
+mode_art = {
+    'armor': (342, 162, 364.25, 192.25, 1),
+    'strength': (340.75, 152.25, 365.75, 183.25, 1),
+    'speed': (342.25, 151.5, 365.75, 183.25, 1.17),
+    'cloak': (342, 162, 365.75, 196.25, .88),
+}
+for mode, (x, y, center_x, center_y, scale) in mode_art.items():
+    transform = f'translate(365.5 184) scale({scale}) translate({-center_x} {-center_y})'
+    write(mode,f'<use href="#{mode}" x="{x}" y="{y}" width="48" height="65" color="#719671" transform="{transform}"/>')
+
+digit_paths = [
+    'M2 1H8L9 2V18L8 19H2L1 18V2Z', 'M2 5L5 1H6V19',
+    'M1 4V2L2 1H8L9 2V8L1 17V19H9', 'M1 1H8L9 2V8L7 10L9 12V18L8 19H1M4 10H7',
+    'M1 1V11H9M8 1V19', 'M9 1H1V9H7L9 11V18L8 19H1',
+    'M9 1H3L1 3V18L2 19H8L9 18V11L8 10H1', 'M1 1H9V4L4 19',
+    'M2 1H8L9 2V8L7 10L9 12V18L8 19H2L1 18V12L3 10L1 8V2ZM3 10H7',
+    'M9 10H2L1 9V2L2 1H8L9 2V17L7 19H1',
+]
+glyphs = ''.join(f'<path d="{path}" transform="translate({i * 16 + 3} 2)"/>'
+                 for i, path in enumerate(digit_paths))
+write('digits',f'<g fill="none" stroke="white" stroke-width="2.9" stroke-linejoin="round">{glyphs}</g>',
+      160,24,'0 0 160 24')
 for name,color in [('battery-off','#565728'),('battery-on','#eef13b')]:
     write(name,''.join(f'<rect x="{i*58}" y="0" width="54" height="14" fill="{color}"/>' for i in range(4)),232,14,'0 0 232 14')
 # Exact paths from generate-v3.py, translated locally without changing geometry or alpha.

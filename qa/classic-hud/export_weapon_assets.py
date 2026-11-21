@@ -4,9 +4,12 @@ OUT=Path(__file__).resolve().parents[2]/'src/main/resources/assets/crysismod/tex
 OUT.mkdir(exist_ok=True)
 def write(name,w,h,view,body):
  (OUT/f'{name}.svg').write_text(f'<svg xmlns="http://www.w3.org/2000/svg" width="{w*2}" height="{h*2}" viewBox="{view}">{body}</svg>',encoding='utf-8')
-write('frame',440,125,'0 0 440 125','''<path d="M132 13L150 0L349 8L366 26V119L144 108L132 96Z" fill="#111111" fill-opacity=".8"/><path d="M349 8L366 26V119M132 49L366 61M278 6V113" fill="none" stroke="white" stroke-width="1.7" opacity=".78"/>''')
+slope = 'matrix(1 .045 0 1 0 -6.75)'
+write('frame',440,125,'0 0 440 125',f'<path transform="{slope}" d="M132 13L150 0H349L366 17V51H132Z M132 56H366V107H145L132 94Z" fill="#202020" fill-opacity=".8"/>')
+write('frame-outline',440,125,'0 0 440 125',f'<path transform="{slope}" d="M278 1V51M278 56V106M349 0L366 17V107" fill="none" stroke="white" stroke-width="1.8" opacity=".83"/>')
 write('infinity',45,34,'0 0 45 34','<path d="M3 17C3 0 22 18 27 20C48 35 50 0 31 10L16 23C2 32 0 13 7 10C16 5 29 28 39 22" fill="none" stroke="white" stroke-width="2"/>')
-write('strip',230,125,'0 0 230 125','<path d="M0 15L20 0H226V62H0Z" fill="#111111" fill-opacity=".8"/><path d="M224 6V59" stroke="white" stroke-width="3"/>')
+write('strip',230,125,'0 0 230 125','<path d="M0 15L20 0H226V62H0Z" fill="#202020" fill-opacity=".8"/>')
+write('strip-outline',230,125,'0 0 230 125','<path d="M224 6V59" stroke="white" stroke-width="3"/>')
 # FIRE-01. Repeat one silhouette on the same baseline in all three modes.
 projectile='M-3 12V-8L-2 -13L0 -16L2 -13L3 -8V12Z'
 for name, centers in [('bullet', [30]), ('burst', [20,30,40]), ('auto', [10,20,30,40,50])]:

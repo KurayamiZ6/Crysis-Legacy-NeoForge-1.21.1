@@ -21,6 +21,7 @@ import java.util.Locale;
 public final class ClassicBinoculars {
    private static final ClassicBinocularAnimation ANIMATION=new ClassicBinocularAnimation();
    private static final ResourceLocation FRAME=ResourceLocation.fromNamespaceAndPath("crysismod","textures/gui/classic_binoculars/frame.png");
+   private static final ResourceLocation LABEL_BACKGROUND=ResourceLocation.fromNamespaceAndPath("crysismod","textures/gui/classic_binoculars/label-background.png");
    private static final ResourceLocation GLYPHS=ResourceLocation.fromNamespaceAndPath("crysismod","textures/gui/classic_binoculars/glyphs.png");
    private static final ResourceLocation BRACKETS=ResourceLocation.fromNamespaceAndPath("crysismod","textures/gui/classic_binoculars/brackets.png");
    private static final ResourceLocation VIGNETTE=ResourceLocation.fromNamespaceAndPath("crysismod","textures/gui/classic_binoculars/vignette.png");
@@ -97,6 +98,8 @@ public final class ClassicBinoculars {
          g.setColor(1,1,1,vignetteAlpha);
          g.blit(VIGNETTE,0,0,1920,1080,0,0,1920,1080,1920,1080);g.setColor(1,1,1,1);
          g.flush();RenderSystem.enableBlend();RenderSystem.defaultBlendFunc();RenderSystem.disableDepthTest();
+         g.setColor(1,1,1,p);
+         g.blit(LABEL_BACKGROUND,0,0,1920,1080,0,0,1920,1080,1920,1080);
          g.setColor((rgb>>16&255)/255f,(rgb>>8&255)/255f,(rgb&255)/255f,p);
          g.blit(FRAME,0,0,1920,1080,0,0,1920,1080,1920,1080);
          g.setColor(1,1,1,1);

@@ -54,44 +54,25 @@ function mountComparison(id, reference, current, viewBox, notes) {
 }
 
 const fullReference = [statusRef, 'Remastered · panneau de droite, extrait fourni', [0, 0, 475, 256]];
-const fullCurrent = [rightHud, 'Minecraft · dernier rendu N1, SPAS-12 · 1920 × 1080', [1470, 868, 329, 182]];
+const fullCurrent = [rightHud, 'Minecraft · avant HUD-02, SPAS-12 · 1920 × 1080', [1470, 868, 329, 182]];
 const viewBox = [-10, -11, 450, 263];
-const geometry = mountComparison('geometry', fullReference, fullCurrent, viewBox, 'Maquette HUD-02 · proposition de raccord, chiffres de démonstration');
-const type = mountComparison('type', fullReference, fullCurrent, viewBox, 'Maquette TYPE-01 · cadre actuel, chiffres polygonaux originaux');
+const geometry = mountComparison('geometry', fullReference, fullCurrent, viewBox, 'Maquette HUD-02 · nouveau cadre, valeurs de démonstration');
+const type = mountComparison('type', fullReference, fullCurrent, viewBox, 'Maquette TYPE-01 · nouveau cadre et chiffres intégrés, valeurs de démonstration');
 const fire = mountComparison('fire',
   ['references/fire-auto.png', 'Nouvelle référence · tir automatique'],
   [qa + '/classic-hud/evidence-final/fire-burst.png', 'Minecraft · BURST, capture QA archivée · 1920 × 1080', [1669, 878, 89, 59]],
   [0, 0, 360, 179], 'Maquette FIRE-01 · quatre symboles à échelle commune');
 
-const digitPaths = {
-  0: 'M2 1H8L9 2V18L8 19H2L1 18V2Z',
-  1: 'M2 5L5 1H6V19', 2: 'M1 4V2L2 1H8L9 2V8L1 17V19H9',
-  3: 'M1 1H8L9 2V8L7 10L9 12V18L8 19H1M4 10H7',
-  4: 'M1 1V11H9M8 1V19', 5: 'M9 1H1V9H7L9 11V18L8 19H1',
-  6: 'M9 1H3L1 3V18L2 19H8L9 18V11L8 10H1',
-  7: 'M1 1H9V4L4 19', 8: 'M2 1H8L9 2V8L7 10L9 12V18L8 19H2L1 18V12L3 10L1 8V2ZM3 10H7',
-  9: 'M9 10H2L1 9V2L2 1H8L9 2V17L7 19H1'
-};
-
-function number(value, x, y, height, polygonal, color = '#c0efa6') {
+function digits(value, right, top, height, maxWidth, filter, minimum = 0) {
+  const digits = value.padStart(minimum, '0');
+  height = Math.min(height, maxWidth / (digits.length * .49));
   const advance = height * .49;
-  if (!polygonal) {
-    return [...value].map((digit, i) => {
-      const offset = (digit.charCodeAt(0) - 32) * 32;
-      const left = x + (i - value.length / 2) * advance;
-      return `<svg x="${left}" y="${y - height / 2}" width="${advance}" height="${height * 1.25}"
-        viewBox="${offset} 0 32 80" preserveAspectRatio="none">
-        <image href="${assets}/classic_binoculars/glyphs.png" width="1888" height="80"/>
-      </svg>`;
-    }).join('');
-  }
-  return [...value].map((digit, i) => {
-    const left = x + (i - value.length / 2) * advance;
-    return `<path d="${digitPaths[digit]}" transform="translate(${left} ${y - height / 2}) scale(${advance / 12} ${height / 20})"
-      fill="none" stroke="${color}" stroke-width="2.9" stroke-linejoin="round"/>`;
-  }).join('');
+  return [...digits].map((digit, i) => `<svg x="${right + (i - digits.length) * advance}" y="${top}"
+    width="${advance}" height="${height}" viewBox="${Number(digit) * 16} 0 16 24" preserveAspectRatio="none"
+    opacity="${i < digits.length - value.length ? .30 : 1}">
+    <image href="${assets}/classic_hud/digits.png" width="160" height="24" filter="url(#${filter})"/>
+  </svg>`).join('');
 }
-
 
 const slope = 'matrix(1 .045 0 1 0 -6.75)';
 const projectile = 'M-3 12V-8L-2 -13L0 -16L2 -13L3 -8V12Z';
@@ -108,61 +89,59 @@ function mixWithWhite(rgb, amount) {
   const channels = [1, 3, 5].map(offset => parseInt(rgb.slice(offset, offset + 2), 16));
   return '#' + channels.map(value => Math.round(value + (255 - value) * amount).toString(16).padStart(2, '0')).join('');
 }
-function block({ join, polygonal, wide, shotgun, theme = '#719671' }) {
-  const plate = join
-    ? `<g transform="${slope}">
-         <path d="M132 13L150 0H349L366 17V51H132Z M132 56H366V107H145L132 94Z" fill="#0b1116" opacity=".72"/>
-         <path d="M278 1V51M278 56V106M349 0L366 17V107" fill="none" stroke="#719671" stroke-width="1.8" opacity=".83"/>
-         <path d="M8 122L25 110H355L305 143.3V182H20L8 170Z" fill="#090f15" opacity=".81"/>
-         <path d="M8 170L20 182H305" fill="none" stroke="#62815b" stroke-width="1.8"/>
-       </g>
-       <path d="M366 126L416 156V211L366 242L315 211V156Z" fill="#090f15" stroke="#62815b" stroke-width="2"/>
-       <path d="M366 116.7L419 148.5M426 192V216L376 247" fill="none" stroke="#62815b" stroke-width="1.7"/>`
-    : `<image href="${assets}/classic_weapon/frame.svg" width="440" height="125" opacity=".65"/>
-       <image href="${assets}/classic_hud/panel.png" y="100" width="440" height="155"/>`;
+function tint(id, color) {
+  return `<filter id="${id}" color-interpolation-filters="sRGB"><feFlood flood-color="${color}"/>
+    <feComposite in2="SourceAlpha" operator="in"/></filter>`;
+}
+
+function chrome(prefix, mode, art = 'panel') {
+  return `<image href="${assets}/classic_weapon/frame.png" width="440" height="125"/>
+    <image href="${assets}/classic_weapon/frame-outline.png" width="440" height="125" filter="url(#${prefix}-accent)"/>
+    <image href="${assets}/classic_hud/${art}.png" y="100" width="440" height="155"/>
+    <image href="${assets}/classic_hud/panel-outline.png" y="100" width="440" height="155" filter="url(#${prefix}-outline)"/>
+    <image href="${assets}/classic_hud/${mode}.png" y="100" width="440" height="155" filter="url(#${prefix}-accent)"/>`;
+}
+
+function block({ id, wide, shotgun, mode = 'armor', theme = '#719671' }) {
   const energy = wide ? '25' : '100';
   const health = wide ? '50' : '100';
-  const clip = polygonal ? 'type' : 'geometry';
   const load = wide ? '123' : shotgun ? '7' : '31';
   const reserve = wide ? '128' : shotgun ? '40' : '43';
   const throwable = wide ? '12' : shotgun ? '4' : '5';
-  // The atlas stays in HUD-02. TYPE-01 separately proposes the heavier glyphs.
   const otherText = theme === '#719671' ? '#c0efa6' : theme;
-  const loadedText = mixWithWhite(otherText, .23);
-  const endNumber = (value, y) => number(value, 266 - value.length * 27 * .49 / 2, y, 27, polygonal, otherText);
   return `<rect x="-10" y="-11" width="450" height="263" fill="#172026"/>
-    ${plate}
     <defs>
-      <clipPath id="${clip}-energy"><rect x="${wide ? 146 : 16}" y="100" width="173" height="155"/></clipPath>
-      <clipPath id="${clip}-health"><rect x="${wide ? 102.5 : 16}" y="100" width="173" height="155"/></clipPath>
+      ${tint(id + '-accent', theme)}
+      ${tint(id + '-outline', theme === '#719671' ? '#62815b' : theme)}
+      ${tint(id + '-text', otherText)}
+      ${tint(id + '-loaded', mixWithWhite(otherText, .23))}
+      <clipPath id="${id}-energy"><rect x="${189 - 173 * Number(energy) / 100}" y="100" width="173" height="155"/></clipPath>
+      <clipPath id="${id}-health"><rect x="${189 - 173 * Number(health) / 100}" y="100" width="173" height="155"/></clipPath>
     </defs>
-    <image href="${assets}/classic_hud/energy.png" y="100" width="440" height="155" clip-path="url(#${clip}-energy)"/>
-    <image href="${assets}/classic_hud/health.png" y="100" width="440" height="155" clip-path="url(#${clip}-health)"/>
-    ${join ? `<g transform="${slope}">
-      <path d="M196 121H237V140H196Z" fill="#0076b0"/><path d="M196 149H237V169H196Z" fill="#7dca2b"/>
-      <path d="M217 124L213 132H217L215 139L222 129H218Z" fill="#d4eee0"/>
-      <path d="M217 153V164M212 158H222" stroke="#d4eead" stroke-width="3"/>
-      <path d="M20 131V140M20 159V167M49 138V146M192 139V146M192 167V174" fill="none" stroke="#77935d" stroke-width="1.5"/>
-    </g>` : ''}
-    <image href="${assets}/classic_hud/armor.png" y="100" width="440" height="155"/>
+    ${chrome(id, mode)}
+    <image href="${assets}/classic_hud/energy.png" y="100" width="440" height="155" clip-path="url(#${id}-energy)"/>
+    <image href="${assets}/classic_hud/health.png" y="100" width="440" height="155" clip-path="url(#${id}-health)"/>
     <g transform="${slope}">
-      ${join ? `<image href="${assets}/classic_weapon/shell-semi.svg" x="292" y="4" width="60" height="48" opacity=".6"/>`
-        : shotgun ? shell(322, 26) : fireRounds('AUTO', 322, 26)}
-      ${number(load, 155 + load.length * 35 * .49 / 2, 25, 35, polygonal, loadedText)}
-      ${endNumber(reserve, 21)}${endNumber(throwable, 73)}
-      <image href="${assets}/classic_weapon/throwable-frag.svg" x="302" y="55" width="40" height="40" opacity=".6"/>
-      ${number(energy, 272, 132, 25, polygonal, otherText)}${number(health, 272, 160, 25, polygonal, otherText)}
+      <image href="${assets}/classic_weapon/${shotgun ? 'shell-semi' : 'auto'}.png" x="292" y="1" width="60" height="48" filter="url(#${id}-accent)"/>
+      ${digits(load, 211, 4, 39, 73, id + '-loaded', 3)}
+      ${digits(reserve, 274, 2, 29, 59, id + '-text')}
+      ${digits(throwable, 274, 62, 39, 125, id + '-text')}
+      <image href="${assets}/classic_weapon/throwable-frag.png" x="302" y="61" width="40" height="40" filter="url(#${id}-accent)"/>
+      ${digits(energy, 292, 113, 28, 49, id + '-text')}${digits(health, 292, 142, 28, 49, id + '-text')}
     </g>`;
 }
-geometry.innerHTML = block({ join: true, polygonal: false, wide: false, shotgun: true });
+
+geometry.innerHTML = block({ id: 'geometry', wide: false, shotgun: true });
 const sample = document.getElementById('sample');
 const themeSample = document.getElementById('type-theme');
+const suitMode = document.getElementById('type-mode');
 function updateType() {
-  type.innerHTML = block({ join: false, polygonal: true, wide: sample.value === 'wide', shotgun: sample.value === 'shotgun',
-    theme: themeSample.value });
+  type.innerHTML = block({ id: 'type', wide: sample.value === 'wide', shotgun: sample.value === 'shotgun',
+    theme: themeSample.value, mode: suitMode.value });
 }
 sample.addEventListener('change', updateType);
 themeSample.addEventListener('input', updateType);
+suitMode.addEventListener('change', updateType);
 updateType();
 
 fire.innerHTML = ['SEMI', 'BURST', 'AUTO', 'CARTOUCHE'].map((label, index) => {
@@ -219,19 +198,17 @@ malfunction.innerHTML = `
     <path d="M56 59V154" stroke="var(--hud-theme)" stroke-width="5" stroke-dasharray="19 4"/>
   </g>
   <path d="M40 155V175M40 180V186" stroke="var(--hud-theme)" stroke-width="3.5"/>
-  <g transform="translate(810 55) skewY(2.575)">
-    <path d="M61 0H207L221 12V38H61ZM61 43H221V81H61Z" fill="#1e242a" opacity=".82"/>
-    <path d="M159 2V38M159 43V81M207 0L221 12V81L246 100" fill="none" stroke="var(--hud-theme)"/>
-    <g class="pulse" fill="var(--hud-theme)" font-family="Bahnschrift, Arial, sans-serif" font-size="15" font-weight="700">
-      <text x="69" y="24" textLength="77" lengthAdjust="spacingAndGlyphs">MALFUNCTION</text>
-      <text x="69" y="66" textLength="77" lengthAdjust="spacingAndGlyphs">MALFUNCTION</text>
+  <g transform="translate(815 60) scale(.64)">
+    <defs>${tint('fault-accent', 'var(--hud-theme)')}${tint('fault-outline', 'var(--hud-theme)')}</defs>
+    ${chrome('fault', 'armor', 'panel')}
+    <g transform="${slope}">
+      <path d="M16 124L25 116H189V138H16Z M16 145H189V167H26L16 157Z
+        M196 116H237V138H196Z M196 145H237V167H196Z" fill="#262626"/>
+      <g class="pulse" fill="var(--hud-theme)" font-family="Bahnschrift, Arial, sans-serif" font-size="25" font-weight="700">
+        <text x="150" y="34" textLength="110" lengthAdjust="spacingAndGlyphs">MALFUNCTION</text>
+        <text x="150" y="89" textLength="110" lengthAdjust="spacingAndGlyphs">MALFUNCTION</text>
+      </g>
     </g>
-    <path d="M0 86H191V142H8L0 134Z" fill="#1b2328" opacity=".88"/>
-    <path d="M0 134L8 142H191" fill="none" stroke="var(--hud-theme)"/>
-    <path d="M9 96H155V110H9ZM9 119H155V133H9Z" fill="#812f37" opacity=".2"/>
-    <path d="M207 106L230 92L254 106V131L230 147L207 132Z" fill="#1b2328" stroke="var(--hud-theme)"/>
-    <path d="M254 136V143L231 157" fill="none" stroke="var(--hud-theme)"/>
-    <path d="M221 108H239L236 124L230 130L224 124Z" fill="var(--hud-theme)"/>
   </g>`;
 const replay = document.getElementById('replay-malfunction');
 function playMalfunction() {

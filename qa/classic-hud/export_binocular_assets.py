@@ -10,8 +10,9 @@ write('frame',1920,1080,'0 0 1920 1080','''<g fill="none" stroke="white">
 <path d="M465 310L495 269L605 278L647 310Q960 330 1273 310L1315 278L1425 269L1455 310M466 808L495 850L605 842L647 806L770 800V815Q960 795 1150 815V800L1273 806L1315 842L1425 850L1455 808" opacity=".7" stroke-width="1.8"/>
 <path d="M587 340L620 310L685 316M1235 316L1300 310L1333 340M587 774L620 805L685 799M1235 799L1300 805L1333 774" opacity=".55"/>
 <path d="M932 535L940 527H952M968 527H980L988 535M932 567L940 575H952M968 575H980L988 567" stroke-width="2" opacity=".7"/>
-<path d="M423 550H503V573H423Z M1418 550H1498V573H1418Z" fill="white" fill-opacity=".18"/>
+<path d="M423 550H503V573H423Z M1418 550H1498V573H1418Z"/>
 </g>''')
+write('label-background',1920,1080,'0 0 1920 1080','<path d="M423 550H503V573H423Z M1418 550H1498V573H1418Z" fill="#202020" fill-opacity=".18"/>')
 write('glyphs',1888,80,'0 0 944 40',''.join(f'<text x="{(i-32)*16+1}" y="31" fill="white" font-family="Bahnschrift,Arial,sans-serif" font-weight="600" font-size="31" textLength="14" lengthAdjust="spacingAndGlyphs">{html.escape(chr(i))}</text>' for i in range(32,91)))
 write('brackets',1920,1080,'0 0 1920 1080','<path d="M539 395L525 408V420H539V759H525V771L539 784M1381 395L1395 408V420H1381V759H1395V771L1381 784" fill="white" stroke="white" stroke-width="1"/>')
 print('Exported binocular frame and live-telemetry glyph atlas.')

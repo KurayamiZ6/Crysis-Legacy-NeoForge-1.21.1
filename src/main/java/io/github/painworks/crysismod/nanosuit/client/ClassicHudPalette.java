@@ -11,6 +11,12 @@ public final class ClassicHudPalette {
    public static float red(int rgb){return (rgb>>16&255)/255f;}
    public static float green(int rgb){return (rgb>>8&255)/255f;}
    public static float blue(int rgb){return (rgb&255)/255f;}
+   static int textColor(int theme){return theme==DEFAULT?0xc0efa6:theme;}
+   static int loadedAmmoColor(int theme){
+      int text=textColor(theme);
+      return (lift(text>>16&255)<<16)|(lift(text>>8&255)<<8)|lift(text&255);
+   }
+   private static int lift(int channel){return channel+Math.round((255-channel)*.23f);}
    /** Tint real terrain luminance; the default branch preserves the approved original palette exactly. */
    public static int terrainColor(int color,int theme){
       int gray=((color>>16&255)*54+(color>>8&255)*183+(color&255)*19)/256;

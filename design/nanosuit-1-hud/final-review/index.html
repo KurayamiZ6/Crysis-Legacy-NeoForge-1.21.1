@@ -64,16 +64,17 @@ select,textarea{font:inherit;max-width:100%}textarea{width:100%;box-sizing:borde
 <p>Le panneau des munitions garde deux segments verts à la séparation des chiffres et des pictogrammes, puis une arête externe à droite. Le dessus, le milieu et le dessous restent des espaces de verre, avec une séparation par transparence. Sous les jauges, un seul filet vert souligne le cadre. La garniture basse à droite du médaillon et les petits repères verts des jauges sont rétablis.</p>
 <p>Une fente sépare le bloc supérieur du bloc des jauges, avec un espacement comparable à celui entre munitions et grenades. Le retrait du cadre des jauges suit les deux faces voisines du médaillon avec un jeu constant. Les traits supérieur et inférieur droits du médaillon sont parallèles aux faces qu’ils accompagnent.</p>
 <div class="grid" id="geometry-grid"></div>
-<p class="note">La proposition repose sur la géométrie du mod et des raccords redessinés. Une intégration validée modifierait les contours de deux couches voisines. À contrôler ensuite avec le compteur masqué, les objets à lancer et les deux échelles GUI.</p>
+<p class="note">Les maquettes utilisent les ressources du nouveau HUD N1. Les fonds restent gris anthracite avec leur transparence habituelle. Les liserés, les chiffres et les pictogrammes suivent le thème.</p>
 </section>
 <section id="TYPE-01">
 <h2>TYPE-01 · Chiffres et lignes de base</h2>
-<p>Épaissir les chiffres polygonaux tout en gardant leur dessin étroit. Le chargeur est placé vers le bord gauche de sa zone. La réserve et le nombre d’objets à lancer terminent sur le même axe, juste avant le séparateur vert. Chaque ligne de base suit la pente de sa cellule. Les valeurs de santé et d’énergie partagent une colonne à droite des symboles.</p>
+<p>Les chiffres du chargeur gardent leurs zéros de remplissage translucides. La réserve est plus petite et se cale dans le haut à droite de sa cellule, juste avant le séparateur. Les grenades et autres objets à lancer utilisent la taille du chargeur, au milieu de leur ligne et sur le même axe droit que la réserve. Chaque ligne de base suit la pente de son cadre.</p>
 <div class="grid" id="type-grid"></div>
 <label>Valeurs de démonstration <select id="sample"><option value="normal">31 · 43 · 5 · 100 / 100</option><option value="shotgun">7 · 40 · 4 · 100 / 100</option><option value="wide">123 · 128 · 12 · 25 / 50</option></select></label>
 <label> · Couleur de texte du thème <input id="type-theme" type="color" value="#719671"></label>
+<label> · Mode Nanosuit <select id="type-mode"><option value="armor">Armure</option><option value="strength">Force</option><option value="speed">Vitesse</option><option value="cloak">Camouflage</option></select></label>
 <p>Les chiffres du chargeur utilisent la couleur de texte du thème éclaircie de 23 % vers le blanc. La réserve et les autres valeurs gardent leur couleur de départ. Le sélecteur montre la différence avec le vert classique ou avec une couleur personnalisée.</p>
-<p class="note">Le dessin des glyphes est une proposition originale. Le lot couvre uniquement les nombres du bloc droit. Les lettres des jumelles et de la boussole ont des contraintes différentes. Vérifier les chiffres fins, les réserves à trois chiffres et la lisibilité avec un thème personnalisé.</p>
+<p class="note">La maquette utilise les chiffres du mod et permet de vérifier les valeurs à trois chiffres, les quatre pictogrammes de mode et les thèmes personnalisés.</p>
 </section>
 <section id="FIRE-01">
 <h2>FIRE-01 · Symboles de tir</h2>
@@ -91,8 +92,8 @@ select,textarea{font:inherit;max-width:100%}textarea{width:100%;box-sizing:borde
 <section id="decisions">
 <h2>Validation indépendante</h2>
 <div class="table"><table><thead><tr><th>ID</th><th>Retouche</th><th>Avis</th></tr></thead><tbody>
-<tr><td>HUD-02</td><td>Raccord et géométrie du bloc droit</td><td><select data-decision="HUD-02" aria-label="Avis HUD-02"></select></td></tr>
-<tr><td>TYPE-01</td><td>Chiffres et alignement dans les cellules</td><td><select data-decision="TYPE-01" aria-label="Avis TYPE-01"></select></td></tr>
+<tr><td>HUD-02</td><td>Raccord et géométrie du bloc droit</td><td>Accepté et intégré</td></tr>
+<tr><td>TYPE-01</td><td>Chiffres et alignement dans les cellules</td><td>Accepté et intégré</td></tr>
 <tr><td>FIRE-01</td><td>SEMI, BURST, AUTO et cartouche</td><td>Accepté</td></tr>
 <tr><td>MALF-01</td><td>Étude visuelle de la perturbation EMP</td><td><select data-decision="MALF-01" aria-label="Avis MALF-01"></select></td></tr>
 </tbody></table></div>
