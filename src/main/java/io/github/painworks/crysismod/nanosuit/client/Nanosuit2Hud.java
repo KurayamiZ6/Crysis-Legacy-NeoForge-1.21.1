@@ -102,7 +102,7 @@ public final class Nanosuit2Hud {
                Nanosuit2Art.setCrt(false);
                Nanosuit2Art.counter(g,ammo.loaded(),320,8,31,50,lowAmmo?0xffff493c:0xfff3fffb,
                   lowAmmo?0xa0ff463a:0x75cdffea);
-               Nanosuit2Art.sprite(g,"slash",329,9,16,48,-1);
+               Nanosuit2Art.sprite(g,"slash",321,1,32,64,-1);
                if(ammo.unlimited()) glowingLabel(g,"∞",395,23,3.2f,INK,0xff93e7bb);
                else Nanosuit2Art.counter(g,ammo.reserve(),422,16,21,34,INK,0x6493e7bb);
                Nanosuit2Art.setCrt(true);

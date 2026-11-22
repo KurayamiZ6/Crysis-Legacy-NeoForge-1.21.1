@@ -50,6 +50,19 @@ const out=path.resolve('src/main/resources/assets/crysismod/textures/gui/nanosui
   });
   function clip(r){const [x,y,w,h]=r;return {x:Math.floor(x),y:Math.floor(y),width:Math.ceil(x+w)-Math.floor(x),height:Math.ceil(y+h)-Math.floor(y)}}
   const save=async(name,rect)=>page.screenshot({path:path.join(out,name+'.png'),clip:clip(rect),omitBackground:true});
+  const saveSlash=async()=>{
+   const isolate=await page.addStyleTag({content:`
+    #view .hud,#view .hud *{visibility:hidden!important}
+    #view .hud .slash{visibility:visible!important}
+   `});
+   const [x,y,w,h]=metadata.slash;
+   try {await save("slash",[x-8,y-8,w+16,h+16]);}
+   finally {await isolate.evaluate(style=>style.remove());}
+  };
+  if(process.argv.includes('--slash-only')){
+   await saveSlash();
+   return;
+  }
   await page.evaluate(drawRadarRim);
   await page.evaluate(()=>liveRadar.hud.dataset.export="base");
   await page.evaluate(()=>liveRadar.meter.style.setProperty("--threat-amount",0));
@@ -130,8 +143,7 @@ const out=path.resolve('src/main/resources/assets/crysismod/textures/gui/nanosui
     await page.evaluate(message=>{alertText.firstElementChild.textContent=message;},message);
     await save("alert-"+name,metadata.alert);
   }
-  await page.evaluate(()=>{live.hud.removeAttribute("data-export");live.hud.querySelector(".slash").style.visibility="visible";});
-  await save("slash",metadata.slash);
+  await saveSlash();
 
   const opticAssets=await page.evaluate(()=>{
     opticEnabled.checked=true;const previous=opt.fillText;opt.fillText=()=>{};
