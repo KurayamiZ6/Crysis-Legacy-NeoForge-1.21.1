@@ -11,6 +11,7 @@ import io.github.painworks.crysismod.client.minimap.NanoMinimapCoordinateMapper;
 import io.github.painworks.crysismod.client.minimap.NanoMinimapHudTransform;
 import io.github.painworks.crysismod.client.minimap.NanoMinimapRenderTrace;
 import io.github.painworks.crysismod.client.minimap.NanoMinimapViewport;
+import it.unimi.dsi.fastutil.ints.IntOpenHashSet;
 import io.github.painworks.crysismod.client.minimap.config.NanoMinimapClientConfig;
 import io.github.painworks.crysismod.client.minimap.marker.NanoMinimapEntityIcon;
 import io.github.painworks.crysismod.client.minimap.marker.NanoMinimapEntityIconAtlas;
@@ -259,9 +260,6 @@ public final class NanoMinimapRenderer {
                );
             }
 
-            if (modern&&!debugShowOnlyFrontTexture&&!debugShowTerrainOnly)
-               io.github.painworks.crysismod.nanosuit.client.Nanosuit2Hud.crtLines(guiGraphics,drawViewport.x(),drawViewport.y(),
-                  drawViewport.width(),drawViewport.height(),useStencilMask);
             if (useStencilMask) {
                endStencilMask();
             }
@@ -428,6 +426,11 @@ public final class NanoMinimapRenderer {
       NanoMinimapCoordinateMapper.MutablePoint markerPoint = new NanoMinimapCoordinateMapper.MutablePoint();
       NanoMinimapCoordinateMapper.MutablePoint clampedPoint = new NanoMinimapCoordinateMapper.MutablePoint();
       boolean blendEnabledForIcons = false;
+      IntOpenHashSet modernContacts = modern ? new IntOpenHashSet() : null;
+      if (modern) {
+         float heading = rotateWithPlayer ? 0 : playerYawDeg - 180;
+         this.nanosuit2Cone.draw(guiGraphics, viewport, minecraft, (float) cx, (float) cy, heading);
+      }
 
       for (NanoMinimapMarker marker : markers) {
          if (marker.type() == NanoMinimapMarker.Type.PLAYER) {
@@ -466,10 +469,15 @@ public final class NanoMinimapRenderer {
 
                   double sx = viewport.x() + drawLocalX;
                   double sy = viewport.y() + drawLocalY;
-                  if(modern && entity instanceof net.minecraft.world.entity.monster.Enemy) {
-                     var viewer=Minecraft.getInstance().player;
-                     Nanosuit2Radar.contact(guiGraphics,entity,viewer,(float)sx,(float)sy,
-                        entity.getYRot()-(rotateWithPlayer?playerYawDeg:180),Math.max(2,3*scale));
+                  if (modern) {
+                     if (entity != null && entity.isAlive() && modernContacts.add(entity.getId())) {
+                        if (entity instanceof net.minecraft.world.entity.monster.Enemy) {
+                           float heading = marker.yawDeg() - (rotateWithPlayer ? playerYawDeg : 180);
+                           Nanosuit2Radar.contact(guiGraphics, viewport, entity, (float) sx, (float) sy, heading);
+                        } else if (entity instanceof net.minecraft.world.entity.Mob) {
+                           Nanosuit2Radar.passive(guiGraphics, viewport, (float) sx, (float) sy);
+                        }
+                     }
                      continue;
                   }
                   boolean renderedIcon = false;
@@ -515,8 +523,7 @@ public final class NanoMinimapRenderer {
 
       if(modern) {
          float heading = rotateWithPlayer ? 0 : playerYaw - 180;
-         this.nanosuit2Cone.draw(guiGraphics, viewport, minecraft, (float) cx, (float) cy, heading);
-         Nanosuit2Radar.arrow(guiGraphics,(float)cx,(float)cy,heading,0xffffdf72,Math.max(2,3*scale));
+         Nanosuit2Radar.player(guiGraphics, viewport, (float) cx, (float) cy, heading);
       } else this.drawPlayerMarker(guiGraphics, cx, cy, rotateWithPlayer, playerYaw, playerColor, opacity, scale);
    }
 

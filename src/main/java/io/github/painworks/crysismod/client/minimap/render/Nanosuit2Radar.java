@@ -23,6 +23,9 @@ import net.neoforged.neoforge.event.entity.EntityJoinLevelEvent;
 final class Nanosuit2Radar {
    private static final int[] BARS={2,7,13,20};
    private static final int WAYPOINT=0xff3bddff;
+   private static final int PLAYER_MARKER = 0xffffe582;
+   private static final int PASSIVE_MARKER = 0xff52eb68;
+   private static final int MARKER_TILE_SIZE = 40;
    private static int lit,target;
    private static long stepAt,maxAt=-1;
    private static LocalPlayer owner;
@@ -127,7 +130,7 @@ final class Nanosuit2Radar {
       else Nanosuit2Hud.shape(g,WAYPOINT,drawX,drawY-4,drawX+4,drawY,drawX,drawY+4,drawX-4,drawY);
    }
 
-   static void contact(GuiGraphics g,Entity entity,LocalPlayer viewer,float x,float y,float yaw,float scale) {
+   static void contact(GuiGraphics g, NanoMinimapViewport viewport, Entity entity, float x, float y, float yaw) {
       int level=ClassicEnemyContacts.nanosuit2Threat(entity).ordinal();
       long age=Util.getMillis()-shotAt;
       boolean shooting=entity==shotOwner&&age>=0&&age<620;
@@ -142,10 +145,35 @@ final class Nanosuit2Radar {
                x+bX*(radius-.7f),y+bY*(radius-.7f),x+aX*(radius-.7f),y+aY*(radius-.7f));
          }
       }
-      arrow(g,x,y,yaw,shooting&&age<115?Nanosuit2Hud.threatColor(3):Nanosuit2Hud.threatColor(level),scale);
+      int color = Nanosuit2Hud.threatColor(shooting && age < 115 ? 3 : level);
+      marker(g, viewport, x, y, yaw, color, 0);
    }
 
-   static void arrow(GuiGraphics g,float x,float y,float yaw,int color,float size) {
+   static void player(GuiGraphics g, NanoMinimapViewport viewport, float x, float y, float yaw) {
+      marker(g, viewport, x, y, yaw, PLAYER_MARKER, 0);
+   }
+
+   static void passive(GuiGraphics g, NanoMinimapViewport viewport, float x, float y) {
+      marker(g, viewport, x, y, 0, PASSIVE_MARKER, MARKER_TILE_SIZE);
+   }
+
+   private static void marker(GuiGraphics g, NanoMinimapViewport viewport, float x, float y, float yaw,
+                              int color, int sourceX) {
+      var pose = g.pose();
+      pose.pushPose();
+      try {
+         pose.translate(x, y, 0);
+         pose.scale(viewport.width() / 440F, viewport.height() / 258F, 1);
+         pose.mulPose(Axis.ZP.rotationDegrees(yaw));
+         int half = MARKER_TILE_SIZE / 2;
+         Nanosuit2Art.region(g, "radar-markers", -half, -half, MARKER_TILE_SIZE, MARKER_TILE_SIZE,
+            sourceX, 0, MARKER_TILE_SIZE, MARKER_TILE_SIZE, MARKER_TILE_SIZE * 2, MARKER_TILE_SIZE, color);
+      } finally {
+         pose.popPose();
+      }
+   }
+
+   private static void arrow(GuiGraphics g,float x,float y,float yaw,int color,float size) {
       g.pose().pushPose();
       try {
          g.pose().translate(x,y,0);
