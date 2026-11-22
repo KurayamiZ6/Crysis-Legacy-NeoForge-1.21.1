@@ -5,13 +5,13 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Pseudo;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
-import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Pseudo
-@Mixin(targets = "journeymap.client.InternalStateHandler", remap = false)
+@Mixin(targets = "journeymap.client.ui.UIManager", remap = false)
 abstract class JourneyMapMinimapDisplayMixin {
-   @Inject(method = "isMinimapEnabledApi()Z", at = @At("HEAD"), cancellable = true, require = 0)
-   private void crysismod$hideMinimap(CallbackInfoReturnable<Boolean> callback) {
-      if (ClassicMapCompatibility.hidesCompetingMinimap()) callback.setReturnValue(false);
+   @Inject(method = "drawMiniMap(Lnet/minecraft/client/gui/GuiGraphics;)V", at = @At("HEAD"), cancellable = true, require = 0)
+   private void crysismod$hideMinimap(CallbackInfo callback) {
+      if (ClassicMapCompatibility.hidesCompetingMinimap()) callback.cancel();
    }
 }

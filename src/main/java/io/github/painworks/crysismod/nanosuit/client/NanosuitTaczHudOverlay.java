@@ -49,7 +49,7 @@ public final class NanosuitTaczHudOverlay {
          Minecraft mc=Minecraft.getInstance();
          if(event.getName().toString().equals("tacz:tac_gun_hud_overlay") && !mc.options.hideGui
             && NanosuitHudOverlay.isHudEnabled() && NanosuitClientConfig.taczHudOverrideEnabled()
-            && NanosuitClientConfig.taczHideOriginalHud() && ClassicTaczData.read(mc.player)!=null) event.setCanceled(true);
+            && NanosuitClientConfig.taczHideOriginalHud() && ClassicTaczData.readNanosuit2(mc.player)!=null) event.setCanceled(true);
          return;
       }
       if (io.github.painworks.crysismod.client.minimap.ClassicMinimapRenderer.isClassic()) {

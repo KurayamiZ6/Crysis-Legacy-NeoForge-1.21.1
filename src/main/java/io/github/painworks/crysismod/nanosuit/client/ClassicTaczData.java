@@ -9,7 +9,7 @@ import net.neoforged.fml.ModList;
 
 /** Optional public API adapter. Unknown or unsupported weapons keep their native HUD. */
 public final class ClassicTaczData {
-   public record State(int loaded, int reserve, boolean unlimited, String fireMode, ResourceLocation gunId, ResourceLocation icon,ClassicAmmoIcons.Kind ammoKind,int capacity) {}
+   public record State(int loaded, int reserve, boolean unlimited, String fireMode, ResourceLocation gunId, ResourceLocation icon,ClassicAmmoIcons.Kind ammoKind,int capacity,boolean inventoryFed) {}
    private static Class<?> gunApi,ammoApi,boxApi,timelessApi;
    private static boolean initialized,available;
    private static final java.util.Map<String,Method> METHODS=new java.util.HashMap<>();
@@ -37,20 +37,25 @@ public final class ClassicTaczData {
       } catch(ReflectiveOperationException|LinkageError|RuntimeException unsupported) {return null;}
    }
    public static State read(LocalPlayer player) {
+      State state=readNanosuit2(player);
+      return state!=null && state.inventoryFed()?null:state;
+   }
+   public static State readNanosuit2(LocalPlayer player) {
       init();if(!available)return null;
       ItemStack stack=player.getMainHandItem();long now=System.nanoTime();
       if(player==cachedPlayer.get() && stack==cachedStack && now-readAt<50_000_000L)return cached;
       cachedPlayer=new java.lang.ref.WeakReference<>(player);cachedStack=stack;readAt=now;cached=null;
       try{
          Object gun=call(gunApi,"getIGunOrNull",null,new Class<?>[]{ItemStack.class},stack);
-         if(gun==null || bool(gunApi,"useInventoryAmmo",gun,stack) || bool(gunApi,"hasHeatData",gun,stack))return null;
+         if(gun==null || bool(gunApi,"hasHeatData",gun,stack))return null;
+         boolean inventoryFed=bool(gunApi,"useInventoryAmmo",gun,stack);
          ResourceLocation id=(ResourceLocation)call(gunApi,"getGunId",gun,new Class<?>[]{ItemStack.class},stack);
          var index=(Optional<?>)call(timelessApi,"getCommonGunIndex",null,new Class<?>[]{ResourceLocation.class},id);
          if(index.isEmpty())return null;
          Class<?> indexApi=Class.forName("com.tacz.guns.resource.index.CommonGunIndex");
          Object data=call(indexApi,"getGunData",index.get(),new Class<?>[0]);
          Object bolt=call(data.getClass(),"getBolt",data,new Class<?>[0]);
-         int loaded=number(gunApi,"getCurrentAmmoCount",gun,stack);
+         int loaded=inventoryFed?0:number(gunApi,"getCurrentAmmoCount",gun,stack);
          if(bool(gunApi,"hasBulletInBarrel",gun,stack) && !bolt.toString().equals("OPEN_BOLT"))loaded++;
          int reserve=0;boolean unlimited=player.getAbilities().instabuild;
          if(bool(gunApi,"useDummyAmmo",gun,stack)){
@@ -77,7 +82,8 @@ public final class ClassicTaczData {
          int capacity=0;
          try {capacity=((Number)call(data.getClass(),"getAmmoAmount",data,new Class<?>[0])).intValue();}
          catch(ReflectiveOperationException|RuntimeException unsupportedCapacity) {}
-         cached=new State(Math.max(0,loaded),Math.max(0,reserve),unlimited,fireMode,id,icon,kind,capacity);
+         cached=new State(Math.max(0,inventoryFed?Math.addExact(loaded,reserve):loaded),
+            inventoryFed?0:Math.max(0,reserve),unlimited,fireMode,id,icon,kind,capacity,inventoryFed);
       }catch(ReflectiveOperationException|LinkageError|RuntimeException unsupported){cached=null;}
       return cached;
    }

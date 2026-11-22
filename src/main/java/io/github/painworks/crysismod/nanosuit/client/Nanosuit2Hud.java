@@ -73,7 +73,7 @@ public final class Nanosuit2Hud {
       if(player.isAlive()) deathSince=-1;
       if(panelDropped(false)) return;
       boolean redPulse=now%333<166;
-      var ammo=NanosuitClientConfig.taczHudOverrideEnabled()&&NanosuitClientConfig.taczHideOriginalHud()?ClassicTaczData.read(player):null;
+      var ammo=NanosuitClientConfig.taczHudOverrideEnabled()&&NanosuitClientConfig.taczHideOriginalHud()?ClassicTaczData.readNanosuit2(player):null;
       if(ammo!=null) {
          if(currentGun!=null&&!currentGun.gunId().equals(ammo.gunId())) previousGun=currentGun;
          currentGun=ammo;
@@ -97,12 +97,15 @@ public final class Nanosuit2Hud {
          Nanosuit2Art.sprite(g,armor?"mode-armor":cloak?"mode-stealth":"mode-neutral",0,0,437,193,-1);
          if(ammo!=null) {
             if(!NanoVisorState.isVisorActive()) {
-               boolean lowAmmo=ammo.capacity()>0&&ammo.loaded()*5<=ammo.capacity();
-               Nanosuit2Art.counter(g,ammo.loaded(),320,8,31,50,lowAmmo?0xffff493c:0xfff3fffb,
+               boolean lowAmmo=ammo.inventoryFed()?ammo.loaded()==0:ammo.capacity()>0&&ammo.loaded()*5<=ammo.capacity();
+               if(ammo.inventoryFed()&&ammo.unlimited()) glowingLabel(g,"∞",290,12,4.3f,0xfff3fffb,0xffcdffea);
+               else Nanosuit2Art.counter(g,ammo.loaded(),320,8,31,50,lowAmmo?0xffff493c:0xfff3fffb,
                   lowAmmo?0xa0ff463a:0x75cdffea);
-               Nanosuit2Art.sprite(g,"slash",321,1,32,64,-1);
-               if(ammo.unlimited()) glowingLabel(g,"∞",395,23,3.2f,INK,0xff93e7bb);
-               else Nanosuit2Art.counter(g,ammo.reserve(),422,16,21,34,INK,0x6493e7bb);
+               if(!ammo.inventoryFed()) {
+                  Nanosuit2Art.sprite(g,"slash",321,1,32,64,-1);
+                  if(ammo.unlimited()) glowingLabel(g,"∞",395,23,3.2f,INK,0xff93e7bb);
+                  else Nanosuit2Art.counter(g,ammo.reserve(),422,16,21,34,INK,0x6493e7bb);
+               }
             }
             int count=switch(ammo.fireMode()) {case "AUTO" -> 4; case "BURST" -> 3; case "SEMI" -> 1; default -> 0;};
             if(count>0) Nanosuit2Art.sprite(g,"shots-"+count,0,0,437,193,-1);
