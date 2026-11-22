@@ -33,10 +33,17 @@ public final class NanosuitCloakRefraction extends RenderStateShard {
    private static final int MAX_DEFERRED_VERTICES = 131_072;
    private static final List<DeferredBatch> DEFERRED_WORLD = new ArrayList<>();
    private static final List<DeferredBatch> DEFERRED_HANDS = new ArrayList<>();
+   private static final List<DeferredBatch> DEFERRED_RETICLE = new ArrayList<>();
    private static final Map<ResourceLocation, RenderType> MASK_TYPES = new LinkedHashMap<>(64, 0.75F, true) {
       @Override
       protected boolean removeEldestEntry(Map.Entry<ResourceLocation, RenderType> entry) {
          return size() > 128;
+      }
+   };
+   private static final Map<ResourceLocation, RenderType> RETICLE_TYPES = new LinkedHashMap<>(16, .75f, true) {
+      @Override
+      protected boolean removeEldestEntry(Map.Entry<ResourceLocation, RenderType> entry) {
+         return size() > 32;
       }
    };
    private static ShaderInstance maskShader;
@@ -52,6 +59,7 @@ public final class NanosuitCloakRefraction extends RenderStateShard {
    private static boolean maskPrepared;
    private static boolean hasGeometry;
    private static boolean failed;
+   private static boolean warnedReticle;
    private static final OutputStateShard MASK_OUTPUT = new OutputStateShard("crysismod_cloak_mask", () -> {
       previousMaskDrawFramebuffer = GL11.glGetInteger(GL30.GL_DRAW_FRAMEBUFFER_BINDING);
       GL30.glBindFramebuffer(GL30.GL_DRAW_FRAMEBUFFER, mask.frameBufferId);
@@ -90,6 +98,7 @@ public final class NanosuitCloakRefraction extends RenderStateShard {
          try {
             renderDeferred(DEFERRED_WORLD, true);
             renderDeferred(DEFERRED_HANDS, false);
+            replayReticle();
          } finally {
             discardDeferred();
          }
@@ -115,14 +124,14 @@ public final class NanosuitCloakRefraction extends RenderStateShard {
       return deferredForIris && levelCaptureOpen;
    }
 
-   static void deferBatch(boolean hands, RenderType type, MeshData mesh) {
+   static void deferBatch(boolean hands, boolean reticle, RenderType type, MeshData mesh) {
       int vertices = mesh.drawState().vertexCount();
-      if (DEFERRED_WORLD.size() + DEFERRED_HANDS.size() >= MAX_DEFERRED_BATCHES
+      if (DEFERRED_WORLD.size() + DEFERRED_HANDS.size() + DEFERRED_RETICLE.size() >= MAX_DEFERRED_BATCHES
          || vertices > MAX_DEFERRED_VERTICES - deferredVertices) {
          mesh.close();
          return;
       }
-      var batches = hands ? DEFERRED_HANDS : DEFERRED_WORLD;
+      var batches = reticle ? DEFERRED_RETICLE : hands ? DEFERRED_HANDS : DEFERRED_WORLD;
       batches.add(new DeferredBatch(type, mesh, new Matrix4f(RenderSystem.getProjectionMatrix()),
          new Matrix4f(RenderSystem.getModelViewMatrix()), RenderSystem.getVertexSorting()));
       deferredVertices += vertices;
@@ -131,8 +140,10 @@ public final class NanosuitCloakRefraction extends RenderStateShard {
    static void discardDeferred() {
       DEFERRED_WORLD.forEach(batch -> batch.mesh.close());
       DEFERRED_HANDS.forEach(batch -> batch.mesh.close());
+      DEFERRED_RETICLE.forEach(batch -> batch.mesh.close());
       DEFERRED_WORLD.clear();
       DEFERRED_HANDS.clear();
+      DEFERRED_RETICLE.clear();
       deferredVertices = 0;
    }
 
@@ -140,6 +151,16 @@ public final class NanosuitCloakRefraction extends RenderStateShard {
       if (failed || batches.isEmpty() || !prepareTargets()) {
          return;
       }
+      try {
+         replay(batches);
+      } catch (RuntimeException exception) {
+         fail(exception);
+      }
+      composite(compareSceneDepth);
+   }
+
+   private static void replay(List<DeferredBatch> batches) {
+      if (batches.isEmpty()) return;
       var originalProjection = new Matrix4f(RenderSystem.getProjectionMatrix());
       var originalSorting = RenderSystem.getVertexSorting();
       var viewStack = RenderSystem.getModelViewStack();
@@ -152,15 +173,23 @@ public final class NanosuitCloakRefraction extends RenderStateShard {
             RenderSystem.applyModelViewMatrix();
             batch.type.draw(batch.mesh);
          }
-      } catch (RuntimeException exception) {
-         fail(exception);
       } finally {
          GL30.glBindFramebuffer(GL30.GL_DRAW_FRAMEBUFFER, originalDrawFramebuffer);
          viewStack.popMatrix();
          RenderSystem.applyModelViewMatrix();
          RenderSystem.setProjectionMatrix(originalProjection, originalSorting);
       }
-      composite(compareSceneDepth);
+   }
+
+   private static void replayReticle() {
+      try {
+         replay(DEFERRED_RETICLE);
+      } catch (RuntimeException exception) {
+         if (!warnedReticle) {
+            warnedReticle = true;
+            LogUtils.getLogger().warn("Could not render the TaCZ reticle during camouflage", exception);
+         }
+      }
    }
 
    private static boolean prepareTargets() {
@@ -214,9 +243,29 @@ public final class NanosuitCloakRefraction extends RenderStateShard {
       ));
    }
 
+   static RenderType reticleType(ResourceLocation texture) {
+      return RETICLE_TYPES.computeIfAbsent(texture, key -> RenderType.create(
+         "crysismod_cloak_reticle", DefaultVertexFormat.NEW_ENTITY, Mode.QUADS, 256, false, false,
+         RenderType.CompositeState.builder()
+            .setShaderState(RENDERTYPE_ENTITY_TRANSLUCENT_EMISSIVE_SHADER)
+            .setTextureState(new TextureStateShard(key, false, false))
+            .setTransparencyState(TRANSLUCENT_TRANSPARENCY)
+            .setCullState(NO_CULL)
+            .setDepthTestState(NO_DEPTH_TEST)
+            .setOverlayState(OVERLAY)
+            .setWriteMaskState(COLOR_WRITE)
+            .createCompositeState(false)
+      ));
+   }
+
    static void finishHands() {
       if (!isDeferring()) {
-         composite(false);
+         try {
+            composite(false);
+            replayReticle();
+         } finally {
+            discardDeferred();
+         }
       }
    }
 

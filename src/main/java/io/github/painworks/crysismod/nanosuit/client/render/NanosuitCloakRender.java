@@ -27,8 +27,9 @@ import net.minecraft.world.effect.MobEffects;
 public final class NanosuitCloakRender {
    private static final int MAX_TEXTURES_PER_DRAW = 32;
    private static final VertexConsumer HIDDEN = new HiddenConsumer();
-   private static final CloakBuffers HANDS = new CloakBuffers(true);
-   private static final CloakBuffers BODY = new CloakBuffers(false);
+   private static final CloakBuffers HANDS = new CloakBuffers(true, false);
+   private static final CloakBuffers BODY = new CloakBuffers(false, false);
+   private static final CloakBuffers RETICLE = new CloakBuffers(true, true);
    private static CloakBuffers activeBuffers;
    private static boolean warned;
 
@@ -76,6 +77,18 @@ public final class NanosuitCloakRender {
       }
    }
 
+   public static void captureReticle(java.util.function.Consumer<BufferSource> renderer) {
+      if (activeBuffers != HANDS || !HANDS.surface) return;
+      RETICLE.surface = true;
+      RETICLE.defer = true;
+      try {
+         renderer.accept(RETICLE);
+         RETICLE.endBatch();
+      } finally {
+         RETICLE.reset();
+      }
+   }
+
    private static ResourceLocation texture(RenderType type) {
       if (type instanceof RenderTypeCompositeAccessor composite
          && (Object)composite.crysismod$getState() instanceof RenderTypeCompositeStateAccessor state
@@ -88,12 +101,14 @@ public final class NanosuitCloakRender {
    private static final class CloakBuffers extends BufferSource {
       private final List<ByteBufferBuilder> storage = new ArrayList<>();
       private final boolean hands;
+      private final boolean reticle;
       private boolean surface;
       private boolean defer;
 
-      private CloakBuffers(boolean hands) {
+      private CloakBuffers(boolean hands, boolean reticle) {
          super(new ByteBufferBuilder(256), new LinkedHashMap<>());
          this.hands = hands;
+         this.reticle = reticle;
       }
 
       @Override
@@ -125,7 +140,7 @@ public final class NanosuitCloakRender {
             || texture.getPath().contains("glint")) {
             return null;
          }
-         return NanosuitCloakRefraction.maskType(texture);
+         return this.reticle ? NanosuitCloakRefraction.reticleType(texture) : NanosuitCloakRefraction.maskType(texture);
       }
 
       @Override
@@ -139,14 +154,14 @@ public final class NanosuitCloakRender {
                   if (builder != null) {
                      var mesh = builder.build();
                      if (mesh != null) {
-                        NanosuitCloakRefraction.deferBatch(this.hands, mapped, mesh);
+                        NanosuitCloakRefraction.deferBatch(this.hands, this.reticle, mapped, mesh);
                      }
                   }
                } else {
                   super.endBatch(mapped);
                }
             } catch (RuntimeException exception) {
-               if (this.defer) {
+               if (this.defer && !this.reticle) {
                   NanosuitCloakRefraction.discardDeferred();
                }
                ByteBufferBuilder backing = this.fixedBuffers.get(mapped);
@@ -163,7 +178,7 @@ public final class NanosuitCloakRender {
 
       private void reset() {
          if (!this.startedBuilders.isEmpty()) {
-            if (this.defer) {
+            if (this.defer && !this.reticle) {
                NanosuitCloakRefraction.discardDeferred();
             }
             for (ByteBufferBuilder backing : this.fixedBuffers.values()) {
