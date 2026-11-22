@@ -2,6 +2,7 @@ const fs=require('node:fs');
 const path=require('node:path');
 const {pathToFileURL}=require('node:url');
 const {chromium}=require(process.env.PLAYWRIGHT_MODULE||path.resolve(path.dirname(process.execPath),'../node_modules/playwright'));
+const drawRadarRim=require('./radar-rim.cjs');
 const out=path.resolve('src/main/resources/assets/crysismod/textures/gui/nanosuit2');
 (async()=>{
  const browser=await chromium.launch({executablePath:process.env.CHROME_BIN||'C:/Program Files/Google/Chrome/Application/chrome.exe'});
@@ -48,6 +49,14 @@ const out=path.resolve('src/main/resources/assets/crysismod/textures/gui/nanosui
   });
   function clip(r){const [x,y,w,h]=r;return {x:Math.floor(x),y:Math.floor(y),width:Math.ceil(x+w)-Math.floor(x),height:Math.ceil(y+h)-Math.floor(y)}}
   const save=async(name,rect)=>page.screenshot({path:path.join(out,name+'.png'),clip:clip(rect),omitBackground:true});
+  await page.evaluate(drawRadarRim);
+  await page.evaluate(()=>liveRadar.hud.dataset.export="base");
+  for(const n of [0,2,3]){
+   await page.evaluate(n=>{liveRadar.hud.dataset.threat=String(n);liveRadar.meter.style.setProperty("--threat-amount",0);
+    liveRadar.hud.querySelector('.radar-threat-base').style.visibility='visible';},n);
+   await save('radar-'+n,metadata.radar);
+  }
+  if(process.argv.includes('--radar-only')) return;
   await page.evaluate(()=>live.hud.dataset.export="base");
   await save('panel',metadata.panel);
   for(const [name,low,on,pulse] of [['energy-off',false,false,false],['energy-on',false,true,false],['energy-low-off',true,false,false],['energy-low-on',true,true,false],['energy-low-red',true,true,true]]){
@@ -65,12 +74,6 @@ const out=path.resolve('src/main/resources/assets/crysismod/textures/gui/nanosui
   }
   await page.evaluate(()=>live.hud.dataset.export="bow");
   await save('bow',metadata.panel);
-  await page.evaluate(()=>liveRadar.hud.dataset.export="base");
-  for(const n of [0,2,3]){
-   await page.evaluate(n=>{liveRadar.hud.dataset.threat=String(n);liveRadar.meter.style.setProperty("--threat-amount",0);
-    liveRadar.hud.querySelector('.radar-threat-base').style.visibility='visible';},n);
-   await save('radar-'+n,metadata.radar);
-  }
   for(const pose of ['standing','crouching','prone']){
    await page.evaluate(pose=>{liveRadar.hud.dataset.export="stance";liveRadar.hud.querySelector('.radar-threat-base').style.removeProperty('visibility');drawStance(liveRadar,pose);},pose);
    await save('stance-'+pose,metadata.stance);

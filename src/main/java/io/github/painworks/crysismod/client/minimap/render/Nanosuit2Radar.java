@@ -52,10 +52,13 @@ final class Nanosuit2Radar {
       try {
          g.pose().translate(v.x(),v.y(),0);
          g.pose().scale(v.width()/340f,v.height()/184f,1);
-         Nanosuit2Hud.shape(g,-1,13,0,340,0,340,137,11,137,11,3);
-         Nanosuit2Hud.shape(g,-1,11,137,86,137,86,147,63,175,11,175);
-         Nanosuit2Hud.shape(g,-1,86,137,274,137,274,147,86,147);
-         Nanosuit2Hud.shape(g,-1,274,137,340,137,313,169,296,169,274,147);
+         // Convex strips of the authored terrain clip, in the radar sprite's viewport coordinates.
+         float left = 11.81F, right = 340.65F;
+         float rightBevel = 137.37F, notch = 147.19F, rightAtNotch = 332.42F;
+         Nanosuit2Hud.shape(g, -1, 13.73F, 0, right, 0, right, rightBevel, left, rightBevel, left, 2.33F);
+         Nanosuit2Hud.shape(g, -1, left, rightBevel, right, rightBevel, rightAtNotch, notch, left, notch);
+         Nanosuit2Hud.shape(g, -1, left, notch, 86.83F, notch, 64.08F, 175.80F, left, 175.80F);
+         Nanosuit2Hud.shape(g, -1, 274.37F, notch, rightAtNotch, notch, 313.51F, 169.78F, 297.12F, 169.78F);
       } finally {g.pose().popPose();}
    }
 
