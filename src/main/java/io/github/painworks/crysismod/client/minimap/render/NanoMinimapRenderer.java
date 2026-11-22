@@ -192,8 +192,10 @@ public final class NanoMinimapRenderer {
             }
 
             guiGraphics.pose().pushPose();
-            int centerX = viewportCenterX(drawViewport);
-            int centerY = viewportCenterY(drawViewport);
+            float centerX = modern ? drawViewport.x() + drawViewport.width() * 0.5F + Nanosuit2Cone.offsetX(drawViewport)
+               : viewportCenterX(drawViewport);
+            float centerY = modern ? drawViewport.y() + drawViewport.height() * 0.5F + Nanosuit2Cone.offsetY(drawViewport)
+               : viewportCenterY(drawViewport);
             if (rotateWithPlayer) {
                float pivotX = centerX;
                float pivotY = centerY;
@@ -389,6 +391,8 @@ public final class NanoMinimapRenderer {
       }
    }
 
+   private final Nanosuit2Cone nanosuit2Cone = new Nanosuit2Cone();
+
    private void drawMarkers(
       GuiGraphics guiGraphics,
       NanoMinimapViewport viewport,
@@ -407,8 +411,11 @@ public final class NanoMinimapRenderer {
       boolean fallbackEntityMarkers,
       float partialTick
    ) {
-      double cx = viewport.x() + viewport.width() / 2.0;
-      double cy = viewport.y() + viewport.height() / 2.0;
+      boolean modern = io.github.painworks.crysismod.nanosuit.client.Nanosuit2Hud.equipped();
+      float mapOffsetX = modern ? Nanosuit2Cone.offsetX(viewport) : 0;
+      float mapOffsetY = modern ? Nanosuit2Cone.offsetY(viewport) : 0;
+      double cx = viewport.x() + viewport.width() / 2.0 + mapOffsetX;
+      double cy = viewport.y() + viewport.height() / 2.0 + mapOffsetY;
       float scale = Mth.clamp(markerScale, 0.25F, 4.0F);
       float opacity = Mth.clamp(markerOpacity * viewport.opacity(), 0.05F, 1.0F);
       float iconOpacity = Mth.clamp(entityIconOpacity * viewport.opacity(), 0.05F, 1.0F);
@@ -421,7 +428,6 @@ public final class NanoMinimapRenderer {
       NanoMinimapCoordinateMapper.MutablePoint markerPoint = new NanoMinimapCoordinateMapper.MutablePoint();
       NanoMinimapCoordinateMapper.MutablePoint clampedPoint = new NanoMinimapCoordinateMapper.MutablePoint();
       boolean blendEnabledForIcons = false;
-      boolean modern=io.github.painworks.crysismod.nanosuit.client.Nanosuit2Hud.equipped();
 
       for (NanoMinimapMarker marker : markers) {
          if (marker.type() == NanoMinimapMarker.Type.PLAYER) {
@@ -443,6 +449,8 @@ public final class NanoMinimapRenderer {
 
             if (!(markerAlpha <= 0.001F)) {
                mapper.worldToViewport(worldX, worldZ, fractionalOffsetX, fractionalOffsetY, rotateWithPlayer, playerYawDeg, markerPoint);
+               markerPoint.x += mapOffsetX;
+               markerPoint.y += mapOffsetY;
                boolean inside = mapper.isInsideViewport(markerPoint.x, markerPoint.y);
                if (inside || clampMarkersToBounds) {
                   double drawLocalX;
@@ -506,14 +514,9 @@ public final class NanoMinimapRenderer {
       }
 
       if(modern) {
-         for(int side:new int[]{-1,1}) {
-            for(int y=11;y<viewport.height()/2;y+=5) {
-               float x=(float)cx+side*y*(net.minecraft.client.Minecraft.getInstance().options.keyUse.isDown()?.213f:.51f);
-               io.github.painworks.crysismod.nanosuit.client.Nanosuit2Hud.shape(guiGraphics,0x809fcabb,
-                  x-1,(float)cy-y-1,x+1,(float)cy-y-1,x+1,(float)cy-y+1,x-1,(float)cy-y+1);
-            }
-         }
-         Nanosuit2Radar.arrow(guiGraphics,(float)cx,(float)cy,rotateWithPlayer?0:playerYaw-180,0xffffdf72,Math.max(2,3*scale));
+         float heading = rotateWithPlayer ? 0 : playerYaw - 180;
+         this.nanosuit2Cone.draw(guiGraphics, viewport, minecraft, (float) cx, (float) cy, heading);
+         Nanosuit2Radar.arrow(guiGraphics,(float)cx,(float)cy,heading,0xffffdf72,Math.max(2,3*scale));
       } else this.drawPlayerMarker(guiGraphics, cx, cy, rotateWithPlayer, playerYaw, playerColor, opacity, scale);
    }
 

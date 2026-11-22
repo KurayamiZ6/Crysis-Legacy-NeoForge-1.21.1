@@ -116,9 +116,11 @@ final class Nanosuit2Radar {
       if(goal==null) return;
       var point=new NanoMinimapCoordinateMapper.MutablePoint();
       mapper.worldToViewport(goal.x(),goal.z(),dx,dy,rotate,yaw,point);
-      float cx=v.width()*.5f,cy=v.height()*.5f;
-      double x=point.x-cx,y=point.y-cy;
-      float left=cx-5,right=cx-6,top=cy-5,bottom=cy-(clipped?v.height()*.15f:5);
+      float cx = v.width() * .5f + Nanosuit2Cone.offsetX(v);
+      float cy = v.height() * .5f + Nanosuit2Cone.offsetY(v);
+      double x = point.x - v.width() * .5, y = point.y - v.height() * .5;
+      float left = cx - 5, right = v.width() - cx - 6;
+      float top = cy - 5, bottom = v.height() - cy - (clipped ? v.height() * .15f : 5);
       double ratio=Math.min(1,Math.min((x<0?left:right)/Math.abs(x),(y<0?top:bottom)/Math.abs(y)));
       float drawX=v.x()+cx+(float)(x*ratio),drawY=v.y()+cy+(float)(y*ratio);
       if(ratio<1) arrow(g,drawX,drawY,(float)Math.toDegrees(Math.atan2(y,x))+90,WAYPOINT,3);
