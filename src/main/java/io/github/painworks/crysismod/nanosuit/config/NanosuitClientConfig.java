@@ -160,6 +160,10 @@ public final class NanosuitClientConfig {
        .define("hud.hideCompetingMinimaps",true);
     public static boolean hideCompetingMinimaps(){return safeGetBoolean(HIDE_COMPETING_MINIMAPS,true);}
 
+    public static void setHideCompetingMinimaps(boolean value) {
+       safeSetBoolean(HIDE_COMPETING_MINIMAPS, value);
+    }
+
     private static final BooleanValue CLASSIC_HIDE_DIORAMA = BUILDER.comment("Also allow hiding the Diorama minimap on the Nanosuit 1.")
        .define("hud.classic.hideDioramaMinimap",true);
     public static boolean classicHideDiorama(){return safeGetBoolean(CLASSIC_HIDE_DIORAMA,true);}

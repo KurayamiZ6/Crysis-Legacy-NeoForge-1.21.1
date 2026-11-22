@@ -2507,6 +2507,15 @@ public final class NanoVisorConfigScreen {
          NanoMinimapClientConfig.defaultMinimapEnabled(),
          NanoMinimapClientConfig::setMinimapEnabled
       );
+      addBoolean(
+         entries,
+         category,
+         "option.minimap_hide_external",
+         "tooltip.minimap_hide_external",
+         NanosuitClientConfig.hideCompetingMinimaps(),
+         true,
+         NanosuitClientConfig::setHideCompetingMinimaps
+      );
       addInt(
          entries,
          category,
