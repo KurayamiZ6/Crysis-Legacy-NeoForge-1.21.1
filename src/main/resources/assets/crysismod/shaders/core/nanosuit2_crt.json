@@ -1,0 +1,10 @@
+{
+  "vertex": "crysismod:cloak_surface_composite",
+  "fragment": "crysismod:nanosuit2_crt",
+  "attributes": ["Position", "UV0"],
+  "samplers": [{"name": "HudSampler"}],
+  "uniforms": [
+    {"name": "Time", "type": "float", "count": 1, "values": [0.0]},
+    {"name": "Panel", "type": "float", "count": 3, "values": [0.0, 1.0, 0.001]}
+  ]
+}

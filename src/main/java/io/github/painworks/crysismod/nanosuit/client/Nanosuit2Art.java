@@ -12,8 +12,6 @@ public final class Nanosuit2Art {
    private static final Map<String,ResourceLocation> SPRITES=new HashMap<>();
    public static final int PANEL_W=437,PANEL_H=193;
    public static final int RADAR_W=462,RADAR_H=251;
-   private static boolean crt;
-   public static void setCrt(boolean enabled) {crt=enabled;}
    private Nanosuit2Art() {}
 
    public static float scale(GuiGraphics g) {return g.guiWidth()/1920f;}
@@ -36,14 +34,7 @@ public final class Nanosuit2Art {
       RenderSystem.defaultBlendFunc();
       guiColor(g,color);
       try {
-         if(!crt) g.blit(id,x,y,width,height,u,v,sourceWidth,sourceHeight,texWidth,texHeight);
-         else for(int start=0;start<height;start+=6) {
-            int end=Math.min(start+6,height);
-            int sourceStart=start*sourceHeight/height,sourceEnd=end*sourceHeight/height;
-            int scan=Nanosuit2Hud.crt(color,(y+start)*77/193f);
-            guiColor(g,scan);
-            g.blit(id,x,y+start,width,end-start,u,v+sourceStart,sourceWidth,Math.max(1,sourceEnd-sourceStart),texWidth,texHeight);
-         }
+         g.blit(id,x,y,width,height,u,v,sourceWidth,sourceHeight,texWidth,texHeight);
       }
       finally {g.setColor(1,1,1,1);}
    }

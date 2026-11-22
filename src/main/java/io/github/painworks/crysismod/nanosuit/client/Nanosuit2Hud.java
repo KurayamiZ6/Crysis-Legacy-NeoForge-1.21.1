@@ -79,13 +79,12 @@ public final class Nanosuit2Hud {
          currentGun=ammo;
       }
       g.pose().pushPose();
-      try {
+      try (var crt=Nanosuit2Crt.capture(g,panelCenterY-96.5F*panelScale,193F*panelScale)) {
          NanosuitHudOverlay.applySharedRightHudInertiaTransform(g,g.guiWidth()/2,g.guiHeight()/2);
          g.pose().translate(panelCenterX+crtShift(),panelCenterY,0);
          g.pose().scale(panelScale,panelScale,1);
          g.pose().mulPose(new Matrix4f().m01(.122785f));
          g.pose().translate(-218.5f,-96.5f,0);
-         Nanosuit2Art.setCrt(true);
          Nanosuit2Art.sprite(g,"panel",0,0,437,193,-1);
          String empty=low?"energy-low-off":"energy-off";
          String full=low?(redPulse?"energy-low-red":"energy-low-on"):"energy-on";
@@ -99,13 +98,11 @@ public final class Nanosuit2Hud {
          if(ammo!=null) {
             if(!NanoVisorState.isVisorActive()) {
                boolean lowAmmo=ammo.capacity()>0&&ammo.loaded()*5<=ammo.capacity();
-               Nanosuit2Art.setCrt(false);
                Nanosuit2Art.counter(g,ammo.loaded(),320,8,31,50,lowAmmo?0xffff493c:0xfff3fffb,
                   lowAmmo?0xa0ff463a:0x75cdffea);
                Nanosuit2Art.sprite(g,"slash",321,1,32,64,-1);
                if(ammo.unlimited()) glowingLabel(g,"∞",395,23,3.2f,INK,0xff93e7bb);
                else Nanosuit2Art.counter(g,ammo.reserve(),422,16,21,34,INK,0x6493e7bb);
-               Nanosuit2Art.setCrt(true);
             }
             int count=switch(ammo.fireMode()) {case "AUTO" -> 4; case "BURST" -> 3; case "SEMI" -> 1; default -> 0;};
             if(count>0) Nanosuit2Art.sprite(g,"shots-"+count,0,0,437,193,-1);
@@ -116,7 +113,7 @@ public final class Nanosuit2Hud {
             finally {g.setColor(1,1,1,1);}
          }
          if(hasPredator(player)) Nanosuit2Art.sprite(g,"bow",0,0,437,193,-1);
-      } finally {Nanosuit2Art.setCrt(false);g.pose().popPose();}
+      } finally {g.pose().popPose();}
    }
 
    private static boolean hasPredator(LocalPlayer player) {
@@ -131,7 +128,7 @@ public final class Nanosuit2Hud {
       long cycle=t/1100;
       long phase=t%1100;
       long start=cycle*137%440;
-      return phase<start||phase>=start+90?0:phase<start+45?.5f:-.5f;
+      return phase<start||phase>=start+90?0:phase<start+45?.25f:-.25f;
    }
 
    public static int crt(int color,float row) {

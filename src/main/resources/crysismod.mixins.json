@@ -5,6 +5,8 @@
   "compatibilityLevel": "JAVA_21",
   "mixins": ["nanosuit.CloakFootstepsMixin", "nanosuit.CloakTargetingConditionsMixin", "nanosuit.NanosuitLandingSoundMixin", "nanosuit.PlayerPowerMeleeMixin", "nanosuit.PowerMeleeKnockbackMixin", "nanosuit.TaczClassicMeleeActionMixin", "nanosuit.TaczPowerMeleeMixin", "nanosuit.TaczCloakGunfireMixin"],
   "client": [
+    "client.minimap.JourneyMapMinimapDisplayMixin",
+    "client.minimap.XaeroMinimapDisplayMixin",
     "client.nanosuit.AbstractSoundVolumeAccessor",
     "client.nanosuit.CloakHandsMixin",
     "client.nanosuit.CloakPlayerRenderMixin",

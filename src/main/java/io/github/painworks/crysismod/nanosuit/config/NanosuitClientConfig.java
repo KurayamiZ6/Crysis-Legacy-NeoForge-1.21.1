@@ -156,7 +156,11 @@ public final class NanosuitClientConfig {
    public static java.util.List<? extends String> classicAmmoIcons(){try{return CLASSIC_AMMO_ICONS.get();}catch(IllegalStateException e){return java.util.List.of();}}
    public static java.util.List<? extends String> classicThrowableItems(){try{return CLASSIC_THROWABLE_ITEMS.get();}catch(IllegalStateException e){return java.util.List.of();}}
    public static boolean classicMinimapEnabled(){return safeGetBoolean(CLASSIC_MINIMAP_ENABLED,true);}
-    private static final BooleanValue CLASSIC_HIDE_DIORAMA = BUILDER.comment("Temporarily hide only Diorama 0.10.2 minimap layer when the N1 terrain is ready. Waypoints and full map are preserved.")
+    private static final BooleanValue HIDE_COMPETING_MINIMAPS = BUILDER.comment("Hide supported third-party minimap panels while the suit minimap is enabled. Waypoints and full maps are kept.")
+       .define("hud.hideCompetingMinimaps",true);
+    public static boolean hideCompetingMinimaps(){return safeGetBoolean(HIDE_COMPETING_MINIMAPS,true);}
+
+    private static final BooleanValue CLASSIC_HIDE_DIORAMA = BUILDER.comment("Also allow hiding the Diorama minimap on the Nanosuit 1.")
        .define("hud.classic.hideDioramaMinimap",true);
     public static boolean classicHideDiorama(){return safeGetBoolean(CLASSIC_HIDE_DIORAMA,true);}
 

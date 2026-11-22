@@ -29,7 +29,7 @@ final class Nanosuit2Radar {
    // The compass band is centered at atlas row 43, and the glyph ink at tile row 15.
    private static final int COMPASS_CENTER_Y = -59 + 43;
    private static final int COMPASS_GLYPH_CENTER = 15;
-   private static int lit,target;
+   private static int lit,target,displayedLevel;
    private static long stepAt,maxAt=-1;
    private static LocalPlayer owner;
    private static Entity shotOwner;
@@ -71,6 +71,7 @@ final class Nanosuit2Radar {
       if(owner!=player) {
          owner=player;
          target=lit=BARS[level];
+         displayedLevel=level;
          stepAt=now;
          maxAt=-1;
       }
@@ -82,13 +83,15 @@ final class Nanosuit2Radar {
       if(lit!=target && now-stepAt>=150) {
          int step=(int)Math.min(20,(now-stepAt)/150);
          lit+=Integer.signum(target-lit)*Math.min(step,Math.abs(target-lit));
+         while(displayedLevel+1<BARS.length && lit>=BARS[displayedLevel+1]) displayedLevel++;
+         while(displayedLevel>0 && lit<=BARS[displayedLevel-1]) displayedLevel--;
          stepAt+=step*150L;
          if(lit==20) maxAt=now;
       }
       boolean blink=maxAt>=0 && now-maxAt<880 && (now-maxAt)%220>=110;
       float opacity=v.opacity();
       int rail=alpha(0xffa6d4c6,opacity*.69f);
-      int glow=alpha(Nanosuit2Hud.threatColor(level),blink?.40f:1f);
+      int glow=alpha(Nanosuit2Hud.threatColor(displayedLevel),blink?.40f:1f);
       int untinted=alpha(-1,opacity);
       g.pose().pushPose();
       try {

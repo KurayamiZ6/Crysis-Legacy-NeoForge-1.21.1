@@ -11,6 +11,7 @@ import io.github.painworks.crysismod.client.minimap.NanoMinimapCoordinateMapper;
 import io.github.painworks.crysismod.client.minimap.NanoMinimapHudTransform;
 import io.github.painworks.crysismod.client.minimap.NanoMinimapRenderTrace;
 import io.github.painworks.crysismod.client.minimap.NanoMinimapViewport;
+import io.github.painworks.crysismod.nanosuit.client.Nanosuit2Crt;
 import it.unimi.dsi.fastutil.ints.IntOpenHashSet;
 import io.github.painworks.crysismod.client.minimap.config.NanoMinimapClientConfig;
 import io.github.painworks.crysismod.client.minimap.marker.NanoMinimapEntityIcon;
@@ -136,8 +137,10 @@ public final class NanoMinimapRenderer {
          int scissorMaxX = (int)Math.ceil(transformedBounds[2]);
          int scissorMaxY = (int)Math.ceil(transformedBounds[3]);
          boolean useStencilMask = !debugShowTerrainOnly && !debugDisableMinimapMask;
-         boolean stencilReady = false;
-         if (useStencilMask) {
+         Nanosuit2Crt crt = modern ? Nanosuit2Crt.capture(guiGraphics,
+            drawViewport.y() - 59F * drawViewport.height() / 184F, 251F * drawViewport.height() / 184F) : null;
+         boolean stencilReady = crt != null;
+         if (useStencilMask && !stencilReady) {
             ensureStencilAvailable();
             Minecraft minecraft = Minecraft.getInstance();
             stencilReady = minecraft != null && minecraft.getMainRenderTarget() != null && minecraft.getMainRenderTarget().isStencilEnabled();
@@ -385,6 +388,7 @@ public final class NanoMinimapRenderer {
             }
 
             guiGraphics.pose().popPose();
+            if (crt != null) crt.close();
          }
       }
    }
