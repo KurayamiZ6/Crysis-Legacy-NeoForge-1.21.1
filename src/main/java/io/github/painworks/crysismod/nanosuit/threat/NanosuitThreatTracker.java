@@ -58,7 +58,7 @@ public final class NanosuitThreatTracker {
          state.searchUntil = now;
          state.contactSearchUntil.clear();
       }
-      ThreatLevel threat = profile == NanosuitProfile.NANOSUIT_1 ? assessClassic(player, level, state, now) : assess(player, level, now);
+      ThreatLevel threat = profile == NanosuitProfile.NANOSUIT_1 ? assessClassic(player, level, state, now) : assess(player, level, state, now,profile==NanosuitProfile.NANOSUIT_2);
       // N1 already retains evidence per contact; do not add a second aggregate linger afterward.
       if (profile != NanosuitProfile.NANOSUIT_1 && threat.ordinal() >= ThreatLevel.SEARCHING.ordinal()) {
          state.searchUntil = now + SEARCH_LINGER;
@@ -107,38 +107,46 @@ public final class NanosuitThreatTracker {
       return threat;
    }
 
-   private static ThreatLevel assess(ServerPlayer player, ServerLevel level, long now) {
+   private static ThreatLevel assess(ServerPlayer player, ServerLevel level, State state, long now, boolean publishContacts) {
       ThreatLevel threat = ThreatLevel.CALM;
       var bounds = player.getBoundingBox().inflate(RANGE, 16.0, RANGE);
-      for (Mob mob : level.getEntitiesOfClass(Mob.class, bounds)) {
-         double distance = mob.distanceToSqr(player);
-         if (distance > RANGE * RANGE || !mob.isAlive() || mob.isAlliedTo(player)) {
-            continue;
-         }
-
-         LivingEntity target = mob.getTarget();
-         var brain = mob.getBrain();
-         boolean hasAttackMemory = brain.hasMemoryValue(MemoryModuleType.ATTACK_TARGET);
-         boolean tracksPlayer = target == player || hasAttackMemory && brain.isMemoryValue(MemoryModuleType.ATTACK_TARGET, player);
-         boolean rememberedAttacker = mob.getLastHurtByMob() == player
-            && mob.tickCount - mob.getLastHurtByMobTimestamp() <= SEARCH_LINGER;
-         if (tracksPlayer) {
-            if (!NanosuitCloak.hidesFrom(mob, player) && mob.hasLineOfSight(player)) {
-               return ThreatLevel.DETECTED;
-            }
-            threat = ThreatLevel.SEARCHING;
-         } else if (rememberedAttacker || brain.isMemoryValue(MemoryModuleType.ANGRY_AT, player.getUUID())) {
-            threat = ThreatLevel.SEARCHING;
-         } else if (mob instanceof Enemy && target == null && !hasAttackMemory) {
-            if (distance <= SECTOR_ALERT_RANGE_SQUARED && ZombieAwarenessThreat.isInvestigating(mob, now)) {
-               threat = ThreatLevel.SEARCHING;
-            } else if (threat == ThreatLevel.CALM && distance <= SUSPICION_RANGE_SQUARED && !player.isInvisible()
-                  && mob.hasLineOfSight(player)) {
-               threat = ThreatLevel.SUSPICIOUS;
-            }
+      var mobs=level.getEntitiesOfClass(Mob.class,bounds);
+      if(publishContacts) mobs.sort(java.util.Comparator.comparingDouble(player::distanceToSqr));
+      var contacts=new java.util.ArrayList<SyncClassicThreatsPacket.Contact>();
+      for(Mob mob:mobs) {
+         double distance=mob.distanceToSqr(player);
+         if(distance>RANGE*RANGE||!mob.isAlive()||mob.isAlliedTo(player)) continue;
+         ThreatLevel contact=assessContact(player,mob,distance,now);
+         if(contact.ordinal()>threat.ordinal()) threat=contact;
+         if(!publishContacts&&threat==ThreatLevel.DETECTED) return threat;
+         if(publishContacts) {
+            if(contact.ordinal()>=ThreatLevel.SEARCHING.ordinal()) state.contactSearchUntil.put(mob.getUUID(),now+SEARCH_LINGER);
+            else if(state.contactSearchUntil.getOrDefault(mob.getUUID(),0L)>now) contact=ThreatLevel.SEARCHING;
+            if((mob instanceof Enemy||contact!=ThreatLevel.CALM)&&contacts.size()<SyncClassicThreatsPacket.MAX_CONTACTS)
+               contacts.add(new SyncClassicThreatsPacket.Contact(mob.getId(),mob.getUUID(),contact));
          }
       }
+      if(publishContacts) {
+         state.contactSearchUntil.values().removeIf(until->until<=now);
+         NanosuitNetwork.sendToPlayer(player,new SyncClassicThreatsPacket(java.util.List.copyOf(contacts)));
+      }
       return threat;
+   }
+
+   private static ThreatLevel assessContact(ServerPlayer player,Mob mob,double distance,long now) {
+      LivingEntity target=mob.getTarget();
+      var brain=mob.getBrain();
+      boolean hasAttackMemory=brain.hasMemoryValue(MemoryModuleType.ATTACK_TARGET);
+      if(target==player||hasAttackMemory&&brain.isMemoryValue(MemoryModuleType.ATTACK_TARGET,player)) {
+         return !NanosuitCloak.hidesFrom(mob,player)&&mob.hasLineOfSight(player)?ThreatLevel.DETECTED:ThreatLevel.SEARCHING;
+      }
+      if(mob.getLastHurtByMob()==player&&mob.tickCount-mob.getLastHurtByMobTimestamp()<=SEARCH_LINGER
+         ||brain.isMemoryValue(MemoryModuleType.ANGRY_AT,player.getUUID())) return ThreatLevel.SEARCHING;
+      if(mob instanceof Enemy && target==null && !hasAttackMemory) {
+         if(distance<=SECTOR_ALERT_RANGE_SQUARED&&ZombieAwarenessThreat.isInvestigating(mob,now)) return ThreatLevel.SEARCHING;
+         if(distance<=SUSPICION_RANGE_SQUARED&&!player.isInvisible()&&mob.hasLineOfSight(player)) return ThreatLevel.SUSPICIOUS;
+      }
+      return ThreatLevel.CALM;
    }
 
    private static final class State {

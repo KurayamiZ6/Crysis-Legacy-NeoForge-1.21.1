@@ -91,6 +91,8 @@ public final class NanoMinimapRenderer {
       boolean debugDrawMinimapMaskBounds,
       NanoMinimapRenderTrace trace
    ) {
+      boolean modern=io.github.painworks.crysismod.nanosuit.client.Nanosuit2Hud.equipped();
+      if(modern&&io.github.painworks.crysismod.nanosuit.client.Nanosuit2Hud.panelDropped(true)) return;
       if (viewport.width() > 0 && viewport.height() > 0) {
          Minecraft minecraftInstance = Minecraft.getInstance();
          if (minecraftInstance != null) {
@@ -106,7 +108,7 @@ public final class NanoMinimapRenderer {
          }
 
          float clampedPerspectiveStrength = Mth.clamp(perspectiveStrength, 0.0F, 1.0F);
-         boolean applyPerspective = perspectiveEnabled && clampedPerspectiveStrength > 1.0E-4F;
+         boolean applyPerspective = !modern && perspectiveEnabled && clampedPerspectiveStrength > 1.0E-4F;
          float edgeArcPixels = computeEdgeArcPixels(drawViewport, edgeArcTopBottom);
          float renderInertiaOffsetX = inertiaOffsetX;
          float renderInertiaOffsetY = inertiaOffsetY;
@@ -170,12 +172,17 @@ public final class NanoMinimapRenderer {
                );
             }
 
+            if(modern) {
+               guiGraphics.pose().translate(io.github.painworks.crysismod.nanosuit.client.Nanosuit2Hud.crtShift(),0,0);
+               io.github.painworks.crysismod.nanosuit.client.Nanosuit2Art.shear(guiGraphics,
+                  drawViewport.x()+drawViewport.width()*231f/340,drawViewport.y()+drawViewport.height()*67f/184,-.122785f,1);
+            }
             if (useStencilMask) {
-               beginStencilMask(guiGraphics, drawViewport, edgeArcPixels);
+               beginStencilMask(guiGraphics, drawViewport, edgeArcPixels,modern);
             }
 
             int frameColor = this.withOpacity(-16381684, drawViewport.opacity() * 0.66F * Mth.clamp(frameOpacity, 0.0F, 1.0F));
-            int backColor = this.withOpacity(-15789288, drawViewport.opacity() * 0.8F);
+            int backColor = this.withOpacity(modern ? 0xff203b33 : -15789288, drawViewport.opacity() * 0.8F);
             if (!debugShowTerrainOnly) {
                if (useStencilMask && Math.abs(edgeArcPixels) >= 0.001F) {
                   drawStencilBackedBackground(guiGraphics, drawViewport, edgeArcPixels, backColor);
@@ -250,11 +257,14 @@ public final class NanoMinimapRenderer {
                );
             }
 
+            if (modern&&!debugShowOnlyFrontTexture&&!debugShowTerrainOnly)
+               io.github.painworks.crysismod.nanosuit.client.Nanosuit2Hud.crtLines(guiGraphics,drawViewport.x(),drawViewport.y(),
+                  drawViewport.width(),drawViewport.height(),useStencilMask);
             if (useStencilMask) {
                endStencilMask();
             }
 
-            if (!debugShowOnlyFrontTexture && !debugShowTerrainOnly && frameEnabled) {
+            if (!debugShowOnlyFrontTexture && !debugShowTerrainOnly && frameEnabled && !modern) {
                drawFrameContour(guiGraphics, drawViewport, frameColor, edgeArcPixels);
             }
 
@@ -358,7 +368,12 @@ public final class NanoMinimapRenderer {
                   guiGraphics.disableScissor();
                   scissorClipEnabled = false;
                }
-               ThreatGauge.render(guiGraphics, drawViewport, minecraftInstance);
+               if(modern&&minecraftInstance.player!=null) {
+                  io.github.painworks.crysismod.nanosuit.client.Nanosuit2Hud.rememberRadar(drawViewport.x(),drawViewport.y(),drawViewport.width(),drawViewport.height());
+                  Nanosuit2Radar.frame(guiGraphics,drawViewport,minecraftInstance.player,playerYawDeg,useStencilMask,frameEnabled);
+                  Nanosuit2Radar.waypoint(guiGraphics,drawViewport,mapper,markerOffsetX,markerOffsetY,
+                     rotateWithPlayer,playerYawDeg,useStencilMask);
+               } else ThreatGauge.render(guiGraphics, drawViewport, minecraftInstance);
             }
          } finally {
             if (useStencilMask) {
@@ -406,6 +421,7 @@ public final class NanoMinimapRenderer {
       NanoMinimapCoordinateMapper.MutablePoint markerPoint = new NanoMinimapCoordinateMapper.MutablePoint();
       NanoMinimapCoordinateMapper.MutablePoint clampedPoint = new NanoMinimapCoordinateMapper.MutablePoint();
       boolean blendEnabledForIcons = false;
+      boolean modern=io.github.painworks.crysismod.nanosuit.client.Nanosuit2Hud.equipped();
 
       for (NanoMinimapMarker marker : markers) {
          if (marker.type() == NanoMinimapMarker.Type.PLAYER) {
@@ -416,8 +432,9 @@ public final class NanoMinimapRenderer {
             double worldZ = marker.worldZ();
             ResourceLocation markerEntityTypeId = marker.entityTypeId();
             float markerAlpha = Mth.clamp(marker.opacityMultiplier(), 0.0F, 1.0F);
+            Entity entity=null;
             if (marker.entityId() >= 0 && level != null) {
-               Entity entity = level.getEntity(marker.entityId());
+               entity = level.getEntity(marker.entityId());
                if (entity != null && entity.isAlive()) {
                   worldX = Mth.lerp(partialTick, entity.xo, entity.getX());
                   worldZ = Mth.lerp(partialTick, entity.zo, entity.getZ());
@@ -441,6 +458,12 @@ public final class NanoMinimapRenderer {
 
                   double sx = viewport.x() + drawLocalX;
                   double sy = viewport.y() + drawLocalY;
+                  if(modern && entity instanceof net.minecraft.world.entity.monster.Enemy) {
+                     var viewer=Minecraft.getInstance().player;
+                     Nanosuit2Radar.contact(guiGraphics,entity,viewer,(float)sx,(float)sy,
+                        entity.getYRot()-(rotateWithPlayer?playerYawDeg:180),Math.max(2,3*scale));
+                     continue;
+                  }
                   boolean renderedIcon = false;
                   if (useEntityIcons && markerEntityTypeId != null) {
                      NanoMinimapEntityIcon icon = iconAtlas.resolve(markerEntityTypeId);
@@ -482,7 +505,16 @@ public final class NanoMinimapRenderer {
          guiGraphics.setColor(1.0F, 1.0F, 1.0F, 1.0F);
       }
 
-      this.drawPlayerMarker(guiGraphics, cx, cy, rotateWithPlayer, playerYaw, playerColor, opacity, scale);
+      if(modern) {
+         for(int side:new int[]{-1,1}) {
+            for(int y=11;y<viewport.height()/2;y+=5) {
+               float x=(float)cx+side*y*(net.minecraft.client.Minecraft.getInstance().options.keyUse.isDown()?.213f:.51f);
+               io.github.painworks.crysismod.nanosuit.client.Nanosuit2Hud.shape(guiGraphics,0x809fcabb,
+                  x-1,(float)cy-y-1,x+1,(float)cy-y-1,x+1,(float)cy-y+1,x-1,(float)cy-y+1);
+            }
+         }
+         Nanosuit2Radar.arrow(guiGraphics,(float)cx,(float)cy,rotateWithPlayer?0:playerYaw-180,0xffffdf72,Math.max(2,3*scale));
+      } else this.drawPlayerMarker(guiGraphics, cx, cy, rotateWithPlayer, playerYaw, playerColor, opacity, scale);
    }
 
    private static void ensureStencilAvailable() {
@@ -494,7 +526,7 @@ public final class NanoMinimapRenderer {
       }
    }
 
-   private static void beginStencilMask(GuiGraphics guiGraphics, NanoMinimapViewport viewport, float edgeArcPixels) {
+   private static void beginStencilMask(GuiGraphics guiGraphics, NanoMinimapViewport viewport, float edgeArcPixels,boolean modern) {
       RenderSystem.clearStencil(0);
       RenderSystem.clear(1024, false);
       GL11.glEnable(2960);
@@ -502,7 +534,8 @@ public final class NanoMinimapRenderer {
       GL11.glStencilFunc(519, 1, 255);
       GL11.glStencilOp(7680, 7680, 7681);
       RenderSystem.colorMask(false, false, false, false);
-      drawCurvedMaskFill(guiGraphics, viewport, edgeArcPixels);
+      if(modern) Nanosuit2Radar.mask(guiGraphics,viewport);
+      else drawCurvedMaskFill(guiGraphics, viewport, edgeArcPixels);
       RenderSystem.colorMask(true, true, true, true);
       GL11.glStencilMask(0);
       GL11.glStencilFunc(514, 1, 255);

@@ -16,13 +16,19 @@ public final class NanoMinimapTerrainTexture {
    private int resolution;
    private boolean hasTexture;
    private boolean classicPalette;
+   private boolean nanosuit2Palette;
    private int classicColor=ClassicHudPalette.DEFAULT;
    private int[] sourcePixels;
 
-   public void setClassicPalette(boolean enabled){
+   public void setPalette(boolean enabled,boolean nanosuit2){
       int theme=classicColor;
       if(enabled) theme=ClassicMalfunction.active()?0xeb9c9e:NanosuitClientConfig.classicInterfaceColor();
-      if(classicPalette!=enabled || enabled&&classicColor!=theme){classicPalette=enabled;classicColor=theme;if(sourcePixels!=null)upload(sourcePixels);}
+      if(classicPalette!=enabled || nanosuit2Palette!=nanosuit2 || enabled&&classicColor!=theme){
+         classicPalette=enabled;
+         nanosuit2Palette=nanosuit2;
+         classicColor=theme;
+         if(sourcePixels!=null)upload(sourcePixels);
+      }
    }
 
    public boolean ensureCapacity(int targetResolution) {
@@ -53,6 +59,7 @@ public final class NanoMinimapTerrainTexture {
                for (int x = 0; x < side; x++) {
                   int color=argbPixels[row+x];
                   if(classicPalette)color=ClassicHudPalette.terrainColor(color,classicColor);
+                  else if(nanosuit2Palette) color=nanosuit2Color(color,argbPixels[row+Math.min(x+1,side-1)],argbPixels[Math.min(y+1,side-1)*side+x]);
                   this.pixels.setPixelRGBA(x, y, argbToAbgr(color));
                }
             }
@@ -88,6 +95,17 @@ public final class NanoMinimapTerrainTexture {
          this.pixels.close();
          this.pixels = null;
       }
+   }
+
+   private static int nanosuit2Color(int argb,int right,int below) {
+      int luminance=((argb>>>16&255)*54+(argb>>>8&255)*183+(argb&255)*19)>>8;
+      int edge=Math.max(Math.abs(luminance-luminance(right)),Math.abs(luminance-luminance(below)));
+      int green=Math.min(205,34+luminance*55/255+Math.max(0,edge-14)*2);
+      return argb&0xff000000|(green*82/100)<<16|green<<8|green*93/100;
+   }
+
+   private static int luminance(int argb) {
+      return ((argb>>>16&255)*54+(argb>>>8&255)*183+(argb&255)*19)>>8;
    }
 
    private static int argbToAbgr(int argb) {

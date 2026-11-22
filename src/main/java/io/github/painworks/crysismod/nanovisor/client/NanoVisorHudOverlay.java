@@ -115,6 +115,14 @@ public final class NanoVisorHudOverlay {
             if(!minecraft.options.hideGui)ClassicBinoculars.render(event.getGuiGraphics(),event.getPartialTick().getGameTimeDeltaPartialTick(false));
             return;
          }
+         if (io.github.painworks.crysismod.nanosuit.client.Nanosuit2Hud.equipped()) {
+            if (!minecraft.options.hideGui && NanoVisorState.shouldRenderOverlay() && minecraft.screen==null) {
+               float opacity=(float)NanoVisorSettings.Hud.opacity();
+               if(opacity>0) Nanosuit2Optic.render(event.getGuiGraphics(),player,event.getPartialTick().getGameTimeDeltaPartialTick(false),opacity);
+            } else Nanosuit2Optic.resetFocus();
+            return;
+         }
+         Nanosuit2Optic.resetFocus();
          if (player != null && !minecraft.options.hideGui && NanoVisorState.shouldRenderOverlay()) {
             float opacity = (float)Mth.clamp(NanoVisorSettings.Hud.opacity(), 0.0, 1.0);
             if (!(opacity <= 0.0F)) {

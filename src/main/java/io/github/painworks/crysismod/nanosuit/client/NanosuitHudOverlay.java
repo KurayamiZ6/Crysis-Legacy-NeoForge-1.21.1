@@ -220,6 +220,13 @@ public final class NanosuitHudOverlay {
                            renderArmorModeOverlay(guiGraphics, screenWidth, screenHeight, screenCenterX, screenCenterY,
                               event.getPartialTick().getGameTimeDeltaPartialTick(false), armorModeActive);
                         }
+                        if (profile==NanosuitProfile.NANOSUIT_2 && player instanceof LocalPlayer localPlayer) {
+                           Nanosuit2Hud.render(guiGraphics,localPlayer,targetEnergy,filledEnergySegments(targetEnergy),
+                              armorModeActive,cloakModeActive,groupCenterX,groupCenterY,hudScale,offLayerAlpha);
+                           if(NanosuitClientConfig.debugEnergyDrainInfo())
+                              renderEnergyDrainDebug(guiGraphics,localPlayer,data,profile,screenCenterX,screenCenterY);
+                           return;
+                        }
                         boolean lowEnergy = classic && targetEnergy <= 15.0F;
                         renderEnergyOffLayer(guiGraphics, x, y, screenCenterX, screenCenterY, lowEnergy);
                         renderEnergyActiveLayer(guiGraphics, x, y, screenCenterX, screenCenterY, targetEnergy, lowEnergy);
@@ -355,11 +362,15 @@ public final class NanosuitHudOverlay {
       RenderSystem.disableBlend();
    }
 
+   private static int filledEnergySegments(float energy) {
+      float progress=Mth.clamp(energy/100.0F,0,1);
+      return progress>=FULL_SEGMENT_PROGRESS_THRESHOLD || energy>=100-FULL_ENERGY_EPSILON
+         ? ENERGY_SEGMENTS : Mth.clamp(Mth.floor(progress*ENERGY_SEGMENTS+1.0E-6F),0,ENERGY_SEGMENTS);
+   }
+
    private static void renderEnergyActiveLayer(GuiGraphics guiGraphics, int x, int y, int screenCenterX, int screenCenterY,
       float energy, boolean lowEnergy) {
-      float progress = Mth.clamp(energy / 100.0F, 0.0F, 1.0F);
-      boolean treatAsFull = energy >= 99.999F;
-      int filledSegments = !treatAsFull && !(progress >= 0.9975F) ? Mth.clamp(Mth.floor(progress * 20.0F + 1.0E-6F), 0, 20) : 20;
+      int filledSegments=filledEnergySegments(energy);
       if (filledSegments > 0) {
          int srcFillWidth = fillWidthForSegments(filledSegments);
          if (srcFillWidth > 0) {

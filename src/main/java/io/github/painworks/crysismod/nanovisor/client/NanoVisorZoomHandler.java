@@ -20,18 +20,35 @@ public final class NanoVisorZoomHandler {
    private static float currentZoomMultiplier = 1.0F;
    private static boolean zoomInputActive;
    private static Boolean scrollTarget;
+   private static Boolean rightClickTarget;
+   private static long zoomStarted;
+   private static float zoomFrom=1,zoomDestination=1;
+   private static double lastWorldFov=70;
+
+   @SubscribeEvent(priority=net.neoforged.bus.api.EventPriority.HIGHEST)
+   public static void rightClick(net.neoforged.neoforge.client.event.InputEvent.MouseButton.Pre event) {
+      var mc=Minecraft.getInstance();
+      if(event.getButton()!=org.lwjgl.glfw.GLFW.GLFW_MOUSE_BUTTON_RIGHT || mc.screen!=null || mc.getOverlay()!=null
+         || !io.github.painworks.crysismod.nanosuit.client.Nanosuit2Hud.equipped() || !NanoVisorState.isVisorActive()) return;
+      event.setCanceled(true);
+      mc.options.keyUse.setDown(false);
+      while(mc.options.keyUse.consumeClick()) {}
+      if(event.getAction()==org.lwjgl.glfw.GLFW.GLFW_PRESS && NanoVisorSettings.Zoom.enabled())
+         rightClickTarget=!(rightClickTarget==null?zoomInputActive:rightClickTarget);
+   }
 
    private NanoVisorZoomHandler() {
    }
 
    public static void reset() {
-      currentZoomMultiplier=1;zoomInputActive=false;scrollTarget=null;
+      currentZoomMultiplier=1;zoomInputActive=false;scrollTarget=null;rightClickTarget=null;zoomFrom=zoomDestination=1;
    }
 
    @SubscribeEvent(priority=net.neoforged.bus.api.EventPriority.HIGHEST)
    public static void scroll(net.neoforged.neoforge.client.event.InputEvent.MouseScrollingEvent event) {
       var mc=Minecraft.getInstance();
       if(mc.screen==null && mc.getOverlay()==null && !ClassicBinoculars.isN1Context()
+         && !io.github.painworks.crysismod.nanosuit.client.Nanosuit2Hud.equipped()
          && NanoVisorState.canUse(mc) && NanoVisorState.isVisorActive() && NanoVisorSettings.Zoom.enabled()
          && event.getScrollDeltaY()!=0) {
          scrollTarget=event.getScrollDeltaY()>0;
@@ -48,6 +65,7 @@ public final class NanoVisorZoomHandler {
          zoomInputActive = false;
          return;
       } else {
+         if(io.github.painworks.crysismod.nanosuit.client.Nanosuit2Hud.equipped()) return;
          float targetMultiplier = resolveTargetZoomMultiplier();
          float smoothness = (float)Mth.clamp(NanoVisorSettings.Zoom.smoothness(), 0.0, 1.0);
          float interpolation = smoothness <= 1.0E-4F ? 1.0F : smoothness;
@@ -60,6 +78,23 @@ public final class NanoVisorZoomHandler {
       }
    }
 
+   @SubscribeEvent(priority=net.neoforged.bus.api.EventPriority.LOWEST)
+   public static void applyNanosuit2Fov(net.neoforged.neoforge.client.event.ViewportEvent.ComputeFov event) {
+      if(!event.usedConfiguredFov() || !io.github.painworks.crysismod.nanosuit.client.Nanosuit2Hud.equipped()) return;
+      long now=net.minecraft.Util.getMillis();
+      float target=NanoVisorState.isVisorActive()&&zoomInputActive&&NanoVisorSettings.Zoom.enabled()?3:1;
+      float progress=Mth.clamp((now-zoomStarted)/220f,0,1);
+      float magnification=Mth.lerp(progress*progress*(3-2*progress),zoomFrom,zoomDestination);
+      if(target!=zoomDestination) {zoomFrom=magnification;zoomDestination=target;zoomStarted=now;}
+      double baseFov=event.getFOV();
+      if(!Double.isFinite(baseFov)||baseFov<=0) return;
+      lastWorldFov=ClassicBinocularAnimation.zoomedFov(baseFov,magnification);
+      currentZoomMultiplier=(float)(lastWorldFov/baseFov);
+      event.setFOV(lastWorldFov);
+   }
+
+   static double worldFov() {return lastWorldFov;}
+
    public static void updateZoomInput(KeyMapping zoomKey) {
       if(!NanoVisorState.canUse(Minecraft.getInstance())){
          reset();while(zoomKey.consumeClick()){}while(NanoVisorKeyMappings.CLASSIC_BINOCULAR_ZOOM.consumeClick()){}return;
@@ -71,6 +106,16 @@ public final class NanoVisorZoomHandler {
          return;
       }
       while(NanoVisorKeyMappings.CLASSIC_BINOCULAR_ZOOM.consumeClick()){}
+      if (io.github.painworks.crysismod.nanosuit.client.Nanosuit2Hud.equipped()) {
+         var mc=Minecraft.getInstance();
+         if(mc.screen==null && NanoVisorState.isVisorActive()) mc.options.keyUse.setDown(false);
+         while(zoomKey.consumeClick()) {}
+         if(!NanoVisorState.isVisorActive() || !NanoVisorSettings.Zoom.enabled()) zoomInputActive=false;
+         else if(rightClickTarget!=null) zoomInputActive=rightClickTarget;
+         rightClickTarget=null;
+         scrollTarget=null;
+         return;
+      }
       if (NanoVisorState.isVisorActive() && NanoVisorSettings.Zoom.enabled()) {
          while(zoomKey.consumeClick())zoomInputActive=!zoomInputActive; // Optional user-bound fallback.
          if(scrollTarget!=null)zoomInputActive=scrollTarget;
@@ -105,6 +150,7 @@ public final class NanoVisorZoomHandler {
 
    public static float getSensitivityZoomFactor() {
       if (NanoVisorState.isVisorActive() && NanoVisorSettings.Zoom.enabled()) {
+         if(io.github.painworks.crysismod.nanosuit.client.Nanosuit2Hud.equipped()) return currentZoomMultiplier;
          float baseMultiplier = getBaseZoomMultiplier();
          if (baseMultiplier <= 1.0E-4F) {
             return 1.0F;

@@ -354,7 +354,7 @@ public final class NanoMinimapManager {
          LocalPlayer player = minecraft.player;
          if (player != null) {
             boolean classic=ClassicMinimapRenderer.isClassic();
-            this.terrainTexture.setClassicPalette(classic);
+            this.terrainTexture.setPalette(classic,io.github.painworks.crysismod.nanosuit.client.Nanosuit2Hud.equipped());
             if(classic){
                var view=createViewport(screenWidth,screenHeight);
                double bpp=this.tileCache.hasFrontData()?this.tileCache.activeBlocksPerPixel():logicalBlocksPerPixel();
@@ -860,6 +860,14 @@ public final class NanoMinimapManager {
    private static NanoMinimapViewport createViewport(int screenWidth, int screenHeight) {
       if(ClassicMinimapRenderer.isClassic())return ClassicMinimapRenderer.viewport(screenWidth,screenHeight);
       float scale = (float)Mth.clamp(NanoMinimapClientConfig.minimapScale(), 0.25, 4.0);
+      if(io.github.painworks.crysismod.nanosuit.client.Nanosuit2Hud.equipped()) {
+         float unit=screenWidth/1920f;
+         float artworkScale=scale/(float)NanoMinimapClientConfig.DEFAULT_MINIMAP_SCALE;
+         int width=Math.max(8,Math.round(340*unit*artworkScale)),height=Math.max(8,Math.round(184*unit*artworkScale));
+         int x=Math.round(79*unit)+NanoMinimapClientConfig.minimapOffsetX()-NanoMinimapClientConfig.DEFAULT_MINIMAP_OFFSET_X;
+         int y=screenHeight-Math.round(85*unit)-height-NanoMinimapClientConfig.minimapOffsetY()+NanoMinimapClientConfig.DEFAULT_MINIMAP_OFFSET_Y;
+         return new NanoMinimapViewport(x,y,width,height,(float)NanoMinimapClientConfig.minimapOpacity());
+      }
       int width = Math.max(8, Math.round(NanoMinimapClientConfig.minimapWidth() * scale));
       int height = Math.max(8, Math.round(NanoMinimapClientConfig.minimapHeight() * scale));
       int x = 12 + NanoMinimapClientConfig.minimapOffsetX();

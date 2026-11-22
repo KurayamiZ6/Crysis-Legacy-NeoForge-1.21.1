@@ -33,5 +33,8 @@
   "screen.crysismod.n1theme.presets": "Préréglages enregistrés",
   "screen.crysismod.n1theme.red": "Rouge : %s",
   "screen.crysismod.n1theme.green": "Vert : %s",
-  "screen.crysismod.n1theme.blue": "Bleu : %s"
+  "screen.crysismod.n1theme.blue": "Bleu : %s",
+  "hud.crysismod.n2.low_energy": "ÉNERGIE FAIBLE",
+  "hud.crysismod.n2.critical_health": "SANTÉ CRITIQUE",
+  "hud.crysismod.n2.hostile": "HOSTILE"
 }

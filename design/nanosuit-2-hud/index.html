@@ -1,0 +1,1401 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Nanosuit 2 · Maquette du HUD</title>
+<style>
+:root{color-scheme:dark;font-family:"Segoe UI",system-ui,sans-serif;background:#0b1013;color:#edf5f3;--muted:#a9bbb9}
+*{box-sizing:border-box}
+body{width:min(100% - 40px,1350px);margin:0 auto;padding:38px 0 50px}
+h1,h2,p{margin:0}h1{font-size:clamp(1.9rem,4.2vw,3.45rem);letter-spacing:-.047em;line-height:1.05}
+h2{font-size:1.12rem}p{color:var(--muted);line-height:1.5}header p{margin:12px 0 24px}
+.review{display:grid;grid-template-columns:minmax(0,1fr) 270px;align-items:start;gap:17px}
+.screen{position:relative;aspect-ratio:16/9;container-type:inline-size;overflow:hidden;isolation:isolate;border:1px solid #364846;border-radius:6px;background:#162024}
+.screen::before,.screen::after{content:"";position:absolute;inset:0;z-index:-1}
+.screen::before{background:url("../../qa/classic-hud/evidence-final/n2.png") center 14%/145% auto no-repeat}
+.screen::after{background:#10191e70;pointer-events:none}
+.screen[data-scene="bright"]::after{background:#667e82b5}
+.aim{position:absolute;top:50%;left:50%;width:4px;height:4px;border-radius:50%;background:#b9d5d0;opacity:.42;transform:translate(-50%,-50%)}
+.mount{position:absolute;bottom:8.6%;right:5.55%;width:21.8%;transform-origin:75% 62%}
+.detail .mount{width:57%;bottom:22%;right:21.5%}
+.hud{
+  --bevel-slope:1.16;--mode-height:1.04em;--tab-gap:.095em;
+  --rail-width:.24em;--rail-extension:.09em;--rail-widen:.24em;
+  --plate-inset:calc(.39em + var(--rail-extension));--frame-bottom-inset:.19em;
+  --frame-bevel-height:calc(1em + var(--rail-extension) / var(--bevel-slope));
+  --rail-tip:calc(var(--frame-bevel-height) * var(--bevel-slope));
+  --rail-inner-tip:calc(var(--rail-tip) + var(--rail-width) - .12em * var(--bevel-slope));
+  position:relative;margin-left:calc(-.30em - var(--rail-extension) - var(--rail-widen));
+  color:#a5f0df;font:1.44cqw "Bahnschrift","Arial Narrow",sans-serif;transform:skewY(7deg);
+  translate:var(--crt-nudge,0px) 0;
+  mask-image:var(--crt-mask);mask-size:100% var(--crt-mask-height);mask-repeat:no-repeat;
+  animation:crt-sweep 1.46s steps(var(--crt-steps),end) infinite;
+}
+.radar,.hud{filter:var(--crt-tear-filter)}
+@keyframes crt-sweep{to{mask-position:0 100%}}
+.detail .hud{font-size:3.28cqw}
+.hud-frame{
+  --right-bevel-x:94%;--right-bevel-y:9%;--right-rail-width:.29em;
+  position:relative;isolation:isolate;
+  clip-path:polygon(calc(2% + var(--rail-widen)) 0,var(--right-bevel-x) 0,100% var(--right-bevel-y),100% 100%,
+    calc(var(--rail-tip) + var(--rail-widen)) 100%,
+    var(--rail-widen) calc(100% - var(--frame-bevel-height)),var(--rail-widen) 5%);
+  padding:0 .34em var(--frame-bottom-inset) calc(var(--plate-inset) + var(--rail-widen));
+}
+.hud-frame::before{
+  content:"";position:absolute;inset:auto var(--right-rail-width) 0 0;height:.105em;z-index:-1;
+  background:#82ad9d;opacity:.635;
+}
+.right-rail{
+  position:absolute;inset:0;z-index:-1;pointer-events:none;opacity:.624;
+}
+.right-rail::before{
+  content:"";position:absolute;inset:0;background:#a6d4c6;
+  clip-path:polygon(var(--right-bevel-x) 0,100% var(--right-bevel-y),100% 100%,
+    calc(100% - var(--right-rail-width)) 100%,calc(100% - var(--right-rail-width)) var(--right-bevel-y),
+    calc(var(--right-bevel-x) - .1em) .18em);
+}
+.left-rail{
+  position:absolute;pointer-events:none;inset:0 0 calc(var(--mode-height) + var(--tab-gap));opacity:.66;
+}
+.left-rail::before{
+  --rail-top:calc(74.6% - .12em);
+  --rail-elbow:calc(100% - var(--frame-bevel-height));
+  --rail-end:calc(var(--rail-tip) + .75em + var(--rail-widen));
+  --stem-inset:.16em;
+  --stem-right:calc(var(--rail-width) + var(--rail-widen) + var(--stem-inset));
+  /* Match the thickness measured perpendicular to the diagonal. */
+  --stem-width:calc((var(--rail-width) + var(--rail-widen)) / hypot(1,var(--bevel-slope)));
+  --stem-left:calc(var(--stem-right) - var(--stem-width));
+  content:"";position:absolute;inset:0;background:#a0cdb9;
+  clip-path:polygon(var(--stem-left) var(--rail-top),var(--stem-right) var(--rail-top),
+    var(--stem-right) calc(var(--rail-elbow) + var(--stem-inset) / var(--bevel-slope)),
+    calc(var(--rail-inner-tip) + var(--rail-widen)) calc(100% - .12em),var(--rail-end) calc(100% - .12em),
+    var(--rail-end) 100%,var(--rail-tip) 100%,var(--stem-left) calc(var(--rail-elbow) + var(--stem-left) / var(--bevel-slope)));
+}
+.plate{padding:0 .05em 0 .05em}
+.ammo{
+  position:relative;isolation:isolate;height:2.34em;display:flex;align-items:center;justify-content:flex-end;gap:.38em;
+  padding:.06em .14em .04em .4em;font-weight:760;
+}
+.ammo-background{position:absolute;inset:0;z-index:-1;pointer-events:none;opacity:.259}
+.ammo-background::before{
+  content:"";position:absolute;inset:0;background:#506e62;
+  clip-path:polygon(0 .38em,.46em 0,100% 0,100% 100%,0 100%);
+}
+.ammo strong,.ammo b{display:inline-flex;align-items:center;line-height:1;gap:.045em}
+.ammo strong{color:#f3fffb;font-size:1.91em;filter:drop-shadow(0 0 .11em #cdffea75)}
+.ammo b{font-size:1.29em;filter:drop-shadow(0 0 .11em #93e7bb64)}
+.ammo strong[data-low="true"]{color:#ff493c;filter:drop-shadow(0 0 .12em #ff463aa0)}
+.ammo .zero{color:#a2c0b5;opacity:.22}
+.digit{position:relative;width:.59em;height:.94em}
+.digit::before{content:"";position:absolute;inset:0;background:currentColor;mask-image:var(--glyph-mask);mask-size:100% 100%}
+.slash{font-size:1.42em;font-weight:500;color:#a9edcf;text-shadow:0 0 .18em #98edcb91}
+.cells{display:grid;grid-template-columns:1.18fr .65fr 1fr;gap:.14em;margin:.14em 0 .08em}
+.cell{position:relative;isolation:isolate;min-width:0;height:1.60em;display:grid;place-items:center;padding-bottom:.045em}
+.cell::before{content:"";position:absolute;inset:0;z-index:-1;background:#456c60;border-bottom:.045em solid #7ed1bbb0;opacity:.314}
+.icon{position:relative;display:block;width:2.58em;height:1.06em;color:#c0f4df}
+.rifle::before{content:"";position:absolute;inset:0;background:currentColor;clip-path:polygon(2% 41%,17% 41%,17% 33%,42% 33%,47% 23%,74% 23%,79% 33%,98% 30%,98% 62%,82% 56%,68% 50%,65% 65%,55% 65%,51% 77%,42% 75%,46% 50%,31% 52%,17% 49%,2% 49%)}
+[data-example="low"] .rifle{width:2.08em}
+[data-example="low"] .rifle::before{clip-path:polygon(4% 28%,64% 28%,68% 20%,90% 22%,95% 37%,88% 51%,93% 76%,78% 80%,70% 57%,61% 52%,53% 57%,41% 49%,4% 49%)}
+.shot{display:flex;align-items:center;justify-content:center;gap:.14em}
+.shot i{position:relative;width:.37em;height:.71em}
+.shot i::before{content:"";position:absolute;inset:0;background:currentColor;clip-path:polygon(50% 0,100% 26%,100% 100%,0 100%,0 26%)}
+.bow{width:3.6em;height:1.34em}
+.bow canvas{display:block;width:100%;height:100%}
+.bow-slot[aria-hidden="true"] .bow{visibility:hidden}
+.energy{
+  /* The first segments have their own bevel, inset from the parallel rail. */
+  --bevel-x:calc((var(--frame-bevel-height) - var(--frame-bottom-inset)) * var(--bevel-slope)
+    + var(--rail-width) + .13em - var(--plate-inset) - .05em);
+  position:relative;height:1.45em;display:flex;gap:.066em;align-items:stretch;
+  clip-path:polygon(0 0,100% 0,100% 100%,var(--bevel-x) 100%,0 calc(100% - var(--bevel-x) / var(--bevel-slope)));
+}
+.energy i{flex:1 1 0;min-width:0;background:#88b7ab;opacity:.176}
+.energy i.on{background:#d2ffea;opacity:1}
+.ammo-background,.cell::before,.energy i,.mode{filter:url(#inner-vignette)}
+.left-rail,.right-rail,.hud-frame::before,.rifle,.bow,.shot i{filter:url(#fine-inner-vignette)}
+.cutout{color:transparent;pointer-events:none;user-select:none}
+.energy-label{position:absolute;inset:0;display:grid;place-items:center;font-size:.85em;font-weight:850;letter-spacing:.09em}
+.hud[data-critical="true"] .energy i:not(.on){background:#a82620;opacity:.863}
+.hud[data-critical="true"] .energy i.on{background:#fff}
+.hud[data-critical="true"][data-pulse="true"] .energy i.on{background:#ff5b4c}
+.modes{
+  --armor-trim:calc(var(--rail-tip) - var(--rail-widen));
+  display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:.12em;
+  margin:var(--tab-gap) 0 0 var(--rail-widen);height:var(--mode-height);
+  clip-path:polygon(var(--armor-trim) 0,100% 0,100% 82%,97% 100%,calc(var(--armor-trim) + var(--mode-height) * var(--bevel-slope)) 100%);
+}
+.mode{min-width:0;display:grid;place-items:center;background:#557f73;opacity:.835}
+.mode.armor{margin-left:var(--armor-trim)}
+.mode .cutout{font-size:.67em;line-height:1.26;letter-spacing:.085em;font-weight:780}
+.mode.on{background:#ccf8e3;opacity:1}
+.alert{
+  position:absolute;left:50%;top:60%;transform:translate(-50%,-50%);
+  opacity:0;display:grid;grid-template-columns:1.35em 1fr 1.35em;width:33%;align-items:center;
+  text-align:center;color:#ff3c33;pointer-events:none;
+  font:850 2.02cqw "Bahnschrift","Arial Narrow",sans-serif;letter-spacing:.085em;
+}
+.alert::before,.alert::after{
+  content:"";height:.88em;background:currentColor;
+  clip-path:polygon(0 55%,15% 42%,33% 42%,64% 8%,100% 8%,100% 26%,71% 26%,48% 50%,71% 74%,100% 74%,100% 92%,64% 92%,33% 58%,0 58%);
+}
+.alert::after{transform:scaleX(-1)}
+.alert.visible{opacity:1;filter:drop-shadow(0 0 .15em #ff453b9d)}
+.alert span{text-shadow:0 0 .12em #ff4b3d,0 0 .31em #ff241ece,0 0 .56em #ff171968}
+.alert.text-off span{opacity:0}
+
+
+.radar.max-pulse .radar-threat,.radar.max-pulse .radar-threat-base{animation:threat-pulse .22s steps(1) 4}
+@keyframes threat-pulse{50%{opacity:.38}}
+.optic{position:absolute;inset:0;width:100%;height:100%;pointer-events:none}
+.screen[data-optic] .aim{visibility:hidden}
+.screen[data-optic]::before{transform:scale(var(--optic-magnification,1))}
+
+.screen[data-failure="glitch"] :is(.mount,.radar-mount){
+  filter:url(#failure-heavy);opacity:var(--failure-visibility,1);
+  animation:suit-failure .17s steps(1) infinite;
+}
+.screen[data-failure="glitch"] .alert{filter:url(#failure-text) drop-shadow(0 0 .14em #ff251c);animation:alert-distortion .21s steps(1) infinite}
+@keyframes suit-failure{0%{translate:-1.3% .2%}24%{translate:2.5% -.5%}51%{translate:-2.2% .3%}76%{translate:.9% -.4%}}
+@keyframes alert-distortion{30%{translate:-.3% 0}70%{translate:.4% 0}}
+.screen[data-failure="off"] :is(.mount,.radar-mount,.aim){visibility:hidden}
+@media(prefers-reduced-motion:reduce){
+  .screen[data-failure="glitch"] :is(.mount,.radar-mount,.alert),.radar.max-pulse :is(.radar-threat,.radar-threat-base){animation:none}
+}
+.radar-mount{position:absolute;left:4.1%;bottom:7.9%;width:19.75%;transform-origin:28% 60%}
+.radar{
+  --radar-rail:#a6d4c6;--radar-ink:#d2ffea;--threat-ink:#d2ffea;
+  --radar-cap:1em;--stance-space:2.94em;--radar-map-height:6.6em;
+  --rim-to-notch:8% 2.8%,2.4% 14.8%,2.4% 96.8%,17% 96.8%,23% 83.5%,72% 83.5%,78% 94%;
+  --rail-start:67.25%;--rim-right:90% 94%,97.6% 78%,97.6% var(--rail-start);
+  position:relative;color:var(--radar-ink);font:1.44cqw "Bahnschrift","Arial Narrow",sans-serif;
+  --dock-overhang:.25em;
+  padding:var(--radar-cap) var(--stance-space) var(--dock-overhang) 0;
+  margin-right:calc(-1 * var(--stance-space));margin-bottom:calc(-1 * var(--dock-overhang));
+  transform:skewY(-7deg);translate:var(--crt-nudge,0px) 0;
+  mask-image:var(--crt-mask);mask-size:100% var(--crt-mask-height);mask-repeat:no-repeat;
+  animation:crt-sweep 1.46s steps(var(--crt-steps),end) infinite;
+}
+
+.radar[data-threat="2"]{--threat-ink:#ffdf32}
+.radar[data-threat="3"]{--threat-ink:#ff3932}
+.radar-grid{
+  --threat-width:1.26em;--seam:.16em;--compass-gap:.09em;--module-gap:.075em;
+  --threat-stack-height:calc(var(--rail-start) - var(--seam));
+  --column-left:calc(100% - var(--threat-width));
+  --foot-left:calc(var(--column-left) - 7.6%);
+  position:relative;display:grid;grid-template-columns:minmax(0,1fr) var(--threat-width);gap:.11em;
+}
+.radar-mask{
+  position:absolute;inset:var(--radar-cap) var(--stance-space) var(--dock-overhang) 0;
+  pointer-events:none;opacity:.65;filter:url(#fine-inner-vignette);
+}
+.radar-mask::before{
+  content:"";position:absolute;inset:0;background:var(--radar-rail);
+  clip-path:polygon(0 14%,8% 0,var(--rim-to-notch),var(--rim-right),100% var(--rail-start),100% 79.5%,91% 97%,77% 97%,71% 86.3%,24% 86.3%,18% 100%,1.1% 100%,0 98.1%);
+}
+.radar-map{
+  grid-area:1/1/2/-1;position:relative;isolation:isolate;
+  padding-right:calc(var(--threat-width) + var(--seam));
+  --map-outline:polygon(8% 0,var(--rim-to-notch),calc(var(--foot-left) - var(--seam)) 94%,
+    calc(var(--column-left) - var(--seam)) 78%,calc(var(--column-left) - var(--seam)) 0);clip-path:var(--map-outline);
+}
+.radar-compass{
+  height:1.02em;position:relative;isolation:isolate;overflow:hidden;
+  font-weight:820;line-height:1;letter-spacing:.04em;
+}
+.radar-compass::before,.radar-paper::before{
+  content:"";position:absolute;inset:0;z-index:-1;background:#506e62;opacity:.38;filter:url(#inner-vignette);
+}
+.compass-mark{
+  position:absolute;top:50%;width:21%;transform:translate(-50%,-50%);
+  text-align:center;font-size:.72em;text-shadow:0 0 .22em #a7e9ce85;
+}
+.compass-mark::before,.compass-mark::after{
+  content:"";position:absolute;top:50%;transform:translateY(-50%);
+  width:max(1px,.13em);height:.61em;background:var(--radar-rail);opacity:.69;
+}
+.compass-mark::before{left:0}.compass-mark::after{right:0}
+.radar-map{height:calc(1.02em + .16em + var(--radar-map-height))}
+.radar-terrain{position:absolute;inset:0;pointer-events:none;filter:url(#inner-vignette)}
+.radar-terrain-clip{position:absolute;inset:0;clip-path:var(--terrain-outline,var(--map-outline))}
+.radar-paper{position:absolute;isolation:isolate;top:calc(1.02em + var(--compass-gap));bottom:0;left:0;right:calc(var(--threat-width) + var(--seam))}
+.radar-paper::before{background:#273f39;opacity:.79}
+.radar-paper::before{filter:none}
+.radar-paper canvas{display:block;width:100%;height:100%}
+@property --threat-amount{syntax:"<number>";inherits:true;initial-value:2}
+.radar-threat{
+  grid-area:1/2;position:relative;align-self:start;height:var(--threat-stack-height);
+  display:flex;flex-direction:column-reverse;gap:.085em;
+}
+
+.radar-threat strong{
+  position:absolute;right:0;bottom:calc(100% + .23em);color:var(--threat-ink);
+  font-size:.73em;letter-spacing:.06em;text-shadow:0 0 .26em currentColor;
+}
+.radar-threat i{position:relative;flex:1;min-height:0;filter:url(#fine-inner-vignette)}
+.radar-threat i::before,.radar-threat i::after{content:"";position:absolute;inset:0}
+.radar-threat i::before{background:#45665d;opacity:.52}
+.radar-threat i::after{
+  background:var(--threat-ink);transform-origin:center bottom;
+  transform:scaleY(clamp(0, var(--threat-amount) - var(--segment-index), 1));
+}
+.radar-threat-base{position:absolute;inset:0;pointer-events:none;filter:url(#fine-inner-vignette)}
+.radar-threat-base::before{
+  content:"";position:absolute;inset:0;background:var(--threat-ink);
+  clip-path:polygon(var(--rim-right),var(--column-left) var(--rail-start),var(--column-left) 78%,var(--foot-left) 94%);
+}
+.radar-status{
+  position:absolute;top:calc(86.3% + var(--module-gap));bottom:calc(-2.7% - var(--module-gap));left:20.6%;right:25.6%;container-type:inline-size;
+  display:flex;gap:var(--module-gap);align-items:stretch;
+}
+.radar-slot{aspect-ratio:1;flex:none;height:100%}
+.radar-slot-arrow{flex:1;min-width:0}
+.radar-slot{position:relative;display:grid;place-items:center;color:#d9a94f;line-height:1}
+.radar-slot::before,.radar-slot-arrow::before{
+  content:"";position:absolute;inset:0;background:#456c60;opacity:.69;z-index:-1;
+}
+.radar-slot-arrow,.radar-slot{
+  position:relative;isolation:isolate;
+  filter:url(#inner-vignette);
+}
+.radar-slot-arrow::before{clip-path:polygon(0 50%,var(--arrow-tip) 0,100% 0,100% 100%,var(--arrow-tip) 100%)}
+.radar-slot-arrow.next::before{transform:scaleX(-1)}
+.radar-status b{font-size:.79em;font-weight:750;filter:url(#fine-inner-vignette)}
+.radar-status .suit-profile{
+  display:block;width:.7em;height:.8em;position:relative;
+}
+.radar-status .suit-profile::before{
+  content:"";position:absolute;inset:0;background:currentColor;
+  clip-path:polygon(28% 9%,43% 0,65% 3%,79% 18%,76% 36%,71% 51%,67% 58%,67% 68%,94% 83%,100% 100%,0 100%,7% 83%,32% 69%,33% 57%,24% 45%,20% 29%);
+}
+.radar-stance{
+  display:block;position:absolute;right:.06em;bottom:10.8%;width:2.75em;height:2.57em;transform:skewY(7deg);transform-origin:left bottom;
+  filter:url(#inner-vignette);
+}
+
+.screen.radar-detail .radar-mount{width:51%;left:23%;bottom:22%}
+.radar-detail .radar{font-size:3.28cqw}
+.screen.radar-detail .mount,.screen.detail .radar-mount{visibility:hidden}
+.samples .radar-mount{width:38%;left:7%;bottom:17%;visibility:visible}
+.samples .radar{font-size:2.83cqw;animation:none;filter:none}
+@media(max-width:560px){.radar-mount{width:27%}}
+aside{background:#121c20;border:1px solid #344541;border-radius:6px;padding:16px}
+fieldset{margin:14px 0 0;padding:0;border:0;min-width:0}legend{color:var(--muted);margin-bottom:7px;font-size:.86rem}
+.buttons{display:flex;gap:6px;flex-wrap:wrap}
+button{min-height:32px;border:1px solid #46615b;border-radius:4px;color:inherit;background:#182927;padding:5px 8px;cursor:pointer;font:inherit;font-size:.82rem}
+button[aria-pressed="true"]{color:#10241d;background:#a4e6ce;border-color:#a4e6ce}
+button:hover{border-color:#a8e4cf}button:focus-visible,input:focus-visible{outline:2px solid #a2f4d3;outline-offset:3px}
+.range{display:flex;justify-content:space-between;color:var(--muted);font-size:.86rem;margin-top:15px}
+input[type="range"]{display:block;width:100%;accent-color:#a4e6ce;margin:5px 0 10px}
+.check{display:block;font-size:.84rem;margin-top:9px}input[type="checkbox"]{accent-color:#a4e6ce;margin-right:5px}
+.note{margin:12px 0 0;font-size:.82rem}.gallery{margin-top:26px}.gallery h2{margin-bottom:10px}
+.samples{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px}
+figure{margin:0}.samples .mount{width:39%;bottom:17%;right:7%}.samples .hud{font-size:2.75cqw}
+.samples .alert{top:23%;width:60%;font-size:3.25cqw}figcaption{margin-top:6px;font-size:.85rem;color:var(--muted)}
+.notes{margin-top:19px;max-width:105ch;font-size:.87rem}.notes p+p{margin-top:7px}
+@media(max-width:800px){.review{grid-template-columns:1fr}.samples{gap:8px}}
+@media(max-width:560px){body{width:calc(100% - 24px);padding-top:23px}.samples{grid-template-columns:1fr}.mount{width:28%}}
+@media(prefers-reduced-motion:reduce){.hud,.radar{animation:none;filter:none;translate:none}.radar-threat.ready{transition:none}}
+</style>
+</head>
+<body>
+<svg id="hud-filters" width="0" height="0" aria-hidden="true" style="position:absolute">
+  <filter id="inner-vignette" color-interpolation-filters="sRGB">
+    <feGaussianBlur in="SourceAlpha" stdDeviation="1.125" result="soft"/>
+    <feComponentTransfer in="soft" result="opacityRamp">
+      <feFuncA type="table" tableValues=".1 .1 .1 .1 .1 .316 .694 .919 1"/>
+    </feComponentTransfer>
+    <feComposite in="SourceGraphic" in2="opacityRamp" operator="in"/>
+  </filter>
+  <filter id="fine-inner-vignette" color-interpolation-filters="sRGB">
+    <feGaussianBlur in="SourceAlpha" stdDeviation=".4125" result="soft"/>
+    <feComponentTransfer in="soft" result="opacityRamp">
+      <feFuncA type="table" tableValues=".1 .1 .1 .1 .136 .379 .712 .937 1"/>
+    </feComponentTransfer>
+    <feComposite in="SourceGraphic" in2="opacityRamp" operator="in"/>
+  </filter>
+  <filter id="failure-heavy" x="-15%" y="-8%" width="130%" height="116%" color-interpolation-filters="sRGB">
+    <feTurbulence type="turbulence" baseFrequency=".032 .63" numOctaves="2" seed="14" x="-25%" y="-120%" width="150%" height="350%" result="grain"/>
+    <feOffset in="grain" dy="0" result="noise" data-failure-roll="hud"/>
+    <feDisplacementMap in="SourceGraphic" in2="noise" scale="43" xChannelSelector="R" yChannelSelector="A" result="shifted"/>
+    <feColorMatrix in="shifted" values=".12 .16 .09 0 0  .30 .49 .26 0 0  .40 .57 .36 0 0  0 0 0 .95 0" result="cyan"/>
+    <feComponentTransfer in="noise" result="static"><feFuncA type="linear" slope="1.7" intercept="-.40"/></feComponentTransfer>
+    <feComposite in="static" in2="shifted" operator="in" result="grit"/>
+    <feComponentTransfer in="SourceGraphic" result="faint"><feFuncA type="linear" slope=".21"/></feComponentTransfer>
+    <feMerge><feMergeNode in="faint"/><feMergeNode in="cyan"/><feMergeNode in="grit"/></feMerge>
+  </filter>
+  <filter id="failure-text" x="-10%" y="-30%" width="120%" height="160%">
+    <feTurbulence type="turbulence" baseFrequency=".045 .72" numOctaves="2" seed="21" y="-100%" height="300%" result="alertGrain"/>
+    <feOffset in="alertGrain" dy="0" result="rows" data-failure-roll="alert"/>
+    <feDisplacementMap in="SourceGraphic" in2="rows" scale="13" xChannelSelector="R" yChannelSelector="A"/>
+  </filter>
+  <filter id="crt-tear" x="-3%" y="-1%" width="106%" height="102%" color-interpolation-filters="sRGB">
+    <feImage x="0" y="0" preserveAspectRatio="none" result="rowOffsets"/>
+    <feDisplacementMap in="SourceGraphic" in2="rowOffsets" scale="2" xChannelSelector="R" yChannelSelector="G"/>
+  </filter>
+</svg>
+<header><h1>HUD de la Nanosuit 2</h1><p>Minicarte, menace, munitions et énergie</p></header>
+<main>
+<section class="review" aria-label="Maquette interactive">
+  <div id="view" class="screen" data-scene="dark">
+    <canvas class="optic" width="960" height="540" hidden aria-label="Simulation du viseur"></canvas><span class="aim" aria-hidden="true"></span><div class="alert" aria-hidden="true" lang="en"><span>LOW ENERGY</span></div><div class="mount"></div>
+  </div>
+  <aside>
+    <h2>Aperçu interactif</h2>
+    <fieldset><legend>État du HUD</legend><div id="states" class="buttons">
+      <button type="button" data-state="armor" aria-pressed="true">Armure</button>
+      <button type="button" data-state="stealth" aria-pressed="false">Stealth</button>
+      <button type="button" data-state="low" aria-pressed="false">Énergie faible</button>
+    </div></fieldset>
+    <label for="charge" class="range">Énergie <output id="charge-value" for="charge">100 %</output></label>
+    <input id="charge" type="range" min="0" max="100" value="100">
+    <label for="magazine" class="range">Chargeur <output id="mag-value" for="magazine">27 / 30</output></label>
+    <input id="magazine" type="range" min="0" max="30" value="27">
+    <button type="button" id="flash">Rejouer l’alerte de deux secondes</button>
+    <fieldset><legend>Mouvement simulé</legend><div id="motion" class="buttons">
+      <button type="button" data-motion="off" aria-pressed="true">Repos</button>
+      <button type="button" data-motion="walk" aria-pressed="false">Pas</button>
+      <button type="button" data-motion="pitch" aria-pressed="false">Haut / bas</button>
+      <button type="button" data-motion="turn" aria-pressed="false">Rotation</button>
+    </div></fieldset>
+    <label class="check"><input id="predator" type="checkbox" checked>Arc Predator dans l’inventaire</label>
+    <label class="check"><input id="detail" type="checkbox">Agrandir le panneau droit</label>
+    <fieldset><legend>Minicarte</legend>
+      <label for="heading" class="range">Cap <output id="heading-value" for="heading">090° E</output></label>
+      <input id="heading" type="range" min="0" max="359" value="90">
+      <label for="threat" class="range">Menace <output id="threat-value" for="threat">Calme</output></label>
+      <input id="threat" type="range" min="0" max="3" value="0">
+      <label class="check"><input id="waypoint" type="checkbox" checked>Objectif suivi</label>
+      <label class="check"><input id="map-aim" type="checkbox">Viser</label>
+      <label class="check"><input id="map-upgrades" type="checkbox">Afficher les améliorations</label>
+      <label class="range" for="map-stance">Posture
+        <select id="map-stance"><option value="standing">Debout</option><option value="crouching">Accroupi</option><option value="prone">Allongé</option></select>
+      </label>
+      <label class="check"><input id="radar-detail" type="checkbox">Agrandir la minicarte</label>
+    </fieldset>
+    <label class="check"><input id="bright" type="checkbox">Fond de test clair</label>
+    <fieldset><legend>Viseur et événements</legend>
+      <label class="check"><input id="optic-enabled" type="checkbox">Activer le viseur</label>
+      <label for="optic-zoom">Zoom</label>
+      <select id="optic-zoom"><option value="1">×1</option><option value="3">×3</option></select>
+      <label for="optic-pitch" class="range">Inclinaison</label>
+      <input id="optic-pitch" type="range" min="-60" max="60" value="0">
+      <label for="optic-range" class="range">Distance de la cible (m)</label>
+      <input id="optic-range" type="range" min="5" max="140" value="34">
+      <button type="button" id="optic-center">Centrer la cible</button>
+      <button type="button" id="optic-shot">Simuler un tir ennemi</button>
+      <label class="check"><input id="waypoint-distant" type="checkbox">Objectif hors carte</label>
+      <button type="button" id="critical-demo">Simuler la mort</button>
+    </fieldset>
+    <p class="note">Données simulées. Déplace la souris sur le viseur pour déplacer les cibles.</p>
+  </aside>
+</section>
+<section class="gallery" aria-labelledby="gallery-title">
+  <h2 id="gallery-title">Les trois états en détail</h2>
+  <div class="samples">
+    <figure><div class="screen" data-sample="armor"><div class="mount"></div></div><figcaption>Armure · énergie pleine</figcaption></figure>
+    <figure><div class="screen" data-sample="stealth"><div class="mount"></div></div><figcaption>Stealth · énergie partielle</figcaption></figure>
+    <figure><div class="screen" data-sample="low"><div class="mount"></div><div class="alert visible" aria-hidden="true" lang="en"><span>LOW ENERGY</span></div></div><figcaption>Stealth · phase rouge de l’alerte</figcaption></figure>
+  </div>
+</section>
+<section class="notes" aria-label="Hypothèses de la maquette">
+  <p>Le nombre du chargeur passe au rouge à 20 % ou moins, indépendamment de l’énergie. La valeur de droite garde le plafond simulé des maquettes précédentes. Sa source reste à confirmer pour l’intégration.</p>
+  <p>Sous 20 %, les segments remplis alternent entre blanc et rouge. Le texte central partage leur cadence pendant deux secondes. Les deux repères restent visibles pendant l’alerte.</p>
+  <p>Le plan, le point suivi et les quatre états de menace sont simulés. La jauge correspond aux états du mod, de calme à détecté.</p>
+</section>
+</main>
+<template id="panel">
+  <div class="hud">
+    <span class="left-rail" aria-hidden="true"></span>
+    <div class="hud-frame"><span class="right-rail" aria-hidden="true"></span><div class="plate">
+      <div class="ammo" aria-label="Munitions dans le chargeur et valeur de droite"><span class="ammo-background" aria-hidden="true"></span><strong class="total"></strong><span class="slash">/</span><b class="max"></b></div>
+      <div class="cells">
+        <div class="cell" title="Dernière arme utilisée" role="img" aria-label="Dernière arme utilisée"><span class="icon rifle"></span></div>
+        <div class="cell selector" role="img"><span class="icon shot"></span></div>
+        <div class="cell bow-slot" title="Arc Predator dans l’inventaire" role="img" aria-label="Arc Predator dans l’inventaire"><span class="icon bow"><canvas width="166" height="62" aria-hidden="true"></canvas></span></div>
+      </div>
+      <div class="energy" role="meter" lang="en" aria-label="Energy" aria-valuemin="0" aria-valuemax="100"><span class="energy-label cutout" aria-hidden="true">ENERGY</span></div>
+    </div></div>
+    <div class="modes" lang="en"><span class="mode armor"><span class="cutout">ARMOR</span></span><span class="mode stealth"><span class="cutout">STEALTH</span></span></div>
+  </div>
+</template>
+<template id="radar-panel">
+  <div class="radar" data-threat="0">
+    <div class="radar-grid">
+      <div class="radar-map">
+        <div class="radar-compass" aria-label="Cap"></div>
+        <div class="radar-terrain"><div class="radar-terrain-clip"><div class="radar-paper"><canvas width="440" height="258" role="img" aria-label="Plan de démonstration orienté selon le cap"></canvas></div></div></div>
+      </div>
+      <div class="radar-threat" role="meter" aria-label="Menace" aria-valuemin="0" aria-valuemax="3"><strong lang="en" aria-hidden="true">THREAT</strong></div>
+      <span class="radar-threat-base" aria-hidden="true"></span>
+    <div class="radar-status" aria-hidden="true"><span class="radar-slot-arrow"></span><span class="radar-slot"></span><span class="radar-slot"></span><span class="radar-slot"></span><span class="radar-slot"></span><span class="radar-slot-arrow next"></span></div>
+    </div>
+    <span class="radar-mask" aria-hidden="true"></span>
+    <canvas class="radar-stance" width="160" height="150" role="img"></canvas>
+  </div>
+</template>
+<script>
+"use strict";
+const scenarios = {
+  armor:   { charge:100,loaded:27,capacity:30,limit:120,mode:"armor",fire:"Automatique",rounds:4,bow:true },
+  stealth: { charge:53,loaded:9,capacity:30,limit:90,mode:"stealth",fire:"Rafale",rounds:3,bow:false },
+  low:     { charge:12,loaded:3,capacity:15,limit:90,mode:"stealth",fire:"Coup par coup",rounds:1,bow:true }
+};
+const template = document.getElementById("panel");
+const view = document.getElementById("view");
+const chargeControl = document.getElementById("charge");
+const magazineControl = document.getElementById("magazine");
+const magazineOutput = document.getElementById("mag-value");
+const bowControl = document.getElementById("predator");
+const output = document.getElementById("charge-value");
+const alertText = view.querySelector(".alert");
+const reduced = matchMedia("(prefers-reduced-motion: reduce)");
+let state = "armor", motion = "off", alertStart = -Infinity, motionStart = 0, charge = 100, loaded = 27;
+
+const digitPaths = [
+  "M8 6H23L26 9V39L23 42H8L5 39V9Z",
+  "M9 13L16 6H19V42 M10 42H27",
+  "M5 13V9L8 6H23L26 9V19L5 36V42H26",
+  "M6 6H23L26 9V19L23 23L26 27V39L23 42H6 M12 23H23",
+  "M12 2H21L10 26H19V17H27V26H30V34H27V46H19V34H1V26Z",
+  "M26 6H6V22H22L26 26V39L23 42H5",
+  "M25 6H9L5 12V39L8 42H23L26 39V25L23 22H5",
+  "M4 6H26V11L12 42",
+  "M8 6H23L26 9V19L22 23L26 27V39L23 42H8L5 39V27L9 23L5 19V9Z M9 23H22",
+  "M26 25H8L5 22V9L8 6H23L26 9V36L22 42H7"
+];
+const digitMasks = digitPaths.map((commands,digit)=>{
+  const canvas=document.createElement("canvas");
+  canvas.width=64;
+  canvas.height=96;
+  const ctx=canvas.getContext("2d");
+  ctx.scale(2,2);
+  ctx.strokeStyle="#fff";
+  ctx.lineWidth=7.8;
+  ctx.lineJoin="bevel";
+  const path = new Path2D(commands);
+  if (digit===4) {
+    ctx.fillStyle="#fff";
+    ctx.fill(path);
+  } else {
+    ctx.stroke(path);
+  }
+  if (digit===0) {
+    ctx.lineWidth=5.2;
+    ctx.stroke(new Path2D("M7 37L24 11"));
+  }
+  return "url("+canvas.toDataURL()+")";
+});
+
+// Keep the scan, rolling bands and signal streaks in alpha so they follow the HUD silhouette.
+function makeCrtMask() {
+  const width=232, height=163, frames=49;
+  const canvas=document.createElement("canvas");
+  canvas.width=width;
+  canvas.height=height*frames;
+  const ctx=canvas.getContext("2d");
+  const noise=seed=>{
+    const mixed=Math.imul(seed^(seed>>>16),0x45d9f3b);
+    return Math.imul(mixed^(mixed>>>16),0x45d9f3b);
+  };
+  const band=(y,center,radius)=>{
+    const distance=Math.abs(y-center)%height;
+    const wrappedDistance=Math.min(distance,height-distance);
+    return Math.max(0,Math.min(1,(radius-wrappedDistance)/4));
+  };
+  for (let frame=0;frame<frames;frame++) {
+    const phase=frame/(frames-1);
+    // One short rollback per cycle, while the lighter echo rolls in the same direction.
+    const rollback=Math.max(0,1-Math.abs(phase-.72)/.048);
+    const mainRow=height*(7*phase-.53*rollback);
+    const echoRow=height*(.62+6*phase);
+    const echoStrength=5+6*Math.sin(Math.PI*phase)**2;
+    const noiseFrame=frame%(frames-1);
+    for (let y=0;y<height;y++) {
+      const row=frame*height+y;
+      const sample=noise(y+noiseFrame*height);
+      const roll=24*band(y,mainRow,24)
+        +8*band(y,mainRow-34,10)
+        +echoStrength*band(y,echoRow,17);
+      const alpha=250-((sample>>>10)&7)-(y%3===0?18:0)-roll;
+      ctx.fillStyle="rgb(255 255 255 / "+alpha/255+")";
+      ctx.fillRect(0,row,width,1);
+      if ((sample&7)===0) {
+        const x=(sample>>>8)%width;
+        const length=16+((sample>>>18)&63);
+        ctx.globalCompositeOperation="destination-out";
+        ctx.fillStyle="rgb(255 255 255 / .17)";
+        ctx.fillRect(x,row,length,1);
+        ctx.globalCompositeOperation="source-over";
+        ctx.fillStyle="rgb(255 255 255 / .32)";
+        ctx.fillRect(x+length,row,Math.max(4,length/3),1);
+      }
+    }
+  }
+  return {image:"url("+canvas.toDataURL()+")",frames};
+}
+
+const crtMask=makeCrtMask();
+
+const tearTemplate=document.getElementById("crt-tear");
+const tearImages=[];
+const tearCanvas=document.createElement("canvas");
+tearCanvas.width=1;
+tearCanvas.height=104;
+const tearContext=tearCanvas.getContext("2d");
+const tearPixels=tearContext.createImageData(1,tearCanvas.height);
+// Separate the candidate rows so each tear stays thin even in the enlarged preview.
+const tearRows=Array.from({length:26},(_,index)=>({
+  row:index*4+Math.floor(Math.random()*3),
+  next:Math.random()*500,
+  until:0,
+  offset:0
+}));
+for (let index=0;index<tearPixels.data.length;index+=4) {
+  tearPixels.data.set([128,128,128,255],index);
+}
+tearContext.putImageData(tearPixels,0,0);
+let tearMap=tearCanvas.toDataURL();
+let lastTearUpdate=-Infinity;
+function updateCrtTears(now) {
+  if (reduced.matches || now-lastTearUpdate<50) return;
+  lastTearUpdate=now;
+  let changed=false;
+  for (const line of tearRows) {
+    if (now>=line.next) {
+      line.offset=Math.random()<.5?63:127;
+      line.until=now+90+Math.random()*100;
+      line.next=now+360+Math.random()*280;
+    }
+    if (now>=line.until) line.offset=0;
+    const redChannel=line.row*4;
+    if (tearPixels.data[redChannel]!==128+line.offset) {
+      tearPixels.data[redChannel]=128+line.offset;
+      changed=true;
+    }
+  }
+  if (!changed) return;
+  tearContext.putImageData(tearPixels,0,0);
+  tearMap=tearCanvas.toDataURL();
+  for (const layer of tearImages) layer.setAttribute("href",tearMap);
+}
+
+function drawBow(canvas) {
+  const ctx=canvas.getContext("2d");
+  ctx.scale(2,2);
+  ctx.lineCap="round";
+  ctx.lineJoin="round";
+  const stroke=(path,width,color)=>{
+    ctx.strokeStyle=color;
+    ctx.lineWidth=width;
+    ctx.stroke(new Path2D(path));
+  };
+  stroke("M5 21Q7 8 16 7Q22 7 27 14L32 16L39 13 M44 13L52 15L58 13Q62 7 69 7Q77 8 79 21",2.3,"#e2fff2");
+  stroke("M6 24L16 10L31 16L40 17L52 16L70 10L79 24 M12 7L14 12 M73 7L71 12",1.05,"#b5eed8");
+  stroke("M8 19L4 21L4 24L8 25L10 22Z M77 19L80 20L81 24L77 25L75 22Z",1.32,"#e2fff2");
+  stroke("M36 12L45 12L47 16L44 19L44 26L41 28L38 26L38 19L35 17Z M37 16H45",1.65,"#e2fff2");
+}
+function cutout(layer,label,centerX,centerY) {
+  const width=layer.offsetWidth,height=layer.offsetHeight;
+  if (!width || !height) return;
+  const style=getComputedStyle(label);
+  const canvas=document.createElement("canvas");
+  const scale=Math.max(2,devicePixelRatio);
+  canvas.width=Math.ceil(width*scale);
+  canvas.height=Math.ceil(height*scale);
+  const mask=canvas.getContext("2d");
+  mask.scale(canvas.width/width,canvas.height/height);
+  mask.fillStyle="#fff";
+  mask.fillRect(0,0,width,height);
+  mask.globalCompositeOperation="destination-out";
+  mask.font=style.fontWeight+" "+style.fontSize+" "+style.fontFamily;
+  mask.letterSpacing=style.letterSpacing;
+  mask.textAlign="center";
+  // The blurred glyph subtracts a little alpha around the fully cut-out letter.
+  mask.shadowColor="rgb(0 0 0 / .75)";
+  mask.shadowBlur=2.4*scale;
+  const text=label.textContent;
+  const ink=mask.measureText(text);
+  mask.fillText(text,centerX,centerY+(ink.actualBoundingBoxAscent-ink.actualBoundingBoxDescent)/2);
+  layer.style.maskImage="url("+canvas.toDataURL()+")";
+  layer.style.maskSize="100% 100%";
+}
+function applyCrt(hud,animate=true) {
+  hud.style.setProperty("--crt-mask",crtMask.image);
+  hud.style.setProperty("--crt-mask-height",crtMask.frames*100+"%");
+  hud.style.setProperty("--crt-steps",crtMask.frames-1);
+  if (!animate) return;
+  const tear=tearTemplate.cloneNode(true);
+  tear.id="crt-tear-"+tearImages.length;
+  tearTemplate.parentNode.append(tear);
+  const tearImage=tear.firstElementChild;
+  tearImage.setAttribute("href",tearMap);
+  tearImages.push(tearImage);
+  hud.style.setProperty("--crt-tear-filter","url(#"+tear.id+")");
+  const sizeFilter=()=>{
+    tearImage.setAttribute("width",hud.clientWidth);
+    tearImage.setAttribute("height",hud.clientHeight);
+  };
+  new ResizeObserver(sizeFilter).observe(hud);
+  sizeFilter();
+}
+function panel(screen) {
+  const mount=screen.querySelector(".mount");
+  mount.append(template.content.cloneNode(true));
+  const hud=mount.querySelector(".hud"),meter=hud.querySelector(".energy");
+  applyCrt(hud);
+  drawBow(hud.querySelector(".bow canvas"));
+  const segments=Array.from({length:30},()=> {
+    const bar=document.createElement("i");
+    bar.setAttribute("aria-hidden","true");
+    meter.insertBefore(bar,meter.lastElementChild);
+    return bar;
+  });
+  const refresh=()=>{
+    const frame=hud.querySelector(".hud-frame");
+    cutout(frame,meter.querySelector(".energy-label"),meter.offsetLeft+meter.offsetWidth/2,meter.offsetTop+meter.offsetHeight/2);
+    for (const tab of hud.querySelectorAll(".mode")) cutout(tab,tab.firstElementChild,tab.offsetWidth/2,tab.offsetHeight/2);
+  };
+  new ResizeObserver(refresh).observe(hud);
+  document.fonts.ready.then(refresh);
+  refresh();
+
+  return {mount,hud,meter,segments};
+}
+function count(element,value) {
+  const digits=String(value);
+  const padded=digits.padStart(3,"0");
+  element.setAttribute("aria-label",digits);
+  element.replaceChildren(...Array.from(padded,(digit,index)=>{
+    const glyph=document.createElement("span");
+    glyph.className=index<padded.length-digits.length?"digit zero":"digit";
+    glyph.setAttribute("aria-hidden","true");
+    glyph.style.setProperty("--glyph-mask",digitMasks[Number(digit)]);
+    return glyph;
+  }));
+}
+function magazine(panel,value,capacity) {
+  const number=panel.hud.querySelector(".total");
+  count(number,value);
+  number.dataset.low=String(value*5<=capacity);
+}
+function energy(panel,value) {
+  panel.hud.dataset.critical=String(value<20);
+  panel.meter.setAttribute("aria-valuenow",value);
+  const lit=Math.round(panel.segments.length*value/100);
+  panel.segments.forEach((segment,index)=>segment.classList.toggle("on",index<lit));
+}
+function apply(panel,key,value,bow,rounds=scenarios[key].loaded) {
+  const example=scenarios[key];
+  panel.hud.dataset.example=key;
+  magazine(panel,rounds,example.capacity);
+  count(panel.hud.querySelector(".max"),example.limit);
+  panel.hud.querySelector(".armor").classList.toggle("on",example.mode==="armor");
+  panel.hud.querySelector(".stealth").classList.toggle("on",example.mode==="stealth");
+  panel.hud.querySelector(".bow-slot").setAttribute("aria-hidden",String(!bow));
+  const fire=panel.hud.querySelector(".selector");
+  fire.setAttribute("aria-label","Mode de tir actuel · "+example.fire);
+  fire.title=example.fire;
+  fire.firstElementChild.replaceChildren(...Array.from({length:example.rounds},()=>document.createElement("i")));
+  energy(panel,value);
+}
+const radarTemplate=document.getElementById("radar-panel");
+const threatNames=["Calme","Suspicion","Recherche","Détecté"];
+const threatBars=[2,7,13,20];
+const compassPoints=["N","NE","E","SE","S","SW","W","NW"];
+const headingInput=document.getElementById("heading");
+const threatInput=document.getElementById("threat");
+const waypointInput=document.getElementById("waypoint");
+const aimInput=document.getElementById("map-aim");
+const upgradesInput=document.getElementById("map-upgrades");
+const stanceInput=document.getElementById("map-stance");
+const radarDetail=document.getElementById("radar-detail");
+const ammoDetail=document.getElementById("detail");
+
+// An original training outpost used only as the preview's cartographic data.
+const roads=[
+  [[-390,125],[-210,102],[-110,39],[-34,53],[32,24],[98,3],[168,-54],[390,-120]],
+  [[-310,-118],[-192,-122],[-171,-62],[-110,39],[-77,128],[-7,307]],
+  [[-135,-335],[-88,-159],[-48,-88],[-34,53],[-30,156],[60,330]],
+  [[98,3],[103,91],[159,139],[370,171]],
+  [[-48,-88],[15,-99],[137,-112],[168,-54]]
+];
+const buildings=[
+  [-155,-51,36,32,-14],[-117,-16,28,23,-16],[-180,25,48,28,-30],[-108,-95,26,36,-17],
+  [-30,-61,43,28,-14],[16,-72,34,23,-13],[61,-61,39,29,-13],[125,-73,37,30,-16],
+  [-87,73,30,22,17],[-65,108,30,23,17],[11,79,47,35,-10],[48,119,32,21,-10],
+  [69,61,26,21,-10],[137,42,45,35,-20],[186,74,28,33,-18],[200,-12,26,27,-19],
+  [126,168,44,31,11],[-157,123,37,20,-34],[-106,151,41,20,-34],[16,181,31,25,10]
+];
+const terrainSections=[
+  [[-287,-93],[-203,-157],[-147,-146],[-124,-113],[-199,-79],[-242,-58]],
+  [[-244,118],[-194,82],[-145,112],[-132,173],[-208,222],[-256,166]],
+  [[22,27],[80,13],[93,32],[111,90],[68,111],[36,97]],
+  [[184,-103],[240,-120],[312,-86],[318,-48],[248,-11],[203,-43]]
+];
+function radarPanel(screen,animate=false) {
+  const mount=document.createElement("div");
+  mount.className="radar-mount";
+  mount.append(radarTemplate.content.cloneNode(true));
+  screen.prepend(mount);
+  const hud=mount.firstElementChild;
+  const meter=hud.querySelector(".radar-threat");
+  for (let index=0;index<threatBars.at(-1);index++) {
+    const segment=document.createElement("i");
+    segment.setAttribute("aria-hidden","true");
+    segment.style.setProperty("--segment-index",index);
+    meter.append(segment);
+  }
+  const compass=hud.querySelector(".radar-compass");
+  const ticks=Array.from({length:5},()=>{
+    const tick=document.createElement("span");
+    tick.className="compass-mark";
+    tick.setAttribute("aria-hidden","true");
+    compass.append(tick);
+    return tick;
+  });
+  applyCrt(hud,animate);
+  fitRadarEdges(hud);
+  return {mount,hud,meter,compass,ticks,canvas:hud.querySelector(".radar-paper canvas"),
+    stance:hud.querySelector(".radar-stance"),slots:hud.querySelectorAll(".radar-slot")};
+}
+function fitRadarEdges(hud) {
+  const grid=hud.querySelector(".radar-grid"),dock=grid.querySelector(".radar-status");
+  new ResizeObserver(([entry])=>{
+    const {width:w,height:h}=entry.contentRect;
+    if(!w||!h) return;
+    grid.style.setProperty("--compass-gap",(w*.0065)+"px");
+    grid.style.setProperty("--module-gap",(w*.00525)+"px");
+    const shear=Math.tan(7*Math.PI/180);
+    const gap=parseFloat(getComputedStyle(dock).columnGap);
+    const seam=parseFloat(getComputedStyle(grid.querySelector(".radar-map")).paddingRight);
+    const x=w-seam;
+    // Offset each oriented edge inward, then intersect its neighbours at each corner.
+    const outline=[[.08*w,0],[.08*w,.028*h],[.024*w,.148*h],[.024*w,.968*h],
+      [.17*w,.968*h],[.23*w,.835*h],[.72*w,.835*h],[.78*w,.94*h],
+      [x-.076*w,.94*h],[x,.78*h],[x,0]];
+    const lines=outline.map(([ax,ay],i)=>{
+      const [bx,by]=outline[(i+1)%outline.length],dx=bx-ax,dy=by-ay;
+      const offset=i>=1&&i<=7?gap:0;
+      return [dy,-dx,dy*ax-dx*ay+offset*Math.hypot(dx,dy-shear*dx)];
+    });
+    const corners=lines.map(([a,b,c],i)=>{
+      const [d,e,f]=lines[(i+lines.length-1)%lines.length],det=a*e-b*d;
+      return ((c*e-b*f)/det)+"px "+((a*f-c*d)/det)+"px";
+    });
+    grid.style.setProperty("--terrain-outline","polygon("+corners.join(",")+")");
+
+    // offsetHeight excludes the HUD shear, which changes the bounding box of the dock.
+    const half=parseFloat(getComputedStyle(dock).height)/2;
+    const leftSlope=.06*w/(.137*h),rightSlope=.06*w/(.107*h);
+    function arrowSide(side,slope,corner) {
+      const tip=slope*half;
+      dock.style[side]=(corner-slope*gap+gap*Math.hypot(1+(side==="left"?1:-1)*shear*slope,slope)-tip)+"px";
+      dock.querySelector(side==="left"?".radar-slot-arrow":".next").style.setProperty("--arrow-tip",tip+"px");
+    }
+    arrowSide("left",leftSlope,.24*w);
+    arrowSide("right",rightSlope,.29*w);
+  }).observe(grid);
+}
+function setThreat(radar,level) {
+  radar.hud.dataset.threat=level;
+  radar.meter.setAttribute("aria-valuenow",level);
+  radar.meter.setAttribute("aria-valuetext",threatNames[level]);
+  const target=threatBars[level];
+  clearTimeout(radar.threatTimer);
+  if(radar.visibleBars===undefined || matchMedia("(prefers-reduced-motion: reduce)").matches) {
+    radar.visibleBars=target;
+  }
+  if(level!==3) radar.hud.classList.remove("max-pulse");
+  function displayBars() {
+    radar.meter.style.setProperty("--threat-amount",radar.visibleBars);
+    if(level===3 && radar.visibleBars===target) radar.hud.classList.add("max-pulse");
+    if(radar.visibleBars!==target) {
+      radar.threatTimer=setTimeout(()=>{
+        radar.visibleBars+=Math.sign(target-radar.visibleBars);
+        displayBars();
+      },150);
+    }
+  }
+  displayBars();
+}
+function setUpgrades(radar,enabled) {
+  const symbols=["","»","","⬡"];
+  for (const [index,slot] of radar.slots.entries()) {
+    slot.replaceChildren();
+    if (!enabled) continue;
+    const icon=document.createElement("b");
+    icon.textContent=symbols[index];
+    if (!symbols[index]) icon.className="suit-profile";
+    slot.append(icon);
+  }
+}
+function trace(ctx,points) {
+  ctx.beginPath();
+  for (const [x,y] of points) ctx.lineTo(x,y);
+}
+function mapArrow(ctx,x,y,angle,color) {
+  ctx.save();
+  ctx.translate(x,y);
+  ctx.rotate(angle);
+  ctx.fillStyle=color;
+  ctx.shadowColor=color;
+  ctx.shadowBlur=7;
+  trace(ctx,[[0,-9],[8,6],[0,4],[-8,6]]);
+  ctx.fill();
+  ctx.restore();
+}
+function drawViewCone(ctx,x,y,aimFraction) {
+  const halfAngle=(27-15*aimFraction)*Math.PI/180;
+  ctx.fillStyle="rgb(186 243 220 / .77)";
+  for (const direction of [-1,1]) {
+    for (let length=17;length*Math.cos(halfAngle)<y;length+=9.5) {
+      ctx.beginPath();
+      ctx.arc(x+direction*length*Math.sin(halfAngle),y-length*Math.cos(halfAngle),1.65,0,Math.PI*2);
+      ctx.fill();
+    }
+  }
+}
+const stanceNames={standing:"Debout",crouching:"Accroupi",prone:"Allongé"};
+// Angles in the sagittal plane. Positive torso pitch leans toward the face.
+// Browser rig in model units. Rotations are applied around the part joints.
+const playerRig={head:[8,8,8],torso:[8,12,4],limb:[4,12,4],shoulder:[5,10,0],hipOffset:1.9,knee:6};
+const stancePoses={
+  standing:{torso:3,head:0,arms:[-9,10],thighs:[9,-8],shins:[9,-8]},
+
+  crouching:{torso:45,head:-5,arms:[-67,57],thighs:[-Math.acos(1/3)*180/Math.PI,0],shins:[0,90]},
+  prone:{torso:84,head:18,arms:[-76,-49],thighs:[83,90],shins:[79,98]}
+};
+function drawStance(radar,pose,yaw) {
+  const canvas=radar.stance,ctx=canvas.getContext("2d"),model=stancePoses[pose];
+  canvas.dataset.stance=pose;
+  canvas.setAttribute("aria-label",stanceNames[pose]);
+  const faces=[];
+  function point(origin,x,y,z,pitch) {
+    const angle=pitch*Math.PI/180,c=Math.cos(angle),s=Math.sin(angle);
+    return [origin[0]+x,origin[1]+y*c-z*s,origin[2]+y*s+z*c];
+  }
+  // Orthographic three-quarter front view, slightly above eye level.
+  function project([x,y,z]) {
+
+    if(yaw!==undefined) return [Math.cos(yaw)*x+Math.sin(yaw)*z,-y,-Math.sin(yaw)*x+Math.cos(yaw)*z];
+    const forward=-.72*x+.694*z;
+    return [.694*x+.72*z,forward*.15-y*.989,forward*.989+y*.15];
+  }
+  function box(origin,width,from,to,depth,pitch,spread=0) {
+    const vertices=[];
+    for(const y of [from,to]) for(const z of [-depth/2,depth/2]) for(const x of [-width/2,width/2])
+      vertices.push(project(point(origin,x+(y===from?spread:0),y,z,pitch)));
+    for(const indices of [
+      [0,1,3,2],[4,6,7,5],
+      [0,4,5,1],[2,3,7,6],
+      [0,2,6,4],[1,5,7,3]
+    ]) {
+      const corners=indices.map(i=>vertices[i]),[a,b,c]=corners;
+      if((b[0]-a[0])*(c[1]-a[1])-(b[1]-a[1])*(c[0]-a[0])>=0) continue;
+      faces.push(corners);
+    }
+  }
+  const hip=[0,0,0];
+  const [bodyWidth,bodyHeight,bodyDepth]=playerRig.torso;
+  const [headWidth,headHeight,headDepth]=playerRig.head;
+  const [limbWidth,limbHeight,limbDepth]=playerRig.limb;
+  const [shoulderX,shoulderY,shoulderZ]=playerRig.shoulder;
+  const neck=point(hip,0,bodyHeight,0,model.torso);
+  box(hip,bodyWidth,0,bodyHeight,bodyDepth,model.torso);
+  box(neck,headWidth,0,headHeight,headDepth,model.head);
+  for(const [side,sign] of [[0,-1],[1,1]]) {
+    const shoulder=point(hip,sign*(shoulderX+1),shoulderY,shoulderZ,model.torso);
+    box(shoulder,limbWidth,2-limbHeight,2,limbDepth,model.arms[side],sign*1.4);
+    const leg=[sign*playerRig.hipOffset,0,0],knee=point(leg,0,-playerRig.knee,0,model.thighs[side]);
+    box(leg,limbWidth,-playerRig.knee,0,limbDepth,model.thighs[side]);
+    box(knee,limbWidth,playerRig.knee-limbHeight,0,limbDepth,model.shins[side]);
+  }
+  const points=faces.flat();
+  const left=Math.min(...points.map(p=>p[0])),bottom=Math.max(...points.map(p=>p[1]));
+  ctx.clearRect(0,0,canvas.width,canvas.height);
+  ctx.save();
+  const scale=4.15;
+  ctx.scale(scale,scale);
+  const anchor=yaw===undefined?1.4-left:canvas.width/(2*scale);
+  ctx.translate(anchor,canvas.height/scale-1.3-bottom);
+  ctx.fillStyle=ctx.strokeStyle="#d2ffea";
+  for(const corners of faces) {
+
+    ctx.lineWidth=.13;
+    trace(ctx,corners);
+    ctx.fill();ctx.stroke();
+  }
+  ctx.restore();
+}
+function drawRadar(radar,heading,objective,aiming=false,travel=0) {
+  const {canvas,compass,ticks}=radar;
+  const firstTick=Math.round(heading/90)-2;
+  for (const [index,tick] of ticks.entries()) {
+    const degrees=(firstTick+index)*90;
+    tick.textContent=compassPoints[((degrees/45)%8+8)%8];
+    tick.style.left=50+(degrees-heading)/2.05+"%";
+  }
+  const normalized=(Math.round(heading)%360+360)%360;
+  compass.setAttribute("aria-label","Cap "+normalized+" degrés");
+  canvas.dataset.waypoint=String(objective);
+  canvas.dataset.aim=String(aiming);
+
+  const ctx=canvas.getContext("2d");
+  const {width,height}=canvas;
+  const angle=-heading*Math.PI/180;
+  const centerX=width*.49, centerY=height*.61;
+  ctx.clearRect(0,0,width,height);
+  ctx.fillStyle="rgb(28 48 43 / .62)";
+  ctx.fillRect(0,0,width,height);
+  ctx.save();
+  ctx.translate(centerX,centerY);
+  ctx.rotate(angle);
+  ctx.translate(0,travel);
+  ctx.strokeStyle="rgb(163 223 200 / .15)";
+  ctx.lineWidth=1;
+  for (let axis=-450;axis<=450;axis+=36) {
+    trace(ctx,[[-450,axis],[450,axis]]);
+    ctx.stroke();
+    trace(ctx,[[axis,-450],[axis,450]]);
+    ctx.stroke();
+  }
+  ctx.lineJoin="round";
+  ctx.lineWidth=1.6;
+  ctx.fillStyle="rgb(76 119 105 / .20)";
+  ctx.strokeStyle="rgb(166 226 205 / .41)";
+  for (const section of terrainSections) {
+    trace(ctx,section);
+    ctx.closePath();
+    ctx.fill();
+    ctx.stroke();
+  }
+  for (const [index,road] of roads.entries()) {
+    trace(ctx,road);
+    ctx.lineWidth=index===0?20:12;
+    ctx.strokeStyle="rgb(116 156 140 / .23)";
+    ctx.stroke();
+    ctx.lineWidth=1.3;
+    ctx.strokeStyle="rgb(182 239 214 / .63)";
+    ctx.setLineDash(index===0?[]:[5,4]);
+    ctx.stroke();
+  }
+  ctx.setLineDash([]);
+  for (const [x,y,w,h,rotation] of buildings) {
+    ctx.save();
+    ctx.translate(x,y);
+    ctx.rotate(rotation*Math.PI/180);
+    ctx.fillStyle="rgb(85 126 112 / .56)";
+    ctx.strokeStyle="rgb(196 246 225 / .76)";
+    ctx.lineWidth=1.6;
+    ctx.fillRect(0,0,w,h);
+    ctx.strokeRect(0,0,w,h);
+    ctx.restore();
+  }
+  ctx.strokeStyle="rgb(183 239 216 / .52)";
+  ctx.lineWidth=2.2;
+  for (let step=0;step<4;step++) {
+    trace(ctx,[[-350,-230+step*13],[-257,-227+step*15],[-213,-200+step*14],[-109,-214+step*15],[-15,-249+step*19],[98,-221+step*12],[245,-248+step*12],[380,-178+step*13]]);
+    ctx.stroke();
+  }
+  ctx.restore();
+  drawViewCone(ctx,centerX,centerY,aiming);
+  if (objective) {
+    const factor=radar===liveRadarRef && distantWaypoint.checked?5:1;
+    const rx=(86*Math.cos(angle)-(-94+travel)*Math.sin(angle))*factor;
+    const ry=(86*Math.sin(angle)+(-94+travel)*Math.cos(angle))*factor;
+    const limit=Math.min(1,(rx<0?centerX-22:width-31-centerX)/Math.abs(rx),
+      (ry<0?centerY-15:height*.79-centerY)/Math.abs(ry));
+    const x=centerX+rx*limit,y=centerY+ry*limit;
+    if(limit<1) mapArrow(ctx,x,y,Math.atan2(ry,rx)+Math.PI/2,"#3bddff");
+    else {
+      ctx.fillStyle="#3bddff";
+      trace(ctx,[[x,y-8],[x+8,y],[x,y+8],[x-8,y]]);
+      ctx.fill();
+    }
+  }
+  if(radar===liveRadarRef) drawRadarContacts(ctx,centerX,centerY,angle);
+  mapArrow(ctx,centerX,centerY,0,"#ffe582");
+}
+let liveRadarRef;
+const distantWaypoint=document.querySelector("#waypoint-distant");
+for (const scene of document.querySelectorAll("[data-sample]")) {
+  const key=scene.dataset.sample;
+  const sample=panel(scene);
+  apply(sample,key,scenarios[key].charge,scenarios[key].bow);
+  sample.hud.dataset.pulse=String(key==="low");
+  const map=radarPanel(scene);
+  const mapExample={armor:[90,0],stealth:[25,1],low:[155,3]}[key];
+  drawRadar(map,mapExample[0],true,key==="stealth");
+  drawStance(map,key==="stealth"?"crouching":"standing");
+  setUpgrades(map,key!=="armor");
+  setThreat(map,mapExample[1]);
+}
+const optic=view.querySelector(".optic"),opt=optic.getContext("2d");
+const opticEnabled=document.querySelector("#optic-enabled"),opticZoom=document.querySelector("#optic-zoom");
+const opticPitch=document.querySelector("#optic-pitch"),opticRange=document.querySelector("#optic-range");
+document.addEventListener("keydown",event=>{
+  if(event.code==="KeyB" && !event.repeat && !event.target.matches("input,select,textarea,button,[contenteditable]")) {
+    opticEnabled.checked=!opticEnabled.checked;
+  }
+});
+const hologram=document.createElement("canvas");
+hologram.width=160;
+hologram.height=150;
+const contacts=[
+  {x:480,y:270,mx:18,my:-80,distance:34,name:"Squelette",detail:"Arc · attaque à distance",tagged:false},
+  {x:335,y:292,mx:-48,my:-61,distance:68,name:"Zombie",detail:"Attaque de mêlée",tagged:false}
+];
+const threatPalette=["#d2ffea","#d2ffea","#ffdf32","#ff3932"];
+let pointerX=480,pointerY=270,focus,focusStart=0,taggedOnEntry=false,optSpread=0,lastOpticFrame=0;
+let shotAt=-Infinity,deathAt=-Infinity;
+function drawRadarContacts(ctx,cx,cy,rotation) {
+  const now=performance.now();
+  const color=threatPalette[Number(threatInput.value)];
+  for(const [index,contact] of contacts.entries()) {
+    if(contact.distance>100) continue;
+    const x=cx+contact.mx*Math.cos(rotation)-contact.my*Math.sin(rotation);
+    const y=cy+contact.mx*Math.sin(rotation)+contact.my*Math.cos(rotation);
+    const age=now-shotAt;
+    if(index===0 && age<620) {
+      const t=1-(1-age/620)**3;
+      ctx.strokeStyle="rgb(255 255 255 / "+(1-t)+")";
+      ctx.lineWidth=1.5;
+      ctx.beginPath();
+      ctx.arc(x,y,5+24*t,0,Math.PI*2);
+      ctx.stroke();
+    }
+    mapArrow(ctx,x,y,rotation,index===0 && age<120?threatPalette[3]:color);
+  }
+}
+function plot(ctx,points,ink,fill) {
+  trace(ctx,points);
+  ctx.closePath();
+  if(fill){ctx.fillStyle=fill;ctx.fill();}
+  if(ink){ctx.strokeStyle=ink;ctx.stroke();}
+}
+function hexagon(x,y,radius) {
+  return Array.from({length:6},(_,i)=>{
+    const theta=i*Math.PI/3;
+    return [x+radius*Math.cos(theta),y+radius*Math.sin(theta)];
+  });
+}
+function drawOptic(now) {
+  const open=opticEnabled.checked && !view.dataset.failure;
+  optic.hidden=!open;
+  view.toggleAttribute("data-optic",open);
+  if(!open){focus=undefined;optSpread=0;return;}
+  const zoom=Number(opticZoom.value),pitch=Number(opticPitch.value);
+  view.style.setProperty("--optic-magnification",zoom);
+  const markers=contacts.filter(contact=>contact.distance<=100).map(contact=>({
+    contact,x:480+(contact.x-pointerX)*zoom,y:270+(contact.y-pointerY+pitch*2.9)*zoom
+  }));
+  const lock=markers.filter(m=>Math.abs(m.x-480)<41 && Math.abs(m.y-270)<29)
+    .sort((a,b)=>Math.hypot(a.x-480,a.y-270)-Math.hypot(b.x-480,b.y-270))[0];
+  if(lock?.contact!==focus){focus=lock?.contact;focusStart=now;taggedOnEntry=!!focus?.tagged;}
+  const elapsed=now-focusStart,scanTime=taggedOnEntry?500:1000;
+  if(focus && elapsed>=scanTime) focus.tagged=true;
+  const dt=Math.min(50,now-lastOpticFrame);
+  lastOpticFrame=now;
+  optSpread+=(Number(!!lock)-optSpread)*(reduced.matches?1:1-Math.exp(-dt/100));
+  opt.clearRect(0,0,960,540);
+  opt.font='bold 13px Bahnschrift, sans-serif';
+  opt.textAlign="center";
+  opt.lineWidth=1.7;
+  for(const side of [-1,1]){
+    const rail=480+side*(193+71*optSpread);
+    const at=(dx,y)=>[rail+side*dx,y];
+    const railInk="#93baabab";
+    for(const vertical of [-1,1]){
+      const y=270+vertical*64, middle=270+vertical*3;
+      plot(opt,[at(1,y),at(-3,y),at(-8,y-vertical*5),at(-8,y-vertical*11),
+        at(-1,y-vertical*11),at(-1,middle+vertical*7),at(-4,middle+vertical*3),at(-4,middle),at(1,middle)],null,railInk);
+      const edge=480+side*(243+71*optSpread);
+      opt.strokeStyle="#97b8a975";
+      trace(opt,[[edge-side*29,270+vertical*86],[edge-side*4,270+vertical*88],[edge+side*10,270+vertical*68]]);
+      opt.stroke();
+    }
+    for(let tick=-30;tick<=30;tick++){
+      const y=270+(tick*3-pitch)*1.8;
+      if(y<207||y>333) continue;
+      opt.strokeStyle=tick===0?"#ffe44d":tick%10===0?"#b7e1cf":"#89afa2b8";
+      trace(opt,[at(3,y),at(tick%10===0?14:9,y)]);
+      opt.stroke();
+    }
+    opt.fillStyle="#d2ffea";
+    opt.fillText(side<0?(Number(opticRange.value)>100?"— m":opticRange.value+" m"):"×"+zoom,480+side*155,215);
+    for(const vertical of [-1,1]){
+      opt.lineWidth=2.7;
+      opt.strokeStyle="#ffe44d";
+      trace(opt,[[480+side*29,270+vertical*29],[480+side*39,270+vertical*29],[480+side*43,270+vertical*23]]);
+      opt.stroke();
+      opt.lineWidth=1.7;
+    }
+  }
+  opt.strokeStyle="#97b8a975";
+  for(const side of [-1,1]){
+    trace(opt,[[480,270+side*72],[480,270+side*90]]);
+    opt.stroke();
+  }
+  for(const marker of markers){
+    const {x,y,contact}=marker;
+    const triangle=[[x-5.7,y-4.4],[x+5.7,y-4.4],[x,y+5.4]];
+    plot(opt,triangle,contact.tagged?threatPalette[3]:"#fff");
+    if(contact.tagged){
+      const threat=Number(threatInput.value);
+      plot(opt,[[x-3.5,y-3],[x+3.5,y-3],[x,y+3]],null,threat<2?"#79ff92":threatPalette[threat]);
+    }
+  }
+  if(!lock) return;
+  const {x,y}=lock,feedbackAge=elapsed-scanTime;
+  opt.setLineDash([3,3]);
+  plot(opt,hexagon(x,y,32),"#c7f7e1");
+  opt.setLineDash([]);
+  if(feedbackAge<1000 && (feedbackAge<0 || Math.floor(feedbackAge/125)%2===0)){
+    opt.save();
+    opt.translate(x,y+8);
+    opt.rotate(Math.PI/4);
+    opt.fillStyle="#101618";
+    opt.strokeStyle="#fff";
+    opt.fillRect(-4,-4,8,8);
+    opt.strokeRect(-4,-4,8,8);
+    opt.restore();
+  }
+  if(feedbackAge<0 && !taggedOnEntry){
+    opt.strokeStyle="#fff";
+    opt.beginPath();
+    opt.arc(x,y+8,10,-Math.PI/2,-Math.PI/2+Math.PI*2*(elapsed/scanTime));
+    opt.stroke();
+  }
+  const hologramDuration=3400;
+  if(feedbackAge<0 || feedbackAge>=hologramDuration) return;
+  opt.save();
+  const hx=x+80,hy=y+61;
+  plot(opt,hexagon(hx,hy,63),"#bdf7df","#0f2524cf");
+  opt.clip();
+  drawStance({stance:hologram},"standing",Math.PI*2*feedbackAge/hologramDuration);
+  opt.drawImage(hologram,hx-39,hy-48,78,96);
+  opt.fillStyle="#0f252461";
+  for(let line=hy-60;line<hy+60;line+=4)opt.fillRect(hx-63,line,126,1);
+  opt.restore();
+  opt.save();
+  opt.translate(679,137);
+  opt.transform(1,-.075,0,1,0,0);
+  const threat=Number(threatInput.value);
+  plot(opt,[[0,9],[11,0],[226,0],[235,9],[235,107],[227,114],[9,114],[0,105]],null,"#183932a6");
+  plot(opt,[[0,9],[11,0],[226,0],[235,9],[235,22],[0,22]],null,"#93c9b430");
+  opt.strokeStyle="#a1e4d5b0";
+  opt.lineWidth=2;
+  trace(opt,[[0,98],[0,105],[9,114],[227,114],[235,107],[235,9],[226,0]]);
+  opt.stroke();
+  opt.fillStyle="#081d1940";
+  for(let y=3;y<112;y+=3) opt.fillRect(9,y,217,1);
+  opt.textAlign="left";
+  opt.fillStyle="#effff8";
+  opt.shadowColor="#9bf7d8";
+  opt.shadowBlur=5;
+  opt.font="bold 15px Bahnschrift, sans-serif";
+  opt.fillText(focus.name.toUpperCase(),12,16,210);
+  opt.font="bold 12px Bahnschrift, sans-serif";
+  opt.fillText("STATUT  ·  HOSTILE",12,39,211);
+  opt.fillText("›  "+focus.detail,12,57,210);
+  opt.fillText("›  Distance  "+focus.distance+" m",12,75,210);
+  opt.shadowBlur=0;
+  for(let i=0;i<6;i++){
+    const x=164+i*11;
+    plot(opt,[[x,117],[x+8,117],[x+10,120],[x+8,123],[x,123],[x-2,120]],null,
+      i===0?"#effff8":i<=threat+1?threatPalette[threat]:"#254840");
+  }
+  opt.restore();
+}
+const live=panel(view);
+const liveRadar=radarPanel(view,true);
+liveRadarRef=liveRadar;
+apply(live,state,charge,bowControl.checked);
+drawRadar(liveRadar,Number(headingInput.value),waypointInput.checked);
+setThreat(liveRadar,Number(threatInput.value));
+drawStance(liveRadar,stanceInput.value);
+setUpgrades(liveRadar,upgradesInput.checked);
+
+function setPressed(parent,key,value) {
+  for (const button of parent.querySelectorAll("button")) button.setAttribute("aria-pressed",String(button.dataset[key]===value));
+}
+function setMagazine(value) {
+  const capacity=scenarios[state].capacity;
+  loaded=value;
+  magazineControl.max=capacity;
+  magazineControl.value=value;
+  magazineOutput.textContent=value+" / "+capacity;
+  magazine(live,loaded,capacity);
+}
+function setCharge(value,play=false) {
+  if ((charge>=20 && value<20) || play) alertStart=performance.now();
+  if (value>=20) alertStart=-Infinity;
+  charge=value;
+  chargeControl.value=value;
+  output.textContent=value+" %";
+  energy(live,value);
+}
+document.getElementById("states").addEventListener("click",event=>{
+  const button=event.target.closest("[data-state]");
+  if (!button) return;
+  state=button.dataset.state;
+  const example=scenarios[state];
+  bowControl.checked=example.bow;
+  setCharge(example.charge,state==="low");
+  setMagazine(example.loaded);
+  apply(live,state,charge,bowControl.checked,loaded);
+  setPressed(event.currentTarget,"state",state);
+});
+chargeControl.addEventListener("input",()=>setCharge(Number(chargeControl.value)));
+bowControl.addEventListener("change",()=>apply(live,state,charge,bowControl.checked,loaded));
+magazineControl.addEventListener("input",()=>setMagazine(Number(magazineControl.value)));
+document.getElementById("flash").addEventListener("click",()=>setCharge(charge<20?charge:12,true));
+let aimStart=0,aimTarget=0,aimChanged=-Infinity,aimMoving=false;
+function aimFraction(now) {
+  const progress=reduced.matches?1:Math.min(1,(now-aimChanged)/240);
+  return aimStart+(aimTarget-aimStart)*progress*progress*(3-2*progress);
+}
+function redrawLiveRadar(turn=0,travel=0) {
+  const heading=Number(headingInput.value)+turn;
+  const degrees=(Math.round(heading)%360+360)%360;
+  document.getElementById("heading-value").textContent=
+    String(degrees).padStart(3,"0")+"° "+compassPoints[Math.round(degrees/45)%8];
+  drawRadar(liveRadar,heading,waypointInput.checked,aimFraction(performance.now()),travel);
+}
+headingInput.addEventListener("input",()=>redrawLiveRadar());
+waypointInput.addEventListener("change",()=>redrawLiveRadar());
+aimInput.addEventListener("change",()=>{
+  const now=performance.now();
+  aimStart=aimFraction(now);
+  aimChanged=now;
+  aimTarget=Number(aimInput.checked);
+  aimMoving=true;
+});
+upgradesInput.addEventListener("change",()=>setUpgrades(liveRadar,upgradesInput.checked));
+stanceInput.addEventListener("change",()=>drawStance(liveRadar,stanceInput.value));
+threatInput.addEventListener("input",()=>{
+  const level=Number(threatInput.value);
+  setThreat(liveRadar,level);
+  document.getElementById("threat-value").textContent=threatNames[level];
+});
+ammoDetail.addEventListener("change",()=>{
+  if (ammoDetail.checked) radarDetail.checked=false;
+  view.classList.toggle("detail",ammoDetail.checked);
+  view.classList.toggle("radar-detail",radarDetail.checked);
+});
+radarDetail.addEventListener("change",()=>{
+  if (radarDetail.checked) ammoDetail.checked=false;
+  view.classList.toggle("detail",ammoDetail.checked);
+  view.classList.toggle("radar-detail",radarDetail.checked);
+});
+document.getElementById("bright").addEventListener("change",event=>view.dataset.scene=event.target.checked?"bright":"dark");
+document.getElementById("motion").addEventListener("click",event=>{
+  const button=event.target.closest("[data-motion]");
+  if (!button) return;
+  motion=button.dataset.motion;
+  motionStart=performance.now();
+  liveRadar.hud.dataset.motion=motion;
+  redrawLiveRadar();
+  setPressed(event.currentTarget,"motion",motion);
+});
+const nudgeInterval=()=>600+Math.random()*900;
+let nextNudge=performance.now()+nudgeInterval();
+let nudgeStart=-Infinity;
+document.querySelector("#optic-center").addEventListener("click",()=>{
+  pointerX=contacts[0].x;
+  pointerY=contacts[0].y;
+  opticPitch.value=0;
+});
+view.addEventListener("pointermove",event=>{
+  if(!opticEnabled.checked) return;
+  const rect=view.getBoundingClientRect();
+  pointerX=(event.clientX-rect.left)/rect.width*960;
+  pointerY=(event.clientY-rect.top)/rect.height*540;
+});
+view.addEventListener("wheel",event=>{
+  if(!opticEnabled.checked) return;
+  event.preventDefault();
+  opticZoom.value=event.deltaY<0?"3":"1";
+},{passive:false});
+opticRange.addEventListener("input",()=>{
+  contacts[0].distance=Number(opticRange.value);
+  redrawLiveRadar();
+});
+distantWaypoint.addEventListener("change",()=>redrawLiveRadar());
+document.querySelector("#optic-shot").addEventListener("click",()=>{shotAt=performance.now();});
+document.querySelector("#critical-demo").addEventListener("click",()=>{
+  deathAt=view.dataset.failure?-Infinity:performance.now();
+});
+const failureRoll=document.querySelector("[data-failure-roll=hud]");
+const failureTextRoll=document.querySelector("[data-failure-roll=alert]");
+const radarDropout=[[0,1],[190,.73],[263,1],[430,.37],[512,.9],[720,.96],[814,.46],[893,.91],
+  [1090,.25],[1168,.78],[1355,.13],[1412,.76],[1570,.09],[1651,.48],[1720,0],[1810,.31],[1892,0]];
+const ammoDropout=[[0,1],[133,.56],[201,1],[357,.76],[478,.98],[655,.46],[740,.9],[929,.34],
+  [1015,.86],[1230,.19],[1328,.77],[1482,0],[1559,.54],[1735,.06],[1804,.34],[1950,0]];
+function updateFailure(elapsed){
+  const rolling=elapsed<2000;
+  view.dataset.failure=rolling?"glitch":"off";
+  if(!rolling||reduced.matches) return;
+  failureRoll.setAttribute("dy",String(elapsed*.46%196));
+  failureTextRoll.setAttribute("dy",String(elapsed*.29%66));
+  liveRadar.mount.style.setProperty("--failure-visibility",radarDropout.findLast(([start])=>elapsed>=start)[1]);
+  live.mount.style.setProperty("--failure-visibility",ammoDropout.findLast(([start])=>elapsed>=start)[1]);
+}
+let lastRadarDraw=-Infinity;
+function frame(now) {
+  updateCrtTears(now);
+  if (now>=nextNudge) {
+    nudgeStart=reduced.matches?-Infinity:now;
+    nextNudge=now+nudgeInterval();
+  }
+  if (reduced.matches) nudgeStart=-Infinity;
+  const age=now-nudgeStart;
+  const shift=age<45?".5px":age<90?"-.5px":"0px";
+  const style=document.documentElement.style;
+  if (style.getPropertyValue("--crt-nudge")!==shift) style.setProperty("--crt-nudge",shift);
+  const elapsed=now-alertStart;
+  const dying=deathAt!==-Infinity,deathElapsed=now-deathAt;
+  if(dying) updateFailure(Math.max(0,deathElapsed));
+  else delete view.dataset.failure;
+  drawOptic(now);
+  const alertActive=dying || charge<20 && elapsed<2000;
+  const pulse=reduced.matches || Math.floor((dying?deathElapsed:alertActive?elapsed:now)/(1000/6))%2===0;
+  live.hud.dataset.pulse=String(charge<20 && pulse);
+  alertText.classList.toggle("visible",alertActive);
+  alertText.classList.toggle("text-off",alertActive && !pulse);
+  const message=dying?"CRITICAL HEALTH":"LOW ENERGY";
+  if(alertText.firstElementChild.textContent!==message) alertText.firstElementChild.textContent=message;
+  let x=0,y=0,roll=0;
+  const t=(now-motionStart)/1000;
+  const weight=Math.min(1,t*4),unit=view.clientWidth/1000;
+  if (!reduced.matches) {
+    if (motion==="walk") {
+      x=2*Math.sin(2*Math.PI*1.15*t);
+      y=.9*Math.sin(2*Math.PI*2.3*t);
+      roll=.35*Math.sin(2*Math.PI*1.15*t);
+    } else if (motion==="pitch") {
+      y=-4*Math.sin(2*Math.PI*.72*t);
+    } else if (motion==="turn") {
+      const direction=Math.sin(2*Math.PI*.67*t);
+      x=-2.2*direction;
+      roll=1.9*direction;
+    }
+  }
+  const pose="translate("+x*unit*weight+"px,"+y*unit*weight+"px) rotate("+roll*weight+"deg)";
+  live.mount.style.transform=pose;
+  liveRadar.mount.style.transform=pose;
+  if (now-shotAt<700 || aimMoving || (now-lastRadarDraw>=90 && !reduced.matches && (motion==="turn" || motion==="walk"))) {
+    redrawLiveRadar(motion==="turn"?roll*11:0,motion==="walk"?Math.sin(t*.85)*38:0);
+    aimMoving=aimMoving && !reduced.matches && now-aimChanged<240;
+    lastRadarDraw=now;
+  }
+  requestAnimationFrame(frame);
+}
+requestAnimationFrame(frame);
+</script>
+</body>
+</html>

@@ -41,6 +41,18 @@ public final class NanoVisorTargetingHandler {
       }
    }
 
+   static void requestTarget(Entity target, LocalPlayer player) {
+      if(!NanoVisorState.isVisorActive() || !NanoVisorSettings.Targeting.markTargetEnabled()) return;
+      double range=Mth.clamp(NanoVisorSettings.Targeting.markRange(),1,100);
+      boolean onlyLiving=NanoVisorSettings.Targeting.markOnlyLivingEntities();
+      boolean requireLineOfSight=NanoVisorSettings.Targeting.markRequireLineOfSight();
+      if(isValidTarget(player,target,range,onlyLiving,requireLineOfSight)) {
+         NanosuitNetwork.sendToServer(new RequestNanoVisorMarkTargetPacket(target.getId(),range,
+            Mth.clamp(NanoVisorSettings.Targeting.markGlowDurationTicks(),1,12000),onlyLiving,requireLineOfSight,
+            Mth.clamp(NanoVisorSettings.Targeting.maxMarkedTargets(),1,64)));
+      }
+   }
+
    private static Entity resolveTarget(Minecraft minecraft, LocalPlayer player, double range, boolean onlyLiving, boolean requireLineOfSight) {
       if (minecraft.hitResult instanceof EntityHitResult entityHitResult) {
          Entity directTarget = entityHitResult.getEntity();

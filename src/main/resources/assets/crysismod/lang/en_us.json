@@ -1081,5 +1081,8 @@
   "screen.crysismod.n1theme.presets": "Saved presets",
   "screen.crysismod.n1theme.red": "Red: %s",
   "screen.crysismod.n1theme.green": "Green: %s",
-  "screen.crysismod.n1theme.blue": "Blue: %s"
+  "screen.crysismod.n1theme.blue": "Blue: %s",
+  "hud.crysismod.n2.low_energy": "LOW ENERGY",
+  "hud.crysismod.n2.critical_health": "CRITICAL HEALTH",
+  "hud.crysismod.n2.hostile": "HOSTILE"
 }

@@ -20,14 +20,17 @@ public final class ClassicEnemyContacts {
    private static WeakReference<Player> owner = new WeakReference<>(null);
    private static Object level;
    private static int receivedAt;
+   private static NanosuitProfile profile;
    private ClassicEnemyContacts() {}
    @net.neoforged.bus.api.SubscribeEvent
    public static void tick(net.neoforged.neoforge.client.event.ClientTickEvent.Post event) {
-      if(!active()){contacts.clear();visible.clear();level=null;owner.clear();}
+      if(!hasSnapshot(profile)){contacts.clear();visible.clear();level=null;owner.clear();profile=null;}
    }
    public static void update(Player player, List<Contact> snapshot) {
       if (player==null) return;
-      if (owner.get()!=player || level!=player.level()) contacts.clear();
+      var nextProfile=NanosuitArmorUtil.getUsableProfile(player);
+      if (owner.get()!=player || level!=player.level() || profile!=nextProfile) contacts.clear();
+      profile=nextProfile;
       var next = new HashMap<Integer,Seen>();
       visible.clear();
       for (Contact contact : snapshot) {
@@ -37,15 +40,16 @@ public final class ClassicEnemyContacts {
          if (same && old.contact.threat()==ThreatLevel.DETECTED && contact.threat()!=ThreatLevel.DETECTED) lost=player.tickCount;
          next.put(contact.id(),new Seen(contact,lost));
          Entity entity=player.level().getEntity(contact.id());
-         if(entity!=null && entity.getUUID().equals(contact.uuid()) && player.hasLineOfSight(entity)) visible.add(contact.id());
+         if(profile==NanosuitProfile.NANOSUIT_1 && entity!=null && entity.getUUID().equals(contact.uuid()) && player.hasLineOfSight(entity)) visible.add(contact.id());
       }
       contacts.clear(); contacts.putAll(next);
       owner=new WeakReference<>(player); level=player.level(); receivedAt=player.tickCount;
    }
-   public static boolean active() {
+   public static boolean active() { return hasSnapshot(NanosuitProfile.NANOSUIT_1); }
+   private static boolean hasSnapshot(NanosuitProfile expected) {
       var p=Minecraft.getInstance().player;
       return p!=null && p==owner.get() && p.level()==level && p.tickCount-receivedAt<=30
-         && NanosuitArmorUtil.getUsableProfile(p)==NanosuitProfile.NANOSUIT_1;
+         && expected!=null && profile==expected && NanosuitArmorUtil.getUsableProfile(p)==expected;
    }
    public static List<Entity> entities() {
       if(!active())return List.of();
@@ -66,6 +70,11 @@ public final class ClassicEnemyContacts {
          case SEARCHING, SUSPICIOUS -> seen.lostAt!=Integer.MIN_VALUE && owner.get().tickCount-seen.lostAt<10 ? 0xff670c : 0xe8d653;
          default -> 0x83c66d;
       };
+   }
+   public static ThreatLevel nanosuit2Threat(Entity entity) {
+      if(!hasSnapshot(NanosuitProfile.NANOSUIT_2)) return ThreatLevel.CALM;
+      Seen seen=contacts.get(entity.getId());
+      return seen!=null && seen.contact.uuid().equals(entity.getUUID())?seen.contact.threat():ThreatLevel.CALM;
    }
    public static boolean outline(Entity entity) {
       var mc=Minecraft.getInstance();

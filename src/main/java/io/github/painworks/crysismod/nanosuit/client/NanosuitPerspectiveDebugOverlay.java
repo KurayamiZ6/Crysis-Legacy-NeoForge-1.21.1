@@ -69,6 +69,7 @@ public final class NanosuitPerspectiveDebugOverlay {
 
    @SubscribeEvent
    public static void onRenderGuiOverlay(Post event) {
+      if (Nanosuit2Hud.equipped()) return;
       if (event.getName().equals(VanillaGuiLayers.HOTBAR)) {
          Minecraft minecraft = Minecraft.getInstance();
          LocalPlayer player = minecraft.player;
