@@ -26,6 +26,9 @@ final class Nanosuit2Radar {
    private static final int PLAYER_MARKER = 0xffffe582;
    private static final int PASSIVE_MARKER = 0xff52eb68;
    private static final int MARKER_TILE_SIZE = 40;
+   // The compass band is centered at atlas row 43, and the glyph ink at tile row 15.
+   private static final int COMPASS_CENTER_Y = -59 + 43;
+   private static final int COMPASS_GLYPH_CENTER = 15;
    private static int lit,target;
    private static long stepAt,maxAt=-1;
    private static LocalPlayer owner;
@@ -102,10 +105,13 @@ final class Nanosuit2Radar {
             float mid=170+(heading-offset)*158;
             if(mid>40&&mid<325) {
                int glyph=(heading+2)&3;
-               Nanosuit2Art.region(g,"compass",Math.round(mid)-16,-36,32,32,glyph*32,0,32,32,128,32,untinted);
+               Nanosuit2Art.region(g,"compass",Math.round(mid)-16,COMPASS_CENTER_Y-COMPASS_GLYPH_CENTER,
+                  32,32,glyph*32,0,32,32,128,32,untinted);
             }
-            if(mid-34>20&&mid-34<339) g.fill(Math.round(mid-34),-24,Math.round(mid-34)+2,-12,rail);
-            if(mid+34>20&&mid+34<339) g.fill(Math.round(mid+34),-24,Math.round(mid+34)+2,-12,rail);
+            if(mid-34>20&&mid-34<339)
+               g.fill(Math.round(mid-34),COMPASS_CENTER_Y-6,Math.round(mid-34)+2,COMPASS_CENTER_Y+6,rail);
+            if(mid+34>20&&mid+34<339)
+               g.fill(Math.round(mid+34),COMPASS_CENTER_Y-6,Math.round(mid+34)+2,COMPASS_CENTER_Y+6,rail);
          }
          String pose=player.isVisuallySwimming()?"prone":player.isCrouching()?"crouching":"standing";
          g.pose().pushPose();
