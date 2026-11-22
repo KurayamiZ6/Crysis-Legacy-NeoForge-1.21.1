@@ -176,11 +176,11 @@ malfunction.innerHTML = `
   <path d="M52 56V48L65 35L199 27L218 46Z" fill="#202020" opacity=".88"/>
   <g fill="none" stroke="var(--hud-theme)">
     <path d="M47 31L57 23H86M1009 23H1038L1053 31" opacity=".65"/>
-    <path d="M52 139V48L65 35M218 171L200 187L76 193V152" stroke-width="1.4"/>
+    <path d="M52 139V48L65 35M218 171L200 187L76 193" stroke-width="1.4"/>
     <path d="M15 155L40 142L67 156V182L40 199L15 184Z" fill="#202020" fill-opacity=".8"/>
   </g>
   <g fill="var(--hud-theme)" font-family="system-ui" font-weight="700" font-size="12">
-    <text x="70" y="46">E</text><text x="126" y="42">SE</text><text x="189" y="38">S</text>
+    <text x="70" y="49">E</text><text x="126" y="45">SE</text><text x="189" y="41">S</text>
   </g>
   <g clip-path="url(#jammed-map)">
     <g class="malfunction-terrain">

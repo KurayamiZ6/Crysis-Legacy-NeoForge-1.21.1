@@ -65,8 +65,16 @@ public final class ClassicMinimapRenderer {
       for(int i=0;i<headings.length;i++){
          float x=116+Mth.wrapDegrees(i*45-yaw)*1.4f;
          String heading=headings[i];
-         float half=heading.length()*4.75f;
-         if(x-half>=9 && x+half<=223) ClassicHudText.draw(g,heading,x,5-x*13/232,19,rgb,1,true);
+         float size=19;
+         float half=heading.length()*size*.25f;
+         float left=x-half,right=x+half;
+         if(left<9 || right>223)continue;
+         float top=Math.max(compassBandTop(left),compassBandTop(right));
+         float bottom=13*(1-right/232);
+         if(bottom-top<size*.72f)continue;
+         // The atlas places the center of a capital halfway up its 1.25× drawing cell.
+         float baseline=(top+bottom)*.5f+size*.375f;
+         ClassicHudText.draw(g,heading,x,baseline,size,rgb,1,true);
       }
       // Player looks up in this rotating map. The pale wedge and chevron are not a goal.
       RenderSystem.enableBlend();RenderSystem.defaultBlendFunc();RenderSystem.disableDepthTest();
@@ -80,6 +88,11 @@ public final class ClassicMinimapRenderer {
       g.setColor(1,1,1,1);
       if(!jammed)renderMarkers(g,yaw,activeBpp*s);
       g.pose().popPose();g.setColor(1,1,1,1);RenderSystem.disableBlend();
+   }
+   private static float compassBandTop(float x){
+      if(x<12)return -x;
+      if(x>212)return -22+(x-212)*1.1f;
+      return -12-(x-12)*.05f;
    }
    private static void renderMarkers(GuiGraphics g,float yaw,double bpp){
       renderContacts(g,yaw,bpp);
