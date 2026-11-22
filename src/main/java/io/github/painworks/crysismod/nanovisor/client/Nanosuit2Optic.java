@@ -128,7 +128,12 @@ final class Nanosuit2Optic {
       }
       long feedback=elapsed-(markedAtEntry?500:1000);
       int ink=tint(Nanosuit2Hud.INK,alpha);
-      ring(g,x,y,30,6,6,ink);
+      g.pose().pushPose();
+      try {
+         g.pose().translate(x,y,0);
+         // Canvas export at 2×. The texture pivot is the projected contact position.
+         Nanosuit2Art.region(g,"optic-focus",-36,-32,72,64,0,0,144,128,144,128,tint(-1,alpha));
+      } finally {g.pose().popPose();}
       if(feedback<0||feedback<1000&&feedback/125%2==0) {
          Nanosuit2Hud.shape(g,ink,x,y+3,x+6,y+9,x,y+15,x-6,y+9);
          Nanosuit2Hud.shape(g,tint(0xff142423,alpha),x,y+4.4f,x+4.6f,y+9,x,y+13.6f,x-4.6f,y+9);
