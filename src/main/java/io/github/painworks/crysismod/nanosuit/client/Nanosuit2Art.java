@@ -52,15 +52,23 @@ public final class Nanosuit2Art {
       g.setColor((color>>>16&255)/255f,(color>>>8&255)/255f,(color&255)/255f,(color>>>24)/255f);
    }
 
-   static void counter(GuiGraphics g,int amount,int right,int y,int glyphWidth,int glyphHeight,int color,int dim) {
+   static void counter(GuiGraphics g,int amount,int right,int y,int glyphWidth,int glyphHeight,int color,int bloom) {
       String value=Integer.toString(Math.max(0,amount));
       int count=Math.max(3,value.length());
       int pitch=glyphWidth+2;
       int x=right-count*pitch+2;
       int placeholders=count-value.length();
+      int paddingX=Math.round(glyphWidth*24/64f);
+      int paddingY=Math.round(glyphHeight*24/96f);
+      for(int i=0;i<value.length();i++) {
+         int digit=value.charAt(i)-'0';
+         int left=x+(placeholders+i)*pitch;
+         region(g,"digits-bloom",left-paddingX,y-paddingY,glyphWidth+2*paddingX,glyphHeight+2*paddingY,
+            digit*112,0,112,144,1120,144,bloom);
+      }
       for(int i=0;i<count;i++) {
          int digit=i<placeholders?0:value.charAt(i-placeholders)-'0';
-         region(g,"digits",x+i*pitch,y,glyphWidth,glyphHeight,digit*64,0,64,96,640,96,i<placeholders?dim:color);
+         region(g,"digits",x+i*pitch,y,glyphWidth,glyphHeight,digit*64,0,64,96,640,96,i<placeholders?0x38a2c0b5:color);
       }
    }
 }

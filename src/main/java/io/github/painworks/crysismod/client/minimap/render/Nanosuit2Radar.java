@@ -88,14 +88,16 @@ final class Nanosuit2Radar {
       boolean blink=maxAt>=0 && now-maxAt<880 && (now-maxAt)%220>=110;
       float opacity=v.opacity();
       int rail=alpha(0xffa6d4c6,opacity*.69f);
-      int glow=alpha(Nanosuit2Hud.threatColor(level),opacity*(blink?.40f:1f));
+      int glow=alpha(Nanosuit2Hud.threatColor(level),blink?.40f:1f);
       int untinted=alpha(-1,opacity);
       g.pose().pushPose();
       try {
          g.pose().translate(v.x(),v.y(),0);
          g.pose().scale(v.width()/340f,v.height()/184f,1);
-         int palette=level>=2?level:0;
-         if(border) Nanosuit2Art.sprite(g,"radar-"+palette,0,-59,462,251,untinted);
+         if(border) {
+            Nanosuit2Art.sprite(g,"radar-0",0,-59,462,251,untinted);
+            Nanosuit2Art.sprite(g,"radar-threat-base",0,-59,462,251,glow);
+         }
          int height=Math.round(141*lit/20f);
          Nanosuit2Art.region(g,"threat-segments",345,110-height,35,height,0,141-height,35,height,35,141,glow);
          Nanosuit2Art.sprite(g,"threat-label",301,-60,79,25,glow);
@@ -106,7 +108,7 @@ final class Nanosuit2Radar {
             if(mid>40&&mid<325) {
                int glyph=(heading+2)&3;
                Nanosuit2Art.region(g,"compass",Math.round(mid)-16,COMPASS_CENTER_Y-COMPASS_GLYPH_CENTER,
-                  32,32,glyph*32,0,32,32,128,32,untinted);
+                  32,32,glyph*32,0,32,32,128,32,-1);
             }
             if(mid-34>20&&mid-34<339)
                g.fill(Math.round(mid-34),COMPASS_CENTER_Y-6,Math.round(mid-34)+2,COMPASS_CENTER_Y+6,rail);
@@ -117,7 +119,7 @@ final class Nanosuit2Radar {
          g.pose().pushPose();
          try {
             Nanosuit2Art.shear(g,383,165,.122785f,1);
-            Nanosuit2Art.sprite(g,"stance-"+pose,383,93,77,72,untinted);
+            Nanosuit2Art.sprite(g,"stance-"+pose,383,93,77,72,-1);
          } finally {g.pose().popPose();}
       } finally {g.pose().popPose();}
    }

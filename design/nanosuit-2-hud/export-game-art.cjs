@@ -30,6 +30,7 @@ const out=path.resolve('src/main/resources/assets/crysismod/textures/gui/nanosui
     #view .hud[data-export="bow"] .bow{visibility:visible}
     #view .radar[data-export] .radar-terrain,#view .radar[data-export] .compass-mark{visibility:hidden}
     #view .radar[data-export="base"] :is(.radar-stance,.radar-threat strong,.radar-threat-base){visibility:hidden}
+    #view .radar[data-export="floor"] :is(.radar-map,.radar-threat,.radar-mask,.radar-status,.radar-stance){visibility:hidden}
     #view .radar[data-export="stance"] :is(.radar-grid,.radar-mask){visibility:hidden}
     #view .alert span{opacity:0}
   `});
@@ -51,12 +52,49 @@ const out=path.resolve('src/main/resources/assets/crysismod/textures/gui/nanosui
   const save=async(name,rect)=>page.screenshot({path:path.join(out,name+'.png'),clip:clip(rect),omitBackground:true});
   await page.evaluate(drawRadarRim);
   await page.evaluate(()=>liveRadar.hud.dataset.export="base");
-  for(const n of [0,2,3]){
-   await page.evaluate(n=>{liveRadar.hud.dataset.threat=String(n);liveRadar.meter.style.setProperty("--threat-amount",0);
-    liveRadar.hud.querySelector('.radar-threat-base').style.visibility='visible';},n);
-   await save('radar-'+n,metadata.radar);
-  }
+  await page.evaluate(()=>liveRadar.meter.style.setProperty("--threat-amount",0));
+  await save("radar-0",metadata.radar);
+  await page.evaluate(()=>{
+   liveRadar.hud.dataset.export="floor";
+   liveRadar.hud.style.setProperty("--threat-ink","#fff");
+  });
+  await save("radar-threat-base",metadata.radar);
+  await page.evaluate(()=>liveRadar.hud.style.removeProperty("--threat-ink"));
   if(process.argv.includes('--radar-only')) return;
+  const digitBloom=await page.evaluate(async()=>{
+   const tileWidth=112,tileHeight=144,padding=24;
+   const strip=document.createElement("canvas");
+   strip.width=tileWidth*10;
+   strip.height=tileHeight;
+   const images=await Promise.all(digitMasks.map(async mask=>{
+    const image=new Image();image.src=mask.slice(4,-1);await image.decode();return image;
+   }));
+   for(const [digit,image] of images.entries()){
+    const tile=document.createElement("canvas");
+    tile.width=tileWidth;tile.height=tileHeight;
+    const ctx=tile.getContext("2d");
+    ctx.filter="blur(10px)";
+    ctx.drawImage(image,padding,padding,64,96);
+    strip.getContext("2d").drawImage(tile,digit*tileWidth,0);
+   }
+   return strip.toDataURL().split(",")[1];
+  });
+  fs.writeFileSync(path.join(out,"digits-bloom.png"),Buffer.from(digitBloom,"base64"));
+  await page.evaluate(()=>{
+   liveRadar.hud.dataset.export="base";
+   liveRadar.hud.style.setProperty("--threat-ink","#fff");
+   liveRadar.meter.style.setProperty("--threat-amount",20);
+   liveRadar.hud.querySelector(".radar-threat strong").style.visibility="visible";
+  });
+  await save("threat-segments",metadata.threat);
+  const threatLabel=await page.locator('#view .radar-threat strong').boundingBox();
+  metadata.threatLabel=[threatLabel.x,threatLabel.y,threatLabel.width,threatLabel.height];
+  await save("threat-label",metadata.threatLabel);
+  await page.evaluate(()=>{
+   liveRadar.hud.style.removeProperty("--threat-ink");
+   liveRadar.hud.querySelector(".radar-threat strong").style.removeProperty("visibility");
+  });
+  if(process.argv.includes('--lighting-only')) return;
   await page.evaluate(()=>live.hud.dataset.export="base");
   await save('panel',metadata.panel);
   for(const [name,low,on,pulse] of [['energy-off',false,false,false],['energy-on',false,true,false],['energy-low-off',true,false,false],['energy-low-on',true,true,false],['energy-low-red',true,true,true]]){
@@ -79,14 +117,6 @@ const out=path.resolve('src/main/resources/assets/crysismod/textures/gui/nanosui
    await save('stance-'+pose,metadata.stance);
   }
 
-  await page.evaluate(()=>{liveRadar.hud.dataset.export="base";liveRadar.hud.dataset.threat="0";
-    liveRadar.meter.style.setProperty("--threat-amount",20);liveRadar.hud.querySelector(".radar-threat-base").style.removeProperty("visibility");
-    liveRadar.hud.querySelector(".radar-threat strong").style.visibility="visible";});
-  await save("threat-segments",metadata.threat);
-  const threatLabel=await page.locator('#view .radar-threat strong').boundingBox();
-  await save("threat-label",[threatLabel.x,threatLabel.y,threatLabel.width,threatLabel.height]);
-  
-  metadata.threatLabel=[threatLabel.x,threatLabel.y,threatLabel.width,threatLabel.height];
   const compass=await page.evaluate(()=>{
     const glyphs='N E S W';const c=document.createElement("canvas");c.width=128;c.height=32;
     const ctx=c.getContext("2d");ctx.font='820 20px Bahnschrift, sans-serif';ctx.textAlign="center";ctx.textBaseline="middle";ctx.fillStyle="#d2ffea";ctx.shadowColor="#a7e9ce85";ctx.shadowBlur=4;

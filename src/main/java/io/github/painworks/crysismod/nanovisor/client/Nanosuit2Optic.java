@@ -112,8 +112,8 @@ final class Nanosuit2Optic {
          }
          double distance=NanoVisorHudOverlay.classicDistance(player,partial);
          String range=distance<0?"— m":String.format(Locale.ROOT,"%.0f m",distance);
-         opticText(g,range,-155,-65,ink(alpha),true);
-         opticText(g,NanoVisorZoomHandler.isZoomInputActive()?"×3":"×1",155,-65,ink(alpha),true);
+         opticText(g,range,-155,-65,true);
+         opticText(g,NanoVisorZoomHandler.isZoomInputActive()?"×3":"×1",155,-65,true);
          if(centered!=null) renderFocus(g,centered,lockedX,lockedY,halfWidth,now,alpha);
       } finally {g.pose().popPose();}
    }
@@ -146,11 +146,11 @@ final class Nanosuit2Optic {
       try {
          g.pose().translate(fx+1,-133,0);
          Nanosuit2Art.shear(g,0,0,-.075f,1);
-         opticText(g,target.getDisplayName().getString().toUpperCase(Locale.ROOT),12,5,ink,false);
-         opticText(g,net.minecraft.network.chat.Component.translatable("hud.crysismod.n2.hostile").getString(),12,29,ink,false);
+         opticText(g,target.getDisplayName().getString().toUpperCase(Locale.ROOT),12,5,false);
+         opticText(g,net.minecraft.network.chat.Component.translatable("hud.crysismod.n2.hostile").getString(),12,29,false);
          if(!target.getMainHandItem().isEmpty())
-            opticText(g,"›  "+target.getMainHandItem().getHoverName().getString(),12,47,ink,false);
-         opticText(g,"›  "+Math.round(Minecraft.getInstance().player.distanceTo(target))+" m",12,65,ink,false);
+            opticText(g,"›  "+target.getMainHandItem().getHoverName().getString(),12,47,false);
+         opticText(g,"›  "+Math.round(Minecraft.getInstance().player.distanceTo(target))+" m",12,65,false);
          int threat=ClassicEnemyContacts.nanosuit2Threat(target).ordinal();
          for(int i=0;i<6;i++) {
             float bar=164+i*11;
@@ -168,12 +168,11 @@ final class Nanosuit2Optic {
 
    private static int ink(float alpha) {return tint(Nanosuit2Hud.INK,alpha);}
 
-   private static void opticText(GuiGraphics g,String text,int x,int y,int color,boolean centered) {
+   private static void opticText(GuiGraphics g,String text,int x,int y,boolean centered) {
       int width=Minecraft.getInstance().font.width(text);
       float scale=Math.min(1.26f,210f/Math.max(1,width));
-      float left=centered?x-width*scale*.5f:x;
-      Nanosuit2Hud.label(g,text,left+1,y+1,scale,color&0x00ffffff|0x36000000);
-      Nanosuit2Hud.label(g,text,left,y,scale,color);
+      if(centered) Nanosuit2Hud.label(g,text,x-width*scale*.5f,y,scale,Nanosuit2Hud.INK);
+      else Nanosuit2Hud.glowingLabel(g,text,x,y,scale,0xffeffff8,0xff9bf7d8);
    }
 
    private static int tint(int color,float opacity) {

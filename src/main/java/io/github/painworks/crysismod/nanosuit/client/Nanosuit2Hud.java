@@ -98,11 +98,14 @@ public final class Nanosuit2Hud {
          Nanosuit2Art.sprite(g,armor?"mode-armor":cloak?"mode-stealth":"mode-neutral",0,0,437,193,-1);
          if(ammo!=null) {
             if(!NanoVisorState.isVisorActive()) {
-               int loadedColor=ammo.capacity()>0&&ammo.loaded()*5<=ammo.capacity()?0xffff493c:0xfff3fffb;
-               Nanosuit2Art.counter(g,ammo.loaded(),320,8,31,50,loadedColor,0x38a2c0b5);
+               boolean lowAmmo=ammo.capacity()>0&&ammo.loaded()*5<=ammo.capacity();
+               Nanosuit2Art.setCrt(false);
+               Nanosuit2Art.counter(g,ammo.loaded(),320,8,31,50,lowAmmo?0xffff493c:0xfff3fffb,
+                  lowAmmo?0xa0ff463a:0x75cdffea);
                Nanosuit2Art.sprite(g,"slash",329,9,16,48,-1);
-               if(ammo.unlimited()) label(g,"∞",395,23,3.2f,INK);
-               else Nanosuit2Art.counter(g,ammo.reserve(),422,16,21,34,INK,0x38a2c0b5);
+               if(ammo.unlimited()) glowingLabel(g,"∞",395,23,3.2f,INK,0xff93e7bb);
+               else Nanosuit2Art.counter(g,ammo.reserve(),422,16,21,34,INK,0x6493e7bb);
+               Nanosuit2Art.setCrt(true);
             }
             int count=switch(ammo.fireMode()) {case "AUTO" -> 4; case "BURST" -> 3; case "SEMI" -> 1; default -> 0;};
             if(count>0) Nanosuit2Art.sprite(g,"shots-"+count,0,0,437,193,-1);
@@ -194,6 +197,7 @@ public final class Nanosuit2Hud {
             g.pose().pushPose();
             g.pose().scale(radarWidth/340f,radarHeight/184f,1);
             Nanosuit2Art.sprite(g,"radar-0",0,-59,462,251,0xb95ce1f6);
+            Nanosuit2Art.sprite(g,"radar-threat-base",0,-59,462,251,0xb95ce1f6);
             g.pose().popPose();
             shape(g,0x66225158,0,6,8,0,radarWidth,0,radarWidth,radarHeight*.72f,radarWidth*.84f,radarHeight,0,radarHeight);
             crtLines(g,0,0,radarWidth,radarHeight,true);
@@ -242,6 +246,16 @@ public final class Nanosuit2Hud {
             Nanosuit2Art.sprite(g,"alert-"+(critical?"critical-":"low-")+language,-317,-24,634,48,-1);
          }
       } finally {g.pose().popPose();}
+   }
+
+   public static void glowingLabel(GuiGraphics g,String value,float x,float y,float scale,int color,int halo) {
+      int haloAlpha=(color>>>24)*28/255;
+      int glow=halo&0xffffff|haloAlpha<<24;
+      for(int i=0;i<8;i++) {
+         double angle=i*Math.PI/4;
+         label(g,value,x+2.4f*(float)Math.cos(angle),y+2.4f*(float)Math.sin(angle),scale,glow);
+      }
+      label(g,value,x,y,scale,color);
    }
 
    public static void label(GuiGraphics g,String value,float x,float y,float scale,int color) {
