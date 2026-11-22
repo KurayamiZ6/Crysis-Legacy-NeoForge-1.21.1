@@ -14,6 +14,7 @@ import com.mojang.blaze3d.vertex.VertexFormat.Mode;
 import com.mojang.logging.LogUtils;
 import io.github.painworks.crysismod.client.nanogeo.NanoGeoShaderpackCompatibility;
 import io.github.painworks.crysismod.client.nanovision.NanovisionConfig;
+import io.github.painworks.crysismod.client.nanovision.NanovisionState;
 import java.io.IOException;
 import java.lang.reflect.Method;
 import net.minecraft.client.Minecraft;
@@ -72,6 +73,7 @@ public final class ThermalFirstPersonItemGlowCapture {
    }
 
    public static void capturePreHandDepth() {
+      if (!NanovisionState.isActive()) return;
       if (NanoGeoShaderpackCompatibility.isShaderPackActive()) {
          if (isEnabled()) {
             handPassSeen = true;
@@ -79,7 +81,7 @@ public final class ThermalFirstPersonItemGlowCapture {
             if (state.restoreAndValidateDrawTarget()) {
                try {
                   if (!NanoGeoShaderpackCompatibility.isShaderPackActive()) {
-                     if (ensureVanillaPreHandDepth(state.viewportWidth(), state.viewportHeight())) {
+                     if (ensureVanillaPreHandDepth(state.viewportWidth(), state.viewportHeight(), false)) {
                         vanillaPreHandReady = copyCallerColor(state, vanillaPreHandDepth);
                         shaderOffPreHandFramebuffer = vanillaPreHandReady ? state.drawFramebuffer() : -1;
                         return;
@@ -90,7 +92,7 @@ public final class ThermalFirstPersonItemGlowCapture {
 
                   Minecraft minecraft = Minecraft.getInstance();
                   RenderTarget main = minecraft.getMainRenderTarget();
-                  if (main != null && ensureVanillaPreHandDepth(main.width, main.height)) {
+                  if (main != null && ensureVanillaPreHandDepth(main.width, main.height, main.isStencilEnabled())) {
                      GL30.glBindFramebuffer(36008, main.frameBufferId);
                      GL30.glBindFramebuffer(36009, vanillaPreHandDepth.frameBufferId);
                      GL30.glBlitFramebuffer(0, 0, main.width, main.height, 0, 0, vanillaPreHandDepth.width, vanillaPreHandDepth.height, 16640, 9728);
@@ -226,12 +228,14 @@ public final class ThermalFirstPersonItemGlowCapture {
       }
    }
 
-   private static boolean ensureVanillaPreHandDepth(int width, int height) {
-      if (vanillaPreHandDepth != null && vanillaPreHandDepth.width == width && vanillaPreHandDepth.height == height) {
+   private static boolean ensureVanillaPreHandDepth(int width, int height, boolean stencil) {
+      if (vanillaPreHandDepth != null && vanillaPreHandDepth.width == width && vanillaPreHandDepth.height == height
+         && vanillaPreHandDepth.isStencilEnabled() == stencil) {
          return true;
       } else {
          destroy(vanillaPreHandDepth);
          vanillaPreHandDepth = new TextureTarget(width, height, true, Minecraft.ON_OSX);
+         if (stencil) vanillaPreHandDepth.enableStencil();
          vanillaPreHandDepth.setClearColor(0.0F, 0.0F, 0.0F, 0.0F);
          vanillaPreHandDepth.setFilterMode(9728);
          vanillaPreHandReady = false;

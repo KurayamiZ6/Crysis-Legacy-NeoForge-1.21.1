@@ -2,7 +2,9 @@ package io.github.painworks.crysisscopeadspatch.mixin;
 
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.logging.LogUtils;
+import io.github.painworks.crysismod.client.nanogeo.NanoGeoShaderpackCompatibility;
 import io.github.painworks.crysismod.client.nanovision.thermal.ThermalFirstPersonArmComposite;
+import io.github.painworks.crysismod.nanosuit.client.ClassicTaczData;
 import io.github.painworks.crysismod.client.nanovision.thermal.ThermalFirstPersonItemCapture;
 import net.minecraft.client.DeltaTracker;
 import net.minecraft.client.Minecraft;
@@ -19,6 +21,21 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 public abstract class GameRendererThermalBoundaryMixin {
    private static final Logger CRYSISSCOPEFIX$LOGGER = LogUtils.getLogger();
    private static boolean crysisscopefix$logged;
+
+   @Inject(method = "renderLevel", at = @At("HEAD"), require = 1)
+   private void crysisscopefix$prepareIrisGunStencil(DeltaTracker deltaTracker, CallbackInfo ci) {
+      Minecraft minecraft = Minecraft.getInstance();
+      var target = minecraft.getMainRenderTarget();
+      var player = minecraft.player;
+      if (target == null || target.isStencilEnabled() || player == null
+         || !NanoGeoShaderpackCompatibility.isIrisShaderPackActive()
+         || !ClassicTaczData.isGun(player.getMainHandItem())) {
+         return;
+      }
+      // TaCZ can request stencil while rendering the gun. Allocate it before Iris observes this frame's depth attachment.
+      target.enableStencil();
+      target.bindWrite(true);
+   }
 
    @Inject(
       method = "render",
