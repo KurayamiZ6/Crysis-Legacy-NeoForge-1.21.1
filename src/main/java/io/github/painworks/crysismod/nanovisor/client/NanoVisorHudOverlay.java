@@ -119,7 +119,12 @@ public final class NanoVisorHudOverlay {
             if (!minecraft.options.hideGui && NanoVisorState.shouldRenderOverlay() && minecraft.screen==null) {
                float opacity=(float)NanoVisorSettings.Hud.opacity();
                if(opacity>0) Nanosuit2Optic.render(event.getGuiGraphics(),player,event.getPartialTick().getGameTimeDeltaPartialTick(false),opacity);
-            } else Nanosuit2Optic.resetFocus();
+            } else {
+               Nanosuit2Optic.resetFocus();
+               if(!minecraft.options.hideGui && minecraft.screen==null && !NanoVisorState.isVisorActive()) {
+                  Nanosuit2Optic.renderTaggedContacts(event.getGuiGraphics(),player,event.getPartialTick().getGameTimeDeltaPartialTick(false));
+               }
+            }
             return;
          }
          Nanosuit2Optic.resetFocus();

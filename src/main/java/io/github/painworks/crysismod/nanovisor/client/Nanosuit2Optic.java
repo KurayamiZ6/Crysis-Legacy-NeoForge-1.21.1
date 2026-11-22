@@ -3,29 +3,32 @@ package io.github.painworks.crysismod.nanovisor.client;
 import io.github.painworks.crysismod.nanosuit.client.ClassicEnemyContacts;
 import io.github.painworks.crysismod.nanosuit.client.Nanosuit2Hud;
 import io.github.painworks.crysismod.nanosuit.client.Nanosuit2Art;
-import io.github.painworks.crysismod.nanovisor.config.NanoVisorSettings;
+import io.github.painworks.crysismod.nanovisor.network.SyncNanoVisorMarkedTargetsPacket;
 import java.util.List;
 import java.util.Locale;
 import java.util.UUID;
 import net.minecraft.Util;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.Camera;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.monster.Enemy;
 import net.minecraft.world.phys.Vec3;
 import org.joml.Quaternionf;
 import org.joml.Vector3f;
 
 final class Nanosuit2Optic {
-   private static final double RANGE=100;
+   private static final double RANGE=SyncNanoVisorMarkedTargetsPacket.N2_SCAN_RANGE;
    private static LocalPlayer owner;
    private static List<LivingEntity> candidates=List.of();
    private static int sampledTick=Integer.MIN_VALUE;
    private static UUID focus;
    private static long focusedAt;
-   private static boolean markedAtEntry,requested,confirmedWhileFocused;
+   private static boolean markedAtEntry,requested;
+   private static long confirmedAt;
    private static float spread;
    private static long lastFrame;
 
@@ -63,19 +66,15 @@ final class Nanosuit2Optic {
          g.pose().scale(scale,scale,1);
          for(LivingEntity entity:candidates) {
             if(!entity.isAlive()||player.distanceToSqr(entity)>RANGE*RANGE) continue;
-            Vec3 point=entity.getPosition(partial).add(0,entity.getBbHeight()+.22,0).subtract(camera.getPosition());
-            Vector3f relative=inverse.transform(new Vector3f((float)point.x,(float)point.y,(float)point.z));
-            if(relative.z>=-.01f) continue;
-            float x=-relative.x*focal/relative.z,y=relative.y*focal/relative.z;
-            if(Math.abs(x)>halfWidth||Math.abs(y)>270) continue;
+            ContactPosition point=project(entity,camera,inverse,partial,focal,halfWidth);
+            if(point==null) continue;
+            float x=point.x(),y=point.y();
             boolean marked=NanoVisorClientMarkedTargets.isMarkedActive(entity);
             if(marked) {
                int threat=ClassicEnemyContacts.nanosuit2Threat(entity).ordinal();
                Nanosuit2Hud.shape(g,tint(threat<2?0xff79ff92:Nanosuit2Hud.threatColor(threat),alpha),x-3,y-1,x+3,y-1,x,y+4);
             }
-            line(g,x-5,y-3,x+5,y-3,tint(marked?0xffff3932:0xffffffff,alpha),.9f);
-            line(g,x+5,y-3,x,y+6,tint(marked?0xffff3932:0xffffffff,alpha),.9f);
-            line(g,x,y+6,x-5,y-3,tint(marked?0xffff3932:0xffffffff,alpha),.9f);
+            contactTriangle(g,point,tint(marked?0xffff3932:0xffffffff,alpha));
             float distance=x*x+y*y;
             if(Math.abs(x)<frameX&&Math.abs(y)<frameY&&distance<closest) {
                centered=entity;
@@ -90,7 +89,7 @@ final class Nanosuit2Optic {
             focusedAt=now;
             requested=false;
             markedAtEntry=centered!=null&&NanoVisorClientMarkedTargets.isMarkedActive(centered);
-            confirmedWhileFocused=markedAtEntry;
+            confirmedAt=-1;
          }
          long delta=lastFrame==0?0:Math.min(60,now-lastFrame);
          lastFrame=now;
@@ -118,15 +117,53 @@ final class Nanosuit2Optic {
       } finally {g.pose().popPose();}
    }
 
+   static void renderTaggedContacts(GuiGraphics g,LocalPlayer player,float partial) {
+      if(Minecraft.getInstance().level==null || !player.isAlive() || player.isSpectator()) return;
+      Camera camera=Minecraft.getInstance().gameRenderer.getMainCamera();
+      var inverse=new Quaternionf(camera.rotation()).conjugate();
+      float scale=g.guiHeight()/540f;
+      float halfWidth=g.guiWidth()*.5f/scale;
+      float focal=270f/(float)Math.tan(Math.toRadians(NanoVisorZoomHandler.worldFov()*.5));
+      var pose=g.pose();
+      pose.pushPose();
+      try {
+         pose.translate(g.guiWidth()*.5f,g.guiHeight()*.5f,0);
+         pose.scale(scale,scale,1);
+         NanoVisorClientMarkedTargets.forEachActiveMarkedEntity(Minecraft.getInstance().level,entity->{
+            if(!(entity instanceof Enemy) || !NanoVisorClientMarkedTargets.isMarkedActive(entity)
+               || player.distanceToSqr(entity)>RANGE*RANGE) return;
+            ContactPosition point=project(entity,camera,inverse,partial,focal,halfWidth);
+            if(point!=null) contactTriangle(g,point,0xffffffff);
+         });
+      } finally {pose.popPose();}
+   }
+
+   private static ContactPosition project(Entity entity,Camera camera,Quaternionf inverse,float partial,float focal,float halfWidth) {
+      Vec3 point=entity.getPosition(partial).add(0,entity.getBbHeight()+.22,0).subtract(camera.getPosition());
+      Vector3f relative=inverse.transform(new Vector3f((float)point.x,(float)point.y,(float)point.z));
+      if(relative.z>=-.01f) return null;
+      float x=-relative.x*focal/relative.z,y=relative.y*focal/relative.z;
+      return Math.abs(x)<=halfWidth && Math.abs(y)<=270 ? new ContactPosition(x,y) : null;
+   }
+
+   private static void contactTriangle(GuiGraphics g,ContactPosition point,int color) {
+      float x=point.x(),y=point.y();
+      line(g,x-5,y-3,x+5,y-3,color,.9f);
+      line(g,x+5,y-3,x,y+6,color,.9f);
+      line(g,x,y+6,x-5,y-3,color,.9f);
+   }
+
+   private record ContactPosition(float x,float y) {}
+
    private static void renderFocus(GuiGraphics g,LivingEntity target,float x,float y,float halfWidth,long now,float alpha) {
       long elapsed=now-focusedAt;
-      confirmedWhileFocused|=NanoVisorClientMarkedTargets.isMarkedActive(target);
-      boolean marked=confirmedWhileFocused;
+      boolean marked=NanoVisorClientMarkedTargets.isMarkedActive(target);
+      if(marked && confirmedAt<0) confirmedAt=now;
       if(elapsed>=1000&&!marked&&!requested) {
          requested=true;
-         NanoVisorTargetingHandler.requestTarget(target,Minecraft.getInstance().player);
+         NanoVisorTargetingHandler.requestScannedTarget(target,Minecraft.getInstance().player);
       }
-      long feedback=elapsed-(markedAtEntry?500:1000);
+      long feedback=markedAtEntry ? elapsed-500 : confirmedAt<0 ? -1 : now-confirmedAt;
       int ink=tint(Nanosuit2Hud.INK,alpha);
       g.pose().pushPose();
       try {
@@ -134,11 +171,14 @@ final class Nanosuit2Optic {
          // Canvas export at 2×. The texture pivot is the projected contact position.
          Nanosuit2Art.region(g,"optic-focus",-36,-32,72,64,0,0,144,128,144,128,tint(-1,alpha));
       } finally {g.pose().popPose();}
+      float scanCenterY=y+8;
+      int scanInk=tint(0xffffffff,alpha);
       if(feedback<0||feedback<1000&&feedback/125%2==0) {
-         Nanosuit2Hud.shape(g,ink,x,y+3,x+6,y+9,x,y+15,x-6,y+9);
-         Nanosuit2Hud.shape(g,tint(0xff142423,alpha),x,y+4.4f,x+4.6f,y+9,x,y+13.6f,x-4.6f,y+9);
+         Nanosuit2Hud.shape(g,scanInk,x,scanCenterY-6,x+6,scanCenterY,x,scanCenterY+6,x-6,scanCenterY);
+         Nanosuit2Hud.shape(g,tint(0xff101618,alpha),x,scanCenterY-4.6f,x+4.6f,scanCenterY,
+            x,scanCenterY+4.6f,x-4.6f,scanCenterY);
       }
-      if(!markedAtEntry&&!marked) ring(g,x,y+8,10,30,Math.min(30,(int)(elapsed*30/1000)),ink);
+      if(!markedAtEntry&&!marked) ring(g,x,scanCenterY,10,30,Math.min(30,(int)(elapsed*30/1000)),scanInk);
       if(!marked||feedback<0) return;
       int fx=Math.min(198,Math.round(halfWidth-246));
       Nanosuit2Art.sprite(g,"optic-info",fx,-153,239,146,tint(-1,alpha));
@@ -180,8 +220,9 @@ final class Nanosuit2Optic {
    }
 
    private static void ring(GuiGraphics g,float x,float y,float radius,int sides,int amount,int color) {
+      double origin=sides==6?0:-Math.PI/2;
       for(int i=0;i<amount;i++) {
-         double start=i*Math.PI*2/sides,end=(i+1)*Math.PI*2/sides;
+         double start=origin+i*Math.PI*2/sides,end=origin+(i+1)*Math.PI*2/sides;
          float ax=x+(float)Math.cos(start)*radius,ay=y+(float)Math.sin(start)*radius;
          float bx=x+(float)Math.cos(end)*radius,by=y+(float)Math.sin(end)*radius;
          if(sides==6) dashed(g,ax,ay,bx,by,color);

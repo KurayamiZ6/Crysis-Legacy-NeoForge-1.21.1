@@ -89,10 +89,11 @@ public final class NanoVisorClientMarkedTargets {
       if (level != null && consumer != null && !ACTIVE_MARKS.isEmpty()) {
          long now = level.getGameTime();
 
-         for (NanoVisorClientMarkedTargets.LocalMark mark : ACTIVE_MARKS.values()) {
+         for (var entry : ACTIVE_MARKS.entrySet()) {
+            LocalMark mark = entry.getValue();
             if (shouldRenderMarkedFrame(level, mark, now)) {
                Entity entity = level.getEntity(mark.entityId());
-               if (entity != null && entity.isAlive()) {
+               if (entity != null && entity.isAlive() && entity.getUUID().equals(entry.getKey())) {
                   consumer.accept(entity);
                }
             }
@@ -106,7 +107,11 @@ public final class NanoVisorClientMarkedTargets {
       while (it.hasNext()) {
          Entry<UUID, NanoVisorClientMarkedTargets.LocalMark> entry = it.next();
          NanoVisorClientMarkedTargets.LocalMark mark = entry.getValue();
-         if (mark.expiresAtTick() <= now) {
+         if (mark.persistent()) {
+            if (mark.glowApplied() && releaseLocalGlow(level, mark)) {
+               entry.setValue(new LocalMark(mark.entityId(), mark.expiresAtTick(), false, false, true));
+            }
+         } else if (mark.expiresAtTick() <= now) {
             NanoVisorClientMarkedTargets.LocalMark effective = mark;
             if (!mark.releaseApplied() && releaseExpired) {
                boolean released = releaseLocalGlow(level, mark);
@@ -123,7 +128,7 @@ public final class NanoVisorClientMarkedTargets {
             }
          } else {
             Entity entity = level.getEntity(mark.entityId());
-            if (entity != null && entity.isAlive()) {
+            if (entity != null && entity.isAlive() && entity.getUUID().equals(entry.getKey())) {
                applyLocalGlow(entity, mark);
             }
          }
@@ -134,7 +139,8 @@ public final class NanoVisorClientMarkedTargets {
       Minecraft minecraft = Minecraft.getInstance();
       ClientLevel level = minecraft != null ? minecraft.level : null;
       long now = level != null ? level.getGameTime() : 0L;
-      long expiresAt = now + Math.max(1L, (long)durationTicks);
+      long expiresAt = durationTicks == SyncNanoVisorMarkedTargetsPacket.PERSISTENT_SCAN ? Long.MAX_VALUE
+         : now + Math.max(1L, (long)durationTicks);
       NanoVisorClientMarkedTargets.LocalMark previous = ACTIVE_MARKS.get(uuid);
       if (previous == null) {
          ACTIVE_MARKS.put(uuid, new NanoVisorClientMarkedTargets.LocalMark(entityId, expiresAt, false, false, false));
@@ -176,6 +182,7 @@ public final class NanoVisorClientMarkedTargets {
    }
 
    private static boolean releaseLocalGlow(ClientLevel level, NanoVisorClientMarkedTargets.LocalMark mark) {
+      if (mark.persistent() && !mark.glowApplied()) return true;
       Entity entity = level.getEntity(mark.entityId());
       if (entity == null) {
          return true;
@@ -224,6 +231,10 @@ public final class NanoVisorClientMarkedTargets {
    }
 
    private record LocalMark(int entityId, long expiresAtTick, boolean hadGlowingBefore, boolean glowApplied, boolean releaseApplied) {
+      boolean persistent() {
+         return expiresAtTick == Long.MAX_VALUE;
+      }
+
       long visibleUntilTick() {
          return this.expiresAtTick + 8L;
       }

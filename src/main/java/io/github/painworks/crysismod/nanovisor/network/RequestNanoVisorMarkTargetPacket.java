@@ -1,6 +1,7 @@
 package io.github.painworks.crysismod.nanovisor.network;
 
 import io.github.painworks.crysismod.nanosuit.energy.NanosuitCapabilities;
+import io.github.painworks.crysismod.nanosuit.NanosuitProfile;
 import io.github.painworks.crysismod.nanosuit.util.NanosuitArmorUtil;
 import io.github.painworks.crysismod.nanovisor.server.NanoVisorServerState;
 import io.github.painworks.crysismod.nanovisor.server.NanoVisorTargetMarkService;
@@ -11,6 +12,7 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.monster.Enemy;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.neoforged.neoforge.network.handling.IPayloadContext;
@@ -79,14 +81,18 @@ public class RequestNanoVisorMarkTargetPacket implements CustomPacketPayload {
          return;
       }
 
-      double range = Mth.clamp(packet.markRange, MIN_MARK_RANGE, MAX_MARK_RANGE);
-      int glowTicks = Mth.clamp(packet.glowDurationTicks, MIN_GLOW_TICKS, MAX_GLOW_TICKS);
+      boolean tacticalScan = NanosuitArmorUtil.getEquippedProfile(player) == NanosuitProfile.NANOSUIT_2;
+      double range = Mth.clamp(packet.markRange, MIN_MARK_RANGE,
+         tacticalScan ? SyncNanoVisorMarkedTargetsPacket.N2_SCAN_RANGE : MAX_MARK_RANGE);
+      int glowTicks = tacticalScan ? 0 : Mth.clamp(packet.glowDurationTicks, MIN_GLOW_TICKS, MAX_GLOW_TICKS);
       int maxTargets = Mth.clamp(packet.maxMarkedTargets, MIN_MAX_TARGETS, MAX_MAX_TARGETS);
-      if (packet.markOnlyLivingEntities && !(target instanceof LivingEntity)) {
+      if (tacticalScan && (!(target instanceof LivingEntity) || !(target instanceof Enemy) || target.isSpectator())) {
+         reject(player, "message.crysismod.nanovisor.mark_rejected.invalid_target");
+      } else if (packet.markOnlyLivingEntities && !(target instanceof LivingEntity)) {
          reject(player, "message.crysismod.nanovisor.mark_rejected.only_living");
       } else if (player.distanceToSqr(target) > range * range) {
          reject(player, "message.crysismod.nanovisor.mark_rejected.out_of_range");
-      } else if (packet.requireLineOfSight && !player.hasLineOfSight(target)) {
+      } else if (!tacticalScan && packet.requireLineOfSight && !player.hasLineOfSight(target)) {
          reject(player, "message.crysismod.nanovisor.mark_rejected.no_line_of_sight");
       } else if (!NanoVisorTargetMarkService.tryApplyMark(player, target, glowTicks, maxTargets)) {
          reject(player, "message.crysismod.nanovisor.mark_rejected.limit_reached");

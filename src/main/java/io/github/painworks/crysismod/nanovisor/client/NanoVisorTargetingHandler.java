@@ -3,6 +3,7 @@ package io.github.painworks.crysismod.nanovisor.client;
 import io.github.painworks.crysismod.nanosuit.network.NanosuitNetwork;
 import io.github.painworks.crysismod.nanovisor.config.NanoVisorSettings;
 import io.github.painworks.crysismod.nanovisor.network.RequestNanoVisorMarkTargetPacket;
+import io.github.painworks.crysismod.nanovisor.network.SyncNanoVisorMarkedTargetsPacket;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.util.Mth;
@@ -41,14 +42,12 @@ public final class NanoVisorTargetingHandler {
       }
    }
 
-   static void requestTarget(Entity target, LocalPlayer player) {
+   static void requestScannedTarget(LivingEntity target, LocalPlayer player) {
       if(!NanoVisorState.isVisorActive() || !NanoVisorSettings.Targeting.markTargetEnabled()) return;
-      double range=Mth.clamp(NanoVisorSettings.Targeting.markRange(),1,100);
-      boolean onlyLiving=NanoVisorSettings.Targeting.markOnlyLivingEntities();
-      boolean requireLineOfSight=NanoVisorSettings.Targeting.markRequireLineOfSight();
-      if(isValidTarget(player,target,range,onlyLiving,requireLineOfSight)) {
+      double range=Mth.clamp(NanoVisorSettings.Targeting.markRange(),1,SyncNanoVisorMarkedTargetsPacket.N2_SCAN_RANGE);
+      if(isValidTarget(player,target,range,true,false)) {
          NanosuitNetwork.sendToServer(new RequestNanoVisorMarkTargetPacket(target.getId(),range,
-            Mth.clamp(NanoVisorSettings.Targeting.markGlowDurationTicks(),1,12000),onlyLiving,requireLineOfSight,
+            Mth.clamp(NanoVisorSettings.Targeting.markGlowDurationTicks(),1,12000),true,false,
             Mth.clamp(NanoVisorSettings.Targeting.maxMarkedTargets(),1,64)));
       }
    }

@@ -19,28 +19,34 @@ public final class NanoVisorTargetMarkService {
    private NanoVisorTargetMarkService() {
    }
 
-   public static boolean tryApplyMark(ServerPlayer player, Entity target, int glowDurationTicks, int maxMarkedTargets) {
-      if (maxMarkedTargets > 0 && glowDurationTicks > 0) {
+   public static boolean tryApplyMark(ServerPlayer player, Entity target, int durationTicks, int maxMarkedTargets) {
+      if (maxMarkedTargets > 0 && durationTicks >= 0) {
          MinecraftServer server = player.server;
          long now = getNow(server);
          LinkedHashMap<UUID, NanoVisorTargetMarkService.MarkEntry> marks = MARKS_BY_PLAYER.computeIfAbsent(player.getUUID(), id -> new LinkedHashMap<>());
          cleanupExpiredEntries(server, player, marks, now);
          UUID targetId = target.getUUID();
-         NanoVisorTargetMarkService.MarkEntry previous = marks.get(targetId);
-         if (previous != null) {
-            marks.put(targetId, new NanoVisorTargetMarkService.MarkEntry(now + glowDurationTicks, target.getId()));
-            syncUpsertToClient(player, target, glowDurationTicks);
-            return true;
-         } else if (marks.size() >= maxMarkedTargets) {
+         if (!marks.containsKey(targetId) && marks.size() >= maxMarkedTargets) {
             return false;
-         } else {
-            marks.put(targetId, new NanoVisorTargetMarkService.MarkEntry(now + glowDurationTicks, target.getId()));
-            syncUpsertToClient(player, target, glowDurationTicks);
-            return true;
          }
+         long expiresAt = durationTicks == SyncNanoVisorMarkedTargetsPacket.PERSISTENT_SCAN ? Long.MAX_VALUE : now + durationTicks;
+         marks.put(targetId, new MarkEntry(expiresAt, target.getId()));
+         syncUpsertToClient(player, target, durationTicks);
+         return true;
       } else {
          return false;
       }
+   }
+
+   static void forgetDestroyedTarget(MinecraftServer server, UUID targetId) {
+      MARKS_BY_PLAYER.forEach((owner, marks) -> {
+         MarkEntry entry = marks.get(targetId);
+         if (entry != null && entry.persistent()) {
+            marks.remove(targetId);
+            ServerPlayer player = server.getPlayerList().getPlayer(owner);
+            if (player != null) syncRemoveToClient(player, targetId, entry.targetEntityId());
+         }
+      });
    }
 
    public static void tick(MinecraftServer server) {
@@ -82,12 +88,15 @@ public final class NanoVisorTargetMarkService {
          Entry<UUID, NanoVisorTargetMarkService.MarkEntry> markEntry = it.next();
          UUID targetId = markEntry.getKey();
          NanoVisorTargetMarkService.MarkEntry entry = markEntry.getValue();
-         Entity target = findEntityByUuid(server, targetId);
+         Entity target = entry.persistent() ? owner.serverLevel().getEntity(targetId) : findEntityByUuid(server, targetId);
          boolean expired = entry.expiresAt() <= now;
-         boolean invalid = target == null || !target.isAlive();
+         boolean invalid = target == null ? !entry.persistent() : !target.isAlive();
          if (expired || invalid) {
             syncRemoveToClient(owner, targetId, entry.targetEntityId());
             it.remove();
+         } else if (entry.persistent() && target != null && target.getId() != entry.targetEntityId()) {
+            markEntry.setValue(new MarkEntry(entry.expiresAt(), target.getId()));
+            syncUpsertToClient(owner, target, SyncNanoVisorMarkedTargetsPacket.PERSISTENT_SCAN);
          }
       }
    }
@@ -116,5 +125,8 @@ public final class NanoVisorTargetMarkService {
    }
 
    private record MarkEntry(long expiresAt, int targetEntityId) {
+      boolean persistent() {
+         return expiresAt == Long.MAX_VALUE;
+      }
    }
 }

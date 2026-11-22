@@ -1,10 +1,12 @@
 package io.github.painworks.crysismod.nanovisor.server;
 
 import io.github.painworks.crysismod.nanovision.server.NanovisionServerState;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 
 
 import net.neoforged.neoforge.event.entity.player.PlayerEvent.PlayerChangedDimensionEvent;
+import net.neoforged.neoforge.event.entity.EntityLeaveLevelEvent;
 import net.neoforged.neoforge.event.entity.player.PlayerEvent.PlayerLoggedOutEvent;
 import net.neoforged.neoforge.event.entity.player.PlayerEvent.PlayerRespawnEvent;
 import net.neoforged.bus.api.SubscribeEvent;
@@ -20,6 +22,16 @@ public final class NanoVisorServerEvents {
    public static void onServerTick(net.neoforged.neoforge.event.tick.ServerTickEvent.Post event) {
       if (true) {
          NanoVisorTargetMarkService.tick(event.getServer());
+      }
+   }
+
+   @SubscribeEvent
+   public static void onTargetLeave(EntityLeaveLevelEvent event) {
+      if (event.getLevel() instanceof ServerLevel level) {
+         var reason = event.getEntity().getRemovalReason();
+         if (reason != null && reason.shouldDestroy()) {
+            NanoVisorTargetMarkService.forgetDestroyedTarget(level.getServer(), event.getEntity().getUUID());
+         }
       }
    }
 

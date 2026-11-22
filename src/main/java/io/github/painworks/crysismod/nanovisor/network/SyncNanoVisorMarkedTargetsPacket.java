@@ -19,7 +19,9 @@ public class SyncNanoVisorMarkedTargetsPacket implements CustomPacketPayload {
       return TYPE;
    }
 
-   private static final int MIN_DURATION_TICKS = 1;
+   public static final double N2_SCAN_RANGE = 100.0;
+   // An upsert with zero ticks is an N2 contact that lasts until the server removes it.
+   public static final int PERSISTENT_SCAN = 0;
    private static final int MAX_DURATION_TICKS = 12000;
    private final SyncNanoVisorMarkedTargetsPacket.Action action;
    private final UUID targetUuid;
@@ -34,7 +36,7 @@ public class SyncNanoVisorMarkedTargetsPacket implements CustomPacketPayload {
    }
 
    public static SyncNanoVisorMarkedTargetsPacket upsert(UUID targetUuid, int targetEntityId, int durationTicks) {
-      int clamped = Mth.clamp(durationTicks, 1, 12000);
+      int clamped = Mth.clamp(durationTicks, PERSISTENT_SCAN, MAX_DURATION_TICKS);
       return new SyncNanoVisorMarkedTargetsPacket(SyncNanoVisorMarkedTargetsPacket.Action.UPSERT, targetUuid, targetEntityId, clamped);
    }
 
@@ -65,8 +67,7 @@ public class SyncNanoVisorMarkedTargetsPacket implements CustomPacketPayload {
          UUID targetUuid = buffer.readUUID();
          int targetEntityId = buffer.readVarInt();
          if (action == SyncNanoVisorMarkedTargetsPacket.Action.UPSERT) {
-            int duration = Mth.clamp(buffer.readVarInt(), 1, 12000);
-            return upsert(targetUuid, targetEntityId, duration);
+            return upsert(targetUuid, targetEntityId, buffer.readVarInt());
          } else {
             return remove(targetUuid, targetEntityId);
          }
