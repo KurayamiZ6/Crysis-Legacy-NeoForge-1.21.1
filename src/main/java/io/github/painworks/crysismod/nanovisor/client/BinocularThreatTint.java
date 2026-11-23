@@ -50,7 +50,7 @@ public final class BinocularThreatTint extends RenderStateShard {
    private static TextureTarget mask;
    private static int compositeFramebuffer;
    private static NanosuitProfile optic;
-   private static boolean drawContour;
+   private static boolean classicContour;
    private static Matrix4f projection, modelView;
    private static VertexSorting sorting;
 
@@ -75,7 +75,7 @@ public final class BinocularThreatTint extends RenderStateShard {
       var stage = event.getStage();
       if (stage == RenderLevelStageEvent.Stage.AFTER_SKY) {
          optic = activeOptic();
-         drawContour = optic == NanosuitProfile.NANOSUIT_2;
+         classicContour = optic == NanosuitProfile.NANOSUIT_1;
       } else if (stage == RenderLevelStageEvent.Stage.AFTER_ENTITIES) {
          optic = null;
       } else if (stage == RenderLevelStageEvent.Stage.AFTER_LEVEL && projection != null) {
@@ -187,7 +187,7 @@ public final class BinocularThreatTint extends RenderStateShard {
             compositeShader.setSampler("Mask", mask.getColorTextureId());
             compositeShader.setSampler("MaskDepth", mask.getDepthTextureId());
             compositeShader.setSampler("SceneDepth", main.getDepthTextureId());
-            compositeShader.safeGetUniform("DrawContour").set(drawContour ? 1 : 0);
+            compositeShader.safeGetUniform("ClassicContour").set(classicContour ? 1 : 0);
             RenderSystem.setShader(() -> compositeShader);
             var quad = Tesselator.getInstance().begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_TEX);
             quad.addVertex(-1, -1, 0).setUv(0, 0);

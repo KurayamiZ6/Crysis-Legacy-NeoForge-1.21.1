@@ -3,5 +3,5 @@
   "fragment": "crysismod:binocular_threat_composite",
   "attributes": ["Position", "UV0"],
   "samplers": [{"name": "Mask"}, {"name": "MaskDepth"}, {"name": "SceneDepth"}],
-  "uniforms": [{"name": "DrawContour", "type": "int", "count": 1, "values": [0]}]
+  "uniforms": [{"name": "ClassicContour", "type": "int", "count": 1, "values": [0]}]
 }
