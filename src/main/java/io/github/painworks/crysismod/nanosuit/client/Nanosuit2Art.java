@@ -1,6 +1,5 @@
 package io.github.painworks.crysismod.nanosuit.client;
 
-import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.resources.ResourceLocation;
 import java.util.HashMap;
@@ -30,10 +29,9 @@ public final class Nanosuit2Art {
                              int u,int v,int sourceWidth,int sourceHeight,int texWidth,int texHeight,int color) {
       if(width<=0||height<=0) return;
       ResourceLocation id=SPRITES.computeIfAbsent(name,key->ResourceLocation.fromNamespaceAndPath("crysismod","textures/gui/nanosuit2/"+key+".png"));
-      RenderSystem.enableBlend();
-      RenderSystem.defaultBlendFunc();
       guiColor(g,color);
       try {
+         Nanosuit2Crt.blendLayer();
          g.blit(id,x,y,width,height,u,v,sourceWidth,sourceHeight,texWidth,texHeight);
       }
       finally {g.setColor(1,1,1,1);}

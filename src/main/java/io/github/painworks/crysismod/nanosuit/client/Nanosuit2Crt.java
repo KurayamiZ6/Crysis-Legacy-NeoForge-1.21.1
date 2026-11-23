@@ -27,6 +27,7 @@ public final class Nanosuit2Crt implements AutoCloseable {
    private static ShaderInstance shader;
    private static TextureTarget target;
    private static long frameTime;
+   private static boolean capturing;
 
    private final GuiGraphics graphics;
    private final int drawFramebuffer;
@@ -43,7 +44,7 @@ public final class Nanosuit2Crt implements AutoCloseable {
    }
 
    public static Nanosuit2Crt capture(GuiGraphics graphics, float panelTop, float panelHeight) {
-      if (shader == null || panelHeight <= 0 || GL11.glIsEnabled(GL11.GL_SCISSOR_TEST)) return null;
+      if (shader == null || capturing || panelHeight <= 0 || GL11.glIsEnabled(GL11.GL_SCISSOR_TEST)) return null;
       return new Nanosuit2Crt(graphics, panelTop / graphics.guiHeight(), panelHeight / graphics.guiHeight());
    }
 
@@ -65,6 +66,17 @@ public final class Nanosuit2Crt implements AutoCloseable {
       }
       target.clear(Minecraft.ON_OSX);
       target.bindWrite(true);
+      capturing = true;
+   }
+
+   public static void blendLayer() {
+      RenderSystem.enableBlend();
+      if (capturing) {
+         // Pixels in the CRT target carry premultiplied color and the coverage of all layers.
+         RenderSystem.blendFuncSeparate(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA, GL11.GL_ONE, GL11.GL_ONE_MINUS_SRC_ALPHA);
+      } else {
+         RenderSystem.defaultBlendFunc();
+      }
    }
 
    @SubscribeEvent
@@ -75,6 +87,7 @@ public final class Nanosuit2Crt implements AutoCloseable {
    @Override
    public void close() {
       graphics.flush();
+      capturing = false;
       GlStateManager._glBindFramebuffer(GL30.GL_DRAW_FRAMEBUFFER, drawFramebuffer);
       GlStateManager._glBindFramebuffer(GL30.GL_READ_FRAMEBUFFER, readFramebuffer);
       RenderSystem.viewport(viewport[0], viewport[1], viewport[2], viewport[3]);

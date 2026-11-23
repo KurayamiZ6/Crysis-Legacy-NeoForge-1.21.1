@@ -220,9 +220,8 @@ public final class NanoMinimapRenderer {
             } else if (!debugForceCheckerboardTerrain) {
                if (hasTerrainTexture && terrainTextureId != null) {
                   int texRes = Math.max(16, terrainTextureResolution);
-                  RenderSystem.enableBlend();
-                  RenderSystem.defaultBlendFunc();
                   guiGraphics.setColor(1.0F, 1.0F, 1.0F, Mth.clamp(drawViewport.opacity(), 0.0F, 1.0F));
+                  Nanosuit2Crt.blendLayer();
                   drawTexturedQuad(guiGraphics, terrainTextureId, drawX, drawY, sourceSize, sourceSize, texRes, texRes);
                   guiGraphics.setColor(1.0F, 1.0F, 1.0F, 1.0F);
                   RenderSystem.disableBlend();

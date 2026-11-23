@@ -268,8 +268,7 @@ public final class Nanosuit2Hud {
 
    public static void shape(GuiGraphics g,int color,float... xy) {
       g.flush();
-      RenderSystem.enableBlend();
-      RenderSystem.defaultBlendFunc();
+      Nanosuit2Crt.blendLayer();
       RenderSystem.disableCull();
       RenderSystem.setShader(GameRenderer::getPositionColorShader);
       var buffer=Tesselator.getInstance().begin(VertexFormat.Mode.TRIANGLE_FAN,DefaultVertexFormat.POSITION_COLOR);

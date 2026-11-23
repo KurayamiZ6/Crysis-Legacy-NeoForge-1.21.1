@@ -8,6 +8,7 @@ import com.mojang.blaze3d.vertex.Tesselator;
 import com.mojang.blaze3d.vertex.VertexFormat;
 import com.mojang.math.Axis;
 import io.github.painworks.crysismod.client.minimap.NanoMinimapViewport;
+import io.github.painworks.crysismod.nanosuit.client.Nanosuit2Crt;
 import net.minecraft.Util;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
@@ -55,8 +56,7 @@ final class Nanosuit2Cone {
          .translate(x, y, 0)
          .rotate(Axis.ZP.rotationDegrees(heading))
          .scale(viewport.width() / CANVAS_WIDTH, viewport.height() / CANVAS_HEIGHT, 1);
-      RenderSystem.enableBlend();
-      RenderSystem.defaultBlendFunc();
+      Nanosuit2Crt.blendLayer();
       RenderSystem.setShader(GameRenderer::getPositionTexColorShader);
       RenderSystem.setShaderTexture(0, DOT_TEXTURE);
       BufferBuilder buffer = Tesselator.getInstance().begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_TEX_COLOR);
