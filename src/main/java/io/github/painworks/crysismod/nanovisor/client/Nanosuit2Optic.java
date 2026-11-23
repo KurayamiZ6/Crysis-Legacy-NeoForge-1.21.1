@@ -75,10 +75,8 @@ final class Nanosuit2Optic {
             if(point==null) continue;
             float x=point.x(),y=point.y();
             boolean marked=NanoVisorClientMarkedTargets.isMarkedActive(entity);
-            if(marked) {
-               Nanosuit2Hud.shape(g,tint(0xff000000|contactColor(entity),alpha),x-3,y-1,x+3,y-1,x,y+4);
-            }
-            contactTriangle(g,point,tint(marked?0xffff3932:0xffffffff,alpha));
+            int fill=marked?tint(0xff000000|contactColor(entity),alpha):0;
+            contactTriangle(g,point,tint(marked?0xffff3932:0xffffffff,alpha),fill);
             float distance=x*x+y*y;
             if(Math.abs(x)<frameX&&Math.abs(y)<frameY&&distance<closest) {
                centered=entity;
@@ -137,7 +135,7 @@ final class Nanosuit2Optic {
             if(!(entity instanceof Enemy) || !NanoVisorClientMarkedTargets.isMarkedActive(entity)
                || player.distanceToSqr(entity)>RANGE*RANGE) return;
             ContactPosition point=project(entity,camera,inverse,partial,focal,halfWidth);
-            if(point!=null) contactTriangle(g,point,0xffffffff);
+            if(point!=null) contactTriangle(g,point,0xffffffff,0);
          });
       } finally {pose.popPose();}
    }
@@ -150,11 +148,17 @@ final class Nanosuit2Optic {
       return Math.abs(x)<=halfWidth && Math.abs(y)<=270 ? new ContactPosition(x,y) : null;
    }
 
-   private static void contactTriangle(GuiGraphics g,ContactPosition point,int color) {
+   private static void contactTriangle(GuiGraphics g,ContactPosition point,int outline,int fill) {
       float x=point.x(),y=point.y();
-      line(g,x-5,y-3,x+5,y-3,color,.9f);
-      line(g,x+5,y-3,x,y+6,color,.9f);
-      line(g,x,y+6,x-5,y-3,color,.9f);
+      float halfWidth=5,top=-3,tip=6;
+      if (fill != 0) {
+         // Scale the same triangle about its centroid to keep the gap centered.
+         float scale=.6f;
+         Nanosuit2Hud.shape(g,fill,x-halfWidth*scale,y+top*scale,x+halfWidth*scale,y+top*scale,x,y+tip*scale);
+      }
+      line(g,x-halfWidth,y+top,x+halfWidth,y+top,outline,.9f);
+      line(g,x+halfWidth,y+top,x,y+tip,outline,.9f);
+      line(g,x,y+tip,x-halfWidth,y+top,outline,.9f);
    }
 
    private record ContactPosition(float x,float y) {}
