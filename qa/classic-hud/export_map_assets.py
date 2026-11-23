@@ -9,7 +9,7 @@ write('background',600,500,'120 809 300 250','''<g fill="#202020">
 <path d="M165 940L201 961V998L165 1019L130 998V961Z" fill-opacity=".8"/>
 </g>''')
 write('frame',600,500,'120 809 300 250','''<g stroke="white" stroke-width="1.5" fill="none">
-<path d="M166 933.64V831L178 819M398 964L373 986L207 994"/>
+<path d="M166 933.64V831L178 819M398 965.8L373 987.8L207 995.8"/>
 <path d="M165 940L201 961V998L165 1019L130 998V961Z" stroke-width="2"/>
 <path d="M126 982V1001L163 1026M130 954L164 934" stroke-width="1.8"/>
 </g>''')

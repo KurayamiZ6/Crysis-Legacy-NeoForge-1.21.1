@@ -35,6 +35,7 @@
     "client.nanovision.RenderTypeCompositeStateAccessor",
     "client.nanovision.TextureStateShardAccessor",
     "client.nanosuit.ClassicEnemyOutlineMixin",
+    "client.nanosuit.BinocularThreatTintMixin",
     "client.nanosuit.ClassicEnemyColorMixin",
     "client.nanosuit.LocalPlayerEnhancedJumpMixin",
     "client.nanosuit.KeyboardInputEnhancedJumpMixin"

@@ -34,6 +34,11 @@ final class Nanosuit2Optic {
 
    private Nanosuit2Optic() {}
 
+   static int contactColor(Entity entity) {
+      int threat=ClassicEnemyContacts.nanosuit2Threat(entity).ordinal();
+      return (threat<2?0xff79ff92:Nanosuit2Hud.threatColor(threat))&0xffffff;
+   }
+
    static void resetFocus() {
       focus=null;
       spread=0;
@@ -71,8 +76,7 @@ final class Nanosuit2Optic {
             float x=point.x(),y=point.y();
             boolean marked=NanoVisorClientMarkedTargets.isMarkedActive(entity);
             if(marked) {
-               int threat=ClassicEnemyContacts.nanosuit2Threat(entity).ordinal();
-               Nanosuit2Hud.shape(g,tint(threat<2?0xff79ff92:Nanosuit2Hud.threatColor(threat),alpha),x-3,y-1,x+3,y-1,x,y+4);
+               Nanosuit2Hud.shape(g,tint(0xff000000|contactColor(entity),alpha),x-3,y-1,x+3,y-1,x,y+4);
             }
             contactTriangle(g,point,tint(marked?0xffff3932:0xffffffff,alpha));
             float distance=x*x+y*y;
