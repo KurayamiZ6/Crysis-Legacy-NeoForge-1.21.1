@@ -103,7 +103,7 @@ public final class Nanosuit2Hud {
                   lowAmmo?0xa0ff463a:0x75cdffea);
                if(!ammo.inventoryFed()) {
                   Nanosuit2Art.sprite(g,"slash",321,1,32,64,-1);
-                  if(ammo.unlimited()) Nanosuit2Art.infinity(g,359,9,70,48,INK,0x6493e7bb);
+                  if(ammo.unlimited()) Nanosuit2Art.infinity(g,349,9,70,48,INK,0x6493e7bb);
                   else Nanosuit2Art.counter(g,ammo.reserve(),422,16,21,34,INK,0x6493e7bb);
                }
             }
