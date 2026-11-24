@@ -1,0 +1,12 @@
+{
+  "parent": "minecraft:block/cube",
+  "textures": {
+    "particle": "minecraft:block/oxidized_copper",
+    "down": "minecraft:block/iron_block",
+    "up": "minecraft:block/lodestone_top",
+    "north": "minecraft:block/oxidized_copper",
+    "south": "minecraft:block/oxidized_copper",
+    "west": "minecraft:block/oxidized_copper",
+    "east": "minecraft:block/chiseled_copper"
+  }
+}

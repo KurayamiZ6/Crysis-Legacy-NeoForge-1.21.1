@@ -23,14 +23,16 @@ import net.minecraft.world.level.block.state.BlockState;
 public final class NanosuitCradleBlockEntity extends BlockEntity {
    private static final EquipmentSlot[] SLOTS = {EquipmentSlot.HEAD, EquipmentSlot.CHEST, EquipmentSlot.LEGS, EquipmentSlot.FEET};
    private final NonNullList<ItemStack> pieces = NonNullList.withSize(SLOTS.length, ItemStack.EMPTY);
+   private ItemStack battery = ItemStack.EMPTY;
    private MachineState machineState = MachineState.OFF;
 
    public enum MachineState {
-      OFF("off"), STANDBY("standby"), ABORTED("aborted");
+      OFF("off"), STANDBY("standby"), ABORTED("aborted"), RUNNING("running");
 
       final String key;
       MachineState(String key) { this.key = key; }
       public String key() { return key; }
+      public boolean locksBattery() { return this == RUNNING; }
    }
 
    public NanosuitCradleBlockEntity(BlockPos pos, BlockState state) {
@@ -131,6 +133,71 @@ public final class NanosuitCradleBlockEntity extends BlockEntity {
       return "empty";
    }
 
+   public BatteryKind batteryKind() { return BatteryKind.of(battery); }
+
+   public int batteryCharge() {
+      var kind = batteryKind();
+      return kind == null ? 0 : kind.charge(battery);
+   }
+
+   public boolean canDebitEnergy(int amount) {
+      return batteryKind() != null && amount >= 0 && amount <= batteryCharge();
+   }
+
+   public boolean tryDebitEnergy(int amount) {
+      if (!canMutateEnergy() || !canDebitEnergy(amount)) return false;
+      if (amount != 0) {
+         batteryKind().writeCharge(battery, batteryCharge() - amount);
+         setChanged();
+      }
+      return true;
+   }
+
+   /** Adds energy to the installed battery and returns the amount accepted. */
+   public int addEnergy(int amount) {
+      var kind = batteryKind();
+      if (!canMutateEnergy() || kind == null || amount <= 0) return 0;
+      int before = kind.charge(battery);
+      int accepted = Math.min(amount, kind.capacity() - before);
+      if (accepted != 0) {
+         kind.writeCharge(battery, before + accepted);
+         setChanged();
+      }
+      return accepted;
+   }
+
+   private boolean canMutateEnergy() {
+      return level instanceof ServerLevel server && server.getServer().isSameThread() && !isRemoved();
+   }
+
+   String exchangeBattery(ServerPlayer player, BlockPos clicked) {
+      if (!canUse(player, clicked)) return "denied";
+      if (machineState.locksBattery()) return "battery_locked";
+      ItemStack incoming = player.getMainHandItem();
+      if (incoming.getCount() != 1 || BatteryKind.of(incoming) == null) return "invalid_item";
+      ItemStack outgoing = battery;
+      battery = incoming;
+      player.setItemInHand(InteractionHand.MAIN_HAND, outgoing);
+      batteryChanged(player);
+      return outgoing.isEmpty() ? "battery_installed" : "battery_swapped";
+   }
+
+   String retrieveBattery(ServerPlayer player, BlockPos clicked) {
+      if (!canUse(player, clicked) || !player.getMainHandItem().isEmpty()) return "denied";
+      if (machineState.locksBattery()) return "battery_locked";
+      if (battery.isEmpty()) return "battery_empty";
+      ItemStack outgoing = battery;
+      battery = ItemStack.EMPTY;
+      player.setItemInHand(InteractionHand.MAIN_HAND, outgoing);
+      batteryChanged(player);
+      return "battery_retrieved";
+   }
+
+   private void batteryChanged(ServerPlayer player) {
+      player.getInventory().setChanged();
+      setChanged();
+   }
+
    private void changed(ServerPlayer player) {
       player.getInventory().setChanged();
       setChanged();
@@ -154,8 +221,10 @@ public final class NanosuitCradleBlockEntity extends BlockEntity {
    }
 
    void dropContents(ServerLevel server) {
-      var drops = NonNullList.withSize(SLOTS.length, ItemStack.EMPTY);
+      var drops = NonNullList.withSize(SLOTS.length + 1, ItemStack.EMPTY);
       for (int i = 0; i < SLOTS.length; i++) drops.set(i, pieces.set(i, ItemStack.EMPTY));
+      drops.set(SLOTS.length, battery);
+      battery = ItemStack.EMPTY;
       Containers.dropContents(server, worldPosition, drops);
    }
 
@@ -164,6 +233,7 @@ public final class NanosuitCradleBlockEntity extends BlockEntity {
       super.saveAdditional(tag, registries);
       ContainerHelper.saveAllItems(tag, pieces, registries);
       tag.putString("MachineState", machineState.key());
+      if (!battery.isEmpty()) tag.put("Battery", battery.save(registries));
    }
 
    @Override
@@ -171,9 +241,11 @@ public final class NanosuitCradleBlockEntity extends BlockEntity {
       super.loadAdditional(tag, registries);
       pieces.clear();
       ContainerHelper.loadAllItems(tag, pieces, registries);
+      battery = ItemStack.parseOptional(registries, tag.getCompound("Battery"));
       machineState = switch (tag.getString("MachineState")) {
          case "standby" -> MachineState.STANDBY;
          case "aborted" -> MachineState.ABORTED;
+         case "running" -> MachineState.RUNNING;
          default -> MachineState.OFF;
       };
    }

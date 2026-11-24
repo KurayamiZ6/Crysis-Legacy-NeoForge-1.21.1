@@ -113,7 +113,11 @@ public final class NanosuitCradleBlock extends BaseEntityBlock {
       if (stack.isEmpty()) return ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
       if (player instanceof ServerPlayer serverPlayer) {
          var cradle = resolve(level, pos, state);
-         notifyPlayer(serverPlayer, cradle == null ? "denied" : cradle.insert(serverPlayer, pos));
+         String result;
+         if (cradle == null) result = "denied";
+         else if (state.getValue(PART) != Part.LEGACY && BatteryKind.of(stack) != null) result = cradle.exchangeBattery(serverPlayer, pos);
+         else result = cradle.insert(serverPlayer, pos);
+         notifyPlayer(serverPlayer, result);
       }
       return ItemInteractionResult.sidedSuccess(level.isClientSide);
    }
@@ -124,7 +128,10 @@ public final class NanosuitCradleBlock extends BaseEntityBlock {
          var cradle = resolve(level, pos, state);
          String result;
          if (cradle == null) result = "denied";
-         else if (player.isSecondaryUseActive()) result = cradle.retrievePiece(serverPlayer, pos);
+         else if (player.isSecondaryUseActive()) {
+            boolean batteryFace = state.getValue(PART) != Part.LEGACY && hit.getDirection() == state.getValue(FACING).getClockWise();
+            result = batteryFace ? cradle.retrieveBattery(serverPlayer, pos) : cradle.retrievePiece(serverPlayer, pos);
+         }
          else result = cradle.status(serverPlayer, pos);
          notifyPlayer(serverPlayer, result);
       }

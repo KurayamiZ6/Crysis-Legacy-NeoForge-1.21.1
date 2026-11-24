@@ -1,6 +1,7 @@
 package io.github.painworks.crysismod.registry;
 
 import io.github.painworks.crysismod.nanosuit.item.ExperimentalNanoGeoArmorItem;
+import io.github.painworks.crysismod.nanosuit.cradle.BatteryItem;
 import io.github.painworks.crysismod.nanosuit.cradle.NanosuitCradleBlock;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.world.item.ArmorMaterials;
@@ -26,6 +27,12 @@ public final class ModItems {
    );
    public static final DeferredHolder<Item, BlockItem> CRADLE_CONTROLLER = ITEMS.register(
       "cradle_controller", () -> new BlockItem(ModBlocks.CRADLE_CONTROLLER.get(), new Properties())
+   );
+   public static final DeferredHolder<Item, BatteryItem> CELL_POWER_CELL = ITEMS.register(
+      "cell_power_cell", () -> new BatteryItem(ModBlocks.CELL_POWER_CELL.get(), new Properties())
+   );
+   public static final DeferredHolder<Item, BatteryItem> CEPH_ENERGY_CELL = ITEMS.register(
+      "ceph_energy_cell", () -> new BatteryItem(ModBlocks.CEPH_ENERGY_CELL.get(), new Properties())
    );
 
    private ModItems() {

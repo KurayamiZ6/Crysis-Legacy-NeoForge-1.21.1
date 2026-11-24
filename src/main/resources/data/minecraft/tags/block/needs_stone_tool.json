@@ -1,0 +1,7 @@
+{
+  "replace": false,
+  "values": [
+    "crysismod:cell_power_cell",
+    "crysismod:ceph_energy_cell"
+  ]
+}

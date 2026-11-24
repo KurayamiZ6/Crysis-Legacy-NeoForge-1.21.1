@@ -1,7 +1,37 @@
 {
   "variants": {
-    "part=legacy": { "model": "crysismod:block/nanosuit_cradle" },
-    "part=master": { "model": "crysismod:block/nanosuit_cradle" },
-    "part=extension": { "model": "crysismod:block/nanosuit_cradle_extension" }
+    "part=legacy": {
+      "model": "crysismod:block/nanosuit_cradle"
+    },
+    "part=master,facing=north": {
+      "model": "crysismod:block/nanosuit_cradle_master"
+    },
+    "part=master,facing=east": {
+      "model": "crysismod:block/nanosuit_cradle_master",
+      "y": 90
+    },
+    "part=master,facing=south": {
+      "model": "crysismod:block/nanosuit_cradle_master",
+      "y": 180
+    },
+    "part=master,facing=west": {
+      "model": "crysismod:block/nanosuit_cradle_master",
+      "y": 270
+    },
+    "part=extension,facing=north": {
+      "model": "crysismod:block/nanosuit_cradle_extension"
+    },
+    "part=extension,facing=east": {
+      "model": "crysismod:block/nanosuit_cradle_extension",
+      "y": 90
+    },
+    "part=extension,facing=south": {
+      "model": "crysismod:block/nanosuit_cradle_extension",
+      "y": 180
+    },
+    "part=extension,facing=west": {
+      "model": "crysismod:block/nanosuit_cradle_extension",
+      "y": 270
+    }
   }
 }

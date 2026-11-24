@@ -16,8 +16,11 @@ public final class CradleControllerMenu extends AbstractContainerMenu {
    public static final int RECONNECT = 3;
    private static final Connection[] CONNECTIONS = Connection.values();
    private static final MachineState[] MACHINE_STATES = MachineState.values();
+   private static final int CHARGE_BITS = 11;
+   private static final int CHARGE_MASK = (1 << CHARGE_BITS) - 1;
    private final CradleControllerBlockEntity controller;
    private final DataSlot status;
+   private final DataSlot energy;
 
    public CradleControllerMenu(int id, Inventory inventory) {
       this(id, inventory, null);
@@ -27,6 +30,7 @@ public final class CradleControllerMenu extends AbstractContainerMenu {
       super(ModBlocks.CRADLE_CONTROLLER_MENU.get(), id);
       this.controller = controller;
       status = addDataSlot(DataSlot.standalone());
+      energy = addDataSlot(DataSlot.standalone());
    }
 
    @Override
@@ -54,6 +58,8 @@ public final class CradleControllerMenu extends AbstractContainerMenu {
          if (cradle.storedProfile() != null) flags |= 1 << 10;
       }
       status.set(flags);
+      var kind = cradle == null ? null : cradle.batteryKind();
+      energy.set(kind == null ? 0 : ((kind.ordinal() + 1) << CHARGE_BITS) | cradle.batteryCharge());
    }
 
    public Connection connection() { return CONNECTIONS[status.get() & 3]; }
@@ -61,6 +67,14 @@ public final class CradleControllerMenu extends AbstractContainerMenu {
    public int occupiedSlots() { return (status.get() >> 4) & 15; }
    public int generations() { return (status.get() >> 8) & 3; }
    public boolean complete() { return (status.get() & (1 << 10)) != 0; }
+   public BatteryKind batteryKind() {
+      return switch (energy.get() >> CHARGE_BITS) {
+         case 1 -> BatteryKind.CELL;
+         case 2 -> BatteryKind.CEPH;
+         default -> null;
+      };
+   }
+   public int batteryCharge() { return energy.get() & CHARGE_MASK; }
 
    @Override
    public boolean clickMenuButton(Player player, int command) {
@@ -71,7 +85,7 @@ public final class CradleControllerMenu extends AbstractContainerMenu {
       var state = cradle.machineState();
       return switch (command) {
          case POWER_ON -> state == MachineState.OFF && cradle.setMachineState(MachineState.STANDBY);
-         case POWER_OFF -> cradle.setMachineState(MachineState.OFF);
+         case POWER_OFF -> !state.locksBattery() && cradle.setMachineState(MachineState.OFF);
          case CANCEL -> state == MachineState.STANDBY && cradle.setMachineState(MachineState.ABORTED);
          default -> false;
       };

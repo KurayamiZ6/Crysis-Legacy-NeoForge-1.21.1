@@ -1,8 +1,12 @@
 {
-  "parent": "minecraft:block/cube_bottom_top",
+  "parent": "minecraft:block/cube",
   "textures": {
-    "side": "minecraft:block/oxidized_copper",
-    "top": "minecraft:block/weathered_copper",
-    "bottom": "minecraft:block/iron_block"
+    "particle": "minecraft:block/oxidized_copper",
+    "down": "minecraft:block/iron_block",
+    "up": "minecraft:block/weathered_copper",
+    "north": "minecraft:block/oxidized_copper",
+    "south": "minecraft:block/oxidized_copper",
+    "west": "minecraft:block/oxidized_copper",
+    "east": "minecraft:block/chiseled_copper"
   }
 }

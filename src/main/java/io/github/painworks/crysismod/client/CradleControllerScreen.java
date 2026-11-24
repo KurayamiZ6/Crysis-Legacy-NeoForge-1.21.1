@@ -1,6 +1,7 @@
 package io.github.painworks.crysismod.client;
 
 import io.github.painworks.crysismod.nanosuit.cradle.CradleControllerBlockEntity.Connection;
+import io.github.painworks.crysismod.nanosuit.cradle.BatteryKind;
 import io.github.painworks.crysismod.nanosuit.cradle.CradleControllerMenu;
 import io.github.painworks.crysismod.nanosuit.cradle.NanosuitCradleBlockEntity.MachineState;
 import io.github.painworks.crysismod.registry.ModBlocks;
@@ -18,6 +19,7 @@ final class CradleControllerScreen extends AbstractContainerScreen<CradleControl
    private static final int WHITE = 0xFFE9EFED;
    private static final int MUTED = 0xFFAEBEB9;
    private static final int GREEN = 0xFFA7E7CB;
+   private static final int AMBER = 0xFFFFCF80;
    private Button power;
    private Button cancel;
    private Button reconnect;
@@ -29,7 +31,7 @@ final class CradleControllerScreen extends AbstractContainerScreen<CradleControl
    CradleControllerScreen(CradleControllerMenu menu, Inventory inventory, Component title) {
       super(menu, inventory, title);
       imageWidth = 248;
-      imageHeight = 184;
+      imageHeight = 224;
    }
 
    @Override
@@ -37,16 +39,16 @@ final class CradleControllerScreen extends AbstractContainerScreen<CradleControl
       super.init();
       power = addRenderableWidget(Button.builder(label("power_on"),
          button -> send(menu.machineState() == MachineState.OFF ? CradleControllerMenu.POWER_ON : CradleControllerMenu.POWER_OFF))
-         .bounds(leftPos + 12, topPos + 106, 72, 20).build());
+         .bounds(leftPos + 12, topPos + 146, 72, 20).build());
       cancel = addRenderableWidget(Button.builder(label("cancel"), button -> send(CradleControllerMenu.CANCEL))
-         .bounds(leftPos + 88, topPos + 106, 72, 20).build());
+         .bounds(leftPos + 88, topPos + 146, 72, 20).build());
       reconnect = addRenderableWidget(Button.builder(label("reconnect"), button -> send(CradleControllerMenu.RECONNECT))
-         .bounds(leftPos + 164, topPos + 106, 72, 20).build());
+         .bounds(leftPos + 164, topPos + 146, 72, 20).build());
 
       String[] interventions = {"integration", "extraction", "maintenance", "evolution"};
       for (int i = 0; i < interventions.length; i++) {
          var button = addRenderableWidget(Button.builder(label(interventions[i]), ignored -> {})
-            .bounds(leftPos + 12 + i % 2 * 114, topPos + 134 + i / 2 * 23, 110, 20).build());
+            .bounds(leftPos + 12 + i % 2 * 114, topPos + 174 + i / 2 * 23, 110, 20).build());
          button.active = false;
          button.setTooltip(Tooltip.create(label("unavailable")));
       }
@@ -63,7 +65,7 @@ final class CradleControllerScreen extends AbstractContainerScreen<CradleControl
       var connection = menu.connection();
       var state = menu.machineState();
       power.setMessage(label(state == MachineState.OFF ? "power_on" : "power_off"));
-      power.active = connection == Connection.CONNECTED;
+      power.active = connection == Connection.CONNECTED && !state.locksBattery();
       cancel.active = power.active && state == MachineState.STANDBY;
       reconnect.active = connection == Connection.DISCONNECTED || connection == Connection.MISSING;
    }
@@ -81,6 +83,7 @@ final class CradleControllerScreen extends AbstractContainerScreen<CradleControl
       graphics.fill(leftPos + 1, topPos + 1, leftPos + imageWidth - 1, topPos + imageHeight - 1, 0xFF182220);
       graphics.fill(leftPos + 1, topPos + 1, leftPos + imageWidth - 1, topPos + 23, 0xFF2E413C);
       graphics.fill(leftPos + 12, topPos + 61, leftPos + imageWidth - 12, topPos + 100, 0xFF23332F);
+      graphics.fill(leftPos + 12, topPos + 104, leftPos + imageWidth - 12, topPos + 140, 0xFF23332F);
    }
 
    @Override
@@ -110,8 +113,28 @@ final class CradleControllerScreen extends AbstractContainerScreen<CradleControl
             default -> "empty";
          };
          String fit = menu.complete() ? "complete" : menu.occupiedSlots() == 0 ? "empty" : "incomplete";
-         draw(graphics, label("suit", label(generation), label(fit)), 18, 89, menu.complete() ? GREEN : MUTED);
+         var summary = menu.occupiedSlots() == 0 ? label("empty") : label("suit", label(generation), label(fit));
+         draw(graphics, summary, 18, 89, menu.complete() ? GREEN : MUTED);
       }
+      drawEnergy(graphics, linked);
+   }
+
+   private void drawEnergy(GuiGraphics graphics, boolean linked) {
+      var kind = linked ? menu.batteryKind() : null;
+      if (kind == null) {
+         draw(graphics, label("battery", label(linked ? "battery_none" : "unknown")), 18, 110, MUTED);
+         draw(graphics, label("energy", label(linked ? "battery_none" : "unknown")), 18, 124, MUTED);
+         return;
+      }
+      int charge = menu.batteryCharge();
+      int capacity = kind.capacity();
+      int color = charge > 0 ? GREEN : AMBER;
+      draw(graphics, label("battery", label(kind == BatteryKind.CELL ? "battery_cell" : "battery_ceph")), 18, 109, WHITE);
+      draw(graphics, label("energy", label(charge > 0 ? "energy_ready" : "energy_empty")), 112, 109, color);
+      draw(graphics, label("charge", charge, capacity, charge * 100 / capacity), 18, 121, color);
+      graphics.fill(18, 133, 230, 137, 0xFF111C1A);
+      int filled = charge == 0 ? 0 : Math.max(1, 212 * charge / capacity);
+      if (filled > 0) graphics.fill(18, 133, 18 + filled, 137, color);
    }
 
    private void draw(GuiGraphics graphics, Component text, int x, int y, int color) {
