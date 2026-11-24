@@ -102,9 +102,11 @@ public final class ClassicBinoculars {
          g.blit(LABEL_BACKGROUND,0,0,1920,1080,0,0,1920,1080,1920,1080);
          g.setColor((rgb>>16&255)/255f,(rgb>>8&255)/255f,(rgb&255)/255f,p);
          // Vanilla positions its 15-pixel crosshair on integer GUI coordinates.
-         float centerOffset=mc.options.getCameraType().isFirstPerson() && g.guiWidth()%2==0 ? -.5f/sx : 0;
+         boolean firstPerson=mc.options.getCameraType().isFirstPerson();
+         float centerOffsetX=firstPerson && g.guiWidth()%2==0 ? -.5f/sx : 0;
+         float centerOffsetY=firstPerson && g.guiHeight()%2==0 ? -.5f/sy : 0;
          g.pose().pushPose();
-         g.pose().translate(centerOffset,0,0);
+         g.pose().translate(centerOffsetX,centerOffsetY,0);
          g.blit(FRAME,0,0,1920,1080,0,0,1920,1080,1920,1080);
          g.pose().popPose();
          g.setColor(1,1,1,1);
