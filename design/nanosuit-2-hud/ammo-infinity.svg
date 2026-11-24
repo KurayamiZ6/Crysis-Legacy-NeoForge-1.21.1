@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="128" height="80" viewBox="0 0 128 80">
+  <defs>
+    <filter id="bloom" filterUnits="userSpaceOnUse" x="0" y="0" width="128" height="80">
+      <feGaussianBlur stdDeviation="5"/>
+    </filter>
+    <path id="glyph" d="M64 40 45 22H29L17 32V48L29 58H45L83 22H99L111 32V48L99 58H83Z"
+      fill="none" stroke="white" stroke-width="11" stroke-linejoin="bevel"/>
+  </defs>
+  <use href="#glyph" filter="url(#bloom)" id="halo" opacity="0"/>
+  <use href="#glyph" id="core"/>
+</svg>

@@ -41,6 +41,11 @@ public final class Nanosuit2Art {
       g.setColor((color>>>16&255)/255f,(color>>>8&255)/255f,(color&255)/255f,(color>>>24)/255f);
    }
 
+   static void infinity(GuiGraphics g,int x,int y,int width,int height,int color,int bloom) {
+      region(g,"ammo-infinity-bloom",x,y,width,height,0,0,128,80,128,80,bloom);
+      region(g,"ammo-infinity",x,y,width,height,0,0,128,80,128,80,color);
+   }
+
    static void counter(GuiGraphics g,int amount,int right,int y,int glyphWidth,int glyphHeight,int color,int bloom) {
       String value=Integer.toString(Math.max(0,amount));
       int count=Math.max(3,value.length());

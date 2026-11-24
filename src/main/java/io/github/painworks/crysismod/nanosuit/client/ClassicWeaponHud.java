@@ -68,9 +68,13 @@ public final class ClassicWeaponHud {
          ClassicHudText.alignWithPanel(g,0);
          int textColor=ClassicHudPalette.textColor(rgb);
          if(melee||state!=null){
-            ClassicHudText.digits(g,melee?0:state.loaded(),211,4,39,73,ClassicHudPalette.loadedAmmoColor(rgb),3);
-            if(!melee&&state.unlimited())layer(g,INFINITY,230,3,45,26,rgb,1);
-            else ClassicHudText.digits(g,melee?0:state.reserve(),274,2,29,59,textColor,0);
+            boolean inventoryFed=!melee&&state.inventoryFed();
+            if(inventoryFed&&state.unlimited())layer(g,INFINITY,155,7,58,32,rgb,1);
+            else ClassicHudText.digits(g,melee?0:state.loaded(),211,4,39,73,ClassicHudPalette.loadedAmmoColor(rgb),3);
+            if(!inventoryFed){
+               if(!melee&&state.unlimited())layer(g,INFINITY,230,3,45,26,rgb,1);
+               else ClassicHudText.digits(g,melee?0:state.reserve(),274,2,29,59,textColor,0);
+            }
             if(melee)layer(g,INFINITY,288,8,68,34,rgb,1);
             else renderFireMode(g,state,rgb);
          }

@@ -37,10 +37,6 @@ public final class ClassicTaczData {
       } catch(ReflectiveOperationException|LinkageError|RuntimeException unsupported) {return null;}
    }
    public static State read(LocalPlayer player) {
-      State state=readNanosuit2(player);
-      return state!=null && state.inventoryFed()?null:state;
-   }
-   public static State readNanosuit2(LocalPlayer player) {
       init();if(!available)return null;
       ItemStack stack=player.getMainHandItem();long now=System.nanoTime();
       if(player==cachedPlayer.get() && stack==cachedStack && now-readAt<50_000_000L)return cached;
@@ -73,15 +69,30 @@ public final class ClassicTaczData {
          }
          ResourceLocation icon=null;
          var display=(Optional<?>)call(timelessApi,"getGunDisplay",null,new Class<?>[]{ItemStack.class},stack);
-         if(display.isPresent())icon=(ResourceLocation)call(Class.forName("com.tacz.guns.client.resource.GunDisplayInstance"),"getHUDTexture",display.get(),new Class<?>[0]);
-         String fireMode=((Enum<?>)call(gunApi,"getFireMode",gun,new Class<?>[]{ItemStack.class},stack)).name();
+         if(display.isPresent()){
+            Class<?> displayApi=display.get().getClass();
+            try {
+               Object style=call(displayApi,"getAmmoCountStyle",display.get(),new Class<?>[0]);
+               if(style instanceof Enum<?> countStyle && countStyle.name().equals("PERCENT"))return null;
+            } catch(NoSuchMethodException legacyDisplay) {
+               // Older TaCZ releases use numeric counters for all displays.
+            }
+            icon=(ResourceLocation)call(displayApi,"getHUDTexture",display.get(),new Class<?>[0]);
+         }
+         Object mode=call(gunApi,"getFireMode",gun,new Class<?>[]{ItemStack.class},stack);
+         String fireMode=mode instanceof Enum<?> fire?fire.name():"UNKNOWN";
          ClassicAmmoIcons.Kind kind=ClassicAmmoIcons.Kind.BULLET;
          try{kind=ClassicAmmoIcons.classify((String)call(indexApi,"getType",index.get(),new Class<?>[0]),
             (ResourceLocation)call(data.getClass(),"getAmmoId",data,new Class<?>[0]));}
          catch(ReflectiveOperationException|LinkageError unsupportedMetadata){} // Counters remain available if icon metadata is absent.
          int capacity=0;
-         try {capacity=((Number)call(data.getClass(),"getAmmoAmount",data,new Class<?>[0])).intValue();}
-         catch(ReflectiveOperationException|RuntimeException unsupportedCapacity) {}
+         try {
+            var attachmentApi=Class.forName("com.tacz.guns.util.AttachmentDataUtils");
+            capacity=((Number)call(attachmentApi,"getAmmoCountWithAttachment",null,new Class<?>[]{ItemStack.class,data.getClass()},stack,data)).intValue();
+         } catch(ReflectiveOperationException|LinkageError|RuntimeException unsupportedCapacity) {
+            try {capacity=((Number)call(data.getClass(),"getAmmoAmount",data,new Class<?>[0])).intValue();}
+            catch(ReflectiveOperationException|RuntimeException missingCapacity) {}
+         }
          cached=new State(Math.max(0,inventoryFed?Math.addExact(loaded,reserve):loaded),
             inventoryFed?0:Math.max(0,reserve),unlimited,fireMode,id,icon,kind,capacity,inventoryFed);
       }catch(ReflectiveOperationException|LinkageError|RuntimeException unsupported){cached=null;}

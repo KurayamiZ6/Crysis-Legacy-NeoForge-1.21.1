@@ -73,7 +73,7 @@ public final class Nanosuit2Hud {
       if(player.isAlive()) deathSince=-1;
       if(panelDropped(false)) return;
       boolean redPulse=now%333<166;
-      var ammo=NanosuitClientConfig.taczHudOverrideEnabled()&&NanosuitClientConfig.taczHideOriginalHud()?ClassicTaczData.readNanosuit2(player):null;
+      var ammo=NanosuitClientConfig.taczHudOverrideEnabled()&&NanosuitClientConfig.taczHideOriginalHud()?ClassicTaczData.read(player):null;
       if(ammo!=null) {
          if(currentGun!=null&&!currentGun.gunId().equals(ammo.gunId())) previousGun=currentGun;
          currentGun=ammo;
@@ -98,12 +98,12 @@ public final class Nanosuit2Hud {
          if(ammo!=null) {
             if(!NanoVisorState.isVisorActive()) {
                boolean lowAmmo=ammo.inventoryFed()?ammo.loaded()==0:ammo.capacity()>0&&ammo.loaded()*5<=ammo.capacity();
-               if(ammo.inventoryFed()&&ammo.unlimited()) glowingLabel(g,"∞",290,12,4.3f,0xfff3fffb,0xffcdffea);
+               if(ammo.inventoryFed()&&ammo.unlimited()) Nanosuit2Art.infinity(g,250,0,77,66,0xfff3fffb,0x75cdffea);
                else Nanosuit2Art.counter(g,ammo.loaded(),320,8,31,50,lowAmmo?0xffff493c:0xfff3fffb,
                   lowAmmo?0xa0ff463a:0x75cdffea);
                if(!ammo.inventoryFed()) {
                   Nanosuit2Art.sprite(g,"slash",321,1,32,64,-1);
-                  if(ammo.unlimited()) glowingLabel(g,"∞",395,23,3.2f,INK,0xff93e7bb);
+                  if(ammo.unlimited()) Nanosuit2Art.infinity(g,359,9,70,48,INK,0x6493e7bb);
                   else Nanosuit2Art.counter(g,ammo.reserve(),422,16,21,34,INK,0x6493e7bb);
                }
             }
