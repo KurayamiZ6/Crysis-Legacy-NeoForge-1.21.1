@@ -14,6 +14,7 @@ import io.github.painworks.crysismod.nanosuit.handler.NanosuitPlayerHandler;
 import io.github.painworks.crysismod.nanosuit.network.NanosuitNetwork;
 import io.github.painworks.crysismod.nanovisor.config.NanoVisorClientConfig;
 import io.github.painworks.crysismod.registry.ModCreativeTabs;
+import io.github.painworks.crysismod.registry.ModBlocks;
 import io.github.painworks.crysismod.registry.ModItems;
 import io.github.painworks.crysismod.registry.ModSounds;
 import net.neoforged.api.distmarker.Dist;
@@ -33,6 +34,8 @@ public class CrysisMod {
       modEventBus.addListener(NanosuitNetwork::register);
       if (FMLEnvironment.dist == Dist.CLIENT) CrysisModClientBootstrap.init(modEventBus, context);
       ModItems.ITEMS.register(modEventBus);
+      ModBlocks.BLOCKS.register(modEventBus);
+      ModBlocks.BLOCK_ENTITIES.register(modEventBus);
       ModCreativeTabs.CREATIVE_MODE_TABS.register(modEventBus);
       ModSounds.SOUND_EVENTS.register(modEventBus);
       context.registerConfig(Type.COMMON, NanosuitClientConfig.SPEC, "nanosuit-client.toml");
