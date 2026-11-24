@@ -1,5 +1,7 @@
 {
   "variants": {
-    "": { "model": "crysismod:block/nanosuit_cradle" }
+    "part=legacy": { "model": "crysismod:block/nanosuit_cradle" },
+    "part=master": { "model": "crysismod:block/nanosuit_cradle" },
+    "part=extension": { "model": "crysismod:block/nanosuit_cradle_extension" }
   }
 }

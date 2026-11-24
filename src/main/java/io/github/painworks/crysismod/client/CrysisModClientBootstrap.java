@@ -23,6 +23,7 @@ public final class CrysisModClientBootstrap {
          context.registerExtensionPoint(IConfigScreenFactory.class, (container, parent) -> new io.github.painworks.crysismod.nanosuit.client.CrysisSettingsScreen(parent));
          modEventBus.addListener(NanosuitKeyMappings::register);
          modEventBus.addListener(NanoVisorKeyMappings::register);
+         modEventBus.addListener(NanosuitCradleRenderer::register);
          modEventBus.addListener(NanovisionKeybinds::register);
          NanovisionClientEvents.init(modEventBus);
          NanoGeoClientHooks.init(modEventBus);

@@ -1,6 +1,7 @@
 package io.github.painworks.crysismod.registry;
 
 import io.github.painworks.crysismod.nanosuit.item.ExperimentalNanoGeoArmorItem;
+import io.github.painworks.crysismod.nanosuit.cradle.NanosuitCradleBlock;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.world.item.ArmorMaterials;
 import net.minecraft.world.item.BlockItem;
@@ -21,7 +22,7 @@ public final class ModItems {
    public static final DeferredHolder<Item, Item> NANOSUIT_2_LEGGINGS = registerArmor("nanosuit_2_leggings", Type.LEGGINGS);
    public static final DeferredHolder<Item, Item> NANOSUIT_2_BOOTS = registerArmor("nanosuit_2_boots", Type.BOOTS);
    public static final DeferredHolder<Item, BlockItem> NANOSUIT_CRADLE = ITEMS.register(
-      "nanosuit_cradle", () -> new BlockItem(ModBlocks.NANOSUIT_CRADLE.get(), new Properties())
+      "nanosuit_cradle", () -> new NanosuitCradleBlock.PlacementItem(ModBlocks.NANOSUIT_CRADLE.get(), new Properties())
    );
 
    private ModItems() {
