@@ -1,0 +1,5 @@
+{
+  "variants": {
+    "": {"model":"crysismod:block/ceph_crystal_core"}
+  }
+}

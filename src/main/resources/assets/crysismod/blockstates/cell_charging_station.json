@@ -1,0 +1,12 @@
+{
+  "variants": {
+    "facing=north,lit=false": {"model":"crysismod:block/cell_charging_station"},
+    "facing=north,lit=true": {"model":"crysismod:block/cell_charging_station_on"},
+    "facing=east,lit=false": {"model":"crysismod:block/cell_charging_station","y":90},
+    "facing=east,lit=true": {"model":"crysismod:block/cell_charging_station_on","y":90},
+    "facing=south,lit=false": {"model":"crysismod:block/cell_charging_station","y":180},
+    "facing=south,lit=true": {"model":"crysismod:block/cell_charging_station_on","y":180},
+    "facing=west,lit=false": {"model":"crysismod:block/cell_charging_station","y":270},
+    "facing=west,lit=true": {"model":"crysismod:block/cell_charging_station_on","y":270}
+  }
+}

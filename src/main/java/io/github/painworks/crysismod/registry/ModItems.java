@@ -34,6 +34,18 @@ public final class ModItems {
    public static final DeferredHolder<Item, BatteryItem> CEPH_ENERGY_CELL = ITEMS.register(
       "ceph_energy_cell", () -> new BatteryItem(ModBlocks.CEPH_ENERGY_CELL.get(), new Properties())
    );
+   public static final DeferredHolder<Item, BlockItem> CELL_CHARGING_STATION = ITEMS.register(
+      "cell_charging_station", () -> new BlockItem(ModBlocks.CELL_CHARGING_STATION.get(), new Properties())
+   );
+   public static final DeferredHolder<Item, BlockItem> CEPH_CRYSTAL_CORE = ITEMS.register(
+      "ceph_crystal_core", () -> new BlockItem(ModBlocks.CEPH_CRYSTAL_CORE.get(), new Properties())
+   );
+   public static final DeferredHolder<Item, BlockItem> CEPH_CRYSTAL_CLUSTER = ITEMS.register(
+      "ceph_crystal_cluster", () -> new BlockItem(ModBlocks.CEPH_CRYSTAL_CLUSTER.get(), new Properties())
+   );
+   public static final DeferredHolder<Item, Item> CEPH_ENERGY_CRYSTAL = ITEMS.register(
+      "ceph_energy_crystal", () -> new Item(new Properties())
+   );
 
    private ModItems() {
    }

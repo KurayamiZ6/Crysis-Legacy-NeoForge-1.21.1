@@ -28,6 +28,10 @@ public final class ModCreativeTabs {
             output.accept(ModItems.CRADLE_CONTROLLER.get());
             output.accept(ModItems.CELL_POWER_CELL.get());
             output.accept(ModItems.CEPH_ENERGY_CELL.get());
+            output.accept(ModItems.CELL_CHARGING_STATION.get());
+            output.accept(ModItems.CEPH_CRYSTAL_CORE.get());
+            output.accept(ModItems.CEPH_CRYSTAL_CLUSTER.get());
+            output.accept(ModItems.CEPH_ENERGY_CRYSTAL.get());
          })
          .build()
    );

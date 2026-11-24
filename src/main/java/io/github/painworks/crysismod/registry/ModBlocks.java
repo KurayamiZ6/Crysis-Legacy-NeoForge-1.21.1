@@ -3,6 +3,10 @@ package io.github.painworks.crysismod.registry;
 import io.github.painworks.crysismod.nanosuit.cradle.BatteryBlock;
 import io.github.painworks.crysismod.nanosuit.cradle.BatteryBlockEntity;
 import io.github.painworks.crysismod.nanosuit.cradle.BatteryKind;
+import io.github.painworks.crysismod.nanosuit.cradle.CellChargingStationBlock;
+import io.github.painworks.crysismod.nanosuit.cradle.CellChargingStationBlockEntity;
+import io.github.painworks.crysismod.nanosuit.cradle.CephCrystalClusterBlock;
+import io.github.painworks.crysismod.nanosuit.cradle.CephCrystalCoreBlock;
 import io.github.painworks.crysismod.nanosuit.cradle.CradleControllerBlock;
 import io.github.painworks.crysismod.nanosuit.cradle.CradleControllerBlockEntity;
 import io.github.painworks.crysismod.nanosuit.cradle.CradleControllerMenu;
@@ -44,6 +48,20 @@ public final class ModBlocks {
    public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<BatteryBlockEntity>> BATTERY_ENTITY =
       BLOCK_ENTITIES.register("power_cell",
          () -> BlockEntityType.Builder.of(BatteryBlockEntity::new, CELL_POWER_CELL.get(), CEPH_ENERGY_CELL.get()).build(null));
+   public static final DeferredHolder<net.minecraft.world.level.block.Block, CellChargingStationBlock> CELL_CHARGING_STATION =
+      BLOCKS.register("cell_charging_station", () -> new CellChargingStationBlock(BlockBehaviour.Properties.of()
+         .strength(3.0F).sound(SoundType.METAL).requiresCorrectToolForDrops().pushReaction(PushReaction.BLOCK)
+         .lightLevel(state -> state.getValue(CellChargingStationBlock.LIT) ? 6 : 0)));
+   public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<CellChargingStationBlockEntity>> CELL_CHARGING_STATION_ENTITY =
+      BLOCK_ENTITIES.register("cell_charging_station",
+         () -> BlockEntityType.Builder.of(CellChargingStationBlockEntity::new, CELL_CHARGING_STATION.get()).build(null));
+   public static final DeferredHolder<net.minecraft.world.level.block.Block, CephCrystalCoreBlock> CEPH_CRYSTAL_CORE =
+      BLOCKS.register("ceph_crystal_core", () -> new CephCrystalCoreBlock(BlockBehaviour.Properties.of()
+         .strength(3.0F).sound(SoundType.AMETHYST).requiresCorrectToolForDrops().randomTicks().pushReaction(PushReaction.BLOCK)));
+   public static final DeferredHolder<net.minecraft.world.level.block.Block, CephCrystalClusterBlock> CEPH_CRYSTAL_CLUSTER =
+      BLOCKS.register("ceph_crystal_cluster", () -> new CephCrystalClusterBlock(BlockBehaviour.Properties.of()
+         .strength(1.5F).sound(SoundType.AMETHYST_CLUSTER).requiresCorrectToolForDrops().noOcclusion()
+         .lightLevel(state -> state.getValue(CephCrystalClusterBlock.AGE) + 1)));
 
    private ModBlocks() {}
 }
