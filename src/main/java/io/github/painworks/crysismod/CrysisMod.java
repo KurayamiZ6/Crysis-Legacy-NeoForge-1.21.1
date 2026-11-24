@@ -36,6 +36,7 @@ public class CrysisMod {
       ModItems.ITEMS.register(modEventBus);
       ModBlocks.BLOCKS.register(modEventBus);
       ModBlocks.BLOCK_ENTITIES.register(modEventBus);
+      ModBlocks.MENUS.register(modEventBus);
       ModCreativeTabs.CREATIVE_MODE_TABS.register(modEventBus);
       ModSounds.SOUND_EVENTS.register(modEventBus);
       context.registerConfig(Type.COMMON, NanosuitClientConfig.SPEC, "nanosuit-client.toml");

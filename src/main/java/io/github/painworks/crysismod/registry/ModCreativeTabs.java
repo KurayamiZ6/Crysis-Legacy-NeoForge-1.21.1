@@ -25,6 +25,7 @@ public final class ModCreativeTabs {
             output.accept((ItemLike)ModItems.NANOSUIT_2_LEGGINGS.get());
             output.accept((ItemLike)ModItems.NANOSUIT_2_BOOTS.get());
             output.accept(ModItems.NANOSUIT_CRADLE.get());
+            output.accept(ModItems.CRADLE_CONTROLLER.get());
          })
          .build()
    );

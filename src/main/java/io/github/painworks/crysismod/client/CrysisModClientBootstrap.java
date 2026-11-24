@@ -24,6 +24,7 @@ public final class CrysisModClientBootstrap {
          modEventBus.addListener(NanosuitKeyMappings::register);
          modEventBus.addListener(NanoVisorKeyMappings::register);
          modEventBus.addListener(NanosuitCradleRenderer::register);
+         modEventBus.addListener(CradleControllerScreen::register);
          modEventBus.addListener(NanovisionKeybinds::register);
          NanovisionClientEvents.init(modEventBus);
          NanoGeoClientHooks.init(modEventBus);

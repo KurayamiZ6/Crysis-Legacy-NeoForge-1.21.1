@@ -24,6 +24,9 @@ public final class ModItems {
    public static final DeferredHolder<Item, BlockItem> NANOSUIT_CRADLE = ITEMS.register(
       "nanosuit_cradle", () -> new NanosuitCradleBlock.PlacementItem(ModBlocks.NANOSUIT_CRADLE.get(), new Properties())
    );
+   public static final DeferredHolder<Item, BlockItem> CRADLE_CONTROLLER = ITEMS.register(
+      "cradle_controller", () -> new BlockItem(ModBlocks.CRADLE_CONTROLLER.get(), new Properties())
+   );
 
    private ModItems() {
    }

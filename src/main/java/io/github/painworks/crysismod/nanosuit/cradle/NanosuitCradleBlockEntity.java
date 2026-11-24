@@ -23,6 +23,15 @@ import net.minecraft.world.level.block.state.BlockState;
 public final class NanosuitCradleBlockEntity extends BlockEntity {
    private static final EquipmentSlot[] SLOTS = {EquipmentSlot.HEAD, EquipmentSlot.CHEST, EquipmentSlot.LEGS, EquipmentSlot.FEET};
    private final NonNullList<ItemStack> pieces = NonNullList.withSize(SLOTS.length, ItemStack.EMPTY);
+   private MachineState machineState = MachineState.OFF;
+
+   public enum MachineState {
+      OFF("off"), STANDBY("standby"), ABORTED("aborted");
+
+      final String key;
+      MachineState(String key) { this.key = key; }
+      public String key() { return key; }
+   }
 
    public NanosuitCradleBlockEntity(BlockPos pos, BlockState state) {
       super(ModBlocks.NANOSUIT_CRADLE_ENTITY.get(), pos, state);
@@ -46,6 +55,33 @@ public final class NanosuitCradleBlockEntity extends BlockEntity {
 
    public NanosuitProfile storedProfile() {
       return NanosuitProfile.forGeneration(NanosuitGeneration.fullSet(generation(0), generation(1), generation(2), generation(3)));
+   }
+
+   int occupiedSlots() {
+      int mask = 0;
+      for (int i = 0; i < SLOTS.length; i++) {
+         if (!pieces.get(i).isEmpty()) mask |= 1 << i;
+      }
+      return mask;
+   }
+
+   int storedGenerations() {
+      int mask = 0;
+      for (int i = 0; i < SLOTS.length; i++) {
+         var generation = generation(i);
+         if (generation == NanosuitGeneration.NANOSUIT_1) mask |= 1;
+         if (generation == NanosuitGeneration.NANOSUIT_2) mask |= 2;
+      }
+      return mask;
+   }
+
+   MachineState machineState() { return machineState; }
+
+   boolean setMachineState(MachineState next) {
+      if (machineState == next) return false;
+      machineState = next;
+      setChanged();
+      return true;
    }
 
    String status(ServerPlayer player, BlockPos clicked) {
@@ -127,6 +163,7 @@ public final class NanosuitCradleBlockEntity extends BlockEntity {
    protected void saveAdditional(CompoundTag tag, HolderLookup.Provider registries) {
       super.saveAdditional(tag, registries);
       ContainerHelper.saveAllItems(tag, pieces, registries);
+      tag.putString("MachineState", machineState.key());
    }
 
    @Override
@@ -134,5 +171,10 @@ public final class NanosuitCradleBlockEntity extends BlockEntity {
       super.loadAdditional(tag, registries);
       pieces.clear();
       ContainerHelper.loadAllItems(tag, pieces, registries);
+      machineState = switch (tag.getString("MachineState")) {
+         case "standby" -> MachineState.STANDBY;
+         case "aborted" -> MachineState.ABORTED;
+         default -> MachineState.OFF;
+      };
    }
 }
