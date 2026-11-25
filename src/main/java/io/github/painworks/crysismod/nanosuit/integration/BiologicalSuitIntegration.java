@@ -32,6 +32,15 @@ public final class BiologicalSuitIntegration {
          && !player.isSpectator() && linkedIdentity(player) != null;
    }
 
+   public static boolean isIntegratedArmorPiece(ServerPlayer player, ItemStack piece) {
+      UUID identity = linkedIdentity(player);
+      if (identity == null || !identity.equals(pieceIdentity(piece))) return false;
+      for (EquipmentSlot slot : SLOTS) {
+         if (player.getItemBySlot(slot) == piece && NanosuitArmorUtil.isNanosuitArmorPiece(piece, slot)) return true;
+      }
+      return false;
+   }
+
    /**
     * Moves four exclusively owned stacks ordered head, chest, legs, feet out of a mutable server-side storage view.
     * The chest is the anchor for future suit data; the four identity markers keep the set together.
