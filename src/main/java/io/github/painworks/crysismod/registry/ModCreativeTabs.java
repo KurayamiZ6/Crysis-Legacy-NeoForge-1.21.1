@@ -32,6 +32,10 @@ public final class ModCreativeTabs {
             output.accept(ModItems.CEPH_CRYSTAL_CORE.get());
             output.accept(ModItems.CEPH_CRYSTAL_CLUSTER.get());
             output.accept(ModItems.CEPH_ENERGY_CRYSTAL.get());
+            output.accept(ModItems.UNDERSUIT_HOOD.get());
+            output.accept(ModItems.UNDERSUIT_TOP.get());
+            output.accept(ModItems.UNDERSUIT_LEGGINGS.get());
+            output.accept(ModItems.UNDERSUIT_BOOTS.get());
          })
          .build()
    );

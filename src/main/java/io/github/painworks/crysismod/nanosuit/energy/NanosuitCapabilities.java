@@ -1,5 +1,6 @@
 package io.github.painworks.crysismod.nanosuit.energy;
 
+import io.github.painworks.crysismod.nanosuit.integration.BiologicalSuitAttachment;
 import java.util.function.Supplier;
 import net.minecraft.world.entity.player.Player;
 import net.neoforged.neoforge.attachment.AttachmentType;
@@ -11,6 +12,9 @@ public final class NanosuitCapabilities {
       DeferredRegister.create(NeoForgeRegistries.ATTACHMENT_TYPES, "crysismod");
    private static final Supplier<AttachmentType<NanosuitEnergy>> NANOSUIT_ENERGY =
       ATTACHMENT_TYPES.register("nanosuit_energy", () -> AttachmentType.serializable(NanosuitEnergy::new).copyOnDeath().build());
+   public static final Supplier<AttachmentType<BiologicalSuitAttachment>> BIOLOGICAL_SUIT =
+      ATTACHMENT_TYPES.register("biological_suit", () -> AttachmentType.serializable(BiologicalSuitAttachment::new)
+         .sync((holder, recipient) -> holder == recipient, BiologicalSuitAttachment.LOCK_SYNC).build());
 
    private NanosuitCapabilities() {
    }

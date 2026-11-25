@@ -35,6 +35,7 @@ public class CrysisMod {
       modEventBus.addListener(NanosuitNetwork::register);
       if (FMLEnvironment.dist == Dist.CLIENT) CrysisModClientBootstrap.init(modEventBus, context);
       ModItems.ITEMS.register(modEventBus);
+      ModItems.ARMOR_MATERIALS.register(modEventBus);
       ModDataComponents.TYPES.register(modEventBus);
       ModBlocks.BLOCKS.register(modEventBus);
       ModBlocks.BLOCK_ENTITIES.register(modEventBus);
