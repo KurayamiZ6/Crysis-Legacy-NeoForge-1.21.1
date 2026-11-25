@@ -1,6 +1,7 @@
 package io.github.painworks.crysismod.nanosuit.energy;
 
 import io.github.painworks.crysismod.nanosuit.integration.BiologicalSuitAttachment;
+import io.github.painworks.crysismod.nanosuit.cradle.CradlePatient;
 import java.util.function.Supplier;
 import net.minecraft.world.entity.player.Player;
 import net.neoforged.neoforge.attachment.AttachmentType;
@@ -15,6 +16,9 @@ public final class NanosuitCapabilities {
    public static final Supplier<AttachmentType<BiologicalSuitAttachment>> BIOLOGICAL_SUIT =
       ATTACHMENT_TYPES.register("biological_suit", () -> AttachmentType.serializable(BiologicalSuitAttachment::new)
          .sync((holder, recipient) -> holder == recipient, BiologicalSuitAttachment.LOCK_SYNC).build());
+   public static final Supplier<AttachmentType<CradlePatient>> CRADLE_PATIENT =
+      ATTACHMENT_TYPES.register("cradle_patient", () -> AttachmentType.serializable(CradlePatient::new)
+         .sync((holder, recipient) -> holder == recipient, CradlePatient.SYNC).build());
 
    private NanosuitCapabilities() {
    }

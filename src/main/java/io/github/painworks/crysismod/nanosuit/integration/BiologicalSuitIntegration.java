@@ -4,6 +4,8 @@ import io.github.painworks.crysismod.nanosuit.NanosuitGeneration;
 import io.github.painworks.crysismod.nanosuit.NanosuitProfile;
 import io.github.painworks.crysismod.nanosuit.energy.NanosuitCapabilities;
 import io.github.painworks.crysismod.nanosuit.util.NanosuitArmorUtil;
+import io.github.painworks.crysismod.nanosuit.cradle.CradlePatient;
+import io.github.painworks.crysismod.nanosuit.config.NanosuitServerConfig;
 import io.github.painworks.crysismod.registry.ModDataComponents;
 import java.util.List;
 import java.util.Objects;
@@ -28,8 +30,13 @@ public final class BiologicalSuitIntegration {
    }
 
    public static boolean isArmorLocked(Player player, EquipmentSlot slot) {
-      return slot.getType() == EquipmentSlot.Type.HUMANOID_ARMOR && !player.isCreative()
-         && !player.isSpectator() && linkedIdentity(player) != null;
+      return slot.getType() == EquipmentSlot.Type.HUMANOID_ARMOR
+         && (CradlePatient.active(player) || !player.isCreative() && !player.isSpectator() && linkedIdentity(player) != null);
+   }
+
+   public static boolean restrictManualArmor(Player player, ItemStack candidate) {
+      return !player.isCreative() && !player.isSpectator() && NanosuitArmorUtil.isNanosuitArmorPiece(candidate)
+         && NanosuitServerConfig.SPEC.isLoaded() && NanosuitServerConfig.CRADLE_RESTRICT_MANUAL_ARMOR.get();
    }
 
    public static boolean isIntegratedArmorPiece(ServerPlayer player, ItemStack piece) {
@@ -46,6 +53,24 @@ public final class BiologicalSuitIntegration {
     * The chest is the anchor for future suit data; the four identity markers keep the set together.
     */
    public static Result integrate(ServerPlayer player, List<ItemStack> input) {
+      Result eligibility = validateIntegration(player, input);
+      if (eligibility != Result.SUCCESS) return eligibility;
+      var profile = NanosuitArmorUtil.getPieceProfile(input.getFirst(), EquipmentSlot.HEAD);
+      UUID identity = pieceIdentity(input.get(1));
+      var link = new BiologicalSuitAttachment(identity == null ? UUID.randomUUID() : identity);
+      for (int i = 0; i < SLOTS.length; i++) {
+         var equipped = player.getItemBySlot(SLOTS[i]);
+         if (profile == NanosuitProfile.NANOSUIT_1) link.undersuit.set(i, equipped);
+         var piece = input.set(i, ItemStack.EMPTY);
+         piece.set(ModDataComponents.NANOSUIT_IDENTITY.get(), link.identity);
+         setArmor(player, SLOTS[i], piece);
+      }
+      player.setData(NanosuitCapabilities.BIOLOGICAL_SUIT, link);
+      player.getInventory().setChanged();
+      return Result.SUCCESS;
+   }
+
+   public static Result validateIntegration(ServerPlayer player, List<ItemStack> input) {
       if (!canOperate(player)) return Result.INVALID_PLAYER;
       if (linkedIdentity(player) != null) return Result.ALREADY_LINKED;
       if (input.size() != SLOTS.length) return Result.INVALID_SUIT;
@@ -64,32 +89,29 @@ public final class BiologicalSuitIntegration {
          var equipped = player.getItemBySlot(slot);
          if (!equipped.isEmpty() && !Undersuit.isPiece(equipped, slot)) return Result.ARMOR_OCCUPIED;
       }
-      var link = new BiologicalSuitAttachment(identity == null ? UUID.randomUUID() : identity);
-      for (int i = 0; i < SLOTS.length; i++) {
-         var equipped = player.getItemBySlot(SLOTS[i]);
-         if (profile == NanosuitProfile.NANOSUIT_1) link.undersuit.set(i, equipped);
-         var piece = input.set(i, ItemStack.EMPTY);
-         piece.set(ModDataComponents.NANOSUIT_IDENTITY.get(), link.identity);
-         setArmor(player, SLOTS[i], piece);
-      }
-      player.setData(NanosuitCapabilities.BIOLOGICAL_SUIT, link);
-      player.getInventory().setChanged();
       return Result.SUCCESS;
    }
 
    /** Moves the actual linked set into four empty, mutable storage slots. */
    public static Result extract(ServerPlayer player, List<ItemStack> output) {
-      if (!canOperate(player)) return Result.INVALID_PLAYER;
+      Result eligibility = validateExtraction(player, output);
+      if (eligibility != Result.SUCCESS) return eligibility;
       var link = player.getExistingDataOrNull(NanosuitCapabilities.BIOLOGICAL_SUIT);
-      if (link == null || link.identity == null) return Result.NOT_LINKED;
-      if (!matches(player, link.identity)) return Result.INVALID_SUIT;
-      if (output.size() != SLOTS.length || output.stream().anyMatch(stack -> !stack.isEmpty())) return Result.OUTPUT_OCCUPIED;
       for (int i = 0; i < SLOTS.length; i++) {
          output.set(i, player.getItemBySlot(SLOTS[i]));
          setArmor(player, SLOTS[i], link.undersuit.set(i, ItemStack.EMPTY));
       }
       player.removeData(NanosuitCapabilities.BIOLOGICAL_SUIT);
       player.getInventory().setChanged();
+      return Result.SUCCESS;
+   }
+
+   public static Result validateExtraction(ServerPlayer player, List<ItemStack> output) {
+      if (!canOperate(player)) return Result.INVALID_PLAYER;
+      var link = player.getExistingDataOrNull(NanosuitCapabilities.BIOLOGICAL_SUIT);
+      if (link == null || link.identity == null) return Result.NOT_LINKED;
+      if (!matches(player, link.identity)) return Result.INVALID_SUIT;
+      if (output.size() != SLOTS.length || output.stream().anyMatch(stack -> !stack.isEmpty())) return Result.OUTPUT_OCCUPIED;
       return Result.SUCCESS;
    }
 

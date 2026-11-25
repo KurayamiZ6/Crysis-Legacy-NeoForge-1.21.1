@@ -94,6 +94,12 @@ public final class NanosuitServerConfig {
    public static final BooleanValue DEBUG_COMMANDS_ENABLED = BUILDER.comment("Enable /nanosuit debug commands.").define("debug.commandsEnabled", true);
    public static final BooleanValue DEBUG_ARMOR_DAMAGE_ABSORPTION = BUILDER.comment("Log armor-mode damage absorption calculations on hit events.")
       .define("debug.armorDamageAbsorption", false);
+   public static final BooleanValue CRADLE_N2_FATAL_RISK = BUILDER.comment("Enable the N2 extraction death roll outside Hardcore.")
+      .define("cradle.n2FatalRisk", true);
+   public static final DoubleValue CRADLE_N2_FATAL_CHANCE = BUILDER.comment("Chance of a fatal N2 extraction outside Hardcore.")
+      .defineInRange("cradle.n2FatalChance", 0.5, 0.0, 1.0);
+   public static final BooleanValue CRADLE_RESTRICT_MANUAL_ARMOR = BUILDER.comment("Require the Cradle to equip Nanosuit pieces in Survival. Off by default.")
+      .define("cradle.restrictManualArmor", false);
    public static final ModConfigSpec SPEC = BUILDER.build();
    private static volatile NanosuitServerConfig.CachedValues CACHED_VALUES = NanosuitServerConfig.CachedValues.defaults();
 

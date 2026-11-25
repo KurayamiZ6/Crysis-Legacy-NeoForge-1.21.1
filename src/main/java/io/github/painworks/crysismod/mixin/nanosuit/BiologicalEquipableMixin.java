@@ -18,7 +18,8 @@ interface BiologicalEquipableMixin {
    @Inject(method = "swapWithEquipmentSlot", at = @At("HEAD"), cancellable = true, require = 1)
    private void crysismod$preventManualReplacement(Item item, Level level, Player player, InteractionHand hand,
       CallbackInfoReturnable<InteractionResultHolder<ItemStack>> result) {
-      if (BiologicalSuitIntegration.isArmorLocked(player, ((Equipable)this).getEquipmentSlot())) {
+      if (BiologicalSuitIntegration.isArmorLocked(player, ((Equipable)this).getEquipmentSlot())
+         || BiologicalSuitIntegration.restrictManualArmor(player, player.getItemInHand(hand))) {
          result.setReturnValue(InteractionResultHolder.fail(player.getItemInHand(hand)));
       }
    }

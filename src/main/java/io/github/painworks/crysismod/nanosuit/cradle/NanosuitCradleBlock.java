@@ -20,6 +20,10 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Mirror;
 import net.minecraft.world.level.block.RenderShape;
 import net.minecraft.world.level.block.Rotation;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.entity.BlockEntityTicker;
+import net.minecraft.world.level.block.entity.BlockEntityType;
+import io.github.painworks.crysismod.registry.ModBlocks;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
@@ -47,6 +51,12 @@ public final class NanosuitCradleBlock extends BaseEntityBlock {
    @Override
    public NanosuitCradleBlockEntity newBlockEntity(BlockPos pos, BlockState state) {
       return state.getValue(PART) == Part.EXTENSION ? null : new NanosuitCradleBlockEntity(pos, state);
+   }
+
+   @Override
+   public <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level level, BlockState state, BlockEntityType<T> type) {
+      if (level.isClientSide || state.getValue(PART) != Part.MASTER) return null;
+      return createTickerHelper(type, ModBlocks.NANOSUIT_CRADLE_ENTITY.get(), (world, pos, block, cradle) -> cradle.tickProcedure());
    }
 
    @Override
@@ -136,6 +146,7 @@ public final class NanosuitCradleBlock extends BaseEntityBlock {
             boolean batteryFace = state.getValue(PART) != Part.LEGACY && hit.getDirection() == state.getValue(FACING).getClockWise();
             result = batteryFace ? cradle.retrieveBattery(serverPlayer, pos) : cradle.retrievePiece(serverPlayer, pos);
          }
+         else if (hit.getDirection() == Direction.UP && cradle.useProcedure(serverPlayer, pos)) return InteractionResult.CONSUME;
          else result = cradle.status(serverPlayer, pos);
          notifyPlayer(serverPlayer, result);
       }

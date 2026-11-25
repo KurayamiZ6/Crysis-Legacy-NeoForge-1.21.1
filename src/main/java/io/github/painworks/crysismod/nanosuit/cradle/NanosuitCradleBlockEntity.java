@@ -25,6 +25,7 @@ public final class NanosuitCradleBlockEntity extends BlockEntity {
    private final NonNullList<ItemStack> pieces = NonNullList.withSize(SLOTS.length, ItemStack.EMPTY);
    private ItemStack battery = ItemStack.EMPTY;
    private MachineState machineState = MachineState.OFF;
+   private CradleProcedure procedure;
 
    public enum MachineState {
       OFF("off"), STANDBY("standby"), ABORTED("aborted"), RUNNING("running");
@@ -78,6 +79,25 @@ public final class NanosuitCradleBlockEntity extends BlockEntity {
    }
 
    MachineState machineState() { return machineState; }
+   CradleProcedure procedure() { return procedure; }
+   void setProcedure(CradleProcedure next) { procedure = next; }
+   NonNullList<ItemStack> piecesForProcedure() { return pieces; }
+
+   boolean useProcedure(ServerPlayer player, BlockPos clicked) {
+      if (procedure == null || !canUse(player, clicked) || !player.getMainHandItem().isEmpty()) return false;
+      procedure.use(player);
+      return true;
+   }
+
+   void tickProcedure() {
+      if (procedure != null) procedure.tick();
+   }
+
+   @Override
+   public void setRemoved() {
+      if (procedure != null) procedure.cancel();
+      super.setRemoved();
+   }
 
    RoboticArmAssemblyBlockEntity.Installation roboticArms() {
       return RoboticArmAssemblyBlockEntity.installationAt((ServerLevel)level, worldPosition);
@@ -111,6 +131,7 @@ public final class NanosuitCradleBlockEntity extends BlockEntity {
 
    String insert(ServerPlayer player, BlockPos clicked) {
       if (!canUse(player, clicked)) return "denied";
+      if (machineState.locksBattery()) return "storage_locked";
       ItemStack held = player.getMainHandItem();
       for (int i = 0; i < SLOTS.length; i++) {
          NanosuitProfile profile = NanosuitArmorUtil.getPieceProfile(held, SLOTS[i]);
@@ -133,6 +154,7 @@ public final class NanosuitCradleBlockEntity extends BlockEntity {
 
    String retrievePiece(ServerPlayer player, BlockPos clicked) {
       if (!canUse(player, clicked) || !player.getMainHandItem().isEmpty()) return "denied";
+      if (machineState.locksBattery()) return "storage_locked";
       for (int i = SLOTS.length - 1; i >= 0; i--) {
          if (pieces.get(i).isEmpty()) continue;
          player.setItemInHand(InteractionHand.MAIN_HAND, pieces.set(i, ItemStack.EMPTY));
@@ -209,9 +231,13 @@ public final class NanosuitCradleBlockEntity extends BlockEntity {
 
    private void changed(ServerPlayer player) {
       player.getInventory().setChanged();
+      publishProcedureInventory();
+   }
+
+   void publishProcedureInventory() {
       setChanged();
       var state = getBlockState();
-      player.serverLevel().sendBlockUpdated(worldPosition, state, state, Block.UPDATE_CLIENTS);
+      level.sendBlockUpdated(worldPosition, state, state, Block.UPDATE_CLIENTS);
    }
 
    /** The client display renders the synchronized stack without modifying it. */
@@ -230,6 +256,7 @@ public final class NanosuitCradleBlockEntity extends BlockEntity {
    }
 
    void dropContents(ServerLevel server) {
+      if (procedure != null) procedure.cancel();
       var drops = NonNullList.withSize(SLOTS.length + 1, ItemStack.EMPTY);
       for (int i = 0; i < SLOTS.length; i++) drops.set(i, pieces.set(i, ItemStack.EMPTY));
       drops.set(SLOTS.length, battery);
@@ -241,7 +268,7 @@ public final class NanosuitCradleBlockEntity extends BlockEntity {
    protected void saveAdditional(CompoundTag tag, HolderLookup.Provider registries) {
       super.saveAdditional(tag, registries);
       ContainerHelper.saveAllItems(tag, pieces, registries);
-      tag.putString("MachineState", machineState.key());
+      tag.putString("MachineState", (machineState == MachineState.RUNNING ? MachineState.ABORTED : machineState).key());
       if (!battery.isEmpty()) tag.put("Battery", battery.save(registries));
    }
 
@@ -253,8 +280,7 @@ public final class NanosuitCradleBlockEntity extends BlockEntity {
       battery = ItemStack.parseOptional(registries, tag.getCompound("Battery"));
       machineState = switch (tag.getString("MachineState")) {
          case "standby" -> MachineState.STANDBY;
-         case "aborted" -> MachineState.ABORTED;
-         case "running" -> MachineState.RUNNING;
+         case "aborted", "running" -> MachineState.ABORTED;
          default -> MachineState.OFF;
       };
    }

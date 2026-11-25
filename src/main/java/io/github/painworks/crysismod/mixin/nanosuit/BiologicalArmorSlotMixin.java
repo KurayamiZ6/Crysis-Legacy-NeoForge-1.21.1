@@ -24,7 +24,8 @@ abstract class BiologicalArmorSlotMixin {
 
    @Inject(method = "mayPlace", at = @At("HEAD"), cancellable = true, require = 1)
    private void crysismod$keepArmorSlot(ItemStack candidate, CallbackInfoReturnable<Boolean> result) {
-      if (locked()) result.setReturnValue(false);
+      if (locked() || owner instanceof Player player && BiologicalSuitIntegration.restrictManualArmor(player, candidate))
+         result.setReturnValue(false);
    }
 
    private boolean locked() {
