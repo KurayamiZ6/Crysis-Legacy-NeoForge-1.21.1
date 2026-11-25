@@ -56,9 +56,13 @@ public final class NanosuitCradleBlock extends BaseEntityBlock {
 
    @Override
    public BlockState getStateForPlacement(BlockPlaceContext context) {
+      return placementState(context, defaultBlockState());
+   }
+
+   static BlockState placementState(BlockPlaceContext context, BlockState base) {
       Direction facing = context.getHorizontalDirection();
       BlockPos extension = context.getClickedPos().relative(facing);
-      BlockState master = defaultBlockState().setValue(FACING, facing).setValue(PART, Part.MASTER);
+      BlockState master = base.setValue(FACING, facing).setValue(PART, Part.MASTER);
       return canPlaceExtension(context, extension, master) ? master : null;
    }
 
@@ -70,14 +74,14 @@ public final class NanosuitCradleBlock extends BaseEntityBlock {
          && level.isUnobstructed(state, pos, player == null ? CollisionContext.empty() : CollisionContext.of(player));
    }
 
-   private static BlockPos otherPos(BlockPos pos, BlockState state) {
+   static BlockPos otherPos(BlockPos pos, BlockState state) {
       Direction facing = state.getValue(FACING);
       return pos.relative(state.getValue(PART) == Part.MASTER ? facing : facing.getOpposite());
    }
 
-   private boolean isPartner(BlockState state, BlockState candidate) {
+   static boolean isPartner(BlockState state, BlockState candidate) {
       Part expected = state.getValue(PART) == Part.MASTER ? Part.EXTENSION : Part.MASTER;
-      return candidate.is(this) && candidate.getValue(PART) == expected && candidate.getValue(FACING) == state.getValue(FACING);
+      return candidate.is(state.getBlock()) && candidate.getValue(PART) == expected && candidate.getValue(FACING) == state.getValue(FACING);
    }
 
    private NanosuitCradleBlockEntity resolve(Level level, BlockPos pos, BlockState state) {
@@ -146,12 +150,15 @@ public final class NanosuitCradleBlock extends BaseEntityBlock {
    protected void onRemove(BlockState state, Level level, BlockPos pos, BlockState next, boolean movedByPiston) {
       if (!state.is(next.getBlock()) && level instanceof ServerLevel server) {
          if (level.getBlockEntity(pos) instanceof NanosuitCradleBlockEntity cradle) cradle.dropContents(server);
-         if (state.getValue(PART) != Part.LEGACY) {
-            BlockPos other = otherPos(pos, state);
-            if (isPartner(state, server.getBlockState(other))) server.removeBlock(other, false);
-         }
+         removePartner(server, pos, state);
       }
       super.onRemove(state, level, pos, next, movedByPiston);
+   }
+
+   static void removePartner(ServerLevel server, BlockPos pos, BlockState state) {
+      if (state.getValue(PART) == Part.LEGACY) return;
+      BlockPos other = otherPos(pos, state);
+      if (isPartner(state, server.getBlockState(other))) server.removeBlock(other, false);
    }
 
    public enum Part implements StringRepresentable {

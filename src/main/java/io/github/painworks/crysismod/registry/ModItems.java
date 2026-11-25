@@ -46,6 +46,9 @@ public final class ModItems {
    public static final DeferredHolder<Item, BlockItem> CRADLE_CONTROLLER = ITEMS.register(
       "cradle_controller", () -> new BlockItem(ModBlocks.CRADLE_CONTROLLER.get(), new Properties())
    );
+   public static final DeferredHolder<Item, BlockItem> ROBOTIC_ARM_ASSEMBLY = ITEMS.register(
+      "robotic_arm_assembly", () -> new NanosuitCradleBlock.PlacementItem(ModBlocks.ROBOTIC_ARM_ASSEMBLY.get(), new Properties())
+   );
    public static final DeferredHolder<Item, BatteryItem> CELL_POWER_CELL = ITEMS.register(
       "cell_power_cell", () -> new BatteryItem(ModBlocks.CELL_POWER_CELL.get(), new Properties())
    );

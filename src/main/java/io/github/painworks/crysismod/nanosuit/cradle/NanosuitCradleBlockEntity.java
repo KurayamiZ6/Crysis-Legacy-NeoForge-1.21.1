@@ -79,6 +79,15 @@ public final class NanosuitCradleBlockEntity extends BlockEntity {
 
    MachineState machineState() { return machineState; }
 
+   RoboticArmAssemblyBlockEntity.Installation roboticArms() {
+      return RoboticArmAssemblyBlockEntity.installationAt((ServerLevel)level, worldPosition);
+   }
+
+   boolean foldRoboticArms() {
+      var assembly = roboticArms().assembly();
+      return assembly != null && assembly.transitionTo(RoboticArmAssemblyBlockEntity.State.FOLDED);
+   }
+
    boolean setMachineState(MachineState next) {
       if (machineState == next) return false;
       machineState = next;

@@ -4,6 +4,8 @@ import io.github.painworks.crysismod.nanosuit.cradle.CradleControllerBlockEntity
 import io.github.painworks.crysismod.nanosuit.cradle.BatteryKind;
 import io.github.painworks.crysismod.nanosuit.cradle.CradleControllerMenu;
 import io.github.painworks.crysismod.nanosuit.cradle.NanosuitCradleBlockEntity.MachineState;
+import io.github.painworks.crysismod.nanosuit.cradle.RoboticArmAssemblyBlockEntity.Availability;
+import io.github.painworks.crysismod.nanosuit.cradle.RoboticArmAssemblyBlockEntity.State;
 import io.github.painworks.crysismod.registry.ModBlocks;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.Button;
@@ -66,7 +68,8 @@ final class CradleControllerScreen extends AbstractContainerScreen<CradleControl
       var state = menu.machineState();
       power.setMessage(label(state == MachineState.OFF ? "power_on" : "power_off"));
       power.active = connection == Connection.CONNECTED && !state.locksBattery();
-      cancel.active = power.active && state == MachineState.STANDBY;
+      cancel.active = power.active && (state == MachineState.STANDBY
+         || menu.armAvailability() == Availability.CONNECTED && menu.armState() != State.FOLDED);
       reconnect.active = connection == Connection.DISCONNECTED || connection == Connection.MISSING;
    }
 
@@ -82,7 +85,7 @@ final class CradleControllerScreen extends AbstractContainerScreen<CradleControl
       graphics.fill(leftPos, topPos, leftPos + imageWidth, topPos + imageHeight, 0xFF465956);
       graphics.fill(leftPos + 1, topPos + 1, leftPos + imageWidth - 1, topPos + imageHeight - 1, 0xFF182220);
       graphics.fill(leftPos + 1, topPos + 1, leftPos + imageWidth - 1, topPos + 23, 0xFF2E413C);
-      graphics.fill(leftPos + 12, topPos + 61, leftPos + imageWidth - 12, topPos + 100, 0xFF23332F);
+      graphics.fill(leftPos + 12, topPos + 64, leftPos + imageWidth - 12, topPos + 100, 0xFF23332F);
       graphics.fill(leftPos + 12, topPos + 104, leftPos + imageWidth - 12, topPos + 140, 0xFF23332F);
    }
 
@@ -98,6 +101,17 @@ final class CradleControllerScreen extends AbstractContainerScreen<CradleControl
       Component stateText = label(linked ? "state." + state.key() : "unknown");
       draw(graphics, label("power", powerText), 12, 43, WHITE);
       draw(graphics, label("machine", stateText), 111, 43, WHITE);
+      var arms = menu.armAvailability();
+      Component armsText = switch (arms) {
+         case ABSENT -> label("arms_absent");
+         case UNAVAILABLE -> label("arms_unavailable");
+         case CONNECTED -> label("arms_connected", label(switch (menu.armState()) {
+            case FOLDED -> "arms_folded";
+            case DEPLOYED -> "arms_deployed";
+            case OPERATING -> "arms_operating";
+         }));
+      };
+      draw(graphics, armsText, 12, 54, arms == Availability.CONNECTED ? GREEN : MUTED);
 
       for (int i = 0; i < PIECES.length; i++) {
          boolean present = (menu.occupiedSlots() & (1 << i)) != 0;

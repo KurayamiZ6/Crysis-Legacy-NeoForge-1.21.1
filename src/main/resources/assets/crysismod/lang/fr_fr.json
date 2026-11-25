@@ -1,4 +1,13 @@
 {
+  "block.crysismod.robotic_arm_assembly": "Assemblage de bras robotiques",
+  "command.crysismod.arms_denied": "Assemblage ou transition de test indisponible.",
+  "command.crysismod.arms_changed": "État de test des bras : %s.",
+  "screen.crysismod.cradle_controller.arms_absent": "Bras : Absents",
+  "screen.crysismod.cradle_controller.arms_unavailable": "Bras : Temporairement indisponibles",
+  "screen.crysismod.cradle_controller.arms_connected": "Bras : Connectés · %s",
+  "screen.crysismod.cradle_controller.arms_folded": "Repliés",
+  "screen.crysismod.cradle_controller.arms_deployed": "Déployés",
+  "screen.crysismod.cradle_controller.arms_operating": "En opération (test)",
   "item.crysismod.crynet_undersuit_hood": "Cagoule de sous-combinaison CryNet",
   "item.crysismod.crynet_undersuit_top": "Haut de sous-combinaison CryNet",
   "item.crysismod.crynet_undersuit_leggings": "Jambières de sous-combinaison CryNet",

@@ -2,6 +2,8 @@ package io.github.painworks.crysismod.nanosuit.cradle;
 
 import io.github.painworks.crysismod.nanosuit.cradle.CradleControllerBlockEntity.Connection;
 import io.github.painworks.crysismod.nanosuit.cradle.NanosuitCradleBlockEntity.MachineState;
+import io.github.painworks.crysismod.nanosuit.cradle.RoboticArmAssemblyBlockEntity.Availability;
+import io.github.painworks.crysismod.nanosuit.cradle.RoboticArmAssemblyBlockEntity.State;
 import io.github.painworks.crysismod.registry.ModBlocks;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
@@ -16,6 +18,10 @@ public final class CradleControllerMenu extends AbstractContainerMenu {
    public static final int RECONNECT = 3;
    private static final Connection[] CONNECTIONS = Connection.values();
    private static final MachineState[] MACHINE_STATES = MachineState.values();
+   private static final Availability[] ARM_AVAILABILITY = Availability.values();
+   private static final State[] ARM_STATES = State.values();
+   private static final int ARM_AVAILABILITY_SHIFT = 11;
+   private static final int ARM_STATE_SHIFT = 13;
    private static final int CHARGE_BITS = 11;
    private static final int CHARGE_MASK = (1 << CHARGE_BITS) - 1;
    private final CradleControllerBlockEntity controller;
@@ -56,6 +62,11 @@ public final class CradleControllerMenu extends AbstractContainerMenu {
          flags |= cradle.occupiedSlots() << 4;
          flags |= cradle.storedGenerations() << 8;
          if (cradle.storedProfile() != null) flags |= 1 << 10;
+         var arms = cradle.roboticArms();
+         flags |= arms.availability().ordinal() << ARM_AVAILABILITY_SHIFT;
+         if (arms.assembly() != null) flags |= arms.assembly().armState().ordinal() << ARM_STATE_SHIFT;
+      } else {
+         flags |= Availability.UNAVAILABLE.ordinal() << ARM_AVAILABILITY_SHIFT;
       }
       status.set(flags);
       var kind = cradle == null ? null : cradle.batteryKind();
@@ -67,6 +78,8 @@ public final class CradleControllerMenu extends AbstractContainerMenu {
    public int occupiedSlots() { return (status.get() >> 4) & 15; }
    public int generations() { return (status.get() >> 8) & 3; }
    public boolean complete() { return (status.get() & (1 << 10)) != 0; }
+   public Availability armAvailability() { return ARM_AVAILABILITY[(status.get() >> ARM_AVAILABILITY_SHIFT) & 3]; }
+   public State armState() { return ARM_STATES[(status.get() >> ARM_STATE_SHIFT) & 3]; }
    public BatteryKind batteryKind() {
       return switch (energy.get() >> CHARGE_BITS) {
          case 1 -> BatteryKind.CELL;
@@ -85,10 +98,17 @@ public final class CradleControllerMenu extends AbstractContainerMenu {
       var state = cradle.machineState();
       return switch (command) {
          case POWER_ON -> state == MachineState.OFF && cradle.setMachineState(MachineState.STANDBY);
-         case POWER_OFF -> !state.locksBattery() && cradle.setMachineState(MachineState.OFF);
-         case CANCEL -> state == MachineState.STANDBY && cradle.setMachineState(MachineState.ABORTED);
+         case POWER_OFF, CANCEL -> stop(cradle, state, command);
          default -> false;
       };
+   }
+
+   private static boolean stop(NanosuitCradleBlockEntity cradle, MachineState state, int command) {
+      if (state.locksBattery()) return false;
+      boolean folded = cradle.foldRoboticArms();
+      boolean changed = command == POWER_OFF ? cradle.setMachineState(MachineState.OFF)
+         : state == MachineState.STANDBY && cradle.setMachineState(MachineState.ABORTED);
+      return folded || changed;
    }
 
    @Override

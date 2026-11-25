@@ -12,6 +12,8 @@ import io.github.painworks.crysismod.nanosuit.cradle.CradleControllerBlockEntity
 import io.github.painworks.crysismod.nanosuit.cradle.CradleControllerMenu;
 import io.github.painworks.crysismod.nanosuit.cradle.NanosuitCradleBlock;
 import io.github.painworks.crysismod.nanosuit.cradle.NanosuitCradleBlockEntity;
+import io.github.painworks.crysismod.nanosuit.cradle.RoboticArmAssemblyBlock;
+import io.github.painworks.crysismod.nanosuit.cradle.RoboticArmAssemblyBlockEntity;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.world.flag.FeatureFlags;
 import net.minecraft.world.inventory.MenuType;
@@ -28,6 +30,12 @@ public final class ModBlocks {
       BLOCKS.register("nanosuit_cradle", () -> new NanosuitCradleBlock(
          BlockBehaviour.Properties.of().strength(2.5F).sound(SoundType.METAL).pushReaction(PushReaction.BLOCK)));
    public static final DeferredRegister<BlockEntityType<?>> BLOCK_ENTITIES = DeferredRegister.create(Registries.BLOCK_ENTITY_TYPE, "crysismod");
+   public static final DeferredHolder<net.minecraft.world.level.block.Block, RoboticArmAssemblyBlock> ROBOTIC_ARM_ASSEMBLY =
+      BLOCKS.register("robotic_arm_assembly", () -> new RoboticArmAssemblyBlock(BlockBehaviour.Properties.of()
+         .strength(3.0F).sound(SoundType.METAL).noOcclusion().pushReaction(PushReaction.BLOCK)));
+   public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<RoboticArmAssemblyBlockEntity>> ROBOTIC_ARM_ASSEMBLY_ENTITY =
+      BLOCK_ENTITIES.register("robotic_arm_assembly",
+         () -> BlockEntityType.Builder.of(RoboticArmAssemblyBlockEntity::new, ROBOTIC_ARM_ASSEMBLY.get()).build(null));
    public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<NanosuitCradleBlockEntity>> NANOSUIT_CRADLE_ENTITY =
       BLOCK_ENTITIES.register("nanosuit_cradle", () -> BlockEntityType.Builder.of(NanosuitCradleBlockEntity::new, NANOSUIT_CRADLE.get()).build(null));
    public static final DeferredHolder<net.minecraft.world.level.block.Block, CradleControllerBlock> CRADLE_CONTROLLER =

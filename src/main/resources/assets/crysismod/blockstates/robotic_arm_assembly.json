@@ -1,0 +1,16 @@
+{
+  "variants": {
+    "part=legacy,facing=north": {"model":"crysismod:block/robotic_arm_assembly"},
+    "part=legacy,facing=east": {"model":"crysismod:block/robotic_arm_assembly","y":90},
+    "part=legacy,facing=south": {"model":"crysismod:block/robotic_arm_assembly","y":180},
+    "part=legacy,facing=west": {"model":"crysismod:block/robotic_arm_assembly","y":270},
+    "part=master,facing=north": {"model":"crysismod:block/robotic_arm_assembly"},
+    "part=master,facing=east": {"model":"crysismod:block/robotic_arm_assembly","y":90},
+    "part=master,facing=south": {"model":"crysismod:block/robotic_arm_assembly","y":180},
+    "part=master,facing=west": {"model":"crysismod:block/robotic_arm_assembly","y":270},
+    "part=extension,facing=north": {"model":"crysismod:block/robotic_arm_assembly_tail"},
+    "part=extension,facing=east": {"model":"crysismod:block/robotic_arm_assembly_tail","y":90},
+    "part=extension,facing=south": {"model":"crysismod:block/robotic_arm_assembly_tail","y":180},
+    "part=extension,facing=west": {"model":"crysismod:block/robotic_arm_assembly_tail","y":270}
+  }
+}

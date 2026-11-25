@@ -1,4 +1,13 @@
 {
+  "block.crysismod.robotic_arm_assembly": "Robotic Arm Assembly",
+  "command.crysismod.arms_denied": "No valid assembly or test transition.",
+  "command.crysismod.arms_changed": "Test arm state: %s.",
+  "screen.crysismod.cradle_controller.arms_absent": "Arms: Absent",
+  "screen.crysismod.cradle_controller.arms_unavailable": "Arms: Temporarily unavailable",
+  "screen.crysismod.cradle_controller.arms_connected": "Arms: Connected · %s",
+  "screen.crysismod.cradle_controller.arms_folded": "Folded",
+  "screen.crysismod.cradle_controller.arms_deployed": "Deployed",
+  "screen.crysismod.cradle_controller.arms_operating": "Operating (test)",
   "item.crysismod.crynet_undersuit_hood": "CryNet Undersuit Hood",
   "item.crysismod.crynet_undersuit_top": "CryNet Undersuit Top",
   "item.crysismod.crynet_undersuit_leggings": "CryNet Undersuit Leggings",

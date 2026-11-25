@@ -1,0 +1,6 @@
+{
+  "parent": "crysismod:block/robotic_arm_assembly",
+  "textures": {
+    "end": "minecraft:block/weathered_copper"
+  }
+}

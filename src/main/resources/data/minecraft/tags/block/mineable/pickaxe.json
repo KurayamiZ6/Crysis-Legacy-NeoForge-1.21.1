@@ -5,6 +5,7 @@
     "crysismod:ceph_energy_cell",
     "crysismod:cell_charging_station",
     "crysismod:ceph_crystal_core",
-    "crysismod:ceph_crystal_cluster"
+    "crysismod:ceph_crystal_cluster",
+    "crysismod:robotic_arm_assembly"
   ]
 }
